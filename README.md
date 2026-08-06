@@ -1,44 +1,75 @@
-# Club Regalones 💚
+# React + TypeScript + Vite
 
-Plataforma de fidelización para comercios locales y sus clientes.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Sobre el proyecto
+Currently, two official plugins are available:
 
-Club Regalones busca ayudar a los negocios de barrio a fortalecer la relación con sus clientes mediante un sistema digital de puntos llamado **Rekis**, beneficios, campañas y herramientas de gestión.
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-Los clientes podrán identificarse en los comercios mediante códigos QR o tecnología NFC, registrar sus compras y acumular Rekis para acceder a recompensas.
+## React Compiler
 
-## Objetivos principales
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-- Modernizar los programas de fidelización de los comercios locales.
-- Facilitar el registro y la validación de compras.
-- Permitir que los clientes acumulen y canjeen Rekis.
-- Entregar métricas y herramientas de gestión a cada negocio.
-- Crear una red de comercios participantes mediante la Ruta Regalona.
+## Expanding the ESLint configuration
 
-## Módulos previstos
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-- Portal para clientes.
-- Panel para comercios.
-- Terminal de validación para caja.
-- Panel administrativo.
-- Registro mediante QR y NFC.
-- Sistema de Rekis, niveles y recompensas.
-- Reportes y campañas para comercios.
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
 
-## Estado del proyecto
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
 
-🟡 En etapa de planificación y configuración inicial.
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 
-## Equipo
+```
 
-- **Bárbara Jopia:** diseño, arquitectura y desarrollo tecnológico.
-- **Andrés Molina:** estrategia comercial, ventas y relación con comercios.
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-## Uso del repositorio
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
 
-Repositorio privado de desarrollo y documentación interna de Club Regalones.
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 
----
-
-**Club Regalones — Más barrio Más beneficios 💚**
+```
