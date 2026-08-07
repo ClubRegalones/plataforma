@@ -1,1 +1,110 @@
-/* Estilos de PiePagina. Se implementarán durante el desarrollo de la landing. */
+.pie-pagina {
+  padding: 65px 0 25px;
+  color: white;
+  background: #063d29;
+}
+
+.pie-pagina__principal {
+  display: grid;
+  grid-template-columns: 1.35fr 0.8fr 0.9fr 1fr;
+  gap: 45px;
+  padding-bottom: 45px;
+}
+
+.pie-pagina__marca img {
+  width: 270px;
+  height: 115px;
+  object-fit: contain;
+  object-position: left center;
+}
+
+.pie-pagina__marca p {
+  margin: 4px 0 0;
+  color: #ffb46f;
+  font-size: 1.05rem;
+  font-weight: 900;
+}
+
+.pie-pagina h2 {
+  margin: 0 0 17px;
+  font-size: 1rem;
+}
+
+.pie-pagina__principal > div:not(:first-child) {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.pie-pagina a {
+  margin-bottom: 10px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.pie-pagina a:hover {
+  color: white;
+}
+
+.pie-pagina__destacado {
+  margin: 0 0 18px;
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.5;
+}
+
+.pie-pagina__redes {
+  display: flex;
+  gap: 10px;
+}
+
+.pie-pagina__redes a {
+  width: 35px;
+  height: 35px;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  border-radius: 50%;
+  color: var(--verde-900);
+  background: white;
+  font-weight: 900;
+}
+
+.pie-pagina__inferior {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.13);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.82rem;
+}
+
+.pie-pagina__inferior div {
+  display: flex;
+  gap: 20px;
+}
+
+.pie-pagina__inferior a {
+  margin: 0;
+  font-size: inherit;
+}
+
+@media (max-width: 900px) {
+  .pie-pagina__principal {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .pie-pagina__principal {
+    grid-template-columns: 1fr;
+  }
+
+  .pie-pagina__inferior,
+  .pie-pagina__inferior div {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

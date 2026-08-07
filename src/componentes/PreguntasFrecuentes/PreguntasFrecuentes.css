@@ -1,1 +1,64 @@
-/* Estilos de PreguntasFrecuentes. Se implementarán durante el desarrollo de la landing. */
+.preguntas {
+  padding: 95px 0;
+  background: var(--crema-50);
+}
+
+.preguntas__contenido {
+  display: grid;
+  grid-template-columns: 0.72fr 1fr;
+  align-items: start;
+  gap: 80px;
+}
+
+.preguntas__lista {
+  display: grid;
+  gap: 12px;
+}
+
+.preguntas details {
+  overflow: hidden;
+  border: 1px solid var(--borde);
+  border-radius: 16px;
+  background: white;
+}
+
+.preguntas summary {
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+  padding: 16px 20px;
+  color: var(--verde-900);
+  font-weight: 900;
+  cursor: pointer;
+  list-style: none;
+}
+
+.preguntas summary::-webkit-details-marker {
+  display: none;
+}
+
+.preguntas summary span {
+  color: var(--naranjo-500);
+  font-size: 1.5rem;
+  transition: transform 180ms ease;
+}
+
+.preguntas details[open] summary span {
+  transform: rotate(45deg);
+}
+
+.preguntas details p {
+  margin: 0;
+  padding: 0 20px 20px;
+  color: var(--texto-suave);
+  line-height: 1.65;
+}
+
+@media (max-width: 820px) {
+  .preguntas__contenido {
+    grid-template-columns: 1fr;
+    gap: 35px;
+  }
+}

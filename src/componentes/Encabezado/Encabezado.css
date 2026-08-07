@@ -1,1 +1,230 @@
-/* Estilos de Encabezado. Se implementarán durante el desarrollo de la landing. */
+.encabezado {
+  position: sticky;
+  z-index: 100;
+  top: 0;
+  border-bottom: 1px solid rgba(9, 63, 41, 0.08);
+  background: rgba(255, 250, 241, 0.94);
+  box-shadow: 0 8px 28px rgba(54, 42, 20, 0.035);
+  backdrop-filter: blur(18px);
+}
+
+.encabezado__contenido {
+  min-height: 88px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.encabezado__marca {
+  width: 252px;
+  display: block;
+  flex: 0 0 auto;
+  transform-origin: left center;
+  transition: transform 220ms ease;
+}
+
+.encabezado__marca:hover {
+  transform: translateY(-1px) scale(1.025);
+}
+
+.encabezado__marca img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.encabezado__navegacion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(17px, 2vw, 31px);
+  margin-left: auto;
+}
+
+.encabezado__navegacion a {
+  position: relative;
+  padding: 8px 0;
+  color: var(--texto);
+  font-size: 0.94rem;
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 180ms ease;
+}
+
+.encabezado__navegacion a::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--naranjo-500);
+  content: "";
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 200ms ease;
+}
+
+.encabezado__navegacion a:hover {
+  color: var(--verde-800);
+}
+
+.encabezado__navegacion a:hover::after {
+  transform: scaleX(1);
+}
+
+.encabezado__sesion {
+  position: relative;
+  min-height: 48px;
+  display: inline-flex;
+  overflow: hidden;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 20px;
+  border: 1.5px solid var(--verde-800);
+  border-radius: 14px;
+  color: var(--verde-900);
+  background: rgba(255, 255, 255, 0.38);
+  font-size: 0.94rem;
+  font-weight: 900;
+  text-decoration: none;
+  white-space: nowrap;
+  isolation: isolate;
+  transition:
+    transform 200ms ease,
+    color 200ms ease,
+    border-color 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.encabezado__sesion::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, var(--verde-800), var(--verde-700));
+  content: "";
+  transform: translateX(-103%);
+  transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.encabezado__sesion:hover {
+  color: white;
+  border-color: var(--verde-800);
+  box-shadow: 0 12px 27px rgba(8, 63, 41, 0.2);
+  transform: translateY(-3px);
+}
+
+.encabezado__sesion:hover::before {
+  transform: translateX(0);
+}
+
+.encabezado__sesion svg {
+  width: 21px;
+  height: 21px;
+  flex: 0 0 auto;
+  transition: transform 220ms ease;
+}
+
+.encabezado__sesion:hover svg {
+  transform: translateX(2px) scale(1.08);
+}
+
+.encabezado__sesion--movil,
+.encabezado__menu-boton {
+  display: none;
+}
+
+@media (max-width: 1120px) {
+  .encabezado__marca {
+    width: 222px;
+  }
+
+  .encabezado__navegacion {
+    gap: 17px;
+  }
+
+  .encabezado__sesion {
+    padding-inline: 16px;
+  }
+}
+
+@media (max-width: 960px) {
+  .encabezado__contenido {
+    min-height: 80px;
+  }
+
+  .encabezado__marca {
+    width: 225px;
+  }
+
+  .encabezado__menu-boton {
+    width: 45px;
+    height: 45px;
+    display: grid;
+    place-content: center;
+    gap: 5px;
+    margin-left: auto;
+    border-radius: 13px;
+    color: var(--verde-900);
+    background: var(--verde-100);
+    cursor: pointer;
+  }
+
+  .encabezado__menu-boton span {
+    width: 22px;
+    height: 2px;
+    border-radius: 999px;
+    background: currentColor;
+  }
+
+  .encabezado__navegacion {
+    position: absolute;
+    top: calc(100% + 1px);
+    right: 14px;
+    left: 14px;
+    display: none;
+    align-items: stretch;
+    gap: 3px;
+    margin: 0;
+    padding: 18px;
+    border: 1px solid var(--borde);
+    border-radius: 18px;
+    background: #fffaf2;
+    box-shadow: var(--sombra);
+  }
+
+  .encabezado__navegacion--abierta {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .encabezado__navegacion a {
+    padding: 12px 10px;
+  }
+
+  .encabezado__navegacion a::after {
+    display: none;
+  }
+
+  .encabezado__sesion {
+    display: none;
+  }
+
+  .encabezado__sesion--movil {
+    display: inline-flex;
+    margin-top: 8px;
+  }
+}
+
+@media (max-width: 520px) {
+  .encabezado__contenido {
+    min-height: 74px;
+  }
+
+  .encabezado__marca {
+    width: 195px;
+  }
+}

@@ -13,19 +13,23 @@ import './Inicio.css'
 
 function Inicio() {
   return (
-    <main className="pagina-inicio">
+    <div className="pagina-inicio">
       <Encabezado />
-      <Portada />
-      <BarraBeneficios />
-      <ComoFunciona />
-      <SeccionVecinos />
-      <SeccionComercios />
-      <CintaCategorias />
-      <SeccionNosotros />
-      <PreguntasFrecuentes />
+
+      <main>
+        <Portada />
+        <BarraBeneficios />
+        <ComoFunciona />
+        <SeccionVecinos />
+        <SeccionComercios />
+        <CintaCategorias />
+        <SeccionNosotros />
+        <PreguntasFrecuentes />
+      </main>
+
       <PiePagina />
       <BotonWhatsApp />
-    </main>
+    </div>
   )
 }
 

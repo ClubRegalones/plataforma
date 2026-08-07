@@ -1,75 +1,25 @@
-# React + TypeScript + Vite
+# Estructura inicial — Club Regalones
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este paquete contiene:
 
-Currently, two official plugins are available:
+- Carpetas y archivos base de los componentes de la landing.
+- Página `Inicio` preparada para reunir los componentes.
+- Recursos gráficos organizados por marca, mascota, portada y originales.
+- Documento `docs/landing-v1.md` con la primera definición aprobada de la landing.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Cómo incorporarlo al proyecto
 
-## React Compiler
+1. Descomprime el ZIP fuera del repositorio.
+2. Copia las carpetas `componentes`, `paginas` y `recursos` dentro de la carpeta `src` del proyecto.
+3. No reemplaces `src/lib/supabase.ts` ni tus archivos actuales de configuración.
+4. Los componentes incluidos son bases vacías y se implementarán por bloques durante el desarrollo.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Recursos principales
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
-```
+- `src/recursos/marca/logo-horizontal-con-slogan.png`
+- `src/recursos/marca/logo-horizontal.png`
+- `src/recursos/marca/logo-horizontal-claro.png`
+- `src/recursos/marca/isotipo-corazon.png`
+- `src/recursos/mascota/regalon-saludando.png`
+- `src/recursos/portada/fondo-barrio.png`
+- `src/recursos/portada/comercio-barrio.png`

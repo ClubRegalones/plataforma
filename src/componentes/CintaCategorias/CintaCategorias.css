@@ -1,1 +1,76 @@
-/* Estilos de CintaCategorias. Se implementarán durante el desarrollo de la landing. */
+.cinta-categorias {
+  padding: 95px 0;
+  background: #fff9ef;
+}
+
+.cinta-categorias__encabezado {
+  display: grid;
+  grid-template-columns: 1fr 0.75fr;
+  align-items: end;
+  gap: 50px;
+}
+
+.cinta-categorias__encabezado .texto-seccion {
+  margin: 0;
+}
+
+.cinta-categorias__ventana {
+  overflow: hidden;
+  margin-top: 44px;
+  padding: 19px 0;
+  border-block: 1px solid rgba(13, 80, 53, 0.12);
+  background: white;
+}
+
+.cinta-categorias__pista {
+  width: max-content;
+  display: flex;
+  gap: 34px;
+  animation: desplazar-categorias 28s linear infinite;
+}
+
+.cinta-categorias__pista span {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--verde-900);
+  font-size: 1.05rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.cinta-categorias__pista i {
+  color: var(--naranjo-500);
+  font-style: normal;
+}
+
+.cinta-categorias__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 36px;
+}
+
+@keyframes desplazar-categorias {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cinta-categorias__pista {
+    animation: none;
+  }
+}
+
+@media (max-width: 820px) {
+  .cinta-categorias__encabezado {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+}

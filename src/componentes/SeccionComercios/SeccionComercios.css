@@ -1,1 +1,111 @@
-/* Estilos de SeccionComercios. Se implementarán durante el desarrollo de la landing. */
+.seccion-comercios {
+  padding: 95px 0 80px;
+  color: white;
+  background:
+    radial-gradient(circle at 80% 10%, rgba(255, 175, 80, 0.18), transparent 22rem),
+    var(--verde-900);
+}
+
+.seccion-comercios .etiqueta-seccion {
+  color: #ffb36b;
+}
+
+.seccion-comercios .titulo-seccion {
+  color: white;
+}
+
+.seccion-comercios .texto-seccion {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.seccion-comercios__principal {
+  display: grid;
+  grid-template-columns: 1.05fr 0.75fr;
+  align-items: center;
+  gap: 60px;
+}
+
+.seccion-comercios__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 13px;
+  margin-top: 30px;
+}
+
+.seccion-comercios .boton--principal {
+  color: var(--verde-900);
+  background: #fff6e9;
+}
+
+.seccion-comercios .boton--secundario {
+  color: white;
+  border-color: rgba(255, 255, 255, 0.62);
+}
+
+.seccion-comercios__imagen {
+  position: relative;
+  min-height: 390px;
+  display: grid;
+  place-items: center;
+}
+
+.seccion-comercios__imagen::before {
+  position: absolute;
+  width: 84%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgba(255, 246, 226, 0.1);
+  content: "";
+}
+
+.seccion-comercios__imagen img {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 510px);
+  filter: drop-shadow(0 22px 28px rgba(0, 0, 0, 0.24));
+}
+
+.seccion-comercios__beneficios {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-top: 48px;
+}
+
+.seccion-comercios__beneficios article {
+  padding: 26px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.seccion-comercios__beneficios article > span {
+  font-size: 2rem;
+}
+
+.seccion-comercios__beneficios h3 {
+  margin: 17px 0 8px;
+  color: white;
+  font-size: 1.1rem;
+}
+
+.seccion-comercios__beneficios p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 860px) {
+  .seccion-comercios__principal {
+    grid-template-columns: 1fr;
+  }
+
+  .seccion-comercios__imagen {
+    min-height: 330px;
+  }
+
+  .seccion-comercios__beneficios {
+    grid-template-columns: 1fr;
+  }
+}

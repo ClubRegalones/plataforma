@@ -1,1 +1,115 @@
-/* Estilos de ComoFunciona. Se implementarán durante el desarrollo de la landing. */
+.como-funciona {
+  padding: 80px 0 95px;
+  background: #fff;
+}
+
+.como-funciona__encabezado {
+  display: grid;
+  grid-template-columns: 1fr 0.8fr;
+  align-items: end;
+  gap: 50px;
+  margin-bottom: 42px;
+}
+
+.como-funciona__encabezado .texto-seccion {
+  margin: 0;
+}
+
+.como-funciona__grilla {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 26px;
+}
+
+.como-funciona__panel {
+  padding: 34px;
+  border: 1px solid var(--borde);
+  border-radius: 24px;
+  background: var(--crema-50);
+  box-shadow: 0 15px 35px rgba(54, 49, 31, 0.06);
+}
+
+.como-funciona__panel:nth-child(2) {
+  background: #edf5ec;
+}
+
+.como-funciona__panel header {
+  padding-bottom: 25px;
+  border-bottom: 1px solid rgba(12, 79, 51, 0.12);
+}
+
+.como-funciona__panel h3 {
+  margin: 0;
+  color: var(--verde-900);
+  font-size: 1.8rem;
+}
+
+.como-funciona__panel header p {
+  margin: 7px 0 0;
+  color: var(--texto-suave);
+}
+
+.como-funciona__panel ol {
+  display: grid;
+  gap: 5px;
+  margin: 25px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.como-funciona__panel li {
+  display: grid;
+  grid-template-columns: 46px 1fr;
+  gap: 14px;
+  padding: 14px 0;
+}
+
+.como-funciona__panel li > span {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  color: white;
+  background: var(--verde-800);
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.como-funciona__panel:nth-child(2) li > span {
+  background: var(--naranjo-500);
+}
+
+.como-funciona__panel h4 {
+  margin: 0;
+  color: var(--verde-900);
+  font-size: 1rem;
+}
+
+.como-funciona__panel li p {
+  margin: 5px 0 0;
+  color: var(--texto-suave);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 840px) {
+  .como-funciona__encabezado,
+  .como-funciona__grilla {
+    grid-template-columns: 1fr;
+  }
+
+  .como-funciona__encabezado {
+    gap: 15px;
+  }
+}
+
+@media (max-width: 520px) {
+  .como-funciona {
+    padding: 65px 0 70px;
+  }
+
+  .como-funciona__panel {
+    padding: 24px 20px;
+  }
+}
