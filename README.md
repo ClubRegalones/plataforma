@@ -1,25 +1,12 @@
-# Estructura inicial — Club Regalones
+# Club Regalones — V12
 
-Este paquete contiene:
+Esta versión corrige únicamente la sección **Así funciona**:
 
-- Carpetas y archivos base de los componentes de la landing.
-- Página `Inicio` preparada para reunir los componentes.
-- Recursos gráficos organizados por marca, mascota, portada y originales.
-- Documento `docs/landing-v1.md` con la primera definición aprobada de la landing.
+- fondo del barrio visible;
+- cards más angostas y separadas;
+- íconos recortados y más grandes;
+- El Regalón camina pegado a la ruta y abre espacio entre las cards;
+- ruta verde con progreso naranjo luminoso y animado;
+- control por clic y flechas del teclado.
 
-## Cómo incorporarlo al proyecto
-
-1. Descomprime el ZIP fuera del repositorio.
-2. Copia las carpetas `componentes`, `paginas` y `recursos` dentro de la carpeta `src` del proyecto.
-3. No reemplaces `src/lib/supabase.ts` ni tus archivos actuales de configuración.
-4. Los componentes incluidos son bases vacías y se implementarán por bloques durante el desarrollo.
-
-## Recursos principales
-
-- `src/recursos/marca/logo-horizontal-con-slogan.png`
-- `src/recursos/marca/logo-horizontal.png`
-- `src/recursos/marca/logo-horizontal-claro.png`
-- `src/recursos/marca/isotipo-corazon.png`
-- `src/recursos/mascota/regalon-saludando.png`
-- `src/recursos/portada/fondo-barrio.png`
-- `src/recursos/portada/comercio-barrio.png`
+Para integrarlo en el proyecto existente, copia la carpeta `src` dentro de `plataforma` y acepta reemplazar.

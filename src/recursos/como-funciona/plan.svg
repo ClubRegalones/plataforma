@@ -1,0 +1,10 @@
+<svg width="640" height="640" viewBox="0 0 640 640" fill="none" xmlns="http://www.w3.org/2000/svg">
+<defs><filter id="s" x="70" y="40" width="500" height="560"><feDropShadow dy="20" stdDeviation="17" flood-color="#083F29" flood-opacity=".16"/></filter></defs>
+<g filter="url(#s)">
+<rect x="130" y="92" width="380" height="450" rx="42" fill="#FFF9EA" stroke="#083F29" stroke-width="18"/>
+<rect x="130" y="92" width="380" height="104" rx="42" fill="#FF6818"/>
+<path d="M130 154H510" stroke="#083F29" stroke-width="18"/>
+<circle cx="194" cy="144" r="16" fill="#FFF9EA"/><circle cx="246" cy="144" r="16" fill="#FFF9EA"/><circle cx="298" cy="144" r="16" fill="#FFF9EA"/>
+<rect x="183" y="237" width="274" height="54" rx="20" fill="#DDEDD8"/><rect x="183" y="321" width="274" height="54" rx="20" fill="#DDEDD8"/><rect x="183" y="405" width="176" height="54" rx="20" fill="#DDEDD8"/>
+<circle cx="432" cy="433" r="74" fill="#FFD84C" stroke="#083F29" stroke-width="16"/><path d="M396 434L422 460L470 408" stroke="#0B6B3E" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+</g></svg>

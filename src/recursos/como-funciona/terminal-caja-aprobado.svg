@@ -1,0 +1,37 @@
+<svg width="520" height="520" viewBox="0 0 520 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="pantalla" x1="150" y1="115" x2="376" y2="320" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#29463B"/>
+      <stop offset="1" stop-color="#0B2F22"/>
+    </linearGradient>
+    <linearGradient id="base" x1="180" y1="344" x2="340" y2="445" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#214A36"/>
+      <stop offset="1" stop-color="#082F21"/>
+    </linearGradient>
+    <filter id="sombra" x="44" y="42" width="432" height="438" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="18" stdDeviation="16" flood-color="#083F29" flood-opacity="0.2"/>
+    </filter>
+    <filter id="brillo" x="148" y="118" width="238" height="212" filterUnits="userSpaceOnUse">
+      <feGaussianBlur stdDeviation="11"/>
+    </filter>
+  </defs>
+  <g filter="url(#sombra)">
+    <path d="M145 86H375C397 86 415 104 415 126V330C415 352 397 370 375 370H145C123 370 105 352 105 330V126C105 104 123 86 145 86Z" fill="#112D24" stroke="#063C28" stroke-width="12"/>
+    <rect x="132" y="112" width="256" height="214" rx="23" fill="url(#pantalla)" stroke="#6A8C7C" stroke-width="6"/>
+    <g opacity="0.32" filter="url(#brillo)">
+      <circle cx="265" cy="205" r="74" fill="#82D64E"/>
+    </g>
+    <circle cx="260" cy="192" r="62" fill="#69C849" stroke="#E7F5D7" stroke-width="9"/>
+    <path d="M226 193L250 217L299 166" stroke="white" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="260" y="283" text-anchor="middle" fill="#FFF8E8" font-family="Arial, sans-serif" font-size="31" font-weight="800">APROBADO</text>
+    <circle cx="161" cy="346" r="7" fill="#FF6B18"/>
+    <circle cx="184" cy="346" r="7" fill="#71CA4C"/>
+    <circle cx="207" cy="346" r="7" fill="#F5C744"/>
+    <path d="M214 370H306L325 417H195L214 370Z" fill="url(#base)" stroke="#063C28" stroke-width="10"/>
+    <rect x="147" y="414" width="226" height="35" rx="17.5" fill="#164A34" stroke="#063C28" stroke-width="10"/>
+    <path d="M150 112H370C375 112 380 116 382 121L384 127H136L138 121C140 116 145 112 150 112Z" fill="white" opacity="0.13"/>
+  </g>
+  <path d="M92 146L66 132" stroke="#FF6B18" stroke-width="11" stroke-linecap="round"/>
+  <path d="M89 179L55 181" stroke="#FF6B18" stroke-width="11" stroke-linecap="round"/>
+  <path d="M105 118L91 91" stroke="#FF6B18" stroke-width="11" stroke-linecap="round"/>
+</svg>
