@@ -17,6 +17,13 @@ import regalonCaminando from '../../recursos/como-funciona/regalon-caminando.png
 import plan from '../../recursos/como-funciona/plan.svg'
 import reportes from '../../recursos/como-funciona/reportes.svg'
 import fondoBarrio from '../../recursos/como-funciona/fondo-barrio-como-funciona.png'
+import minimarketBienvenida from '../../recursos/como-funciona/minimarket_da_la_bienvenida_al_club.png'
+import planIdeal from '../../recursos/como-funciona/mascota_elige_el_plan_ideal.png'
+import terminalAlertaCliente from '../../recursos/como-funciona/terminal_pos_con_alerta_de_cliente.png'
+import pagoAprobadoRecompensas from '../../recursos/como-funciona/pago_aprobado_y_recompensas_brillantes.png'
+import monedaRegisRegalon from '../../recursos/como-funciona/moneda-regis-regalon.png'
+import panelAnaliticaCrecimiento from '../../recursos/como-funciona/mascota_con_panel_de_analítica_y_crecimiento.png'
+
 import './ComoFunciona.css'
 
 type Modo = 'vecino' | 'negocio'
