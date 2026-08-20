@@ -16,7 +16,12 @@
     "lint": "eslint \"apps/**/*.{ts,tsx}\" \"packages/**/*.{ts,tsx}\" --no-error-on-unmatched-pattern",
     "build": "pnpm --recursive --if-present run build",
     "preview": "pnpm --filter @club-regalones/portal preview",
-    "preview:terminal": "pnpm --filter @club-regalones/terminal preview"
+    "preview:terminal": "pnpm --filter @club-regalones/terminal preview",
+    "db:start": "node ./node_modules/supabase/dist/supabase.js start",
+    "db:stop": "node ./node_modules/supabase/dist/supabase.js stop",
+    "db:reset": "node ./node_modules/supabase/dist/supabase.js db reset",
+    "db:test": "node ./node_modules/supabase/dist/supabase.js test db",
+    "db:lint": "node ./node_modules/supabase/dist/supabase.js db lint"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
@@ -24,6 +29,7 @@
     "eslint-plugin-react-hooks": "7.1.1",
     "eslint-plugin-react-refresh": "0.5.3",
     "globals": "17.7.0",
+    "supabase": "2.115.0",
     "typescript-eslint": "8.65.0"
   }
 }
