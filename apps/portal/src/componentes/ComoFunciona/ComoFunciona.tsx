@@ -14,9 +14,9 @@ import terminalAprobado from '../../recursos/como-funciona/terminal-caja-aprobad
 import monedaRegis from '../../recursos/como-funciona/moneda-regis.png'
 import regalo from '../../recursos/como-funciona/regalo.svg'
 import regalonCaminando from '../../recursos/como-funciona/regalon-caminando.png'
-import plan from '../../recursos/como-funciona/plan.svg'
-import reportes from '../../recursos/como-funciona/reportes.svg'
 import fondoBarrio from '../../recursos/como-funciona/fondo-barrio-como-funciona.png'
+
+/* Imágenes exclusivas del recorrido para negocios */
 import minimarketBienvenida from '../../recursos/como-funciona/minimarket_da_la_bienvenida_al_club.png'
 import planIdeal from '../../recursos/como-funciona/mascota_elige_el_plan_ideal.png'
 import terminalAlertaCliente from '../../recursos/como-funciona/terminal_pos_con_alerta_de_cliente.png'
@@ -86,43 +86,43 @@ const recorridos: Record<Modo, Paso[]> = {
     {
       titulo: 'Suma tu negocio',
       descripcion: 'Registra tu comercio y forma parte del club.',
-      imagen: comercio,
-      alt: 'Comercio de barrio',
+      imagen: minimarketBienvenida,
+      alt: 'Minimarket dando la bienvenida al Club Regalones',
       animacion: 'sube',
     },
     {
       titulo: 'Elige tu plan',
       descripcion: 'Selecciona el plan adecuado para tu cantidad de clientes.',
-      imagen: plan,
-      alt: 'Plan para comercios',
+      imagen: planIdeal,
+      alt: 'El Regalón presentando los planes para comercios',
       animacion: 'pulso',
     },
     {
       titulo: 'Recibe solicitudes',
       descripcion: 'Cada uso del tótem aparece en la terminal del negocio.',
-      imagen: totem,
-      alt: 'Tótem NFC y QR',
+      imagen: terminalAlertaCliente,
+      alt: 'Terminal del negocio recibiendo una solicitud de cliente',
       animacion: 'senal',
     },
     {
       titulo: 'Confirma las compras',
       descripcion: 'Aprueba, corrige o rechaza el monto según la boleta.',
-      imagen: terminalAprobado,
-      alt: 'Pantalla de caja con operación aprobada',
+      imagen: pagoAprobadoRecompensas,
+      alt: 'Compra aprobada en la terminal y cliente recibiendo Regis',
       animacion: 'confirma',
     },
     {
       titulo: 'Premia a tus clientes',
       descripcion: 'Entrega Regis y crea razones para que vuelvan.',
-      imagen: monedaRegis,
-      alt: 'Moneda Regis',
+      imagen: monedaRegisRegalon,
+      alt: 'El Regalón junto a una moneda Regis',
       animacion: 'moneda',
     },
     {
       titulo: 'Revisa tus resultados',
       descripcion: 'Consulta actividad, clientes frecuentes y reportes.',
-      imagen: reportes,
-      alt: 'Panel de reportes del comercio',
+      imagen: panelAnaliticaCrecimiento,
+      alt: 'El Regalón junto al panel de resultados del comercio',
       animacion: 'reporte',
     },
   ],
@@ -485,20 +485,26 @@ function ComoFunciona() {
                 Cuando el recorrido termina, las cards vuelven
                 a su posición original y dejan libre el extremo.
               */
-              const abreIzquierda =
-                !recorridoFinalizado &&
-                indice === pasoActivo - 1
+             
+                const abreIzquierda =
+  !recorridoFinalizado &&
+  indice === pasoActivo - 1
 
-              const abreDerecha =
-                !recorridoFinalizado &&
-                indice === pasoActivo
+const abreDerecha =
+  !recorridoFinalizado &&
+  indice === pasoActivo
 
-              const apertura = abreIzquierda
-                ? -10
-                : abreDerecha
-                  ? 55
-                  : 0
+let apertura = 0
 
+if (!recorridoFinalizado) {
+  if (pasoActivo === 0) {
+    apertura = 30
+  } else {
+    apertura = indice < pasoActivo
+      ? -18
+      : 48
+  }
+}
               /*
                 Se mantiene en 0 para que ninguna card quede
                 levantada o parezca más corta que las demás.
@@ -627,34 +633,67 @@ function ComoFunciona() {
           </div>
         </div>
 
-        <div className="como-funciona__resumen">
-          <div>
-            <span aria-hidden="true">✚</span>
+            <div className="como-funciona__resumen">
+        {modo === 'vecino' ? (
+          <>
+            <div>
+              <span aria-hidden="true">✚</span>
 
-            <p>
-              <strong>Es gratis y seguro</strong>
-              Tus datos siempre protegidos.
-            </p>
-          </div>
+              <p>
+                <strong>Es gratis y seguro</strong>
+                Tus datos siempre protegidos.
+              </p>
+            </div>
 
-          <div>
-            <span aria-hidden="true">◷</span>
+            <div>
+              <span aria-hidden="true">◷</span>
 
-            <p>
-              <strong>Rápido y fácil</strong>
-              Todo en menos de 10 segundos.
-            </p>
-          </div>
+              <p>
+                <strong>Rápido y fácil</strong>
+                Todo en menos de 10 segundos.
+              </p>
+            </div>
 
-          <div>
-            <span aria-hidden="true">♡</span>
+            <div>
+              <span aria-hidden="true">♡</span>
 
-            <p>
-              <strong>Beneficia a tu barrio</strong>
-              Cada compra impulsa lo local.
-            </p>
-          </div>
-        </div>
+              <p>
+                <strong>Beneficia a tu barrio</strong>
+                Cada compra impulsa lo local.
+              </p>
+            </div>
+          </>
+        ) : (
+          <>
+            <div>
+              <span aria-hidden="true">♡</span>
+
+              <p>
+                <strong>Fideliza a tus clientes</strong>
+                Convierte cada compra en una razón para volver.
+              </p>
+            </div>
+
+            <div>
+              <span aria-hidden="true">✓</span>
+
+              <p>
+                <strong>Gestión simple</strong>
+                Confirma solicitudes de forma rápida y ordenada.
+              </p>
+            </div>
+
+            <div>
+              <span aria-hidden="true">↗</span>
+
+              <p>
+                <strong>Mide tus resultados</strong>
+                Revisa actividad, clientes frecuentes y crecimiento.
+              </p>
+            </div>
+          </>
+        )}
+      </div>
 
         <p className="como-funciona__ayuda">
           Haz clic en un paso o usa

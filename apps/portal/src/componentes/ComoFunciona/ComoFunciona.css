@@ -1014,3 +1014,94 @@
   }
 }
 
+/* =========================================================
+   IMÁGENES — SOLO "TENGO UN NEGOCIO"
+   Cada imagen se puede mover de forma independiente.
+   ========================================================= */
+
+@media (min-width: 1261px) {
+
+  /* BASE SOLO PARA NEGOCIOS */
+  .como-funciona--negocio
+  .como-funciona__ilustracion img {
+    width: var(--icono-ancho);
+    height: var(--icono-alto);
+
+    /*
+      --icono-x:
+      positivo  = derecha
+      negativo  = izquierda
+
+      --icono-y:
+      positivo  = abajo
+      negativo  = arriba
+    */
+    translate: var(--icono-x) var(--icono-y);
+  }
+
+
+  /* 1 — SUMA TU NEGOCIO */
+  .como-funciona--negocio
+  .como-funciona__ilustracion img[data-icono="1"] {
+    --icono-ancho: 205px;
+    --icono-alto: 175px;
+
+    --icono-x: -5px;
+    --icono-y: 40px;
+  }
+
+
+  /* 2 — ELIGE TU PLAN */
+  .como-funciona--negocio
+  .como-funciona__ilustracion img[data-icono="2"] {
+    --icono-ancho: 165px;
+    --icono-alto: 220px;
+
+    --icono-x: 0px;
+    --icono-y: 40px;
+  }
+
+
+  /* 3 — RECIBE SOLICITUDES */
+  .como-funciona--negocio
+  .como-funciona__ilustracion img[data-icono="3"] {
+    --icono-ancho: 255px;
+    --icono-alto: 150px;
+
+    --icono-x: 0px;
+    --icono-y: 20px;
+  }
+
+
+  /* 4 — CONFIRMA LAS COMPRAS */
+  .como-funciona--negocio
+  .como-funciona__ilustracion img[data-icono="4"] {
+    --icono-ancho: 210px;
+    --icono-alto: 140px;
+
+    --icono-x: 0px;
+    --icono-y: 20px;
+  }
+
+
+  /* 5 — PREMIA A TUS CLIENTES */
+  .como-funciona--negocio
+  .como-funciona__ilustracion img[data-icono="5"] {
+    --icono-ancho: 185px;
+    --icono-alto: 185px;
+
+    --icono-x: 0px;
+    --icono-y: 15px;
+  }
+
+
+  /* 6 — REVISA TUS RESULTADOS */
+  .como-funciona--negocio
+  .como-funciona__ilustracion img[data-icono="6"] {
+    --icono-ancho: 180px;
+    --icono-alto: 175px;
+
+    --icono-x: -4px;
+    --icono-y: -4px;
+  }
+}
