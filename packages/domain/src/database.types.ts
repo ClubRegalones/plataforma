@@ -218,6 +218,73 @@ export type Database = {
           },
         ]
       }
+      llaveros_nfc: {
+        Row: {
+          actualizado_en: string
+          asignado_en: string | null
+          asignado_por: string | null
+          bloqueado_en: string | null
+          codigo_publico: string
+          creado_en: string
+          estado: Database["public"]["Enums"]["estado_llavero_nfc"]
+          id: string
+          reemplazado_por_id: string | null
+          solicitud_id: string | null
+          token_hash: string
+          vecino_id: string | null
+        }
+        Insert: {
+          actualizado_en?: string
+          asignado_en?: string | null
+          asignado_por?: string | null
+          bloqueado_en?: string | null
+          codigo_publico: string
+          creado_en?: string
+          estado?: Database["public"]["Enums"]["estado_llavero_nfc"]
+          id?: string
+          reemplazado_por_id?: string | null
+          solicitud_id?: string | null
+          token_hash: string
+          vecino_id?: string | null
+        }
+        Update: {
+          actualizado_en?: string
+          asignado_en?: string | null
+          asignado_por?: string | null
+          bloqueado_en?: string | null
+          codigo_publico?: string
+          creado_en?: string
+          estado?: Database["public"]["Enums"]["estado_llavero_nfc"]
+          id?: string
+          reemplazado_por_id?: string | null
+          solicitud_id?: string | null
+          token_hash?: string
+          vecino_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "llaveros_nfc_reemplazado_por_id_fkey"
+            columns: ["reemplazado_por_id"]
+            isOneToOne: true
+            referencedRelation: "llaveros_nfc"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "llaveros_nfc_solicitud_id_fkey"
+            columns: ["solicitud_id"]
+            isOneToOne: true
+            referencedRelation: "solicitudes_llavero"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "llaveros_nfc_vecino_id_fkey"
+            columns: ["vecino_id"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       miembros_negocio: {
         Row: {
           actualizado_en: string
@@ -307,6 +374,7 @@ export type Database = {
           creado_en: string
           estado: Database["public"]["Enums"]["estado_perfil"]
           id: string
+          modalidad_atencion: Database["public"]["Enums"]["modalidad_atencion"]
           nombre: string
           rol_plataforma: Database["public"]["Enums"]["rol_plataforma"]
           telefono: string | null
@@ -319,6 +387,7 @@ export type Database = {
           creado_en?: string
           estado?: Database["public"]["Enums"]["estado_perfil"]
           id: string
+          modalidad_atencion?: Database["public"]["Enums"]["modalidad_atencion"]
           nombre: string
           rol_plataforma?: Database["public"]["Enums"]["rol_plataforma"]
           telefono?: string | null
@@ -331,6 +400,7 @@ export type Database = {
           creado_en?: string
           estado?: Database["public"]["Enums"]["estado_perfil"]
           id?: string
+          modalidad_atencion?: Database["public"]["Enums"]["modalidad_atencion"]
           nombre?: string
           rol_plataforma?: Database["public"]["Enums"]["rol_plataforma"]
           telefono?: string | null
@@ -443,6 +513,60 @@ export type Database = {
             columns: ["caja_id"]
             isOneToOne: false
             referencedRelation: "cajas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      solicitudes_llavero: {
+        Row: {
+          actualizado_en: string
+          creado_en: string
+          entregado_en: string | null
+          estado: Database["public"]["Enums"]["estado_solicitud_llavero"]
+          id: string
+          negocio_solicitud_id: string | null
+          observaciones: string | null
+          programado_para: string | null
+          solicitado_en: string
+          vecino_id: string
+        }
+        Insert: {
+          actualizado_en?: string
+          creado_en?: string
+          entregado_en?: string | null
+          estado?: Database["public"]["Enums"]["estado_solicitud_llavero"]
+          id?: string
+          negocio_solicitud_id?: string | null
+          observaciones?: string | null
+          programado_para?: string | null
+          solicitado_en?: string
+          vecino_id: string
+        }
+        Update: {
+          actualizado_en?: string
+          creado_en?: string
+          entregado_en?: string | null
+          estado?: Database["public"]["Enums"]["estado_solicitud_llavero"]
+          id?: string
+          negocio_solicitud_id?: string | null
+          observaciones?: string | null
+          programado_para?: string | null
+          solicitado_en?: string
+          vecino_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "solicitudes_llavero_negocio_solicitud_id_fkey"
+            columns: ["negocio_solicitud_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "solicitudes_llavero_vecino_id_fkey"
+            columns: ["vecino_id"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
             referencedColumns: ["id"]
           },
         ]
@@ -861,6 +985,13 @@ export type Database = {
         | "activa"
         | "suspendida"
         | "reemplazada"
+      estado_llavero_nfc:
+        | "sin_asignar"
+        | "activo"
+        | "bloqueado"
+        | "perdido"
+        | "reemplazado"
+        | "revocado"
       estado_miembro_negocio: "activo" | "suspendido" | "revocado"
       estado_negocio: "pendiente" | "activo" | "suspendido" | "rechazado"
       estado_perfil: "activo" | "bloqueado" | "eliminado"
@@ -872,6 +1003,11 @@ export type Database = {
         | "aprobada"
         | "rechazada"
         | "vencida"
+        | "cancelada"
+      estado_solicitud_llavero:
+        | "pendiente"
+        | "programada_entrega"
+        | "entregada"
         | "cancelada"
       estado_sucursal: "activa" | "inactiva"
       estado_suscripcion:
@@ -886,6 +1022,7 @@ export type Database = {
         | "bloqueada"
         | "revocada"
       informado_por: "vecino" | "cajero"
+      modalidad_atencion: "digital" | "asistida"
       origen_compra: "autoservicio" | "asistido" | "integracion_pos"
       rol_miembro_negocio: "propietario" | "administrador" | "cajero"
       rol_plataforma: "usuario" | "admin_regalones"
@@ -1029,6 +1166,14 @@ export const Constants = {
         "suspendida",
         "reemplazada",
       ],
+      estado_llavero_nfc: [
+        "sin_asignar",
+        "activo",
+        "bloqueado",
+        "perdido",
+        "reemplazado",
+        "revocado",
+      ],
       estado_miembro_negocio: ["activo", "suspendido", "revocado"],
       estado_negocio: ["pendiente", "activo", "suspendido", "rechazado"],
       estado_perfil: ["activo", "bloqueado", "eliminado"],
@@ -1040,6 +1185,12 @@ export const Constants = {
         "aprobada",
         "rechazada",
         "vencida",
+        "cancelada",
+      ],
+      estado_solicitud_llavero: [
+        "pendiente",
+        "programada_entrega",
+        "entregada",
         "cancelada",
       ],
       estado_sucursal: ["activa", "inactiva"],
@@ -1057,6 +1208,7 @@ export const Constants = {
         "revocada",
       ],
       informado_por: ["vecino", "cajero"],
+      modalidad_atencion: ["digital", "asistida"],
       origen_compra: ["autoservicio", "asistido", "integracion_pos"],
       rol_miembro_negocio: ["propietario", "administrador", "cajero"],
       rol_plataforma: ["usuario", "admin_regalones"],
