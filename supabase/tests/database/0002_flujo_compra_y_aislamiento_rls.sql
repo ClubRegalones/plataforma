@@ -3,7 +3,7 @@ begin;
 create extension if not exists pgtap with schema extensions;
 set local search_path = extensions, public, pg_catalog;
 
-select plan(19);
+select plan(29);
 
 insert into auth.users (id, email, raw_user_meta_data)
 values
@@ -200,10 +200,10 @@ select lives_ok(
       'token-prueba-b',
       'solicitud-prueba-b',
       now() + interval '10 minutes',
-      20000
+      null
     )
   $$,
-  'El vecino B crea una solicitud para el negocio B'
+  'El vecino B solicita ayuda del cajero para informar el monto'
 );
 
 reset role;
@@ -257,6 +257,103 @@ select throws_ok(
   'La RPC también rechaza una solicitud ajena aunque se conozca su ID'
 );
 
+select throws_ok(
+  $$
+    select public.solicitar_reingreso_monto(
+      current_setting('prueba.solicitud_b_id')::uuid,
+      'El monto no coincide'
+    )
+  $$,
+  '42501',
+  'No tienes permisos para solicitar la corrección',
+  'Un comercio no puede pedir correcciones sobre solicitudes ajenas'
+);
+
+select lives_ok(
+  $$
+    select public.solicitar_reingreso_monto(
+      (
+        select id
+        from public.solicitudes_compra
+        where idempotency_key = 'solicitud-prueba-a'
+      ),
+      'El monto no coincide con la caja'
+    )
+  $$,
+  'El comercio pide al vecino A que reingrese el monto'
+);
+
+select is(
+  (
+    select estado::text
+    from public.solicitudes_compra
+    where idempotency_key = 'solicitud-prueba-a'
+  ),
+  'esperando_monto',
+  'La solicitud vuelve a esperar un monto del vecino'
+);
+
+reset role;
+set local role authenticated;
+set local request.jwt.claim.sub = '00000000-0000-0000-0000-00000000c001';
+
+select lives_ok(
+  $$
+    select public.informar_monto_vecino(
+      (
+        select id
+        from public.solicitudes_compra
+        where idempotency_key = 'solicitud-prueba-a'
+      ),
+      11000
+    )
+  $$,
+  'El vecino A reingresa el monto solicitado'
+);
+
+select is(
+  (
+    select monto_informado
+    from public.solicitudes_compra
+    where idempotency_key = 'solicitud-prueba-a'
+  ),
+  11000,
+  'El nuevo monto del vecino queda registrado'
+);
+
+reset role;
+set local role authenticated;
+set local request.jwt.claim.sub = '00000000-0000-0000-0000-00000000a001';
+
+select lives_ok(
+  $$
+    select public.corregir_solicitud_compra(
+      (
+        select id
+        from public.solicitudes_compra
+        where idempotency_key = 'solicitud-prueba-a'
+      ),
+      12000,
+      'Corrección directa verificada con el vecino'
+    )
+  $$,
+  'El cajero puede corregir directamente el monto'
+);
+
+select is(
+  (
+    select
+      estado::text
+      || ':' || monto_informado::text
+      || ':' || monto_corregido::text
+      || ':' || informado_por::text
+    from public.solicitudes_compra
+    where idempotency_key = 'solicitud-prueba-a'
+  ),
+  'pendiente_validacion:11000:12000:vecino',
+  'La corrección conserva lo informado por el vecino y guarda otro monto'
+);
+
 select lives_ok(
   $$
     select public.aprobar_compra(
@@ -268,6 +365,18 @@ select lives_ok(
     )
   $$,
   'El propietario A aprueba la solicitud de su negocio'
+);
+
+select is(
+  (
+    select compra.monto_final
+    from public.compras as compra
+    join public.solicitudes_compra as solicitud
+      on solicitud.id = compra.solicitud_id
+    where solicitud.idempotency_key = 'solicitud-prueba-a'
+  ),
+  12000,
+  'La compra utiliza el monto corregido sin reemplazar el informado'
 );
 
 select lives_ok(
@@ -302,6 +411,34 @@ select is(
 reset role;
 set local role authenticated;
 set local request.jwt.claim.sub = '00000000-0000-0000-0000-00000000b001';
+
+select lives_ok(
+  $$
+    select public.informar_monto_cajero(
+      (
+        select id
+        from public.solicitudes_compra
+        where idempotency_key = 'solicitud-prueba-b'
+      ),
+      20000
+    )
+  $$,
+  'El cajero B informa el monto cuando el vecino necesita ayuda'
+);
+
+select is(
+  (
+    select
+      estado::text
+      || ':' || monto_informado::text
+      || ':' || coalesce(monto_corregido::text, 'sin_correccion')
+      || ':' || informado_por::text
+    from public.solicitudes_compra
+    where idempotency_key = 'solicitud-prueba-b'
+  ),
+  'pendiente_validacion:20000:sin_correccion:cajero',
+  'El monto asistido queda listo para aprobación'
+);
 
 select lives_ok(
   $$

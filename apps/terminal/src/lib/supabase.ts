@@ -1,5 +1,5 @@
-import { createClient } from '@supabase/supabase-js'
 import type { Database } from '@club-regalones/domain'
+import { createClient } from '@supabase/supabase-js'
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabasePublishableKey =

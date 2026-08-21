@@ -3,7 +3,7 @@ begin;
 create extension if not exists pgtap with schema extensions;
 set local search_path = extensions, public, pg_catalog;
 
-select plan(42);
+select plan(44);
 
 select has_table('public', 'perfiles', 'Existe la tabla perfiles');
 select has_table('public', 'planes', 'Existe la tabla planes');
@@ -29,6 +29,13 @@ select has_table(
   'Existe la tabla solicitudes_compra'
 );
 select has_table('public', 'compras', 'Existe la tabla compras');
+
+select has_column(
+  'public',
+  'solicitudes_compra',
+  'monto_corregido',
+  'Las solicitudes preservan por separado el monto corregido'
+);
 
 select ok(
   (
@@ -173,6 +180,12 @@ select ok(
     'public.corregir_solicitud_compra(uuid,integer,text)'
   ) is not null,
   'Existe la RPC corregir_solicitud_compra'
+);
+select ok(
+  to_regprocedure(
+    'public.solicitar_reingreso_monto(uuid,text)'
+  ) is not null,
+  'Existe la RPC solicitar_reingreso_monto'
 );
 select ok(
   to_regprocedure(

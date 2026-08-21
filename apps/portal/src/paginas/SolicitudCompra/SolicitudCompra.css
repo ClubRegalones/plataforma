@@ -1,0 +1,223 @@
+.solicitud-compra {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: 2rem 1rem;
+  background:
+    radial-gradient(circle at top right, rgb(255 100 16 / 18%), transparent 28rem),
+    var(--crema-50);
+}
+
+.solicitud-compra__tarjeta {
+  width: min(100%, 42rem);
+  padding: clamp(1.5rem, 5vw, 3rem);
+  border: 1px solid var(--borde);
+  border-radius: 2rem;
+  background: rgb(255 255 255 / 94%);
+  box-shadow: var(--sombra);
+}
+
+.solicitud-compra__volver {
+  display: inline-flex;
+  margin-bottom: 2rem;
+  color: var(--verde-700);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.solicitud-compra__etiqueta {
+  color: var(--naranjo-500);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.solicitud-compra h1 {
+  margin: 0.5rem 0 1rem;
+  color: var(--verde-900);
+  font-family: var(--fuente-marca);
+  font-size: clamp(2.2rem, 8vw, 3.7rem);
+  line-height: 1;
+}
+
+.solicitud-compra__tarjeta > p {
+  color: var(--texto-suave);
+  line-height: 1.7;
+}
+
+.solicitud-compra__formulario {
+  display: grid;
+  gap: 1.1rem;
+  margin-top: 1.5rem;
+}
+
+.solicitud-compra__formulario label {
+  display: grid;
+  gap: 0.45rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.solicitud-compra__formulario input,
+.solicitud-compra__reingreso input {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--borde);
+  border-radius: 0.85rem;
+  color: var(--texto);
+  background: white;
+  font-size: 1rem;
+  outline: none;
+}
+
+.solicitud-compra__formulario input:focus,
+.solicitud-compra__reingreso input:focus {
+  border-color: var(--naranjo-500);
+  box-shadow: 0 0 0 3px rgb(255 100 16 / 14%);
+}
+
+.solicitud-compra__formulario small {
+  color: var(--texto-suave);
+  font-weight: 500;
+}
+
+.solicitud-compra__ayuda {
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  padding: 1rem;
+  border-radius: 1rem;
+  background: var(--naranjo-100);
+}
+
+.solicitud-compra__ayuda input {
+  width: 1.15rem;
+  margin-top: 0.15rem;
+  accent-color: var(--naranjo-500);
+}
+
+.solicitud-compra__ayuda span,
+.solicitud-compra__reingreso label {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.solicitud-compra__formulario button,
+.solicitud-compra__reingreso button,
+.solicitud-compra__acciones button,
+.solicitud-compra__aviso a {
+  display: inline-flex;
+  justify-content: center;
+  padding: 0.95rem 1.2rem;
+  border-radius: 999px;
+  color: white;
+  background: var(--naranjo-500);
+  cursor: pointer;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.solicitud-compra button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.solicitud-compra__aviso,
+.solicitud-compra__exito,
+.solicitud-compra__error {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border-radius: 1rem;
+}
+
+.solicitud-compra__aviso {
+  background: var(--naranjo-100);
+}
+
+.solicitud-compra__aviso p {
+  margin-top: 0;
+}
+
+.solicitud-compra__exito {
+  display: grid;
+  gap: 0.6rem;
+  color: var(--verde-800);
+  background: var(--verde-100);
+  overflow-wrap: anywhere;
+}
+
+.solicitud-compra__exito p {
+  margin: 0;
+}
+
+.solicitud-compra__seguimiento {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  border-radius: 1.25rem;
+  background: var(--verde-100);
+}
+
+.solicitud-compra__seguimiento .estado {
+  width: fit-content;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  color: var(--verde-800);
+  background: white;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.solicitud-compra__seguimiento dl {
+  display: grid;
+  gap: 0.65rem;
+  margin: 0;
+}
+
+.solicitud-compra__seguimiento dl div {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  gap: 0.5rem;
+}
+
+.solicitud-compra__seguimiento dt {
+  color: var(--texto-suave);
+  font-weight: 700;
+}
+
+.solicitud-compra__seguimiento dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.solicitud-compra__motivo {
+  margin: 0;
+  padding: 0.85rem;
+  border-radius: 0.75rem;
+  background: white;
+}
+
+.solicitud-compra__reingreso {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.solicitud-compra__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.solicitud-compra__acciones button:last-child {
+  color: var(--verde-800);
+  background: white;
+}
+
+.solicitud-compra__error {
+  margin: 0;
+  color: #8b2419;
+  background: #fff0ed;
+}
