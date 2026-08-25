@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import Inicio from './paginas/Inicio/Inicio'
 import Autenticacion from './paginas/Autenticacion/Autenticacion'
+import GestionLlaveros from './paginas/Llaveros/GestionLlaveros'
+import MiLlavero from './paginas/Llaveros/MiLlavero'
 import SolicitudCompra from './paginas/SolicitudCompra/SolicitudCompra'
 import './App.css'
 
@@ -48,6 +50,17 @@ function App() {
 
   if (navegacion.ruta === 'compra') {
     return <SolicitudCompra tokenInicial={navegacion.parametros.get('token')} />
+  }
+
+  if (
+    navegacion.ruta === 'mis-regis' ||
+    navegacion.ruta === 'mi-llavero'
+  ) {
+    return <MiLlavero />
+  }
+
+  if (navegacion.ruta === 'administrar-llaveros') {
+    return <GestionLlaveros />
   }
 
   return <Inicio />

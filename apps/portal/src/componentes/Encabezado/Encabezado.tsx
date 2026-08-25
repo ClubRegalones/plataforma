@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useSesion } from '../../hooks/useSesion'
 import logo from '../../recursos/marca/logo-horizontal-con-slogan.png'
 import './Encabezado.css'
 
@@ -28,8 +29,13 @@ function IconoUsuario() {
 
 function Encabezado() {
   const [menuAbierto, setMenuAbierto] = useState(false)
+  const { sesion } = useSesion()
 
   const cerrarMenu = () => setMenuAbierto(false)
+  const destinoCuenta = sesion
+    ? '#mis-regis'
+    : '#iniciar-sesion?continuar=mis-regis'
+  const textoCuenta = sesion ? 'Mis REGIS' : 'Iniciar sesión'
 
   return (
     <header className="encabezado">
@@ -64,16 +70,16 @@ function Encabezado() {
 
           <a
             className="encabezado__sesion encabezado__sesion--movil"
-            href="#iniciar-sesion"
+            href={destinoCuenta}
             onClick={cerrarMenu}
           >
-            <span>Iniciar sesión</span>
+            <span>{textoCuenta}</span>
             <IconoUsuario />
           </a>
         </nav>
 
-        <a className="encabezado__sesion" href="#iniciar-sesion">
-          <span>Iniciar sesión</span>
+        <a className="encabezado__sesion" href={destinoCuenta}>
+          <span>{textoCuenta}</span>
           <IconoUsuario />
         </a>
       </div>

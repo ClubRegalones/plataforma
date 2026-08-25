@@ -140,15 +140,15 @@ select hasnt_table(
   'Beneficios queda para el Hito D'
 );
 select hasnt_table('public', 'canjes', 'Canjes queda para el Hito D');
-select hasnt_table(
+select has_table(
   'public',
   'movimientos_regis',
-  'El ledger queda para el Hito C'
+  'Existe el ledger inmutable de REGIS del Hito C'
 );
-select hasnt_table(
+select has_table(
   'public',
   'saldos_regis',
-  'Los saldos quedan para el Hito C'
+  'Existen los saldos derivados del Hito C'
 );
 
 select ok(

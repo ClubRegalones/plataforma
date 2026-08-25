@@ -12,7 +12,8 @@
 
 body,
 button,
-input {
+input,
+select {
   font-family: inherit;
 }
 
@@ -167,6 +168,211 @@ button:disabled {
   background: #e8f3e9;
 }
 
+.terminal-llavero {
+  display: grid;
+  width: min(100%, 74rem);
+  gap: 1.25rem;
+  margin: 0 auto 1.5rem;
+  padding: clamp(1.2rem, 4vw, 2rem);
+  border: 1px solid rgb(21 63 46 / 12%);
+  border-radius: 1.5rem;
+  background: white;
+  box-shadow: 0 1rem 2.5rem rgb(21 63 46 / 8%);
+}
+
+.terminal-llavero__encabezado {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.75fr);
+  gap: 1rem;
+  align-items: end;
+}
+
+.terminal-llavero__encabezado h2 {
+  margin: 0.35rem 0 0;
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+}
+
+.terminal-llavero__encabezado p {
+  margin: 0;
+}
+
+.terminal-llavero__consulta {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.75fr) minmax(280px, 1.25fr) auto;
+  gap: 0.75rem;
+  align-items: end;
+}
+
+.terminal-llavero label {
+  display: grid;
+  gap: 0.45rem;
+  font-size: 0.88rem;
+  font-weight: 750;
+}
+
+.terminal-llavero input,
+.terminal-llavero select {
+  width: 100%;
+  min-width: 0;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgb(21 63 46 / 18%);
+  border-radius: 0.75rem;
+  color: #153f2e;
+  background: white;
+  font-size: 1rem;
+  outline: none;
+}
+
+.terminal-llavero input:focus,
+.terminal-llavero select:focus {
+  border-color: #e16c26;
+  box-shadow: 0 0 0 3px rgb(225 108 38 / 14%);
+}
+
+.terminal-llavero__resultado {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.65fr) minmax(0, 1.35fr);
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  background: #f7f1e7;
+}
+
+.terminal-llavero__identidad h3 {
+  margin: 0.5rem 0 0.25rem;
+  font-size: 1.4rem;
+}
+
+.terminal-llavero__identidad p,
+.terminal-llavero__confirmado,
+.terminal-llavero__aviso {
+  margin: 0;
+}
+
+.terminal-llavero__estado {
+  display: inline-flex;
+  padding: 0.35rem 0.6rem;
+  border-radius: 999px;
+  color: #8b3d12;
+  background: #fff3e8;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.terminal-llavero__estado--activo {
+  color: #0b5c3a;
+  background: #e8f3e9;
+}
+
+.terminal-llavero__confirmado,
+.terminal-llavero__aviso {
+  align-self: start;
+  padding: 0.85rem;
+  border-radius: 0.8rem;
+  color: #0b5c3a;
+  background: #e8f3e9;
+  font-weight: 700;
+}
+
+.terminal-llavero__aviso {
+  color: #8b3d12;
+  background: #fff3e8;
+}
+
+.terminal-llavero__activacion {
+  display: grid;
+  gap: 1rem;
+}
+
+.terminal-llavero__compra {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.terminal-llavero__saldo {
+  display: grid;
+  grid-template-columns: minmax(190px, 0.65fr) minmax(0, 1.35fr);
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem;
+  border: 1px solid rgb(21 63 46 / 14%);
+  border-radius: 0.9rem;
+  background: #fff;
+}
+
+.terminal-llavero__saldo div {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.terminal-llavero__saldo span {
+  color: #60736a;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.terminal-llavero__saldo strong {
+  color: #0b5c3a;
+  font-size: 1.65rem;
+  line-height: 1.1;
+}
+
+.terminal-llavero__saldo p {
+  margin: 0;
+  color: #153f2e;
+  line-height: 1.5;
+}
+
+.terminal-llavero__compra form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  align-items: end;
+}
+
+.terminal-llavero__compra small {
+  color: #60736a;
+  line-height: 1.45;
+}
+
+.terminal-llavero__activacion fieldset {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.2rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.terminal-llavero__activacion legend {
+  width: 100%;
+  margin-bottom: 0.35rem;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.terminal-llavero__activacion fieldset label,
+.terminal-llavero__confirmacion {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+}
+
+.terminal-llavero__activacion input[type='radio'],
+.terminal-llavero__activacion input[type='checkbox'] {
+  width: 1.05rem;
+  height: 1.05rem;
+  flex: 0 0 auto;
+  margin-top: 0.1rem;
+  padding: 0;
+}
+
+.terminal-llavero__activacion .deshabilitado {
+  opacity: 0.5;
+}
+
 .terminal-list {
   display: grid;
   width: min(100%, 74rem);
@@ -302,12 +508,21 @@ button:disabled {
 
 @media (max-width: 640px) {
   .terminal-panel__header,
-  .terminal-request__encabezado {
+  .terminal-request__encabezado,
+  .terminal-llavero__encabezado {
     flex-direction: column;
   }
 
+  .terminal-llavero__encabezado,
+  .terminal-llavero__consulta,
+  .terminal-llavero__resultado,
+  .terminal-llavero__saldo {
+    grid-template-columns: 1fr;
+  }
+
   .terminal-request__campo > div,
-  .terminal-request__rechazo {
+  .terminal-request__rechazo,
+  .terminal-llavero__compra form {
     grid-template-columns: 1fr;
   }
 

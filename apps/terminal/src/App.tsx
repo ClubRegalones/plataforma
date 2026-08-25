@@ -2,10 +2,28 @@ import type { Tables } from '@club-regalones/domain'
 import type { FormEvent } from 'react'
 import { useCallback, useEffect, useState } from 'react'
 import { useSesion } from './hooks/useSesion'
+import { crearCompraAsistida } from './lib/compras'
+import {
+  activarLlaveroPrimerUso,
+  consultarLlaveroActivacion,
+} from './lib/llaveros'
+import type {
+  ContextoActivacionLlavero,
+  MetodoActivacionLlavero,
+} from './lib/llaveros'
+import { consultarSaldoRegisLlavero } from './lib/regis'
+import type { SaldoRegisLlavero } from './lib/regis'
 import { mensajeSupabase } from './lib/mensajesSupabase'
 import { supabase } from './lib/supabase'
 
 type Solicitud = Tables<'solicitudes_compra'>
+
+type CajaOperador = {
+  id: string
+  nombre: string
+  codigo: string | null
+  sucursal: string
+}
 
 const estadosAbiertos: Solicitud['estado'][] = [
   'esperando_monto',
@@ -103,6 +121,21 @@ function PanelTerminal() {
   const [cargando, setCargando] = useState(true)
   const [procesandoId, setProcesandoId] = useState<string | null>(null)
   const [sinMembresia, setSinMembresia] = useState(false)
+  const [cajas, setCajas] = useState<CajaOperador[]>([])
+  const [cajaId, setCajaId] = useState('')
+  const [tokenLlavero, setTokenLlavero] = useState('')
+  const [contextoLlavero, setContextoLlavero] =
+    useState<ContextoActivacionLlavero | null>(null)
+  const [saldoRegisLlavero, setSaldoRegisLlavero] =
+    useState<SaldoRegisLlavero | null>(null)
+  const [metodoActivacion, setMetodoActivacion] =
+    useState<MetodoActivacionLlavero>('cedula')
+  const [pinActivacion, setPinActivacion] = useState('')
+  const [cedulaVerificada, setCedulaVerificada] = useState(false)
+  const [montoCompraAsistida, setMontoCompraAsistida] = useState('')
+  const [idempotenciaCompraAsistida, setIdempotenciaCompraAsistida] =
+    useState(() => crypto.randomUUID())
+  const [procesandoLlavero, setProcesandoLlavero] = useState(false)
   const [mensaje, setMensaje] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
@@ -127,11 +160,58 @@ function PanelTerminal() {
     if (membresias.length === 0) {
       setSinMembresia(true)
       setSolicitudes([])
+      setCajas([])
       setCargando(false)
       return
     }
 
     setSinMembresia(false)
+
+    const negociosIds = membresias.map((membresia) => membresia.negocio_id)
+    const { data: sucursales, error: errorSucursales } = await supabase
+      .from('sucursales')
+      .select('id, negocio_id, nombre')
+      .in('negocio_id', negociosIds)
+      .eq('estado', 'activa')
+
+    if (errorSucursales) {
+      setError(mensajeSupabase(errorSucursales))
+      setCargando(false)
+      return
+    }
+
+    const sucursalesPorId = new Map(
+      sucursales.map((sucursal) => [sucursal.id, sucursal.nombre]),
+    )
+    const sucursalesIds = sucursales.map((sucursal) => sucursal.id)
+    const { data: cajasActivas, error: errorCajas } = sucursalesIds.length
+      ? await supabase
+          .from('cajas')
+          .select('id, nombre, codigo, sucursal_id')
+          .in('sucursal_id', sucursalesIds)
+          .eq('estado', 'activa')
+          .order('nombre')
+      : { data: [], error: null }
+
+    if (errorCajas) {
+      setError(mensajeSupabase(errorCajas))
+      setCargando(false)
+      return
+    }
+
+    const cajasDisponibles = cajasActivas.map((caja) => ({
+      id: caja.id,
+      nombre: caja.nombre,
+      codigo: caja.codigo,
+      sucursal: sucursalesPorId.get(caja.sucursal_id) ?? 'Sucursal',
+    }))
+
+    setCajas(cajasDisponibles)
+    setCajaId((actual) =>
+      cajasDisponibles.some((caja) => caja.id === actual)
+        ? actual
+        : (cajasDisponibles[0]?.id ?? ''),
+    )
 
     const { data, error: errorSolicitudes } = await supabase
       .from('solicitudes_compra')
@@ -167,6 +247,164 @@ function PanelTerminal() {
 
     return () => window.clearTimeout(cargaInicial)
   }, [cargarSolicitudes])
+
+  const consultarLlavero = async (evento: FormEvent<HTMLFormElement>) => {
+    evento.preventDefault()
+
+    if (!cajaId) {
+      setError('Selecciona la caja donde se utilizará el llavero.')
+      return
+    }
+
+    if (tokenLlavero.trim().length < 8) {
+      setError('Acerca el llavero al lector o ingresa un token válido.')
+      return
+    }
+
+    setProcesandoLlavero(true)
+    setError(null)
+    setMensaje(null)
+
+    try {
+      const contexto = await consultarLlaveroActivacion(
+        tokenLlavero.trim(),
+        cajaId,
+      )
+
+      if (!contexto) {
+        setContextoLlavero(null)
+        setError('No encontramos un llavero asociado a ese identificador.')
+        return
+      }
+
+      setContextoLlavero(contexto)
+      setSaldoRegisLlavero(
+        contexto.estado === 'activo'
+          ? await consultarSaldoRegisLlavero(tokenLlavero.trim(), cajaId)
+          : null,
+      )
+      setMetodoActivacion('cedula')
+      setPinActivacion('')
+      setCedulaVerificada(false)
+      setMontoCompraAsistida('')
+      setIdempotenciaCompraAsistida(crypto.randomUUID())
+    } catch (errorCapturado) {
+      setContextoLlavero(null)
+      setSaldoRegisLlavero(null)
+      setError(mensajeSupabase(errorCapturado))
+    } finally {
+      setProcesandoLlavero(false)
+    }
+  }
+
+  const crearSolicitudAsistida = async (
+    evento: FormEvent<HTMLFormElement>,
+  ) => {
+    evento.preventDefault()
+
+    if (!contextoLlavero || contextoLlavero.estado !== 'activo' || !cajaId) {
+      setError('Lee un llavero activo antes de iniciar la compra asistida.')
+      return
+    }
+
+    const monto = Number(montoCompraAsistida)
+
+    if (!Number.isInteger(monto) || monto <= 0) {
+      setError('El monto debe ser un número entero mayor que cero.')
+      return
+    }
+
+    setProcesandoLlavero(true)
+    setError(null)
+    setMensaje(null)
+
+    try {
+      const solicitud = await crearCompraAsistida(
+        tokenLlavero.trim(),
+        cajaId,
+        monto,
+        idempotenciaCompraAsistida,
+      )
+
+      if (!solicitud) {
+        setError('Supabase no devolvió la solicitud de compra asistida.')
+        return
+      }
+
+      setMensaje(
+        'Compra asistida preparada. Revisa el monto y apruébala en la solicitud pendiente.',
+      )
+      setMontoCompraAsistida('')
+      setIdempotenciaCompraAsistida(crypto.randomUUID())
+      await cargarSolicitudes()
+    } catch (errorCapturado) {
+      setError(mensajeSupabase(errorCapturado))
+    } finally {
+      setProcesandoLlavero(false)
+    }
+  }
+
+  const activarLlavero = async (evento: FormEvent<HTMLFormElement>) => {
+    evento.preventDefault()
+    if (!contextoLlavero || !cajaId) return
+
+    if (metodoActivacion === 'cedula' && !cedulaVerificada) {
+      setError('Confirma que revisaste presencialmente la cédula del vecino.')
+      return
+    }
+
+    if (
+      metodoActivacion === 'pin' &&
+      !/^[0-9]{4,6}$/.test(pinActivacion)
+    ) {
+      setError('El PIN debe contener entre 4 y 6 dígitos.')
+      return
+    }
+
+    setProcesandoLlavero(true)
+    setError(null)
+    setMensaje(null)
+
+    try {
+      const resultado = await activarLlaveroPrimerUso(
+        tokenLlavero.trim(),
+        cajaId,
+        metodoActivacion,
+        metodoActivacion === 'pin' ? pinActivacion : null,
+        metodoActivacion === 'cedula' && cedulaVerificada,
+      )
+
+      if (!resultado) {
+        setError('Supabase no devolvió el resultado de la activación.')
+        return
+      }
+
+      if (!resultado.activado) {
+        setError(resultado.mensaje)
+        return
+      }
+
+      setMensaje(`${resultado.mensaje}. Ya puede continuar con la compra.`)
+      setContextoLlavero((actual) =>
+        actual
+          ? {
+              ...actual,
+              estado: resultado.estado,
+              puede_activar: false,
+            }
+          : null,
+      )
+      setSaldoRegisLlavero(
+        await consultarSaldoRegisLlavero(tokenLlavero.trim(), cajaId),
+      )
+      setPinActivacion('')
+      setCedulaVerificada(false)
+    } catch (errorCapturado) {
+      setError(mensajeSupabase(errorCapturado))
+    } finally {
+      setProcesandoLlavero(false)
+    }
+  }
 
   const informarMonto = async (solicitud: Solicitud) => {
     const monto = Number(montos[solicitud.id])
@@ -297,6 +535,19 @@ function PanelTerminal() {
 
     setMensaje('Compra aprobada correctamente.')
     await cargarSolicitudes()
+    if (
+      contextoLlavero?.estado === 'activo' &&
+      tokenLlavero.trim().length >= 8 &&
+      cajaId
+    ) {
+      try {
+        setSaldoRegisLlavero(
+          await consultarSaldoRegisLlavero(tokenLlavero.trim(), cajaId),
+        )
+      } catch {
+        setSaldoRegisLlavero(null)
+      }
+    }
   }
 
   const rechazar = async (solicitud: Solicitud) => {
@@ -358,6 +609,216 @@ function PanelTerminal() {
         <p className="terminal-alert terminal-alert--success">{mensaje}</p>
       )}
 
+      {!cargando && !sinMembresia && (
+        <section className="terminal-llavero" aria-labelledby="activar-llavero-title">
+          <div className="terminal-llavero__encabezado">
+            <div>
+              <span className="terminal-eyebrow">Primera utilización</span>
+              <h2 id="activar-llavero-title">Leer y activar llavero</h2>
+            </div>
+            <p>
+              El llavero solo se activará si fue entregado y la identidad se
+              verifica mediante cédula o PIN.
+            </p>
+          </div>
+
+          {cajas.length === 0 ? (
+            <p className="terminal-llavero__aviso">
+              No hay cajas activas disponibles para esta cuenta.
+            </p>
+          ) : (
+            <form
+              className="terminal-llavero__consulta"
+              onSubmit={consultarLlavero}
+            >
+              <label>
+                Caja
+                <select
+                  required
+                  value={cajaId}
+                  onChange={(evento) => {
+                    setCajaId(evento.target.value)
+                    setContextoLlavero(null)
+                    setSaldoRegisLlavero(null)
+                    setMontoCompraAsistida('')
+                    setIdempotenciaCompraAsistida(crypto.randomUUID())
+                  }}
+                >
+                  {cajas.map((caja) => (
+                    <option key={caja.id} value={caja.id}>
+                      {caja.sucursal} · {caja.nombre}
+                      {caja.codigo ? ` (${caja.codigo})` : ''}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                Token del llavero
+                <input
+                  required
+                  type="password"
+                  minLength={8}
+                  maxLength={500}
+                  autoComplete="off"
+                  value={tokenLlavero}
+                  onChange={(evento) => {
+                    setTokenLlavero(evento.target.value)
+                    setContextoLlavero(null)
+                    setSaldoRegisLlavero(null)
+                    setMontoCompraAsistida('')
+                    setIdempotenciaCompraAsistida(crypto.randomUUID())
+                  }}
+                  placeholder="Acerca el llavero al lector NFC"
+                />
+              </label>
+              <button type="submit" disabled={procesandoLlavero}>
+                {procesandoLlavero ? 'Consultando…' : 'Leer llavero'}
+              </button>
+            </form>
+          )}
+
+          {contextoLlavero && (
+            <div className="terminal-llavero__resultado">
+              <div className="terminal-llavero__identidad">
+                <span
+                  className={`terminal-llavero__estado terminal-llavero__estado--${contextoLlavero.estado}`}
+                >
+                  {contextoLlavero.estado === 'activo'
+                    ? 'Activo'
+                    : 'Pendiente de activación'}
+                </span>
+                <h3>{contextoLlavero.nombre_vecino}</h3>
+                <p>Código público: {contextoLlavero.codigo_publico}</p>
+              </div>
+
+              {contextoLlavero.estado === 'activo' ? (
+                <div className="terminal-llavero__compra">
+                  {saldoRegisLlavero && (
+                    <aside className="terminal-llavero__saldo" aria-live="polite">
+                      <div>
+                        <span>Saldo en {saldoRegisLlavero.nombre_negocio}</span>
+                        <strong>{saldoRegisLlavero.disponibles} REGIS</strong>
+                      </div>
+                      <p>
+                        Disponibles solo en este comercio.
+                        {saldoRegisLlavero.pendientes > 0 && (
+                          <>
+                            {' '}
+                            Además tiene {saldoRegisLlavero.pendientes} REGIS
+                            pendientes de revisión.
+                          </>
+                        )}
+                      </p>
+                    </aside>
+                  )}
+                  <p className="terminal-llavero__confirmado">
+                    El llavero está activo. Ingresa el monto realmente pagado
+                    para preparar la compra asistida.
+                  </p>
+                  <form onSubmit={crearSolicitudAsistida}>
+                    <label>
+                      Monto pagado en CLP
+                      <input
+                        required
+                        type="number"
+                        inputMode="numeric"
+                        min="1"
+                        step="1"
+                        value={montoCompraAsistida}
+                        onChange={(evento) =>
+                          setMontoCompraAsistida(evento.target.value)
+                        }
+                        placeholder="Ejemplo: 12500"
+                      />
+                    </label>
+                    <button type="submit" disabled={procesandoLlavero}>
+                      {procesandoLlavero
+                        ? 'Preparando…'
+                        : 'Continuar a revisión'}
+                    </button>
+                  </form>
+                  <small>
+                    La compra todavía no queda aprobada. El monto aparecerá
+                    abajo para una confirmación final del cajero.
+                  </small>
+                </div>
+              ) : !contextoLlavero.entregado ? (
+                <p className="terminal-llavero__aviso">
+                  Este llavero todavía no figura como entregado. No puede
+                  activarse.
+                </p>
+              ) : contextoLlavero.puede_activar ? (
+                <form
+                  className="terminal-llavero__activacion"
+                  onSubmit={activarLlavero}
+                >
+                  <fieldset>
+                    <legend>Método de verificación</legend>
+                    <label>
+                      <input
+                        type="radio"
+                        name="metodo-activacion"
+                        value="cedula"
+                        checked={metodoActivacion === 'cedula'}
+                        onChange={() => setMetodoActivacion('cedula')}
+                      />
+                      Revisar cédula
+                    </label>
+                    <label className={!contextoLlavero.tiene_pin ? 'deshabilitado' : ''}>
+                      <input
+                        type="radio"
+                        name="metodo-activacion"
+                        value="pin"
+                        disabled={!contextoLlavero.tiene_pin}
+                        checked={metodoActivacion === 'pin'}
+                        onChange={() => setMetodoActivacion('pin')}
+                      />
+                      Ingresar PIN
+                    </label>
+                  </fieldset>
+
+                  {metodoActivacion === 'cedula' ? (
+                    <label className="terminal-llavero__confirmacion">
+                      <input
+                        type="checkbox"
+                        checked={cedulaVerificada}
+                        onChange={(evento) =>
+                          setCedulaVerificada(evento.target.checked)
+                        }
+                      />
+                      Revisé presencialmente la cédula y el nombre corresponde
+                      al titular.
+                    </label>
+                  ) : (
+                    <label>
+                      PIN del vecino
+                      <input
+                        required
+                        type="password"
+                        inputMode="numeric"
+                        pattern="[0-9]{4,6}"
+                        minLength={4}
+                        maxLength={6}
+                        autoComplete="off"
+                        value={pinActivacion}
+                        onChange={(evento) => setPinActivacion(evento.target.value)}
+                        placeholder="4 a 6 dígitos"
+                      />
+                    </label>
+                  )}
+
+                  <button type="submit" disabled={procesandoLlavero}>
+                    {procesandoLlavero
+                      ? 'Activando…'
+                      : 'Activar y continuar compra'}
+                  </button>
+                </form>
+              ) : null}
+            </div>
+          )}
+        </section>
+      )}
+
       {cargando ? (
         <p className="terminal-empty">Cargando solicitudes…</p>
       ) : sinMembresia ? (
@@ -403,6 +864,12 @@ function PanelTerminal() {
                     <dt>Informado</dt>
                     <dd>{formatearMonto(solicitud.monto_informado)}</dd>
                   </div>
+                  {solicitud.llavero_id !== null && (
+                    <div>
+                      <dt>Modalidad</dt>
+                      <dd>Asistida con llavero</dd>
+                    </div>
+                  )}
                   {solicitud.monto_corregido !== null && (
                     <div>
                       <dt>Corregido</dt>
@@ -456,11 +923,18 @@ function PanelTerminal() {
                 ) : (
                   <div className="terminal-request__revision">
                     <strong>¿El monto coincide con la caja?</strong>
-                    <p>
-                      Si está correcto, aprueba la compra. Si no coincide,
-                      puedes pedir al vecino que lo escriba nuevamente o
-                      corregirlo directamente.
-                    </p>
+                    {solicitud.llavero_id !== null ? (
+                      <p>
+                        Si está correcto, aprueba la compra. Si no coincide,
+                        corrígelo directamente con autorización del vecino.
+                      </p>
+                    ) : (
+                      <p>
+                        Si está correcto, aprueba la compra. Si no coincide,
+                        puedes pedir al vecino que lo escriba nuevamente o
+                        corregirlo directamente.
+                      </p>
+                    )}
 
                     <div className="terminal-request__campo">
                       <label htmlFor={`correccion-monto-${solicitud.id}`}>
@@ -495,13 +969,15 @@ function PanelTerminal() {
                     />
 
                     <div className="terminal-request__opciones-correccion">
-                      <button
-                        type="button"
-                        disabled={estaProcesando}
-                        onClick={() => void solicitarReingreso(solicitud)}
-                      >
-                        Pedir nuevo monto al vecino
-                      </button>
+                      {solicitud.llavero_id === null && (
+                        <button
+                          type="button"
+                          disabled={estaProcesando}
+                          onClick={() => void solicitarReingreso(solicitud)}
+                        >
+                          Pedir nuevo monto al vecino
+                        </button>
+                      )}
                       <button
                         type="button"
                         disabled={estaProcesando}

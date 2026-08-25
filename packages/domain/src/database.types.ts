@@ -39,6 +39,73 @@ export type Database = {
   }
   public: {
     Tables: {
+      alertas_riesgo: {
+        Row: {
+          compra_id: string | null
+          creado_en: string
+          detalle: string | null
+          estado: Database["public"]["Enums"]["estado_alerta_riesgo"]
+          id: string
+          movimiento_regis_id: string | null
+          negocio_id: string
+          regla: string
+          resuelta_en: string | null
+          resuelta_por: string | null
+          severidad: Database["public"]["Enums"]["severidad_riesgo"]
+          vecino_id: string
+        }
+        Insert: {
+          compra_id?: string | null
+          creado_en?: string
+          detalle?: string | null
+          estado?: Database["public"]["Enums"]["estado_alerta_riesgo"]
+          id?: string
+          movimiento_regis_id?: string | null
+          negocio_id: string
+          regla: string
+          resuelta_en?: string | null
+          resuelta_por?: string | null
+          severidad: Database["public"]["Enums"]["severidad_riesgo"]
+          vecino_id: string
+        }
+        Update: {
+          compra_id?: string | null
+          creado_en?: string
+          detalle?: string | null
+          estado?: Database["public"]["Enums"]["estado_alerta_riesgo"]
+          id?: string
+          movimiento_regis_id?: string | null
+          negocio_id?: string
+          regla?: string
+          resuelta_en?: string | null
+          resuelta_por?: string | null
+          severidad?: Database["public"]["Enums"]["severidad_riesgo"]
+          vecino_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "alertas_riesgo_compra_id_fkey"
+            columns: ["compra_id"]
+            isOneToOne: false
+            referencedRelation: "compras"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "alertas_riesgo_movimiento_regis_id_fkey"
+            columns: ["movimiento_regis_id"]
+            isOneToOne: false
+            referencedRelation: "movimientos_regis"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "alertas_riesgo_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cajas: {
         Row: {
           actualizado_en: string
@@ -85,13 +152,19 @@ export type Database = {
           estado: Database["public"]["Enums"]["estado_compra"]
           folio_boleta: string | null
           id: string
+          monto_base_regis_clp: number | null
           monto_final: number
           negocio_id: string
           origen: Database["public"]["Enums"]["origen_compra"]
+          regis_generados: number
+          regis_procesados_en: string | null
+          regla_regis_id: string | null
           revertido_en: string | null
           riesgo: Database["public"]["Enums"]["severidad_riesgo"] | null
           solicitud_id: string
           sucursal_id: string
+          tasa_acumulacion_bp_aplicada: number | null
+          valor_regis_clp_aplicado: number | null
           vecino_id: string
         }
         Insert: {
@@ -101,13 +174,19 @@ export type Database = {
           estado?: Database["public"]["Enums"]["estado_compra"]
           folio_boleta?: string | null
           id?: string
+          monto_base_regis_clp?: number | null
           monto_final: number
           negocio_id: string
           origen?: Database["public"]["Enums"]["origen_compra"]
+          regis_generados?: number
+          regis_procesados_en?: string | null
+          regla_regis_id?: string | null
           revertido_en?: string | null
           riesgo?: Database["public"]["Enums"]["severidad_riesgo"] | null
           solicitud_id: string
           sucursal_id: string
+          tasa_acumulacion_bp_aplicada?: number | null
+          valor_regis_clp_aplicado?: number | null
           vecino_id: string
         }
         Update: {
@@ -117,13 +196,19 @@ export type Database = {
           estado?: Database["public"]["Enums"]["estado_compra"]
           folio_boleta?: string | null
           id?: string
+          monto_base_regis_clp?: number | null
           monto_final?: number
           negocio_id?: string
           origen?: Database["public"]["Enums"]["origen_compra"]
+          regis_generados?: number
+          regis_procesados_en?: string | null
+          regla_regis_id?: string | null
           revertido_en?: string | null
           riesgo?: Database["public"]["Enums"]["severidad_riesgo"] | null
           solicitud_id?: string
           sucursal_id?: string
+          tasa_acumulacion_bp_aplicada?: number | null
+          valor_regis_clp_aplicado?: number | null
           vecino_id?: string
         }
         Relationships: [
@@ -142,6 +227,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "compras_regla_regis_id_fkey"
+            columns: ["regla_regis_id"]
+            isOneToOne: false
+            referencedRelation: "reglas_regis"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "compras_solicitud_id_fkey"
             columns: ["solicitud_id"]
             isOneToOne: true
@@ -153,6 +245,56 @@ export type Database = {
             columns: ["sucursal_id"]
             isOneToOne: false
             referencedRelation: "sucursales"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      configuraciones_riesgo_regis: {
+        Row: {
+          activa: boolean
+          creado_en: string
+          creado_por: string | null
+          id: string
+          max_acumulaciones_ventana: number | null
+          monto_compra_revision_clp: number | null
+          negocio_id: string | null
+          ventana_acumulaciones_minutos: number | null
+          version: number
+          vigencia_desde: string
+          vigencia_hasta: string | null
+        }
+        Insert: {
+          activa?: boolean
+          creado_en?: string
+          creado_por?: string | null
+          id?: string
+          max_acumulaciones_ventana?: number | null
+          monto_compra_revision_clp?: number | null
+          negocio_id?: string | null
+          ventana_acumulaciones_minutos?: number | null
+          version: number
+          vigencia_desde?: string
+          vigencia_hasta?: string | null
+        }
+        Update: {
+          activa?: boolean
+          creado_en?: string
+          creado_por?: string | null
+          id?: string
+          max_acumulaciones_ventana?: number | null
+          monto_compra_revision_clp?: number | null
+          negocio_id?: string | null
+          ventana_acumulaciones_minutos?: number | null
+          version?: number
+          vigencia_desde?: string
+          vigencia_hasta?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "configuraciones_riesgo_regis_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
             referencedColumns: ["id"]
           },
         ]
@@ -220,48 +362,88 @@ export type Database = {
       }
       llaveros_nfc: {
         Row: {
+          activado_en: string | null
+          activado_por: string | null
           actualizado_en: string
           asignado_en: string | null
           asignado_por: string | null
           bloqueado_en: string | null
+          caja_activacion_id: string | null
           codigo_publico: string
           creado_en: string
           estado: Database["public"]["Enums"]["estado_llavero_nfc"]
           id: string
+          intentos_pin_fallidos: number
+          metodo_verificacion_activacion:
+            | Database["public"]["Enums"]["metodo_verificacion_llavero"]
+            | null
+          pin_activacion_hash: string | null
+          pin_bloqueado_hasta: string | null
+          preparado_en: string | null
+          preparado_por: string | null
           reemplazado_por_id: string | null
           solicitud_id: string | null
           token_hash: string
           vecino_id: string | null
         }
         Insert: {
+          activado_en?: string | null
+          activado_por?: string | null
           actualizado_en?: string
           asignado_en?: string | null
           asignado_por?: string | null
           bloqueado_en?: string | null
+          caja_activacion_id?: string | null
           codigo_publico: string
           creado_en?: string
           estado?: Database["public"]["Enums"]["estado_llavero_nfc"]
           id?: string
+          intentos_pin_fallidos?: number
+          metodo_verificacion_activacion?:
+            | Database["public"]["Enums"]["metodo_verificacion_llavero"]
+            | null
+          pin_activacion_hash?: string | null
+          pin_bloqueado_hasta?: string | null
+          preparado_en?: string | null
+          preparado_por?: string | null
           reemplazado_por_id?: string | null
           solicitud_id?: string | null
           token_hash: string
           vecino_id?: string | null
         }
         Update: {
+          activado_en?: string | null
+          activado_por?: string | null
           actualizado_en?: string
           asignado_en?: string | null
           asignado_por?: string | null
           bloqueado_en?: string | null
+          caja_activacion_id?: string | null
           codigo_publico?: string
           creado_en?: string
           estado?: Database["public"]["Enums"]["estado_llavero_nfc"]
           id?: string
+          intentos_pin_fallidos?: number
+          metodo_verificacion_activacion?:
+            | Database["public"]["Enums"]["metodo_verificacion_llavero"]
+            | null
+          pin_activacion_hash?: string | null
+          pin_bloqueado_hasta?: string | null
+          preparado_en?: string | null
+          preparado_por?: string | null
           reemplazado_por_id?: string | null
           solicitud_id?: string | null
           token_hash?: string
           vecino_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "llaveros_nfc_caja_activacion_id_fkey"
+            columns: ["caja_activacion_id"]
+            isOneToOne: false
+            referencedRelation: "cajas"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "llaveros_nfc_reemplazado_por_id_fkey"
             columns: ["reemplazado_por_id"]
@@ -322,6 +504,101 @@ export type Database = {
             columns: ["negocio_id"]
             isOneToOne: false
             referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      movimientos_regis: {
+        Row: {
+          canje_id: string | null
+          cantidad: number
+          compra_id: string | null
+          creado_en: string
+          estado: Database["public"]["Enums"]["estado_movimiento_regis"]
+          id: string
+          idempotency_key: string
+          metadata: Json
+          monto_base_clp: number | null
+          movimiento_relacionado_id: string | null
+          negocio_id: string
+          regla_regis_id: string | null
+          remanente_antes_clp: number | null
+          remanente_despues_clp: number | null
+          tasa_acumulacion_bp: number | null
+          tipo: Database["public"]["Enums"]["tipo_movimiento_regis"]
+          valor_recompensa_clp: number | null
+          valor_regis_clp: number | null
+          vecino_id: string
+        }
+        Insert: {
+          canje_id?: string | null
+          cantidad: number
+          compra_id?: string | null
+          creado_en?: string
+          estado: Database["public"]["Enums"]["estado_movimiento_regis"]
+          id?: string
+          idempotency_key: string
+          metadata?: Json
+          monto_base_clp?: number | null
+          movimiento_relacionado_id?: string | null
+          negocio_id: string
+          regla_regis_id?: string | null
+          remanente_antes_clp?: number | null
+          remanente_despues_clp?: number | null
+          tasa_acumulacion_bp?: number | null
+          tipo: Database["public"]["Enums"]["tipo_movimiento_regis"]
+          valor_recompensa_clp?: number | null
+          valor_regis_clp?: number | null
+          vecino_id: string
+        }
+        Update: {
+          canje_id?: string | null
+          cantidad?: number
+          compra_id?: string | null
+          creado_en?: string
+          estado?: Database["public"]["Enums"]["estado_movimiento_regis"]
+          id?: string
+          idempotency_key?: string
+          metadata?: Json
+          monto_base_clp?: number | null
+          movimiento_relacionado_id?: string | null
+          negocio_id?: string
+          regla_regis_id?: string | null
+          remanente_antes_clp?: number | null
+          remanente_despues_clp?: number | null
+          tasa_acumulacion_bp?: number | null
+          tipo?: Database["public"]["Enums"]["tipo_movimiento_regis"]
+          valor_recompensa_clp?: number | null
+          valor_regis_clp?: number | null
+          vecino_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "movimientos_regis_compra_id_fkey"
+            columns: ["compra_id"]
+            isOneToOne: false
+            referencedRelation: "compras"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "movimientos_regis_movimiento_relacionado_id_fkey"
+            columns: ["movimiento_relacionado_id"]
+            isOneToOne: false
+            referencedRelation: "movimientos_regis"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "movimientos_regis_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "movimientos_regis_regla_regis_id_fkey"
+            columns: ["regla_regis_id"]
+            isOneToOne: false
+            referencedRelation: "reglas_regis"
             referencedColumns: ["id"]
           },
         ]
@@ -461,6 +738,106 @@ export type Database = {
         }
         Relationships: []
       }
+      reglas_regis: {
+        Row: {
+          activa: boolean
+          conservar_remanente: boolean
+          creado_en: string
+          creado_por: string | null
+          id: string
+          monto_minimo_compra_clp: number
+          negocio_id: string | null
+          porcentaje_maximo_canje_bp: number
+          tasa_acumulacion_bp: number
+          valor_regis_clp: number
+          version: number
+          vigencia_desde: string
+          vigencia_hasta: string | null
+        }
+        Insert: {
+          activa?: boolean
+          conservar_remanente?: boolean
+          creado_en?: string
+          creado_por?: string | null
+          id?: string
+          monto_minimo_compra_clp: number
+          negocio_id?: string | null
+          porcentaje_maximo_canje_bp: number
+          tasa_acumulacion_bp: number
+          valor_regis_clp: number
+          version: number
+          vigencia_desde?: string
+          vigencia_hasta?: string | null
+        }
+        Update: {
+          activa?: boolean
+          conservar_remanente?: boolean
+          creado_en?: string
+          creado_por?: string | null
+          id?: string
+          monto_minimo_compra_clp?: number
+          negocio_id?: string | null
+          porcentaje_maximo_canje_bp?: number
+          tasa_acumulacion_bp?: number
+          valor_regis_clp?: number
+          version?: number
+          vigencia_desde?: string
+          vigencia_hasta?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reglas_regis_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      saldos_regis: {
+        Row: {
+          actualizado_en: string
+          canjeados: number
+          disponibles: number
+          id: string
+          negocio_id: string
+          pendientes: number
+          remanente_valor_clp: number
+          reservados: number
+          vecino_id: string
+        }
+        Insert: {
+          actualizado_en?: string
+          canjeados?: number
+          disponibles?: number
+          id?: string
+          negocio_id: string
+          pendientes?: number
+          remanente_valor_clp?: number
+          reservados?: number
+          vecino_id: string
+        }
+        Update: {
+          actualizado_en?: string
+          canjeados?: number
+          disponibles?: number
+          id?: string
+          negocio_id?: string
+          pendientes?: number
+          remanente_valor_clp?: number
+          reservados?: number
+          vecino_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saldos_regis_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       solicitudes_compra: {
         Row: {
           actualizado_en: string
@@ -471,6 +848,7 @@ export type Database = {
           id: string
           idempotency_key: string
           informado_por: Database["public"]["Enums"]["informado_por"] | null
+          llavero_id: string | null
           monto_corregido: number | null
           monto_informado: number | null
           motivo_correccion: string | null
@@ -486,6 +864,7 @@ export type Database = {
           id?: string
           idempotency_key: string
           informado_por?: Database["public"]["Enums"]["informado_por"] | null
+          llavero_id?: string | null
           monto_corregido?: number | null
           monto_informado?: number | null
           motivo_correccion?: string | null
@@ -501,6 +880,7 @@ export type Database = {
           id?: string
           idempotency_key?: string
           informado_por?: Database["public"]["Enums"]["informado_por"] | null
+          llavero_id?: string | null
           monto_corregido?: number | null
           monto_informado?: number | null
           motivo_correccion?: string | null
@@ -513,6 +893,13 @@ export type Database = {
             columns: ["caja_id"]
             isOneToOne: false
             referencedRelation: "cajas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "solicitudes_compra_llavero_id_fkey"
+            columns: ["llavero_id"]
+            isOneToOne: false
+            referencedRelation: "llaveros_nfc"
             referencedColumns: ["id"]
           },
         ]
@@ -753,6 +1140,52 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      acreditar_regis_compra: {
+        Args: { p_compra_id: string }
+        Returns: {
+          canje_id: string | null
+          cantidad: number
+          compra_id: string | null
+          creado_en: string
+          estado: Database["public"]["Enums"]["estado_movimiento_regis"]
+          id: string
+          idempotency_key: string
+          metadata: Json
+          monto_base_clp: number | null
+          movimiento_relacionado_id: string | null
+          negocio_id: string
+          regla_regis_id: string | null
+          remanente_antes_clp: number | null
+          remanente_despues_clp: number | null
+          tasa_acumulacion_bp: number | null
+          tipo: Database["public"]["Enums"]["tipo_movimiento_regis"]
+          valor_recompensa_clp: number | null
+          valor_regis_clp: number | null
+          vecino_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "movimientos_regis"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      activar_llavero_primer_uso: {
+        Args: {
+          p_caja_id: string
+          p_identidad_verificada?: boolean
+          p_metodo: Database["public"]["Enums"]["metodo_verificacion_llavero"]
+          p_pin?: string
+          p_token: string
+        }
+        Returns: {
+          activado: boolean
+          activado_en: string
+          codigo_publico: string
+          estado: Database["public"]["Enums"]["estado_llavero_nfc"]
+          mensaje: string
+        }[]
+      }
       aprobar_compra: {
         Args: {
           p_folio_boleta?: string
@@ -766,13 +1199,19 @@ export type Database = {
           estado: Database["public"]["Enums"]["estado_compra"]
           folio_boleta: string | null
           id: string
+          monto_base_regis_clp: number | null
           monto_final: number
           negocio_id: string
           origen: Database["public"]["Enums"]["origen_compra"]
+          regis_generados: number
+          regis_procesados_en: string | null
+          regla_regis_id: string | null
           revertido_en: string | null
           riesgo: Database["public"]["Enums"]["severidad_riesgo"] | null
           solicitud_id: string
           sucursal_id: string
+          tasa_acumulacion_bp_aplicada: number | null
+          valor_regis_clp_aplicado: number | null
           vecino_id: string
         }
         SetofOptions: {
@@ -781,6 +1220,78 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      cambiar_estado_llavero: {
+        Args: {
+          p_estado: Database["public"]["Enums"]["estado_llavero_nfc"]
+          p_llavero_id: string
+        }
+        Returns: {
+          asignado_en: string
+          bloqueado_en: string
+          codigo_publico: string
+          estado: Database["public"]["Enums"]["estado_llavero_nfc"]
+          id: string
+          vecino_id: string
+        }[]
+      }
+      cancelar_solicitud_llavero: {
+        Args: { p_solicitud_id: string }
+        Returns: {
+          actualizado_en: string
+          creado_en: string
+          entregado_en: string | null
+          estado: Database["public"]["Enums"]["estado_solicitud_llavero"]
+          id: string
+          negocio_solicitud_id: string | null
+          observaciones: string | null
+          programado_para: string | null
+          solicitado_en: string
+          vecino_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "solicitudes_llavero"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      consultar_llavero_activacion: {
+        Args: { p_caja_id: string; p_token: string }
+        Returns: {
+          codigo_publico: string
+          entregado: boolean
+          estado: Database["public"]["Enums"]["estado_llavero_nfc"]
+          nombre_vecino: string
+          puede_activar: boolean
+          tiene_pin: boolean
+        }[]
+      }
+      consultar_saldo_regis: {
+        Args: { p_negocio_id: string; p_vecino_id?: string }
+        Returns: {
+          actualizado_en: string
+          canjeados: number
+          disponibles: number
+          negocio_id: string
+          pendientes: number
+          remanente_valor_clp: number
+          reservados: number
+          vecino_id: string
+        }[]
+      }
+      consultar_saldo_regis_llavero: {
+        Args: { p_caja_id: string; p_token: string }
+        Returns: {
+          actualizado_en: string
+          canjeados: number
+          disponibles: number
+          negocio_id: string
+          nombre_negocio: string
+          pendientes: number
+          remanente_valor_clp: number
+          reservados: number
+        }[]
       }
       corregir_solicitud_compra: {
         Args: { p_monto: number; p_motivo: string; p_solicitud_id: string }
@@ -793,6 +1304,7 @@ export type Database = {
           id: string
           idempotency_key: string
           informado_por: Database["public"]["Enums"]["informado_por"] | null
+          llavero_id: string | null
           monto_corregido: number | null
           monto_informado: number | null
           motivo_correccion: string | null
@@ -850,6 +1362,7 @@ export type Database = {
           id: string
           idempotency_key: string
           informado_por: Database["public"]["Enums"]["informado_por"] | null
+          llavero_id: string | null
           monto_corregido: number | null
           monto_informado: number | null
           motivo_correccion: string | null
@@ -862,6 +1375,51 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      crear_solicitud_compra_asistida: {
+        Args: {
+          p_caja_id: string
+          p_idempotency_key: string
+          p_monto: number
+          p_token: string
+        }
+        Returns: {
+          actualizado_en: string
+          caja_id: string
+          creado_en: string
+          estado: Database["public"]["Enums"]["estado_solicitud_compra"]
+          expira_en: string
+          id: string
+          idempotency_key: string
+          informado_por: Database["public"]["Enums"]["informado_por"] | null
+          llavero_id: string | null
+          monto_corregido: number | null
+          monto_informado: number | null
+          motivo_correccion: string | null
+          motivo_rechazo: string | null
+          vecino_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "solicitudes_compra"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      entregar_llavero: {
+        Args: {
+          p_codigo_publico: string
+          p_solicitud_id: string
+          p_token: string
+        }
+        Returns: {
+          asignado_en: string
+          codigo_publico: string
+          estado: Database["public"]["Enums"]["estado_llavero_nfc"]
+          id: string
+          solicitud_id: string
+          vecino_id: string
+        }[]
       }
       es_admin_regalones: { Args: never; Returns: boolean }
       es_miembro_negocio: {
@@ -882,6 +1440,7 @@ export type Database = {
           id: string
           idempotency_key: string
           informado_por: Database["public"]["Enums"]["informado_por"] | null
+          llavero_id: string | null
           monto_corregido: number | null
           monto_informado: number | null
           motivo_correccion: string | null
@@ -906,6 +1465,7 @@ export type Database = {
           id: string
           idempotency_key: string
           informado_por: Database["public"]["Enums"]["informado_por"] | null
+          llavero_id: string | null
           monto_corregido: number | null
           monto_informado: number | null
           motivo_correccion: string | null
@@ -915,6 +1475,106 @@ export type Database = {
         SetofOptions: {
           from: "*"
           to: "solicitudes_compra"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      listar_gestion_llaveros: {
+        Args: never
+        Returns: {
+          asignado_en: string
+          codigo_publico: string
+          entregado_en: string
+          estado_llavero: Database["public"]["Enums"]["estado_llavero_nfc"]
+          estado_solicitud: Database["public"]["Enums"]["estado_solicitud_llavero"]
+          llavero_id: string
+          modalidad_atencion: Database["public"]["Enums"]["modalidad_atencion"]
+          negocio_solicitud_id: string
+          nombre_negocio: string
+          nombre_vecino: string
+          observaciones: string
+          programado_para: string
+          solicitado_en: string
+          solicitud_id: string
+          vecino_id: string
+        }[]
+      }
+      listar_gestion_llaveros_detalle: {
+        Args: never
+        Returns: {
+          activado_en: string
+          codigo_publico: string
+          comuna_vecino: string
+          correo_vecino: string
+          entregado_en: string
+          estado_llavero: Database["public"]["Enums"]["estado_llavero_nfc"]
+          estado_solicitud: Database["public"]["Enums"]["estado_solicitud_llavero"]
+          llavero_id: string
+          metodo_activacion: Database["public"]["Enums"]["metodo_verificacion_llavero"]
+          modalidad_atencion: Database["public"]["Enums"]["modalidad_atencion"]
+          negocio_solicitud_id: string
+          nombre_negocio: string
+          nombre_vecino: string
+          observaciones: string
+          preparado_en: string
+          programado_para: string
+          solicitado_en: string
+          solicitud_id: string
+          telefono_vecino: string
+          vecino_id: string
+        }[]
+      }
+      listar_saldos_regis_propios: {
+        Args: never
+        Returns: {
+          actualizado_en: string
+          canjeados: number
+          disponibles: number
+          negocio_id: string
+          nombre_negocio: string
+          pendientes: number
+          remanente_valor_clp: number
+          reservados: number
+        }[]
+      }
+      preparar_llavero: {
+        Args: {
+          p_codigo_publico: string
+          p_pin?: string
+          p_solicitud_id: string
+          p_token: string
+        }
+        Returns: {
+          codigo_publico: string
+          estado: Database["public"]["Enums"]["estado_llavero_nfc"]
+          id: string
+          preparado_en: string
+          solicitud_id: string
+          tiene_pin: boolean
+          vecino_id: string
+        }[]
+      }
+      programar_entrega_llavero: {
+        Args: {
+          p_observaciones?: string
+          p_programado_para: string
+          p_solicitud_id: string
+        }
+        Returns: {
+          actualizado_en: string
+          creado_en: string
+          entregado_en: string | null
+          estado: Database["public"]["Enums"]["estado_solicitud_llavero"]
+          id: string
+          negocio_solicitud_id: string | null
+          observaciones: string | null
+          programado_para: string | null
+          solicitado_en: string
+          vecino_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "solicitudes_llavero"
           isOneToOne: true
           isSetofReturn: false
         }
@@ -930,6 +1590,7 @@ export type Database = {
           id: string
           idempotency_key: string
           informado_por: Database["public"]["Enums"]["informado_por"] | null
+          llavero_id: string | null
           monto_corregido: number | null
           monto_informado: number | null
           motivo_correccion: string | null
@@ -939,6 +1600,27 @@ export type Database = {
         SetofOptions: {
           from: "*"
           to: "solicitudes_compra"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      registrar_entrega_llavero: {
+        Args: { p_solicitud_id: string }
+        Returns: {
+          actualizado_en: string
+          creado_en: string
+          entregado_en: string | null
+          estado: Database["public"]["Enums"]["estado_solicitud_llavero"]
+          id: string
+          negocio_solicitud_id: string | null
+          observaciones: string | null
+          programado_para: string | null
+          solicitado_en: string
+          vecino_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "solicitudes_llavero"
           isOneToOne: true
           isSetofReturn: false
         }
@@ -963,6 +1645,7 @@ export type Database = {
           id: string
           idempotency_key: string
           informado_por: Database["public"]["Enums"]["informado_por"] | null
+          llavero_id: string | null
           monto_corregido: number | null
           monto_informado: number | null
           motivo_correccion: string | null
@@ -978,6 +1661,11 @@ export type Database = {
       }
     }
     Enums: {
+      estado_alerta_riesgo:
+        | "abierta"
+        | "en_revision"
+        | "resuelta"
+        | "descartada"
       estado_caja: "activa" | "inactiva" | "bloqueada"
       estado_compra: "confirmada" | "observada" | "revertida"
       estado_etiqueta_nfc:
@@ -993,6 +1681,12 @@ export type Database = {
         | "reemplazado"
         | "revocado"
       estado_miembro_negocio: "activo" | "suspendido" | "revocado"
+      estado_movimiento_regis:
+        | "pendiente"
+        | "disponible"
+        | "canjeado"
+        | "revertido"
+        | "bloqueado"
       estado_negocio: "pendiente" | "activo" | "suspendido" | "rechazado"
       estado_perfil: "activo" | "bloqueado" | "eliminado"
       estado_plan: "activo" | "inactivo" | "archivado"
@@ -1022,12 +1716,19 @@ export type Database = {
         | "bloqueada"
         | "revocada"
       informado_por: "vecino" | "cajero"
+      metodo_verificacion_llavero: "cedula" | "pin" | "sms"
       modalidad_atencion: "digital" | "asistida"
       origen_compra: "autoservicio" | "asistido" | "integracion_pos"
       rol_miembro_negocio: "propietario" | "administrador" | "cajero"
       rol_plataforma: "usuario" | "admin_regalones"
       severidad_riesgo: "baja" | "media" | "alta" | "critica"
       tipo_etiqueta_nfc: "inscripcion" | "compra"
+      tipo_movimiento_regis:
+        | "acreditacion_compra"
+        | "canje"
+        | "reversa"
+        | "ajuste"
+        | "bonificacion"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1158,6 +1859,12 @@ export const Constants = {
   },
   public: {
     Enums: {
+      estado_alerta_riesgo: [
+        "abierta",
+        "en_revision",
+        "resuelta",
+        "descartada",
+      ],
       estado_caja: ["activa", "inactiva", "bloqueada"],
       estado_compra: ["confirmada", "observada", "revertida"],
       estado_etiqueta_nfc: [
@@ -1175,6 +1882,13 @@ export const Constants = {
         "revocado",
       ],
       estado_miembro_negocio: ["activo", "suspendido", "revocado"],
+      estado_movimiento_regis: [
+        "pendiente",
+        "disponible",
+        "canjeado",
+        "revertido",
+        "bloqueado",
+      ],
       estado_negocio: ["pendiente", "activo", "suspendido", "rechazado"],
       estado_perfil: ["activo", "bloqueado", "eliminado"],
       estado_plan: ["activo", "inactivo", "archivado"],
@@ -1208,12 +1922,20 @@ export const Constants = {
         "revocada",
       ],
       informado_por: ["vecino", "cajero"],
+      metodo_verificacion_llavero: ["cedula", "pin", "sms"],
       modalidad_atencion: ["digital", "asistida"],
       origen_compra: ["autoservicio", "asistido", "integracion_pos"],
       rol_miembro_negocio: ["propietario", "administrador", "cajero"],
       rol_plataforma: ["usuario", "admin_regalones"],
       severidad_riesgo: ["baja", "media", "alta", "critica"],
       tipo_etiqueta_nfc: ["inscripcion", "compra"],
+      tipo_movimiento_regis: [
+        "acreditacion_compra",
+        "canje",
+        "reversa",
+        "ajuste",
+        "bonificacion",
+      ],
     },
   },
 } as const

@@ -1,5 +1,9 @@
 import regalon from '../../recursos/mascota/regalon-saludando.png'
 import fondoBarrio from '../../recursos/seccion-vecinos/fondo-vecinos.png'
+import hojasIzquierda from '../../recursos/seccion-vecinos/vecinos-hojas-izquierda.png'
+import hojasDerecha from '../../recursos/seccion-vecinos/vecinos-hojas-derecha.png'
+
+
 import './SeccionVecinos.css'
 
 const beneficios = [
@@ -12,14 +16,31 @@ const beneficios = [
       function SeccionVecinos() {
   return (
     <section className="seccion-vecinos" id="vecinos">
-      <img
-        className="seccion-vecinos__fondo-barrio"
-        src={fondoBarrio}
-        alt=""
-        aria-hidden="true"
-      />
+  <img
+    className="seccion-vecinos__fondo-barrio"
+    src={fondoBarrio}
+    alt=""
+    aria-hidden="true"
+  />
 
-      <div className="contenedor seccion-vecinos__contenido">
+  <img
+    className="seccion-vecinos__hojas seccion-vecinos__hojas--izquierda"
+    src={hojasIzquierda}
+    alt=""
+    aria-hidden="true"
+  />
+
+  <img
+    className="seccion-vecinos__hojas seccion-vecinos__hojas--derecha"
+    src={hojasDerecha}
+    alt=""
+    aria-hidden="true"
+  />
+
+  <div className="contenedor seccion-vecinos__contenido">
+     
+
+        
         <div className="seccion-vecinos__imagen">
           <div className="seccion-vecinos__circulo" />
 
