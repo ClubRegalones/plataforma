@@ -106,6 +106,38 @@ export type Database = {
           },
         ]
       }
+      beneficios_regis: {
+        Row: {
+          codigo: string
+          creado_en: string
+          creado_por: string | null
+          id: string
+          negocio_id: string
+        }
+        Insert: {
+          codigo: string
+          creado_en?: string
+          creado_por?: string | null
+          id?: string
+          negocio_id: string
+        }
+        Update: {
+          codigo?: string
+          creado_en?: string
+          creado_por?: string | null
+          id?: string
+          negocio_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "beneficios_regis_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cajas: {
         Row: {
           actualizado_en: string
@@ -144,20 +176,157 @@ export type Database = {
           },
         ]
       }
+      canjes_regis: {
+        Row: {
+          aporte_promocional_negocio_clp: number | null
+          beneficio_id: string
+          beneficio_version_id: string
+          caja_id: string | null
+          cancelado_en: string | null
+          codigo_publico: string
+          compra_id: string | null
+          confirmado_en: string | null
+          costo_regis: number
+          creado_en: string
+          descuento_total_clp: number | null
+          estado: Database["public"]["Enums"]["estado_canje_regis"]
+          expira_en: string
+          expirado_en: string | null
+          id: string
+          idempotency_key: string
+          llavero_id: string | null
+          monto_compra_bruto_clp: number | null
+          monto_final_pagado_clp: number | null
+          negocio_id: string
+          origen: Database["public"]["Enums"]["origen_canje_regis"]
+          qr_token_hash: string | null
+          regla_regis_id: string
+          reservado_en: string
+          valor_financiado_regis_clp: number | null
+          valor_regis_clp: number
+          vecino_id: string
+        }
+        Insert: {
+          aporte_promocional_negocio_clp?: number | null
+          beneficio_id: string
+          beneficio_version_id: string
+          caja_id?: string | null
+          cancelado_en?: string | null
+          codigo_publico?: string
+          compra_id?: string | null
+          confirmado_en?: string | null
+          costo_regis: number
+          creado_en?: string
+          descuento_total_clp?: number | null
+          estado?: Database["public"]["Enums"]["estado_canje_regis"]
+          expira_en: string
+          expirado_en?: string | null
+          id?: string
+          idempotency_key: string
+          llavero_id?: string | null
+          monto_compra_bruto_clp?: number | null
+          monto_final_pagado_clp?: number | null
+          negocio_id: string
+          origen: Database["public"]["Enums"]["origen_canje_regis"]
+          qr_token_hash?: string | null
+          regla_regis_id: string
+          reservado_en?: string
+          valor_financiado_regis_clp?: number | null
+          valor_regis_clp: number
+          vecino_id: string
+        }
+        Update: {
+          aporte_promocional_negocio_clp?: number | null
+          beneficio_id?: string
+          beneficio_version_id?: string
+          caja_id?: string | null
+          cancelado_en?: string | null
+          codigo_publico?: string
+          compra_id?: string | null
+          confirmado_en?: string | null
+          costo_regis?: number
+          creado_en?: string
+          descuento_total_clp?: number | null
+          estado?: Database["public"]["Enums"]["estado_canje_regis"]
+          expira_en?: string
+          expirado_en?: string | null
+          id?: string
+          idempotency_key?: string
+          llavero_id?: string | null
+          monto_compra_bruto_clp?: number | null
+          monto_final_pagado_clp?: number | null
+          negocio_id?: string
+          origen?: Database["public"]["Enums"]["origen_canje_regis"]
+          qr_token_hash?: string | null
+          regla_regis_id?: string
+          reservado_en?: string
+          valor_financiado_regis_clp?: number | null
+          valor_regis_clp?: number
+          vecino_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canjes_beneficio_negocio_fkey"
+            columns: ["beneficio_id", "negocio_id"]
+            isOneToOne: false
+            referencedRelation: "beneficios_regis"
+            referencedColumns: ["id", "negocio_id"]
+          },
+          {
+            foreignKeyName: "canjes_beneficio_version_fkey"
+            columns: ["beneficio_version_id", "beneficio_id"]
+            isOneToOne: false
+            referencedRelation: "versiones_beneficio_regis"
+            referencedColumns: ["id", "beneficio_id"]
+          },
+          {
+            foreignKeyName: "canjes_regis_caja_id_fkey"
+            columns: ["caja_id"]
+            isOneToOne: false
+            referencedRelation: "cajas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canjes_regis_compra_id_fkey"
+            columns: ["compra_id"]
+            isOneToOne: true
+            referencedRelation: "compras"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canjes_regis_llavero_id_fkey"
+            columns: ["llavero_id"]
+            isOneToOne: false
+            referencedRelation: "llaveros_nfc"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canjes_regis_regla_regis_id_fkey"
+            columns: ["regla_regis_id"]
+            isOneToOne: false
+            referencedRelation: "reglas_regis"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       compras: {
         Row: {
+          aporte_promocional_clp: number
           caja_id: string
           cajero_id: string
           creado_en: string
+          descuento_total_clp: number
           estado: Database["public"]["Enums"]["estado_compra"]
           folio_boleta: string | null
           id: string
           monto_base_regis_clp: number | null
+          monto_bruto_clp: number | null
           monto_final: number
           negocio_id: string
           origen: Database["public"]["Enums"]["origen_compra"]
           regis_generados: number
           regis_procesados_en: string | null
+          regis_utilizados: number
           regla_regis_id: string | null
           revertido_en: string | null
           riesgo: Database["public"]["Enums"]["severidad_riesgo"] | null
@@ -168,18 +337,22 @@ export type Database = {
           vecino_id: string
         }
         Insert: {
+          aporte_promocional_clp?: number
           caja_id: string
           cajero_id: string
           creado_en?: string
+          descuento_total_clp?: number
           estado?: Database["public"]["Enums"]["estado_compra"]
           folio_boleta?: string | null
           id?: string
           monto_base_regis_clp?: number | null
+          monto_bruto_clp?: number | null
           monto_final: number
           negocio_id: string
           origen?: Database["public"]["Enums"]["origen_compra"]
           regis_generados?: number
           regis_procesados_en?: string | null
+          regis_utilizados?: number
           regla_regis_id?: string | null
           revertido_en?: string | null
           riesgo?: Database["public"]["Enums"]["severidad_riesgo"] | null
@@ -190,18 +363,22 @@ export type Database = {
           vecino_id: string
         }
         Update: {
+          aporte_promocional_clp?: number
           caja_id?: string
           cajero_id?: string
           creado_en?: string
+          descuento_total_clp?: number
           estado?: Database["public"]["Enums"]["estado_compra"]
           folio_boleta?: string | null
           id?: string
           monto_base_regis_clp?: number | null
+          monto_bruto_clp?: number | null
           monto_final?: number
           negocio_id?: string
           origen?: Database["public"]["Enums"]["origen_compra"]
           regis_generados?: number
           regis_procesados_en?: string | null
+          regis_utilizados?: number
           regla_regis_id?: string | null
           revertido_en?: string | null
           riesgo?: Database["public"]["Enums"]["severidad_riesgo"] | null
@@ -573,6 +750,13 @@ export type Database = {
           vecino_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "movimientos_regis_canje_id_fkey"
+            columns: ["canje_id"]
+            isOneToOne: false
+            referencedRelation: "canjes_regis"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "movimientos_regis_compra_id_fkey"
             columns: ["compra_id"]
@@ -1135,6 +1319,99 @@ export type Database = {
           },
         ]
       }
+      versiones_beneficio_regis: {
+        Row: {
+          beneficio_id: string
+          compra_minima_clp: number
+          costo_regis: number
+          creado_en: string
+          creado_por: string | null
+          cupos_totales: number | null
+          descripcion: string | null
+          estado: Database["public"]["Enums"]["estado_beneficio_regis"]
+          id: string
+          limite_por_vecino: number
+          monto_descuento_fijo_clp: number | null
+          mostrar_cupos: boolean
+          nombre: string
+          porcentaje_descuento_bp: number | null
+          porcentaje_maximo_canje_bp: number
+          publicado_en: string | null
+          regla_regis_id: string
+          tipo: Database["public"]["Enums"]["tipo_beneficio_regis"]
+          tope_descuento_clp: number | null
+          valor_regis_clp: number
+          version: number
+          vigencia_desde: string
+          vigencia_hasta: string | null
+        }
+        Insert: {
+          beneficio_id: string
+          compra_minima_clp: number
+          costo_regis: number
+          creado_en?: string
+          creado_por?: string | null
+          cupos_totales?: number | null
+          descripcion?: string | null
+          estado?: Database["public"]["Enums"]["estado_beneficio_regis"]
+          id?: string
+          limite_por_vecino?: number
+          monto_descuento_fijo_clp?: number | null
+          mostrar_cupos?: boolean
+          nombre: string
+          porcentaje_descuento_bp?: number | null
+          porcentaje_maximo_canje_bp: number
+          publicado_en?: string | null
+          regla_regis_id: string
+          tipo: Database["public"]["Enums"]["tipo_beneficio_regis"]
+          tope_descuento_clp?: number | null
+          valor_regis_clp: number
+          version: number
+          vigencia_desde?: string
+          vigencia_hasta?: string | null
+        }
+        Update: {
+          beneficio_id?: string
+          compra_minima_clp?: number
+          costo_regis?: number
+          creado_en?: string
+          creado_por?: string | null
+          cupos_totales?: number | null
+          descripcion?: string | null
+          estado?: Database["public"]["Enums"]["estado_beneficio_regis"]
+          id?: string
+          limite_por_vecino?: number
+          monto_descuento_fijo_clp?: number | null
+          mostrar_cupos?: boolean
+          nombre?: string
+          porcentaje_descuento_bp?: number | null
+          porcentaje_maximo_canje_bp?: number
+          publicado_en?: string | null
+          regla_regis_id?: string
+          tipo?: Database["public"]["Enums"]["tipo_beneficio_regis"]
+          tope_descuento_clp?: number | null
+          valor_regis_clp?: number
+          version?: number
+          vigencia_desde?: string
+          vigencia_hasta?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "versiones_beneficio_regis_beneficio_id_fkey"
+            columns: ["beneficio_id"]
+            isOneToOne: false
+            referencedRelation: "beneficios_regis"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "versiones_beneficio_regis_regla_regis_id_fkey"
+            columns: ["regla_regis_id"]
+            isOneToOne: false
+            referencedRelation: "reglas_regis"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -1193,18 +1470,22 @@ export type Database = {
           p_solicitud_id: string
         }
         Returns: {
+          aporte_promocional_clp: number
           caja_id: string
           cajero_id: string
           creado_en: string
+          descuento_total_clp: number
           estado: Database["public"]["Enums"]["estado_compra"]
           folio_boleta: string | null
           id: string
           monto_base_regis_clp: number | null
+          monto_bruto_clp: number | null
           monto_final: number
           negocio_id: string
           origen: Database["public"]["Enums"]["origen_compra"]
           regis_generados: number
           regis_procesados_en: string | null
+          regis_utilizados: number
           regla_regis_id: string | null
           revertido_en: string | null
           riesgo: Database["public"]["Enums"]["severidad_riesgo"] | null
@@ -1235,6 +1516,14 @@ export type Database = {
           vecino_id: string
         }[]
       }
+      cancelar_reserva_canje_regis: {
+        Args: { p_canje_id: string }
+        Returns: {
+          canje_id: string
+          costo_regis: number
+          estado: Database["public"]["Enums"]["estado_canje_regis"]
+        }[]
+      }
       cancelar_solicitud_llavero: {
         Args: { p_solicitud_id: string }
         Returns: {
@@ -1255,6 +1544,42 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      confirmar_compra_con_canje: {
+        Args: {
+          p_caja_id: string
+          p_canje_id: string
+          p_folio_boleta?: string
+          p_monto_bruto_clp: number
+          p_qr_token?: string
+        }
+        Returns: {
+          aporte_promocional_negocio_clp: number
+          canje_id: string
+          compra_id: string
+          descuento_total_clp: number
+          estado: Database["public"]["Enums"]["estado_canje_regis"]
+          monto_compra_bruto_clp: number
+          monto_final_pagado_clp: number
+          regis_utilizados: number
+          valor_financiado_regis_clp: number
+        }[]
+      }
+      consultar_canje_regis_qr: {
+        Args: { p_caja_id: string; p_qr_token: string }
+        Returns: {
+          canje_id: string
+          codigo_publico: string
+          compra_minima_clp: number
+          costo_regis: number
+          estado: Database["public"]["Enums"]["estado_canje_regis"]
+          expira_en: string
+          monto_descuento_fijo_clp: number
+          nombre_beneficio: string
+          porcentaje_descuento_bp: number
+          tipo: Database["public"]["Enums"]["tipo_beneficio_regis"]
+          tope_descuento_clp: number
+        }[]
       }
       consultar_llavero_activacion: {
         Args: { p_caja_id: string; p_token: string }
@@ -1318,6 +1643,57 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      crear_beneficio_regis: {
+        Args: {
+          p_codigo: string
+          p_compra_minima_clp: number
+          p_costo_regis: number
+          p_cupos_totales?: number
+          p_descripcion?: string
+          p_limite_por_vecino?: number
+          p_monto_descuento_fijo_clp?: number
+          p_mostrar_cupos?: boolean
+          p_negocio_id: string
+          p_nombre: string
+          p_porcentaje_descuento_bp?: number
+          p_publicar?: boolean
+          p_tipo: Database["public"]["Enums"]["tipo_beneficio_regis"]
+          p_tope_descuento_clp?: number
+          p_vigencia_desde?: string
+          p_vigencia_hasta?: string
+        }
+        Returns: {
+          beneficio_id: string
+          compra_minima_clp: number
+          costo_regis: number
+          creado_en: string
+          creado_por: string | null
+          cupos_totales: number | null
+          descripcion: string | null
+          estado: Database["public"]["Enums"]["estado_beneficio_regis"]
+          id: string
+          limite_por_vecino: number
+          monto_descuento_fijo_clp: number | null
+          mostrar_cupos: boolean
+          nombre: string
+          porcentaje_descuento_bp: number | null
+          porcentaje_maximo_canje_bp: number
+          publicado_en: string | null
+          regla_regis_id: string
+          tipo: Database["public"]["Enums"]["tipo_beneficio_regis"]
+          tope_descuento_clp: number | null
+          valor_regis_clp: number
+          version: number
+          vigencia_desde: string
+          vigencia_hasta: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "versiones_beneficio_regis"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       crear_negocio: {
         Args: {
           p_descripcion?: string
@@ -1342,6 +1718,52 @@ export type Database = {
         SetofOptions: {
           from: "*"
           to: "negocios"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      crear_reserva_canje_regis_interna: {
+        Args: {
+          p_beneficio_version_id: string
+          p_caja_id: string
+          p_idempotency_key: string
+          p_llavero_id: string
+          p_origen: Database["public"]["Enums"]["origen_canje_regis"]
+          p_qr_token: string
+          p_vecino_id: string
+        }
+        Returns: {
+          aporte_promocional_negocio_clp: number | null
+          beneficio_id: string
+          beneficio_version_id: string
+          caja_id: string | null
+          cancelado_en: string | null
+          codigo_publico: string
+          compra_id: string | null
+          confirmado_en: string | null
+          costo_regis: number
+          creado_en: string
+          descuento_total_clp: number | null
+          estado: Database["public"]["Enums"]["estado_canje_regis"]
+          expira_en: string
+          expirado_en: string | null
+          id: string
+          idempotency_key: string
+          llavero_id: string | null
+          monto_compra_bruto_clp: number | null
+          monto_final_pagado_clp: number | null
+          negocio_id: string
+          origen: Database["public"]["Enums"]["origen_canje_regis"]
+          qr_token_hash: string | null
+          regla_regis_id: string
+          reservado_en: string
+          valor_financiado_regis_clp: number | null
+          valor_regis_clp: number
+          vecino_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "canjes_regis"
           isOneToOne: true
           isSetofReturn: false
         }
@@ -1429,6 +1851,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      expirar_reservas_canje_regis: { Args: never; Returns: number }
       informar_monto_cajero: {
         Args: { p_monto: number; p_solicitud_id: string }
         Returns: {
@@ -1478,6 +1901,28 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      listar_beneficios_regis_disponibles: {
+        Args: { p_negocio_id?: string }
+        Returns: {
+          beneficio_id: string
+          beneficio_version_id: string
+          compra_minima_clp: number
+          costo_regis: number
+          cupos_disponibles: number
+          descripcion: string
+          monto_descuento_fijo_clp: number
+          mostrar_cupos: boolean
+          negocio_id: string
+          nombre_beneficio: string
+          nombre_negocio: string
+          porcentaje_descuento_bp: number
+          puede_reservar: boolean
+          saldo_disponible: number
+          tipo: Database["public"]["Enums"]["tipo_beneficio_regis"]
+          tope_descuento_clp: number
+          vigencia_hasta: string
+        }[]
       }
       listar_gestion_llaveros: {
         Args: never
@@ -1625,6 +2070,35 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      reservar_canje_regis_llavero: {
+        Args: {
+          p_beneficio_version_id: string
+          p_caja_id: string
+          p_idempotency_key: string
+          p_token_llavero: string
+        }
+        Returns: {
+          canje_id: string
+          codigo_publico: string
+          costo_regis: number
+          estado: Database["public"]["Enums"]["estado_canje_regis"]
+          expira_en: string
+        }[]
+      }
+      reservar_canje_regis_qr: {
+        Args: {
+          p_beneficio_version_id: string
+          p_idempotency_key: string
+          p_qr_token: string
+        }
+        Returns: {
+          canje_id: string
+          codigo_publico: string
+          costo_regis: number
+          estado: Database["public"]["Enums"]["estado_canje_regis"]
+          expira_en: string
+        }[]
+      }
       resolver_etiqueta: {
         Args: { p_token: string }
         Returns: {
@@ -1659,6 +2133,69 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      validar_configuracion_beneficio_regis: {
+        Args: {
+          p_compra_minima_clp: number
+          p_costo_regis: number
+          p_monto_descuento_fijo_clp: number
+          p_porcentaje_descuento_bp: number
+          p_porcentaje_maximo_canje_bp: number
+          p_tipo: Database["public"]["Enums"]["tipo_beneficio_regis"]
+          p_tope_descuento_clp: number
+          p_valor_regis_clp: number
+        }
+        Returns: undefined
+      }
+      versionar_beneficio_regis: {
+        Args: {
+          p_beneficio_id: string
+          p_compra_minima_clp: number
+          p_costo_regis: number
+          p_cupos_totales?: number
+          p_descripcion?: string
+          p_limite_por_vecino?: number
+          p_monto_descuento_fijo_clp?: number
+          p_mostrar_cupos?: boolean
+          p_nombre: string
+          p_porcentaje_descuento_bp?: number
+          p_publicar?: boolean
+          p_tipo: Database["public"]["Enums"]["tipo_beneficio_regis"]
+          p_tope_descuento_clp?: number
+          p_vigencia_desde?: string
+          p_vigencia_hasta?: string
+        }
+        Returns: {
+          beneficio_id: string
+          compra_minima_clp: number
+          costo_regis: number
+          creado_en: string
+          creado_por: string | null
+          cupos_totales: number | null
+          descripcion: string | null
+          estado: Database["public"]["Enums"]["estado_beneficio_regis"]
+          id: string
+          limite_por_vecino: number
+          monto_descuento_fijo_clp: number | null
+          mostrar_cupos: boolean
+          nombre: string
+          porcentaje_descuento_bp: number | null
+          porcentaje_maximo_canje_bp: number
+          publicado_en: string | null
+          regla_regis_id: string
+          tipo: Database["public"]["Enums"]["tipo_beneficio_regis"]
+          tope_descuento_clp: number | null
+          valor_regis_clp: number
+          version: number
+          vigencia_desde: string
+          vigencia_hasta: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "versiones_beneficio_regis"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
     }
     Enums: {
       estado_alerta_riesgo:
@@ -1666,7 +2203,9 @@ export type Database = {
         | "en_revision"
         | "resuelta"
         | "descartada"
+      estado_beneficio_regis: "borrador" | "activo" | "pausado" | "finalizado"
       estado_caja: "activa" | "inactiva" | "bloqueada"
+      estado_canje_regis: "reservado" | "confirmado" | "expirado" | "cancelado"
       estado_compra: "confirmada" | "observada" | "revertida"
       estado_etiqueta_nfc:
         | "sin_asignar"
@@ -1718,10 +2257,12 @@ export type Database = {
       informado_por: "vecino" | "cajero"
       metodo_verificacion_llavero: "cedula" | "pin" | "sms"
       modalidad_atencion: "digital" | "asistida"
+      origen_canje_regis: "qr" | "llavero"
       origen_compra: "autoservicio" | "asistido" | "integracion_pos"
       rol_miembro_negocio: "propietario" | "administrador" | "cajero"
       rol_plataforma: "usuario" | "admin_regalones"
       severidad_riesgo: "baja" | "media" | "alta" | "critica"
+      tipo_beneficio_regis: "porcentaje_descuento" | "monto_fijo"
       tipo_etiqueta_nfc: "inscripcion" | "compra"
       tipo_movimiento_regis:
         | "acreditacion_compra"
@@ -1865,7 +2406,9 @@ export const Constants = {
         "resuelta",
         "descartada",
       ],
+      estado_beneficio_regis: ["borrador", "activo", "pausado", "finalizado"],
       estado_caja: ["activa", "inactiva", "bloqueada"],
+      estado_canje_regis: ["reservado", "confirmado", "expirado", "cancelado"],
       estado_compra: ["confirmada", "observada", "revertida"],
       estado_etiqueta_nfc: [
         "sin_asignar",
@@ -1924,10 +2467,12 @@ export const Constants = {
       informado_por: ["vecino", "cajero"],
       metodo_verificacion_llavero: ["cedula", "pin", "sms"],
       modalidad_atencion: ["digital", "asistida"],
+      origen_canje_regis: ["qr", "llavero"],
       origen_compra: ["autoservicio", "asistido", "integracion_pos"],
       rol_miembro_negocio: ["propietario", "administrador", "cajero"],
       rol_plataforma: ["usuario", "admin_regalones"],
       severidad_riesgo: ["baja", "media", "alta", "critica"],
+      tipo_beneficio_regis: ["porcentaje_descuento", "monto_fijo"],
       tipo_etiqueta_nfc: ["inscripcion", "compra"],
       tipo_movimiento_regis: [
         "acreditacion_compra",
