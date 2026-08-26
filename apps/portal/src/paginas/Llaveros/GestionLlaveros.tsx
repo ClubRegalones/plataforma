@@ -1,6 +1,7 @@
 import type { Tables } from '@club-regalones/domain'
 import type { FormEvent } from 'react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import EnlaceSoporteAdmin from '../../componentes/EnlaceSoporteAdmin'
 import { useSesion } from '../../hooks/useSesion'
 import {
   cancelarSolicitudLlavero,
@@ -253,6 +254,10 @@ function GestionLlaveros() {
           Club Regalones
         </a>
         <nav aria-label="Acciones administrativas">
+          {perfil?.rol_plataforma === 'admin_regalones' && (
+            <EnlaceSoporteAdmin />
+          )}
+          <a href="#administrar-beneficios">Beneficios</a>
           <a href="#mis-regis">Mis REGIS</a>
           {sesion && (
             <button type="button" onClick={() => void cerrarSesion()}>

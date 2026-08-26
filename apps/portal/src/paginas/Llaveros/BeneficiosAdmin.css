@@ -1,0 +1,648 @@
+.beneficios-admin {
+  padding-bottom: 5rem;
+}
+
+.beneficios-admin__metricas {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.beneficios-admin__metricas article {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.2rem 1.4rem;
+  border: 1px solid var(--borde);
+  border-radius: 1.4rem;
+  background: rgb(255 255 255 / 90%);
+  box-shadow: 0 18px 48px rgb(70 53 24 / 8%);
+}
+
+.beneficios-admin__metricas span {
+  color: var(--texto-suave);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.beneficios-admin__metricas strong {
+  color: var(--verde-900);
+  font-family: var(--fuente-marca);
+  font-size: 2.4rem;
+  line-height: 1;
+}
+
+.beneficios-admin__panel {
+  min-height: 720px;
+  display: grid;
+  grid-template-columns: minmax(310px, 0.75fr) minmax(500px, 1.25fr);
+  overflow: hidden;
+  border: 1px solid var(--borde);
+  border-radius: 1.6rem;
+  background: rgb(255 255 255 / 92%);
+  box-shadow: 0 18px 48px rgb(70 53 24 / 8%);
+}
+
+.beneficios-admin__listado {
+  padding: 1.25rem;
+  border-right: 1px solid var(--borde);
+  background: rgb(248 246 237 / 72%);
+}
+
+.beneficios-admin__acciones-lista {
+  display: grid;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.beneficios-admin__filtros {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 9rem;
+  gap: 0.7rem;
+  margin-bottom: 1rem;
+}
+
+.beneficios-admin__filtros label {
+  display: grid;
+  gap: 0.42rem;
+  color: var(--verde-900);
+  font-size: 0.84rem;
+  font-weight: 800;
+}
+
+.beneficios-admin__filtros input,
+.beneficios-admin__filtros select {
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid var(--borde);
+  border-radius: 0.85rem;
+  color: var(--texto);
+  background: white;
+  font: inherit;
+  outline: none;
+}
+
+.beneficios-admin__filtros input:focus,
+.beneficios-admin__filtros select:focus {
+  border-color: var(--naranjo-500);
+  box-shadow: 0 0 0 3px rgb(255 100 16 / 12%);
+}
+
+.beneficios-admin__acciones-lista label,
+.beneficios-admin__formulario label {
+  display: grid;
+  gap: 0.42rem;
+  color: var(--verde-900);
+  font-size: 0.84rem;
+  font-weight: 800;
+}
+
+.beneficios-admin__acciones-lista input,
+.beneficios-admin__formulario input,
+.beneficios-admin__formulario select,
+.beneficios-admin__formulario textarea {
+  width: 100%;
+  min-height: 46px;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid var(--borde);
+  border-radius: 0.85rem;
+  color: var(--texto);
+  background: white;
+  font-size: 0.92rem;
+  outline: none;
+}
+
+.beneficios-admin__formulario textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.beneficios-admin__acciones-lista input:focus,
+.beneficios-admin__formulario input:focus,
+.beneficios-admin__formulario select:focus,
+.beneficios-admin__formulario textarea:focus {
+  border-color: var(--naranjo-500);
+  box-shadow: 0 0 0 3px rgb(255 100 16 / 12%);
+}
+
+.beneficios-admin__acciones-lista > button,
+.beneficios-admin__acciones-formulario button {
+  min-height: 46px;
+  padding: 0.75rem 1.1rem;
+  border-radius: 999px;
+  color: white;
+  background: var(--naranjo-500);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.beneficios-admin__acciones-lista > button {
+  width: 100%;
+}
+
+.beneficios-admin__tarjetas {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.beneficios-admin__tarjetas > button {
+  width: 100%;
+  display: grid;
+  gap: 0.45rem;
+  padding: 1rem;
+  border: 1px solid transparent;
+  border-radius: 1rem;
+  color: var(--texto);
+  background: white;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 160ms ease, transform 160ms ease;
+}
+
+.beneficios-admin__tarjetas > button:hover,
+.beneficios-admin__tarjetas > button.seleccionado {
+  border-color: var(--naranjo-500);
+  transform: translateY(-1px);
+}
+
+.beneficios-admin__tarjetas > button > strong {
+  color: var(--verde-900);
+  font-family: var(--fuente-marca);
+  font-size: 1.15rem;
+}
+
+.beneficios-admin__tarjetas > button > span:last-child,
+.beneficios-admin__tarjeta-superior small {
+  color: var(--texto-suave);
+  font-size: 0.75rem;
+}
+
+.beneficios-admin__tarjeta-superior {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.beneficios-admin__tarjeta-superior em {
+  padding: 0.3rem 0.55rem;
+  border-radius: 999px;
+  color: var(--verde-800);
+  background: var(--verde-100);
+  font-size: 0.66rem;
+  font-style: normal;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.beneficios-admin__tarjeta-superior em.estado--borrador {
+  color: #88410d;
+  background: #fff0df;
+}
+
+.beneficios-admin__tarjeta-superior em.estado--finalizado,
+.beneficios-admin__tarjeta-superior em.estado--pausado {
+  color: var(--texto-suave);
+  background: #eceee8;
+}
+
+.beneficios-admin__vacio {
+  display: grid;
+  gap: 0.25rem;
+  padding: 1.5rem 1rem;
+  color: var(--texto-suave);
+  text-align: center;
+}
+
+.beneficios-admin__vacio strong {
+  color: var(--verde-900);
+}
+
+.beneficios-admin__formulario {
+  display: grid;
+  align-content: start;
+  gap: 1.2rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+}
+
+.beneficios-admin__formulario-cabecera {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.beneficios-admin__formulario-cabecera span {
+  color: var(--naranjo-500);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.beneficios-admin__formulario-cabecera h2 {
+  margin: 0.25rem 0 0;
+  color: var(--verde-900);
+  font-family: var(--fuente-marca);
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  line-height: 1;
+}
+
+.beneficios-admin__formulario-cabecera > small {
+  color: var(--texto-suave);
+  text-align: right;
+}
+
+.beneficios-admin__nota {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.9rem 1rem;
+  border-radius: 0.9rem;
+  color: var(--verde-800);
+  background: var(--verde-100);
+}
+
+.beneficios-admin__nota span {
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.beneficios-admin__formulario fieldset {
+  display: grid;
+  gap: 0.9rem;
+  margin: 0;
+  padding: 1.15rem;
+  border: 1px solid var(--borde);
+  border-radius: 1.1rem;
+}
+
+.beneficios-admin__formulario legend {
+  padding: 0 0.45rem;
+  color: var(--verde-900);
+  font-family: var(--fuente-marca);
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.beneficios-admin__campos {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.beneficios-admin__campos.dos-columnas {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.beneficios-admin__input-unidad {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid var(--borde);
+  border-radius: 0.85rem;
+  background: white;
+}
+
+.beneficios-admin__input-unidad:focus-within {
+  border-color: var(--naranjo-500);
+  box-shadow: 0 0 0 3px rgb(255 100 16 / 12%);
+}
+
+.beneficios-admin__input-unidad > span {
+  padding-inline: 0.85rem;
+  color: var(--verde-800);
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.beneficios-admin__input-unidad input {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.beneficios-admin__input-unidad input:focus {
+  box-shadow: none;
+}
+
+.beneficios-admin__resumen-economico {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.8rem 1rem;
+  border-radius: 0.85rem;
+  color: var(--texto-suave);
+  background: var(--crema-100);
+}
+
+.beneficios-admin__resumen-economico strong {
+  color: var(--verde-900);
+  font-size: 1.15rem;
+}
+
+.beneficios-admin__formulario label.beneficios-admin__check {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-weight: 600;
+}
+
+.beneficios-admin__check input {
+  width: 1.1rem;
+  min-height: 1.1rem;
+  accent-color: var(--verde-700);
+}
+
+.beneficios-admin__historial {
+  padding: 1rem;
+  border: 1px solid var(--borde);
+  border-radius: 1rem;
+  background: var(--crema-50);
+}
+
+.beneficios-admin__historial summary {
+  color: var(--verde-900);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.beneficios-admin__historial ol {
+  display: grid;
+  gap: 0.65rem;
+  margin: 0.9rem 0 0;
+  padding-left: 1.4rem;
+}
+
+.beneficios-admin__historial li {
+  padding-left: 0.25rem;
+  color: var(--texto-suave);
+}
+
+.beneficios-admin__historial li span,
+.beneficios-admin__historial li small {
+  display: block;
+}
+
+.beneficios-admin__historial li span {
+  color: var(--verde-900);
+  font-weight: 700;
+}
+
+.beneficios-admin__acciones-formulario {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.beneficios-admin__acciones-formulario button.secundario {
+  color: var(--verde-800);
+  background: var(--verde-100);
+}
+
+.beneficios-admin button:disabled {
+  cursor: wait;
+  opacity: 0.58;
+}
+
+.beneficios-admin__detalle {
+  display: grid;
+  align-content: start;
+  gap: 1.25rem;
+  min-width: 0;
+  padding: clamp(1.25rem, 3vw, 2rem);
+}
+
+.beneficios-admin__detalle-cabecera {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.beneficios-admin__detalle-cabecera > div > span {
+  color: var(--naranjo-500);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.beneficios-admin__detalle-cabecera h2 {
+  margin: 0.35rem 0 0.6rem;
+  color: var(--verde-900);
+  font-family: var(--fuente-marca);
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  line-height: 1;
+}
+
+.beneficios-admin__detalle-cabecera p {
+  max-width: 42rem;
+  margin: 0;
+}
+
+.beneficios-admin__detalle-cabecera em {
+  flex: 0 0 auto;
+  padding: 0.4rem 0.7rem;
+  border-radius: 999px;
+  color: var(--verde-800);
+  background: var(--verde-100);
+  font-size: 0.7rem;
+  font-style: normal;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.beneficios-admin__detalle-cabecera em.estado--borrador {
+  color: #88410d;
+  background: #fff0df;
+}
+
+.beneficios-admin__detalle-cabecera em.estado--pausado,
+.beneficios-admin__detalle-cabecera em.estado--finalizado {
+  color: var(--texto-suave);
+  background: #eceee8;
+}
+
+.beneficios-admin__condiciones {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.beneficios-admin__contactar {
+  justify-self: start;
+  padding: 0.75rem 1rem;
+  border-radius: 999px;
+  color: var(--verde-800);
+  background: var(--verde-100);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.beneficios-admin__condiciones > div {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.95rem;
+  border: 1px solid var(--borde);
+  border-radius: 0.9rem;
+  background: var(--crema-50);
+}
+
+.beneficios-admin__condiciones span {
+  color: var(--texto-suave);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.beneficios-admin__condiciones strong {
+  color: var(--verde-900);
+  overflow-wrap: anywhere;
+}
+
+.beneficios-admin__supervision {
+  display: grid;
+  gap: 0.9rem;
+  padding: 1.1rem;
+  border: 1px solid rgb(165 53 39 / 20%);
+  border-radius: 1rem;
+  background: #fff7f4;
+}
+
+.beneficios-admin__supervision h3,
+.beneficios-admin__historial-supervision h3 {
+  margin: 0;
+  color: var(--verde-900);
+  font-family: var(--fuente-marca);
+  font-size: 1.25rem;
+}
+
+.beneficios-admin__supervision p {
+  margin: 0.25rem 0 0;
+}
+
+.beneficios-admin__supervision label {
+  display: grid;
+  gap: 0.4rem;
+  color: var(--verde-900);
+  font-size: 0.84rem;
+  font-weight: 800;
+}
+
+.beneficios-admin__supervision textarea {
+  min-height: 90px;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid var(--borde);
+  border-radius: 0.85rem;
+  color: var(--texto);
+  background: white;
+  font: inherit;
+  resize: vertical;
+}
+
+.beneficios-admin__supervision button {
+  justify-self: start;
+  padding: 0.8rem 1rem;
+  border-radius: 999px;
+  color: white;
+  background: #a53527;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.beneficios-admin__historial-supervision,
+.beneficios-admin__versiones {
+  padding: 1.1rem;
+  border: 1px solid var(--borde);
+  border-radius: 1rem;
+}
+
+.beneficios-admin__historial-supervision ol,
+.beneficios-admin__versiones ol {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0.9rem 0 0;
+  padding-left: 1.35rem;
+}
+
+.beneficios-admin__historial-supervision li,
+.beneficios-admin__versiones li {
+  color: var(--texto-suave);
+}
+
+.beneficios-admin__historial-supervision li > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.beneficios-admin__historial-supervision li strong,
+.beneficios-admin__versiones li strong,
+.beneficios-admin__versiones li span {
+  display: block;
+}
+
+.beneficios-admin__historial-supervision li strong,
+.beneficios-admin__versiones li strong {
+  color: var(--verde-900);
+}
+
+.beneficios-admin__historial-supervision time,
+.beneficios-admin__versiones li span {
+  font-size: 0.78rem;
+}
+
+.beneficios-admin__historial-supervision li p {
+  margin: 0.25rem 0 0;
+}
+
+.beneficios-admin__versiones summary {
+  color: var(--verde-900);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+@media (max-width: 900px) {
+  .beneficios-admin__panel {
+    grid-template-columns: 1fr;
+  }
+
+  .beneficios-admin__listado {
+    border-right: 0;
+    border-bottom: 1px solid var(--borde);
+  }
+}
+
+@media (max-width: 680px) {
+  .beneficios-admin__metricas,
+  .beneficios-admin__campos.dos-columnas {
+    grid-template-columns: 1fr;
+  }
+
+  .beneficios-admin__formulario-cabecera,
+  .beneficios-admin__acciones-formulario {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .beneficios-admin__formulario-cabecera > small {
+    text-align: left;
+  }
+
+  .beneficios-admin__acciones-formulario button {
+    width: 100%;
+  }
+
+  .beneficios-admin__filtros,
+  .beneficios-admin__condiciones {
+    grid-template-columns: 1fr;
+  }
+
+  .beneficios-admin__detalle-cabecera,
+  .beneficios-admin__historial-supervision li > div {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

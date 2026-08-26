@@ -10,6 +10,10 @@ export function mensajeSupabase(error: unknown) {
     'message' in error &&
     typeof error.message === 'string'
   ) {
+    if (error.message.includes('beneficios_regis_codigo_negocio_unico')) {
+      return 'Ya existe un beneficio con ese código interno. Selecciona el beneficio existente para publicar una nueva versión o utiliza otro código.'
+    }
+
     return mensajesConocidos[error.message] ?? error.message
   }
 

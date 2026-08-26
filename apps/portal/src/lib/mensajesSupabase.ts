@@ -8,6 +8,9 @@ const mensajesConocidos: Record<string, string> = {
 
 export function mensajeSupabase(error: unknown) {
   if (error instanceof Error) {
+    if (error.message.includes('beneficios_regis_codigo_negocio_unico')) {
+      return 'Ya existe un beneficio con ese código interno. Abre el beneficio existente o utiliza otro código.'
+    }
     return mensajesConocidos[error.message] ?? error.message
   }
 
@@ -17,6 +20,9 @@ export function mensajeSupabase(error: unknown) {
     'message' in error &&
     typeof error.message === 'string'
   ) {
+    if (error.message.includes('beneficios_regis_codigo_negocio_unico')) {
+      return 'Ya existe un beneficio con ese código interno. Abre el beneficio existente o utiliza otro código.'
+    }
     return mensajesConocidos[error.message] ?? error.message
   }
 

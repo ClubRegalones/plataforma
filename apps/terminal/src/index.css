@@ -144,6 +144,29 @@ button:disabled {
   gap: 0.65rem;
 }
 
+.terminal-panel__acciones a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.8rem 1rem;
+  border-radius: 0.75rem;
+  color: white;
+  background: #e16c26;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.enlace-asistencia__contador {
+  min-width: 1.45rem;
+  padding: 0.15rem 0.38rem;
+  border-radius: 999px;
+  color: #8a3409;
+  background: #fff1e8;
+  font-size: 0.7rem;
+  line-height: 1.15;
+  text-align: center;
+}
+
 .terminal-panel__acciones button:last-child {
   color: #153f2e;
   background: #e3eadf;

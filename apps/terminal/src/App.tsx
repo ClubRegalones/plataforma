@@ -15,6 +15,9 @@ import { consultarSaldoRegisLlavero } from './lib/regis'
 import type { SaldoRegisLlavero } from './lib/regis'
 import { mensajeSupabase } from './lib/mensajesSupabase'
 import { supabase } from './lib/supabase'
+import GestionBeneficios from './GestionBeneficios'
+import Asistencia from './Asistencia'
+import EnlaceAsistencia from './EnlaceAsistencia'
 
 type Solicitud = Tables<'solicitudes_compra'>
 
@@ -121,6 +124,8 @@ function PanelTerminal() {
   const [cargando, setCargando] = useState(true)
   const [procesandoId, setProcesandoId] = useState<string | null>(null)
   const [sinMembresia, setSinMembresia] = useState(false)
+  const [puedeGestionarBeneficios, setPuedeGestionarBeneficios] =
+    useState(false)
   const [cajas, setCajas] = useState<CajaOperador[]>([])
   const [cajaId, setCajaId] = useState('')
   const [tokenLlavero, setTokenLlavero] = useState('')
@@ -159,6 +164,7 @@ function PanelTerminal() {
 
     if (membresias.length === 0) {
       setSinMembresia(true)
+      setPuedeGestionarBeneficios(false)
       setSolicitudes([])
       setCajas([])
       setCargando(false)
@@ -166,6 +172,11 @@ function PanelTerminal() {
     }
 
     setSinMembresia(false)
+    setPuedeGestionarBeneficios(
+      membresias.some(
+        ({ rol }) => rol === 'propietario' || rol === 'administrador',
+      ),
+    )
 
     const negociosIds = membresias.map((membresia) => membresia.negocio_id)
     const { data: sucursales, error: errorSucursales } = await supabase
@@ -595,6 +606,10 @@ function PanelTerminal() {
           <p>{sesion?.user.email}</p>
         </div>
         <div className="terminal-panel__acciones">
+          <EnlaceAsistencia />
+          {puedeGestionarBeneficios && (
+            <a href="#beneficios">Gestionar beneficios</a>
+          )}
           <button type="button" onClick={() => void cargarSolicitudes()}>
             Actualizar
           </button>
@@ -1042,6 +1057,16 @@ function PanelTerminal() {
 
 function App() {
   const { sesion, cargando } = useSesion()
+  const [ruta, setRuta] = useState(() =>
+    window.location.hash.replace(/^#\/?/, '').split('?')[0],
+  )
+
+  useEffect(() => {
+    const actualizarRuta = () =>
+      setRuta(window.location.hash.replace(/^#\/?/, '').split('?')[0])
+    window.addEventListener('hashchange', actualizarRuta)
+    return () => window.removeEventListener('hashchange', actualizarRuta)
+  }, [])
 
   if (cargando) {
     return (
@@ -1051,7 +1076,12 @@ function App() {
     )
   }
 
-  return sesion ? <PanelTerminal /> : <AccesoTerminal />
+  if (!sesion) return <AccesoTerminal />
+
+  if (ruta === 'beneficios') return <GestionBeneficios />
+  if (ruta === 'asistencia') return <Asistencia />
+
+  return <PanelTerminal />
 }
 
 export default App

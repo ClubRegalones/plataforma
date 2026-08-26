@@ -1,15 +1,24 @@
 import type { Tables } from '@club-regalones/domain'
 import type { FormEvent } from 'react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { QRCodeSVG } from 'qrcode.react'
+import EnlaceSoporteAdmin from '../../componentes/EnlaceSoporteAdmin'
 import { useSesion } from '../../hooks/useSesion'
 import {
   cancelarSolicitudLlavero,
 } from '../../lib/llaveros'
 import { mensajeSupabase } from '../../lib/mensajesSupabase'
 import {
+  cancelarReservaCanjeRegis,
+  listarBeneficiosRegisDisponibles,
   listarSaldosRegisPropios,
+  reservarCanjeRegisQr,
 } from '../../lib/regis'
-import type { SaldoRegisPropio } from '../../lib/regis'
+import type {
+  BeneficioRegisDisponible,
+  ReservaCanjeRegisQr,
+  SaldoRegisPropio,
+} from '../../lib/regis'
 import { supabase } from '../../lib/supabase'
 import './Llaveros.css'
 
@@ -49,6 +58,29 @@ function formatearFecha(fecha: string | null) {
   }).format(new Date(fecha))
 }
 
+function formatearPesos(monto: number) {
+  return new Intl.NumberFormat('es-CL', {
+    style: 'currency',
+    currency: 'CLP',
+    maximumFractionDigits: 0,
+  }).format(monto)
+}
+
+function describirBeneficio(beneficio: BeneficioRegisDisponible) {
+  if (beneficio.tipo === 'porcentaje_descuento') {
+    return `${beneficio.porcentaje_descuento_bp / 100}% de descuento`
+  }
+
+  return `${formatearPesos(beneficio.monto_descuento_fijo_clp)} de descuento`
+}
+
+function formatearCuentaRegresiva(segundos: number) {
+  const minutos = Math.floor(segundos / 60)
+  const resto = segundos % 60
+
+  return `${minutos}:${resto.toString().padStart(2, '0')}`
+}
+
 function tieneCodigo(error: unknown, codigo: string) {
   return (
     typeof error === 'object' &&
@@ -65,6 +97,18 @@ function MiLlavero() {
   const [llaveros, setLlaveros] = useState<LlaveroPropio[]>([])
   const [negocios, setNegocios] = useState<Negocio[]>([])
   const [saldosRegis, setSaldosRegis] = useState<SaldoRegisPropio[]>([])
+  const [beneficiosRegis, setBeneficiosRegis] = useState<
+    BeneficioRegisDisponible[]
+  >([])
+  const [canjeActivo, setCanjeActivo] = useState<{
+    beneficio: BeneficioRegisDisponible
+    reserva: ReservaCanjeRegisQr
+  } | null>(null)
+  const [segundosRestantes, setSegundosRestantes] = useState(0)
+  const [beneficioProcesandoId, setBeneficioProcesandoId] = useState<
+    string | null
+  >(null)
+  const [cancelandoCanje, setCancelandoCanje] = useState(false)
   const [negocioId, setNegocioId] = useState('')
   const [observaciones, setObservaciones] = useState('')
   const [mostrarOpcionesLlavero, setMostrarOpcionesLlavero] = useState(false)
@@ -83,6 +127,7 @@ function MiLlavero() {
         respuestaLlaveros,
         respuestaNegocios,
         respuestaSaldosRegis,
+        respuestaBeneficiosRegis,
       ] =
         await Promise.all([
           supabase
@@ -107,6 +152,7 @@ function MiLlavero() {
             .eq('estado', 'activo')
             .order('nombre'),
           listarSaldosRegisPropios(),
+          listarBeneficiosRegisDisponibles(),
         ])
 
       const errorConsulta =
@@ -122,6 +168,7 @@ function MiLlavero() {
       setLlaveros((respuestaLlaveros.data ?? []) as LlaveroPropio[])
       setNegocios((respuestaNegocios.data ?? []) as Negocio[])
       setSaldosRegis(respuestaSaldosRegis)
+      setBeneficiosRegis(respuestaBeneficiosRegis)
     } catch (errorCapturado) {
       setError(mensajeSupabase(errorCapturado))
     } finally {
@@ -134,6 +181,39 @@ function MiLlavero() {
 
     return () => window.clearTimeout(inicioCarga)
   }, [cargarDatos])
+
+  useEffect(() => {
+    if (!canjeActivo) return
+
+    const actualizarCuentaRegresiva = () => {
+      const restantes = Math.max(
+        0,
+        Math.ceil(
+          (new Date(canjeActivo.reserva.expira_en).getTime() - Date.now()) /
+            1000,
+        ),
+      )
+
+      setSegundosRestantes(restantes)
+
+      if (restantes === 0) {
+        setCanjeActivo(null)
+        setMensaje('La reserva venció y los REGIS volvieron a estar disponibles.')
+        setCargandoDatos(true)
+        void cargarDatos()
+        return true
+      }
+
+      return false
+    }
+
+    actualizarCuentaRegresiva()
+    const intervalo = window.setInterval(() => {
+      if (actualizarCuentaRegresiva()) window.clearInterval(intervalo)
+    }, 1000)
+
+    return () => window.clearInterval(intervalo)
+  }, [canjeActivo, cargarDatos])
 
   const solicitudActiva = useMemo(
     () =>
@@ -240,6 +320,45 @@ function MiLlavero() {
     }
   }
 
+  const reservarBeneficio = async (beneficio: BeneficioRegisDisponible) => {
+    if (canjeActivo) return
+
+    setBeneficioProcesandoId(beneficio.beneficio_version_id)
+    setError(null)
+    setMensaje(null)
+
+    try {
+      const reserva = await reservarCanjeRegisQr(
+        beneficio.beneficio_version_id,
+      )
+
+      setCanjeActivo({ beneficio, reserva })
+      await cargarDatos()
+    } catch (errorCapturado) {
+      setError(mensajeSupabase(errorCapturado))
+    } finally {
+      setBeneficioProcesandoId(null)
+    }
+  }
+
+  const cancelarCanje = async () => {
+    if (!canjeActivo) return
+
+    setCancelandoCanje(true)
+    setError(null)
+
+    try {
+      await cancelarReservaCanjeRegis(canjeActivo.reserva.canje_id)
+      setCanjeActivo(null)
+      setMensaje('Cancelamos la reserva y devolvimos los REGIS a tu saldo.')
+      await cargarDatos()
+    } catch (errorCapturado) {
+      setError(mensajeSupabase(errorCapturado))
+    } finally {
+      setCancelandoCanje(false)
+    }
+  }
+
   const actualizarDatos = () => {
     setCargandoDatos(true)
     setError(null)
@@ -259,7 +378,11 @@ function MiLlavero() {
         </a>
         <nav aria-label="Acciones de cuenta">
           {perfil?.rol_plataforma === 'admin_regalones' && (
-            <a href="#administrar-llaveros">Administrar llaveros</a>
+            <>
+              <a href="#administrar-beneficios">Beneficios</a>
+              <a href="#administrar-llaveros">Llaveros</a>
+              <EnlaceSoporteAdmin />
+            </>
           )}
           {sesion && (
             <button type="button" onClick={() => void cerrarSesion()}>
@@ -415,6 +538,112 @@ function MiLlavero() {
             )}
           </section>
 
+          <section
+            className="llaveros__beneficios"
+            aria-labelledby="beneficios-regis-title"
+          >
+            <div className="llaveros__beneficios-encabezado">
+              <div>
+                <span className="llaveros__sobrelinea">Para usar tus REGIS</span>
+                <h2 id="beneficios-regis-title">Beneficios disponibles</h2>
+              </div>
+              <p>
+                Elige un beneficio, genera tu QR y muéstralo en la caja. La
+                reserva dura diez minutos y solo funciona en el comercio
+                indicado.
+              </p>
+            </div>
+
+            {beneficiosRegis.length === 0 ? (
+              <div className="llaveros__beneficios-vacio">
+                <strong>Aún no hay beneficios publicados</strong>
+                <span>
+                  Cuando un comercio active uno, aparecerá aquí con su costo y
+                  sus condiciones.
+                </span>
+              </div>
+            ) : (
+              <div className="llaveros__beneficios-lista">
+                {beneficiosRegis.map((beneficio) => {
+                  const faltantes = Math.max(
+                    beneficio.costo_regis - beneficio.saldo_disponible,
+                    0,
+                  )
+                  const esCanjeActivo =
+                    canjeActivo?.beneficio.beneficio_version_id ===
+                    beneficio.beneficio_version_id
+
+                  return (
+                    <article
+                      className="llaveros__beneficio"
+                      key={beneficio.beneficio_version_id}
+                    >
+                      <div className="llaveros__beneficio-comercio">
+                        <span>{beneficio.nombre_negocio}</span>
+                        {beneficio.mostrar_cupos &&
+                          beneficio.cupos_disponibles !== null && (
+                            <small>
+                              {beneficio.cupos_disponibles}{' '}
+                              {beneficio.cupos_disponibles === 1
+                                ? 'cupo'
+                                : 'cupos'}
+                            </small>
+                          )}
+                      </div>
+                      <h3>{beneficio.nombre_beneficio}</h3>
+                      <strong className="llaveros__beneficio-descuento">
+                        {describirBeneficio(beneficio)}
+                      </strong>
+                      {beneficio.descripcion && <p>{beneficio.descripcion}</p>}
+                      <dl>
+                        <div>
+                          <dt>Costo</dt>
+                          <dd>{beneficio.costo_regis} REGIS</dd>
+                        </div>
+                        <div>
+                          <dt>Compra mínima</dt>
+                          <dd>{formatearPesos(beneficio.compra_minima_clp)}</dd>
+                        </div>
+                        {beneficio.tope_descuento_clp !== null && (
+                          <div>
+                            <dt>Descuento máximo</dt>
+                            <dd>
+                              {formatearPesos(beneficio.tope_descuento_clp)}
+                            </dd>
+                          </div>
+                        )}
+                        <div>
+                          <dt>Tu saldo aquí</dt>
+                          <dd>{beneficio.saldo_disponible} REGIS</dd>
+                        </div>
+                      </dl>
+                      <button
+                        type="button"
+                        disabled={
+                          !beneficio.puede_reservar ||
+                          canjeActivo !== null ||
+                          beneficioProcesandoId !== null
+                        }
+                        onClick={() => void reservarBeneficio(beneficio)}
+                      >
+                        {beneficioProcesandoId ===
+                        beneficio.beneficio_version_id
+                          ? 'Reservando…'
+                          : esCanjeActivo
+                            ? 'Reserva activa'
+                            : beneficio.puede_reservar
+                              ? `Canjear ${beneficio.costo_regis} REGIS`
+                              : faltantes > 0
+                                ? `Te faltan ${faltantes} REGIS`
+                                : 'No disponible'}
+                      </button>
+                    </article>
+                  )
+                })}
+              </div>
+            )}
+          </section>
+
           {!mostrarGestionLlavero && (
             <section className="llaveros__opcion-llavero">
               <div>
@@ -551,6 +780,62 @@ function MiLlavero() {
                 </table>
               </div>
             </section>
+          )}
+
+          {canjeActivo && (
+            <div className="llaveros__modal-fondo">
+              <section
+                className="llaveros__modal-canje"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="canje-qr-title"
+              >
+                <span className="llaveros__sobrelinea">Reserva lista</span>
+                <h2 id="canje-qr-title">Muestra este QR en la caja</h2>
+                <p>
+                  {canjeActivo.beneficio.nombre_beneficio} en{' '}
+                  <strong>{canjeActivo.beneficio.nombre_negocio}</strong>
+                </p>
+                <div className="llaveros__qr">
+                  <QRCodeSVG
+                    value={canjeActivo.reserva.tokenQr}
+                    size={220}
+                    bgColor="#ffffff"
+                    fgColor="#073f2d"
+                    level="M"
+                    title="Código QR temporal del canje"
+                  />
+                </div>
+                <div className="llaveros__canje-tiempo" aria-live="polite">
+                  <span>Tiempo restante</span>
+                  <strong>{formatearCuentaRegresiva(segundosRestantes)}</strong>
+                </div>
+                <dl className="llaveros__canje-resumen">
+                  <div>
+                    <dt>REGIS reservados</dt>
+                    <dd>{canjeActivo.reserva.costo_regis}</dd>
+                  </div>
+                  <div>
+                    <dt>Código de respaldo</dt>
+                    <dd>{canjeActivo.reserva.codigo_publico}</dd>
+                  </div>
+                </dl>
+                <p className="llaveros__canje-seguridad">
+                  Mantén esta pantalla abierta. El QR no contiene tu nombre ni
+                  tu saldo y dejará de funcionar al vencer o después del canje.
+                </p>
+                <button
+                  type="button"
+                  className="llaveros__cancelar-canje"
+                  disabled={cancelandoCanje}
+                  onClick={() => void cancelarCanje()}
+                >
+                  {cancelandoCanje
+                    ? 'Cancelando…'
+                    : 'Cancelar y devolver mis REGIS'}
+                </button>
+              </section>
+            </div>
           )}
         </div>
       )}

@@ -1,4 +1,4 @@
-﻿export type Json =
+export type Json =
   | string
   | number
   | boolean
@@ -7,11 +7,6 @@
   | Json[]
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
-  __InternalSupabase: {
-    PostgrestVersion: "14.15"
-  }
   graphql_public: {
     Tables: {
       [_ in never]: never
@@ -644,6 +639,41 @@ export type Database = {
           },
         ]
       }
+      mensajes_ticket_soporte: {
+        Row: {
+          autor_id: string | null
+          creado_en: string
+          id: string
+          mensaje: string
+          origen: Database["public"]["Enums"]["origen_mensaje_soporte"]
+          ticket_id: string
+        }
+        Insert: {
+          autor_id?: string | null
+          creado_en?: string
+          id?: string
+          mensaje: string
+          origen: Database["public"]["Enums"]["origen_mensaje_soporte"]
+          ticket_id: string
+        }
+        Update: {
+          autor_id?: string | null
+          creado_en?: string
+          id?: string
+          mensaje?: string
+          origen?: Database["public"]["Enums"]["origen_mensaje_soporte"]
+          ticket_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mensajes_ticket_soporte_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "tickets_soporte"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       miembros_negocio: {
         Row: {
           actualizado_en: string
@@ -921,6 +951,61 @@ export type Database = {
           precio_mensual_clp?: number
         }
         Relationships: []
+      }
+      registro_supervision_beneficios: {
+        Row: {
+          accion: Database["public"]["Enums"]["accion_supervision_beneficio_regis"]
+          actor_id: string | null
+          beneficio_id: string
+          beneficio_version_id: string
+          creado_en: string
+          id: string
+          motivo: string | null
+          negocio_id: string
+        }
+        Insert: {
+          accion: Database["public"]["Enums"]["accion_supervision_beneficio_regis"]
+          actor_id?: string | null
+          beneficio_id: string
+          beneficio_version_id: string
+          creado_en?: string
+          id?: string
+          motivo?: string | null
+          negocio_id: string
+        }
+        Update: {
+          accion?: Database["public"]["Enums"]["accion_supervision_beneficio_regis"]
+          actor_id?: string | null
+          beneficio_id?: string
+          beneficio_version_id?: string
+          creado_en?: string
+          id?: string
+          motivo?: string | null
+          negocio_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "registro_supervision_beneficio_version_fkey"
+            columns: ["beneficio_version_id", "beneficio_id"]
+            isOneToOne: false
+            referencedRelation: "versiones_beneficio_regis"
+            referencedColumns: ["id", "beneficio_id"]
+          },
+          {
+            foreignKeyName: "registro_supervision_beneficios_beneficio_id_fkey"
+            columns: ["beneficio_id"]
+            isOneToOne: false
+            referencedRelation: "beneficios_regis"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "registro_supervision_beneficios_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       reglas_regis: {
         Row: {
@@ -1281,6 +1366,69 @@ export type Database = {
           },
         ]
       }
+      tickets_soporte: {
+        Row: {
+          actualizado_en: string
+          asunto: string
+          beneficio_id: string | null
+          categoria: Database["public"]["Enums"]["categoria_ticket_soporte"]
+          cerrado_en: string | null
+          creado_en: string
+          creado_por: string
+          estado: Database["public"]["Enums"]["estado_ticket_soporte"]
+          id: string
+          leido_comercio_en: string | null
+          leido_regalones_en: string | null
+          negocio_id: string
+          ultima_actividad_en: string
+        }
+        Insert: {
+          actualizado_en?: string
+          asunto: string
+          beneficio_id?: string | null
+          categoria: Database["public"]["Enums"]["categoria_ticket_soporte"]
+          cerrado_en?: string | null
+          creado_en?: string
+          creado_por: string
+          estado?: Database["public"]["Enums"]["estado_ticket_soporte"]
+          id?: string
+          leido_comercio_en?: string | null
+          leido_regalones_en?: string | null
+          negocio_id: string
+          ultima_actividad_en?: string
+        }
+        Update: {
+          actualizado_en?: string
+          asunto?: string
+          beneficio_id?: string | null
+          categoria?: Database["public"]["Enums"]["categoria_ticket_soporte"]
+          cerrado_en?: string | null
+          creado_en?: string
+          creado_por?: string
+          estado?: Database["public"]["Enums"]["estado_ticket_soporte"]
+          id?: string
+          leido_comercio_en?: string | null
+          leido_regalones_en?: string | null
+          negocio_id?: string
+          ultima_actividad_en?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tickets_soporte_beneficio_id_fkey"
+            columns: ["beneficio_id"]
+            isOneToOne: false
+            referencedRelation: "beneficios_regis"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tickets_soporte_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       vecinos_negocios: {
         Row: {
           actualizado_en: string
@@ -1502,6 +1650,44 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      cambiar_estado_beneficio_regis: {
+        Args: {
+          p_beneficio_version_id: string
+          p_estado: Database["public"]["Enums"]["estado_beneficio_regis"]
+          p_motivo: string
+        }
+        Returns: {
+          beneficio_id: string
+          compra_minima_clp: number
+          costo_regis: number
+          creado_en: string
+          creado_por: string | null
+          cupos_totales: number | null
+          descripcion: string | null
+          estado: Database["public"]["Enums"]["estado_beneficio_regis"]
+          id: string
+          limite_por_vecino: number
+          monto_descuento_fijo_clp: number | null
+          mostrar_cupos: boolean
+          nombre: string
+          porcentaje_descuento_bp: number | null
+          porcentaje_maximo_canje_bp: number
+          publicado_en: string | null
+          regla_regis_id: string
+          tipo: Database["public"]["Enums"]["tipo_beneficio_regis"]
+          tope_descuento_clp: number | null
+          valor_regis_clp: number
+          version: number
+          vigencia_desde: string
+          vigencia_hasta: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "versiones_beneficio_regis"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       cambiar_estado_llavero: {
         Args: {
           p_estado: Database["public"]["Enums"]["estado_llavero_nfc"]
@@ -1515,6 +1701,33 @@ export type Database = {
           id: string
           vecino_id: string
         }[]
+      }
+      cambiar_estado_ticket_soporte: {
+        Args: {
+          p_estado: Database["public"]["Enums"]["estado_ticket_soporte"]
+          p_ticket_id: string
+        }
+        Returns: {
+          actualizado_en: string
+          asunto: string
+          beneficio_id: string | null
+          categoria: Database["public"]["Enums"]["categoria_ticket_soporte"]
+          cerrado_en: string | null
+          creado_en: string
+          creado_por: string
+          estado: Database["public"]["Enums"]["estado_ticket_soporte"]
+          id: string
+          leido_comercio_en: string | null
+          leido_regalones_en: string | null
+          negocio_id: string
+          ultima_actividad_en: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "tickets_soporte"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       cancelar_reserva_canje_regis: {
         Args: { p_canje_id: string }
@@ -1618,6 +1831,7 @@ export type Database = {
           reservados: number
         }[]
       }
+      contar_tickets_soporte_no_leidos: { Args: never; Returns: number }
       corregir_solicitud_compra: {
         Args: { p_monto: number; p_motivo: string; p_solicitud_id: string }
         Returns: {
@@ -1828,6 +2042,36 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      crear_ticket_soporte: {
+        Args: {
+          p_asunto: string
+          p_beneficio_id?: string
+          p_categoria: Database["public"]["Enums"]["categoria_ticket_soporte"]
+          p_mensaje: string
+          p_negocio_id: string
+        }
+        Returns: {
+          actualizado_en: string
+          asunto: string
+          beneficio_id: string | null
+          categoria: Database["public"]["Enums"]["categoria_ticket_soporte"]
+          cerrado_en: string | null
+          creado_en: string
+          creado_por: string
+          estado: Database["public"]["Enums"]["estado_ticket_soporte"]
+          id: string
+          leido_comercio_en: string | null
+          leido_regalones_en: string | null
+          negocio_id: string
+          ultima_actividad_en: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "tickets_soporte"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       entregar_llavero: {
         Args: {
           p_codigo_publico: string
@@ -1982,6 +2226,30 @@ export type Database = {
           reservados: number
         }[]
       }
+      marcar_ticket_soporte_leido: {
+        Args: { p_ticket_id: string }
+        Returns: {
+          actualizado_en: string
+          asunto: string
+          beneficio_id: string | null
+          categoria: Database["public"]["Enums"]["categoria_ticket_soporte"]
+          cerrado_en: string | null
+          creado_en: string
+          creado_por: string
+          estado: Database["public"]["Enums"]["estado_ticket_soporte"]
+          id: string
+          leido_comercio_en: string | null
+          leido_regalones_en: string | null
+          negocio_id: string
+          ultima_actividad_en: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "tickets_soporte"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       preparar_llavero: {
         Args: {
           p_codigo_publico: string
@@ -2023,6 +2291,10 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      puede_acceder_ticket_soporte: {
+        Args: { p_ticket_id: string }
+        Returns: boolean
       }
       rechazar_solicitud_compra: {
         Args: { p_motivo: string; p_solicitud_id: string }
@@ -2107,6 +2379,23 @@ export type Database = {
           sucursal_id: string
           tipo: Database["public"]["Enums"]["tipo_etiqueta_nfc"]
         }[]
+      }
+      responder_ticket_soporte: {
+        Args: { p_mensaje: string; p_ticket_id: string }
+        Returns: {
+          autor_id: string | null
+          creado_en: string
+          id: string
+          mensaje: string
+          origen: Database["public"]["Enums"]["origen_mensaje_soporte"]
+          ticket_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "mensajes_ticket_soporte"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       solicitar_reingreso_monto: {
         Args: { p_motivo: string; p_solicitud_id: string }
@@ -2198,6 +2487,18 @@ export type Database = {
       }
     }
     Enums: {
+      accion_supervision_beneficio_regis:
+        | "borrador_creado"
+        | "publicado"
+        | "pausado"
+        | "reactivado"
+        | "finalizado"
+      categoria_ticket_soporte:
+        | "beneficios"
+        | "compras"
+        | "llaveros"
+        | "cuenta"
+        | "otro"
       estado_alerta_riesgo:
         | "abierta"
         | "en_revision"
@@ -2254,11 +2555,18 @@ export type Database = {
         | "activa"
         | "bloqueada"
         | "revocada"
+      estado_ticket_soporte:
+        | "abierto"
+        | "en_revision"
+        | "esperando_comercio"
+        | "resuelto"
+        | "cerrado"
       informado_por: "vecino" | "cajero"
       metodo_verificacion_llavero: "cedula" | "pin" | "sms"
       modalidad_atencion: "digital" | "asistida"
       origen_canje_regis: "qr" | "llavero"
       origen_compra: "autoservicio" | "asistido" | "integracion_pos"
+      origen_mensaje_soporte: "comercio" | "regalones"
       rol_miembro_negocio: "propietario" | "administrador" | "cajero"
       rol_plataforma: "usuario" | "admin_regalones"
       severidad_riesgo: "baja" | "media" | "alta" | "critica"
@@ -2400,6 +2708,20 @@ export const Constants = {
   },
   public: {
     Enums: {
+      accion_supervision_beneficio_regis: [
+        "borrador_creado",
+        "publicado",
+        "pausado",
+        "reactivado",
+        "finalizado",
+      ],
+      categoria_ticket_soporte: [
+        "beneficios",
+        "compras",
+        "llaveros",
+        "cuenta",
+        "otro",
+      ],
       estado_alerta_riesgo: [
         "abierta",
         "en_revision",
@@ -2464,11 +2786,19 @@ export const Constants = {
         "bloqueada",
         "revocada",
       ],
+      estado_ticket_soporte: [
+        "abierto",
+        "en_revision",
+        "esperando_comercio",
+        "resuelto",
+        "cerrado",
+      ],
       informado_por: ["vecino", "cajero"],
       metodo_verificacion_llavero: ["cedula", "pin", "sms"],
       modalidad_atencion: ["digital", "asistida"],
       origen_canje_regis: ["qr", "llavero"],
       origen_compra: ["autoservicio", "asistido", "integracion_pos"],
+      origen_mensaje_soporte: ["comercio", "regalones"],
       rol_miembro_negocio: ["propietario", "administrador", "cajero"],
       rol_plataforma: ["usuario", "admin_regalones"],
       severidad_riesgo: ["baja", "media", "alta", "critica"],
