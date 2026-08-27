@@ -1,3 +1,4 @@
+import { calcularCompraParaDescuentoCompleto } from '@club-regalones/domain'
 import type { Tables } from '@club-regalones/domain'
 import type { FormEvent } from 'react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -10,12 +11,15 @@ import {
 import { mensajeSupabase } from '../../lib/mensajesSupabase'
 import {
   cancelarReservaCanjeRegis,
+  listarHistorialCanjesVecino,
   listarBeneficiosRegisDisponibles,
   listarSaldosRegisPropios,
+  marcarCanjeRegisLeido,
   reservarCanjeRegisQr,
 } from '../../lib/regis'
 import type {
   BeneficioRegisDisponible,
+  HistorialCanjeRegis,
   ReservaCanjeRegisQr,
   SaldoRegisPropio,
 } from '../../lib/regis'
@@ -71,7 +75,32 @@ function describirBeneficio(beneficio: BeneficioRegisDisponible) {
     return `${beneficio.porcentaje_descuento_bp / 100}% de descuento`
   }
 
-  return `${formatearPesos(beneficio.monto_descuento_fijo_clp)} de descuento`
+  return `Hasta ${formatearPesos(beneficio.monto_descuento_fijo_clp)} de descuento`
+}
+
+function describirReglaBeneficio(beneficio: BeneficioRegisDisponible) {
+  const porcentajeMaximo = beneficio.porcentaje_maximo_canje_bp / 100
+  const compraDescuentoCompleto = Math.max(
+    beneficio.compra_minima_clp,
+    calcularCompraParaDescuentoCompleto({
+      tipo: beneficio.tipo,
+      porcentajeDescuentoBp: beneficio.porcentaje_descuento_bp,
+      montoDescuentoFijoClp: beneficio.monto_descuento_fijo_clp,
+      topeDescuentoClp: beneficio.tope_descuento_clp,
+      porcentajeMaximoCanjeBp: beneficio.porcentaje_maximo_canje_bp,
+    }) ?? beneficio.compra_minima_clp,
+  )
+
+  if (beneficio.tipo === 'monto_fijo') {
+    return `Hasta ${formatearPesos(beneficio.monto_descuento_fijo_clp)}, con un máximo del ${porcentajeMaximo}% de la compra. Recibes el descuento completo en compras desde ${formatearPesos(compraDescuentoCompleto)}.`
+  }
+
+  const porcentajePromocion = beneficio.porcentaje_descuento_bp / 100
+  const porcentajeAplicable = Math.min(
+    porcentajePromocion,
+    porcentajeMaximo,
+  )
+  return `${porcentajeAplicable}% de la compra, hasta ${formatearPesos(beneficio.tope_descuento_clp)}. Alcanzas el descuento máximo en compras desde ${formatearPesos(compraDescuentoCompleto)}.`
 }
 
 function formatearCuentaRegresiva(segundos: number) {
@@ -104,11 +133,17 @@ function MiLlavero() {
     beneficio: BeneficioRegisDisponible
     reserva: ReservaCanjeRegisQr
   } | null>(null)
+  const [historialCanjes, setHistorialCanjes] = useState<
+    HistorialCanjeRegis[]
+  >([])
+  const [mostrarCanjeQr, setMostrarCanjeQr] = useState(false)
   const [segundosRestantes, setSegundosRestantes] = useState(0)
+  const [codigoQrCopiado, setCodigoQrCopiado] = useState(false)
   const [beneficioProcesandoId, setBeneficioProcesandoId] = useState<
     string | null
   >(null)
   const [cancelandoCanje, setCancelandoCanje] = useState(false)
+  const [marcandoCanjesLeidos, setMarcandoCanjesLeidos] = useState(false)
   const [negocioId, setNegocioId] = useState('')
   const [observaciones, setObservaciones] = useState('')
   const [mostrarOpcionesLlavero, setMostrarOpcionesLlavero] = useState(false)
@@ -128,6 +163,7 @@ function MiLlavero() {
         respuestaNegocios,
         respuestaSaldosRegis,
         respuestaBeneficiosRegis,
+        respuestaHistorialCanjes,
       ] =
         await Promise.all([
           supabase
@@ -153,6 +189,7 @@ function MiLlavero() {
             .order('nombre'),
           listarSaldosRegisPropios(),
           listarBeneficiosRegisDisponibles(),
+          listarHistorialCanjesVecino(),
         ])
 
       const errorConsulta =
@@ -169,6 +206,7 @@ function MiLlavero() {
       setNegocios((respuestaNegocios.data ?? []) as Negocio[])
       setSaldosRegis(respuestaSaldosRegis)
       setBeneficiosRegis(respuestaBeneficiosRegis)
+      setHistorialCanjes(respuestaHistorialCanjes)
     } catch (errorCapturado) {
       setError(mensajeSupabase(errorCapturado))
     } finally {
@@ -198,6 +236,8 @@ function MiLlavero() {
 
       if (restantes === 0) {
         setCanjeActivo(null)
+        setMostrarCanjeQr(false)
+        setCodigoQrCopiado(false)
         setMensaje('La reserva venció y los REGIS volvieron a estar disponibles.')
         setCargandoDatos(true)
         void cargarDatos()
@@ -213,6 +253,38 @@ function MiLlavero() {
     }, 1000)
 
     return () => window.clearInterval(intervalo)
+  }, [canjeActivo, cargarDatos])
+
+  useEffect(() => {
+    if (!canjeActivo) return
+
+    let vigente = true
+    const consultarEstado = async () => {
+      const { data, error: errorEstado } = await supabase
+        .from('canjes_regis')
+        .select('estado')
+        .eq('id', canjeActivo.reserva.canje_id)
+        .single()
+
+      if (!vigente || errorEstado || data.estado === 'reservado') return
+
+      setCanjeActivo(null)
+      setMostrarCanjeQr(false)
+      setCodigoQrCopiado(false)
+      setMensaje(
+        data.estado === 'confirmado'
+          ? '¡Canje realizado correctamente! Ya puedes revisar el detalle en tu historial.'
+          : 'La reserva dejó de estar disponible y los REGIS fueron liberados.',
+      )
+      setCargandoDatos(true)
+      void cargarDatos()
+    }
+
+    const intervalo = window.setInterval(() => void consultarEstado(), 2500)
+    return () => {
+      vigente = false
+      window.clearInterval(intervalo)
+    }
   }, [canjeActivo, cargarDatos])
 
   const solicitudActiva = useMemo(
@@ -333,6 +405,8 @@ function MiLlavero() {
       )
 
       setCanjeActivo({ beneficio, reserva })
+      setMostrarCanjeQr(true)
+      setCodigoQrCopiado(false)
       await cargarDatos()
     } catch (errorCapturado) {
       setError(mensajeSupabase(errorCapturado))
@@ -350,12 +424,50 @@ function MiLlavero() {
     try {
       await cancelarReservaCanjeRegis(canjeActivo.reserva.canje_id)
       setCanjeActivo(null)
+      setMostrarCanjeQr(false)
+      setCodigoQrCopiado(false)
       setMensaje('Cancelamos la reserva y devolvimos los REGIS a tu saldo.')
       await cargarDatos()
     } catch (errorCapturado) {
       setError(mensajeSupabase(errorCapturado))
     } finally {
       setCancelandoCanje(false)
+    }
+  }
+
+  const copiarCodigoQr = async () => {
+    if (!canjeActivo) return
+
+    try {
+      await navigator.clipboard.writeText(canjeActivo.reserva.tokenQr)
+      setCodigoQrCopiado(true)
+    } catch {
+      setError(
+        'No pudimos copiar el código automáticamente. Inténtalo desde un navegador con acceso al portapapeles.',
+      )
+    }
+  }
+
+  const marcarHistorialComoLeido = async () => {
+    const pendientes = historialCanjes.filter(({ leido }) => !leido)
+    if (pendientes.length === 0) return
+
+    setMarcandoCanjesLeidos(true)
+    setError(null)
+
+    try {
+      await Promise.all(
+        pendientes.map(({ canje_id }) =>
+          marcarCanjeRegisLeido(canje_id, 'vecino'),
+        ),
+      )
+      setHistorialCanjes((actual) =>
+        actual.map((canje) => ({ ...canje, leido: true })),
+      )
+    } catch (errorCapturado) {
+      setError(mensajeSupabase(errorCapturado))
+    } finally {
+      setMarcandoCanjesLeidos(false)
     }
   }
 
@@ -369,6 +481,8 @@ function MiLlavero() {
     await supabase.auth.signOut()
     window.location.hash = 'inicio'
   }
+
+  const canjesNoLeidos = historialCanjes.filter(({ leido }) => !leido).length
 
   return (
     <main className="llaveros">
@@ -516,7 +630,9 @@ function MiLlavero() {
                     <span>{saldo.nombre_negocio}</span>
                     <strong>{saldo.disponibles} REGIS</strong>
                     <small>Disponibles para usar en este comercio</small>
-                    {(saldo.pendientes > 0 || saldo.reservados > 0) && (
+                    {(saldo.pendientes > 0 ||
+                      saldo.reservados > 0 ||
+                      saldo.canjeados > 0) && (
                       <dl>
                         {saldo.pendientes > 0 && (
                           <div>
@@ -530,8 +646,95 @@ function MiLlavero() {
                             <dd>{saldo.reservados}</dd>
                           </div>
                         )}
+                        {saldo.canjeados > 0 && (
+                          <div>
+                            <dt>REGIS utilizados</dt>
+                            <dd>{saldo.canjeados}</dd>
+                          </div>
+                        )}
                       </dl>
                     )}
+                  </article>
+                ))}
+              </div>
+            )}
+          </section>
+
+          <section
+            className="llaveros__historial-canjes"
+            aria-labelledby="historial-canjes-title"
+          >
+            <div className="llaveros__historial-encabezado">
+              <div>
+                <span className="llaveros__sobrelinea">Actividad de tu cuenta</span>
+                <h2 id="historial-canjes-title">REGIS utilizados</h2>
+                <p>
+                  Cada canje conserva el comercio, la hora, el beneficio y los
+                  montos de la compra.
+                </p>
+              </div>
+              {canjesNoLeidos > 0 && (
+                <div className="llaveros__historial-aviso">
+                  <strong>
+                    {canjesNoLeidos}{' '}
+                    {canjesNoLeidos === 1 ? 'canje nuevo' : 'canjes nuevos'}
+                  </strong>
+                  <button
+                    type="button"
+                    disabled={marcandoCanjesLeidos}
+                    onClick={() => void marcarHistorialComoLeido()}
+                  >
+                    {marcandoCanjesLeidos
+                      ? 'Marcando…'
+                      : 'Marcar como revisados'}
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {historialCanjes.length === 0 ? (
+              <div className="llaveros__historial-vacio">
+                Aún no has utilizado REGIS en un beneficio.
+              </div>
+            ) : (
+              <div className="llaveros__historial-lista">
+                {historialCanjes.map((canje) => (
+                  <article
+                    className={`llaveros__historial-item ${
+                      canje.leido ? '' : 'llaveros__historial-item--nuevo'
+                    }`}
+                    key={canje.canje_id}
+                  >
+                    <div className="llaveros__historial-titulo">
+                      <div>
+                        {!canje.leido && <span>Nuevo</span>}
+                        <h3>{canje.nombre_beneficio}</h3>
+                        <p>{canje.nombre_negocio}</p>
+                      </div>
+                      <strong>-{canje.costo_regis} REGIS</strong>
+                    </div>
+                    <dl>
+                      <div>
+                        <dt>Fecha y hora</dt>
+                        <dd>{formatearFecha(canje.confirmado_en)}</dd>
+                      </div>
+                      <div>
+                        <dt>Compra original</dt>
+                        <dd>{formatearPesos(canje.monto_compra_bruto_clp)}</dd>
+                      </div>
+                      <div>
+                        <dt>Descuento</dt>
+                        <dd>-{formatearPesos(canje.descuento_total_clp)}</dd>
+                      </div>
+                      <div>
+                        <dt>Total pagado</dt>
+                        <dd>{formatearPesos(canje.monto_final_pagado_clp)}</dd>
+                      </div>
+                    </dl>
+                    <small>
+                      {canje.origen === 'qr' ? 'Canje digital' : 'Canje asistido'}
+                      {' · '}{canje.codigo_publico}
+                    </small>
                   </article>
                 ))}
               </div>
@@ -595,6 +798,10 @@ function MiLlavero() {
                         {describirBeneficio(beneficio)}
                       </strong>
                       {beneficio.descripcion && <p>{beneficio.descripcion}</p>}
+                      <div className="llaveros__beneficio-regla">
+                        <strong>Cómo se calcula</strong>
+                        <span>{describirReglaBeneficio(beneficio)}</span>
+                      </div>
                       <dl>
                         <div>
                           <dt>Costo</dt>
@@ -782,7 +989,22 @@ function MiLlavero() {
             </section>
           )}
 
-          {canjeActivo && (
+          {canjeActivo && !mostrarCanjeQr && (
+            <aside className="llaveros__canje-minimizado" aria-live="polite">
+              <div>
+                <span>QR de canje activo</span>
+                <strong>{canjeActivo.beneficio.nombre_beneficio}</strong>
+              </div>
+              <span className="llaveros__canje-minimizado-tiempo">
+                {formatearCuentaRegresiva(segundosRestantes)}
+              </span>
+              <button type="button" onClick={() => setMostrarCanjeQr(true)}>
+                Mostrar QR
+              </button>
+            </aside>
+          )}
+
+          {canjeActivo && mostrarCanjeQr && (
             <div className="llaveros__modal-fondo">
               <section
                 className="llaveros__modal-canje"
@@ -790,6 +1012,13 @@ function MiLlavero() {
                 aria-modal="true"
                 aria-labelledby="canje-qr-title"
               >
+                <button
+                  type="button"
+                  className="llaveros__modal-minimizar"
+                  onClick={() => setMostrarCanjeQr(false)}
+                >
+                  Minimizar
+                </button>
                 <span className="llaveros__sobrelinea">Reserva lista</span>
                 <h2 id="canje-qr-title">Muestra este QR en la caja</h2>
                 <p>
@@ -806,6 +1035,15 @@ function MiLlavero() {
                     title="Código QR temporal del canje"
                   />
                 </div>
+                <button
+                  type="button"
+                  className="llaveros__copiar-qr"
+                  onClick={() => void copiarCodigoQr()}
+                >
+                  {codigoQrCopiado
+                    ? 'Código temporal copiado'
+                    : 'Copiar código para ingreso manual'}
+                </button>
                 <div className="llaveros__canje-tiempo" aria-live="polite">
                   <span>Tiempo restante</span>
                   <strong>{formatearCuentaRegresiva(segundosRestantes)}</strong>
@@ -821,8 +1059,9 @@ function MiLlavero() {
                   </div>
                 </dl>
                 <p className="llaveros__canje-seguridad">
-                  Mantén esta pantalla abierta. El QR no contiene tu nombre ni
-                  tu saldo y dejará de funcionar al vencer o después del canje.
+                  Puedes minimizar esta ventana: la reserva y el tiempo seguirán
+                  activos. El QR no contiene tu nombre ni tu saldo y dejará de
+                  funcionar al vencer o después del canje.
                 </p>
                 <button
                   type="button"

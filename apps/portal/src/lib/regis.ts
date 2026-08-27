@@ -10,6 +10,8 @@ export type ReservaCanjeRegis =
 export type ReservaCanjeRegisQr = ReservaCanjeRegis & {
   tokenQr: string
 }
+export type HistorialCanjeRegis =
+  Database['public']['Functions']['listar_historial_canjes_vecino']['Returns'][number]
 
 export async function listarSaldosRegisPropios() {
   const { data, error } = await supabase.rpc('listar_saldos_regis_propios')
@@ -58,5 +60,38 @@ export async function cancelarReservaCanjeRegis(canjeId: string) {
 
   if (error) throw error
 
+  return data[0] ?? null
+}
+
+export async function listarHistorialCanjesVecino(limite = 50) {
+  const { data, error } = await supabase.rpc(
+    'listar_historial_canjes_vecino',
+    { p_limite: limite },
+  )
+
+  if (error) throw error
+  return data
+}
+
+export async function listarHistorialCanjesAdmin(limite = 200) {
+  const { data, error } = await supabase.rpc(
+    'listar_historial_canjes_admin',
+    { p_limite: limite },
+  )
+
+  if (error) throw error
+  return data
+}
+
+export async function marcarCanjeRegisLeido(
+  canjeId: string,
+  destino: 'vecino' | 'negocio' | 'admin_regalones',
+) {
+  const { data, error } = await supabase.rpc('marcar_canje_regis_leido', {
+    p_canje_id: canjeId,
+    p_destino: destino,
+  })
+
+  if (error) throw error
   return data[0] ?? null
 }

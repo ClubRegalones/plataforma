@@ -6,6 +6,15 @@ export type NegocioGestionBeneficios = Pick<
   'id' | 'nombre' | 'estado'
 >
 
+export type ReglaRegisGestion = Pick<
+  Tables<'reglas_regis'>,
+  | 'id'
+  | 'negocio_id'
+  | 'version'
+  | 'valor_regis_clp'
+  | 'porcentaje_maximo_canje_bp'
+>
+
 export type VersionBeneficioGestion = Pick<
   Tables<'versiones_beneficio_regis'>,
   | 'id'
@@ -26,6 +35,7 @@ export type VersionBeneficioGestion = Pick<
   | 'vigencia_desde'
   | 'vigencia_hasta'
   | 'valor_regis_clp'
+  | 'porcentaje_maximo_canje_bp'
   | 'publicado_en'
   | 'creado_en'
 >
@@ -86,6 +96,7 @@ export async function listarGestionBeneficiosComercio(usuarioId: string) {
       negocios: [] as NegocioGestionBeneficios[],
       beneficios: [] as BeneficioGestion[],
       eventos: [] as EventoSupervisionBeneficio[],
+      reglas: [] as ReglaRegisGestion[],
     }
   }
 
@@ -105,10 +116,11 @@ export async function listarGestionBeneficiosComercio(usuarioId: string) {
       negocios: [] as NegocioGestionBeneficios[],
       beneficios: [] as BeneficioGestion[],
       eventos: [] as EventoSupervisionBeneficio[],
+      reglas: [] as ReglaRegisGestion[],
     }
   }
 
-  const [respuestaBeneficios, respuestaEventos] = await Promise.all([
+  const [respuestaBeneficios, respuestaEventos, respuestaReglas] = await Promise.all([
     supabase
       .from('beneficios_regis')
       .select('id, negocio_id, codigo, creado_en')
@@ -121,10 +133,19 @@ export async function listarGestionBeneficiosComercio(usuarioId: string) {
       )
       .in('negocio_id', idsActivos)
       .order('creado_en', { ascending: false }),
+    supabase
+      .from('reglas_regis')
+      .select(
+        'id, negocio_id, version, valor_regis_clp, porcentaje_maximo_canje_bp',
+      )
+      .eq('activa', true)
+      .or(`negocio_id.is.null,negocio_id.in.(${idsActivos.join(',')})`)
+      .order('version', { ascending: false }),
   ])
 
   if (respuestaBeneficios.error) throw respuestaBeneficios.error
   if (respuestaEventos.error) throw respuestaEventos.error
+  if (respuestaReglas.error) throw respuestaReglas.error
 
   const beneficiosBase = respuestaBeneficios.data
   const beneficiosIds = beneficiosBase.map(({ id }) => id)
@@ -132,7 +153,7 @@ export async function listarGestionBeneficiosComercio(usuarioId: string) {
     ? await supabase
         .from('versiones_beneficio_regis')
         .select(
-          'id, beneficio_id, version, nombre, descripcion, tipo, porcentaje_descuento_bp, monto_descuento_fijo_clp, costo_regis, compra_minima_clp, tope_descuento_clp, cupos_totales, limite_por_vecino, mostrar_cupos, estado, vigencia_desde, vigencia_hasta, valor_regis_clp, publicado_en, creado_en',
+          'id, beneficio_id, version, nombre, descripcion, tipo, porcentaje_descuento_bp, monto_descuento_fijo_clp, costo_regis, compra_minima_clp, tope_descuento_clp, cupos_totales, limite_por_vecino, mostrar_cupos, estado, vigencia_desde, vigencia_hasta, valor_regis_clp, porcentaje_maximo_canje_bp, publicado_en, creado_en',
         )
         .in('beneficio_id', beneficiosIds)
         .order('version', { ascending: false })
@@ -160,6 +181,7 @@ export async function listarGestionBeneficiosComercio(usuarioId: string) {
     negocios: negocios as NegocioGestionBeneficios[],
     beneficios,
     eventos: respuestaEventos.data as EventoSupervisionBeneficio[],
+    reglas: respuestaReglas.data as ReglaRegisGestion[],
   }
 }
 

@@ -160,6 +160,13 @@
   font-weight: 600;
 }
 
+.terminal-beneficios__listado small {
+  padding-top: 0.45rem;
+  border-top: 1px solid rgb(21 63 46 / 10%);
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+
 .terminal-beneficios__formulario {
   display: grid;
   align-content: start;
@@ -212,6 +219,17 @@
 
 .terminal-beneficios__nota span {
   font-size: 0.84rem;
+}
+
+.terminal-beneficios__nota .terminal-beneficios__regla-destacada {
+  margin-top: 0.45rem;
+  padding: 0.65rem;
+  border: 1px solid rgb(225 108 38 / 24%);
+  border-radius: 0.7rem;
+  color: #8b3d12;
+  background: #fff4e9;
+  font-weight: 800;
+  line-height: 1.45;
 }
 
 .terminal-beneficios__formulario fieldset,

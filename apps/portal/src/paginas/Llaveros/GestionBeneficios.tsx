@@ -1,3 +1,4 @@
+import { calcularCompraParaDescuentoCompleto } from '@club-regalones/domain'
 import type { Tables } from '@club-regalones/domain'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import EnlaceSoporteAdmin from '../../componentes/EnlaceSoporteAdmin'
@@ -11,6 +12,11 @@ import type {
   RegistroSupervisionBeneficio,
 } from '../../lib/beneficios'
 import { mensajeSupabase } from '../../lib/mensajesSupabase'
+import {
+  listarHistorialCanjesAdmin,
+  marcarCanjeRegisLeido,
+} from '../../lib/regis'
+import type { HistorialCanjeRegis } from '../../lib/regis'
 import { supabase } from '../../lib/supabase'
 import './BeneficiosAdmin.css'
 import './Llaveros.css'
@@ -53,10 +59,27 @@ function describirDescuento(beneficio: BeneficioRegisAdmin) {
   const version = beneficio.version_actual
   if (!version) return 'Sin condiciones'
   if (version.tipo === 'monto_fijo') {
-    return `${formatearPesos(version.monto_descuento_fijo_clp)} de descuento`
+    return `Hasta ${formatearPesos(version.monto_descuento_fijo_clp)} de descuento`
   }
 
   return `${(version.porcentaje_descuento_bp ?? 0) / 100}% de descuento · tope ${formatearPesos(version.tope_descuento_clp)}`
+}
+
+function compraParaDescuentoCompleto(beneficio: BeneficioRegisAdmin) {
+  const version = beneficio.version_actual
+  if (!version) return null
+
+  const calculada = calcularCompraParaDescuentoCompleto({
+    tipo: version.tipo,
+    porcentajeDescuentoBp: version.porcentaje_descuento_bp,
+    montoDescuentoFijoClp: version.monto_descuento_fijo_clp,
+    topeDescuentoClp: version.tope_descuento_clp,
+    porcentajeMaximoCanjeBp: version.porcentaje_maximo_canje_bp,
+  })
+
+  return calculada === null
+    ? null
+    : Math.max(calculada, version.compra_minima_clp)
 }
 
 function GestionBeneficios() {
@@ -64,12 +87,14 @@ function GestionBeneficios() {
   const [perfil, setPerfil] = useState<PerfilAdmin | null>(null)
   const [beneficios, setBeneficios] = useState<BeneficioRegisAdmin[]>([])
   const [registro, setRegistro] = useState<RegistroSupervisionBeneficio[]>([])
+  const [historialCanjes, setHistorialCanjes] = useState<HistorialCanjeRegis[]>([])
   const [seleccionId, setSeleccionId] = useState<string | null>(null)
   const [busqueda, setBusqueda] = useState('')
   const [filtroEstado, setFiltroEstado] = useState('todos')
   const [motivoPausa, setMotivoPausa] = useState('')
   const [cargandoDatos, setCargandoDatos] = useState(false)
   const [procesando, setProcesando] = useState(false)
+  const [marcandoCanjesLeidos, setMarcandoCanjesLeidos] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [mensaje, setMensaje] = useState<string | null>(null)
 
@@ -112,9 +137,13 @@ function GestionBeneficios() {
       setPerfil(perfilActual)
       if (perfilActual.rol_plataforma !== 'admin_regalones') return
 
-      const gestion = await listarGestionBeneficios()
+      const [gestion, canjes] = await Promise.all([
+        listarGestionBeneficios(),
+        listarHistorialCanjesAdmin(),
+      ])
       setBeneficios(gestion.beneficios)
       setRegistro(gestion.registro)
+      setHistorialCanjes(canjes)
       setSeleccionId((actual) =>
         gestion.beneficios.some(({ id }) => id === actual)
           ? actual
@@ -131,6 +160,18 @@ function GestionBeneficios() {
     const inicio = window.setTimeout(() => void cargarSupervision(), 0)
     return () => window.clearTimeout(inicio)
   }, [cargarSupervision])
+
+  useEffect(() => {
+    if (!sesion || perfil?.rol_plataforma !== 'admin_regalones') return
+
+    const intervalo = window.setInterval(() => {
+      void listarHistorialCanjesAdmin()
+        .then(setHistorialCanjes)
+        .catch(() => undefined)
+    }, 15_000)
+
+    return () => window.clearInterval(intervalo)
+  }, [perfil?.rol_plataforma, sesion])
 
   const pausar = async () => {
     const version = seleccion?.version_actual
@@ -157,6 +198,29 @@ function GestionBeneficios() {
     }
   }
 
+  const marcarCanjesComoLeidos = async () => {
+    const pendientes = historialCanjes.filter(({ leido }) => !leido)
+    if (pendientes.length === 0) return
+
+    setMarcandoCanjesLeidos(true)
+    setError(null)
+    try {
+      await Promise.all(
+        pendientes.map(({ canje_id }) =>
+          marcarCanjeRegisLeido(canje_id, 'admin_regalones'),
+        ),
+      )
+      setHistorialCanjes((actual) =>
+        actual.map((canje) => ({ ...canje, leido: true })),
+      )
+      setMensaje('Las notificaciones de canje quedaron revisadas.')
+    } catch (errorCapturado) {
+      setError(mensajeSupabase(errorCapturado))
+    } finally {
+      setMarcandoCanjesLeidos(false)
+    }
+  }
+
   const cerrarSesion = async () => {
     await supabase.auth.signOut()
     window.location.hash = 'inicio'
@@ -171,6 +235,10 @@ function GestionBeneficios() {
   const eventosSeleccion = registro.filter(
     ({ beneficio_id }) => beneficio_id === seleccion?.id,
   )
+  const canjesSeleccion = historialCanjes.filter(
+    ({ beneficio_id }) => beneficio_id === seleccion?.id,
+  )
+  const canjesNoLeidos = historialCanjes.filter(({ leido }) => !leido).length
 
   return (
     <main className="llaveros beneficios-admin">
@@ -228,6 +296,19 @@ function GestionBeneficios() {
             <article><span>Registrados</span><strong>{beneficios.length}</strong></article>
             <article><span>Publicados</span><strong>{publicados}</strong></article>
             <article><span>Pausados</span><strong>{pausados}</strong></article>
+            <article className="beneficios-admin__metrica-canjes">
+              <span>Canjes sin revisar</span>
+              <strong>{canjesNoLeidos}</strong>
+              {canjesNoLeidos > 0 && (
+                <button
+                  type="button"
+                  disabled={marcandoCanjesLeidos}
+                  onClick={() => void marcarCanjesComoLeidos()}
+                >
+                  {marcandoCanjesLeidos ? 'Marcando…' : 'Marcar revisados'}
+                </button>
+              )}
+            </article>
           </section>
 
           <section className="beneficios-admin__panel">
@@ -311,6 +392,8 @@ function GestionBeneficios() {
                     <div><span>Costo</span><strong>{seleccion.version_actual.costo_regis} REGIS</strong></div>
                     <div><span>Beneficio</span><strong>{describirDescuento(seleccion)}</strong></div>
                     <div><span>Compra mínima</span><strong>{formatearPesos(seleccion.version_actual.compra_minima_clp)}</strong></div>
+                    <div><span>Máximo sobre la compra</span><strong>{seleccion.version_actual.porcentaje_maximo_canje_bp / 100}%</strong></div>
+                    <div><span>Descuento completo desde</span><strong>{formatearPesos(compraParaDescuentoCompleto(seleccion) ?? seleccion.version_actual.compra_minima_clp)}</strong></div>
                     <div><span>Cupos</span><strong>{seleccion.version_actual.cupos_totales ?? 'Sin límite'}</strong></div>
                     <div><span>Límite por vecino</span><strong>{seleccion.version_actual.limite_por_vecino}</strong></div>
                     <div><span>Vigencia</span><strong>{formatearFecha(seleccion.version_actual.vigencia_desde)} — {seleccion.version_actual.vigencia_hasta ? formatearFecha(seleccion.version_actual.vigencia_hasta) : 'sin cierre'}</strong></div>
@@ -329,6 +412,70 @@ function GestionBeneficios() {
                       <button type="button" disabled={procesando} onClick={() => void pausar()}>Pausar beneficio</button>
                     </section>
                   )}
+
+                  <section className="beneficios-admin__canjes">
+                    <div className="beneficios-admin__canjes-cabecera">
+                      <div>
+                        <h3>Canjes de este beneficio</h3>
+                        <p>
+                          Historial de REGIS utilizados, descuentos aplicados y
+                          hora de confirmación.
+                        </p>
+                      </div>
+                      <strong>{canjesSeleccion.length}</strong>
+                    </div>
+                    {canjesSeleccion.length === 0 ? (
+                      <p className="beneficios-admin__vacio">
+                        Este beneficio todavía no tiene canjes confirmados.
+                      </p>
+                    ) : (
+                      <div className="llaveros__historial-lista">
+                        {canjesSeleccion.map((canje) => (
+                          <article
+                            key={canje.canje_id}
+                            className={`llaveros__historial-item ${
+                              canje.leido
+                                ? ''
+                                : 'llaveros__historial-item--nuevo'
+                            }`}
+                          >
+                            <div className="llaveros__historial-titulo">
+                              <div>
+                                {!canje.leido && <span>Nuevo</span>}
+                                <h3>{canje.nombre_beneficio}</h3>
+                                <p>{canje.nombre_negocio}</p>
+                              </div>
+                              <strong>-{canje.costo_regis} REGIS</strong>
+                            </div>
+                            <dl>
+                              <div>
+                                <dt>Fecha y hora</dt>
+                                <dd>{formatearFecha(canje.confirmado_en)}</dd>
+                              </div>
+                              <div>
+                                <dt>Compra original</dt>
+                                <dd>{formatearPesos(canje.monto_compra_bruto_clp)}</dd>
+                              </div>
+                              <div>
+                                <dt>Descuento</dt>
+                                <dd>-{formatearPesos(canje.descuento_total_clp)}</dd>
+                              </div>
+                              <div>
+                                <dt>Total pagado</dt>
+                                <dd>{formatearPesos(canje.monto_final_pagado_clp)}</dd>
+                              </div>
+                            </dl>
+                            <small>
+                              {canje.origen === 'qr'
+                                ? 'Canje digital'
+                                : 'Canje asistido'}
+                              {' · '}{canje.codigo_publico}
+                            </small>
+                          </article>
+                        ))}
+                      </div>
+                    )}
+                  </section>
 
                   <section className="beneficios-admin__historial-supervision">
                     <h3>Registro de publicación y supervisión</h3>

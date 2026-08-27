@@ -1,4 +1,4 @@
-export type Json =
+﻿export type Json =
   | string
   | number
   | boolean
@@ -7,6 +7,11 @@ export type Json =
   | Json[]
 
 export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "14.17"
+  }
   graphql_public: {
     Tables: {
       [_ in never]: never
@@ -189,6 +194,9 @@ export type Database = {
           expirado_en: string | null
           id: string
           idempotency_key: string
+          leido_admin_regalones_en: string | null
+          leido_negocio_en: string | null
+          leido_vecino_en: string | null
           llavero_id: string | null
           monto_compra_bruto_clp: number | null
           monto_final_pagado_clp: number | null
@@ -218,6 +226,9 @@ export type Database = {
           expirado_en?: string | null
           id?: string
           idempotency_key: string
+          leido_admin_regalones_en?: string | null
+          leido_negocio_en?: string | null
+          leido_vecino_en?: string | null
           llavero_id?: string | null
           monto_compra_bruto_clp?: number | null
           monto_final_pagado_clp?: number | null
@@ -247,6 +258,9 @@ export type Database = {
           expirado_en?: string | null
           id?: string
           idempotency_key?: string
+          leido_admin_regalones_en?: string | null
+          leido_negocio_en?: string | null
+          leido_vecino_en?: string | null
           llavero_id?: string | null
           monto_compra_bruto_clp?: number | null
           monto_final_pagado_clp?: number | null
@@ -1790,6 +1804,7 @@ export type Database = {
           monto_descuento_fijo_clp: number
           nombre_beneficio: string
           porcentaje_descuento_bp: number
+          porcentaje_maximo_canje_bp: number
           tipo: Database["public"]["Enums"]["tipo_beneficio_regis"]
           tope_descuento_clp: number
         }[]
@@ -1830,6 +1845,13 @@ export type Database = {
           remanente_valor_clp: number
           reservados: number
         }[]
+      }
+      contar_notificaciones_canjes_regis: {
+        Args: {
+          p_destino: Database["public"]["Enums"]["destino_notificacion_canje_regis"]
+          p_negocio_id?: string
+        }
+        Returns: number
       }
       contar_tickets_soporte_no_leidos: { Args: never; Returns: number }
       corregir_solicitud_compra: {
@@ -1963,6 +1985,9 @@ export type Database = {
           expirado_en: string | null
           id: string
           idempotency_key: string
+          leido_admin_regalones_en: string | null
+          leido_negocio_en: string | null
+          leido_vecino_en: string | null
           llavero_id: string | null
           monto_compra_bruto_clp: number | null
           monto_final_pagado_clp: number | null
@@ -2161,6 +2186,7 @@ export type Database = {
           nombre_beneficio: string
           nombre_negocio: string
           porcentaje_descuento_bp: number
+          porcentaje_maximo_canje_bp: number
           puede_reservar: boolean
           saldo_disponible: number
           tipo: Database["public"]["Enums"]["tipo_beneficio_regis"]
@@ -2213,6 +2239,71 @@ export type Database = {
           vecino_id: string
         }[]
       }
+      listar_historial_canjes_admin: {
+        Args: {
+          p_beneficio_id?: string
+          p_limite?: number
+          p_negocio_id?: string
+        }
+        Returns: {
+          beneficio_id: string
+          beneficio_version_id: string
+          canje_id: string
+          codigo_publico: string
+          confirmado_en: string
+          costo_regis: number
+          descuento_total_clp: number
+          leido: boolean
+          monto_compra_bruto_clp: number
+          monto_final_pagado_clp: number
+          negocio_id: string
+          nombre_beneficio: string
+          nombre_negocio: string
+          origen: Database["public"]["Enums"]["origen_canje_regis"]
+        }[]
+      }
+      listar_historial_canjes_negocio: {
+        Args: {
+          p_beneficio_id?: string
+          p_limite?: number
+          p_negocio_id: string
+        }
+        Returns: {
+          beneficio_id: string
+          beneficio_version_id: string
+          canje_id: string
+          codigo_publico: string
+          confirmado_en: string
+          costo_regis: number
+          descuento_total_clp: number
+          leido: boolean
+          monto_compra_bruto_clp: number
+          monto_final_pagado_clp: number
+          negocio_id: string
+          nombre_beneficio: string
+          nombre_negocio: string
+          origen: Database["public"]["Enums"]["origen_canje_regis"]
+        }[]
+      }
+      listar_historial_canjes_vecino: {
+        Args: { p_limite?: number }
+        Returns: {
+          beneficio_id: string
+          beneficio_version_id: string
+          canje_id: string
+          codigo_publico: string
+          confirmado_en: string
+          costo_regis: number
+          descuento_total_clp: number
+          leido: boolean
+          monto_compra_bruto_clp: number
+          monto_final_pagado_clp: number
+          negocio_id: string
+          nombre_beneficio: string
+          nombre_negocio: string
+          origen: Database["public"]["Enums"]["origen_canje_regis"]
+        }[]
+      }
       listar_saldos_regis_propios: {
         Args: never
         Returns: {
@@ -2224,6 +2315,17 @@ export type Database = {
           pendientes: number
           remanente_valor_clp: number
           reservados: number
+        }[]
+      }
+      marcar_canje_regis_leido: {
+        Args: {
+          p_canje_id: string
+          p_destino: Database["public"]["Enums"]["destino_notificacion_canje_regis"]
+        }
+        Returns: {
+          canje_id: string
+          destino: Database["public"]["Enums"]["destino_notificacion_canje_regis"]
+          leido_en: string
         }[]
       }
       marcar_ticket_soporte_leido: {
@@ -2499,6 +2601,7 @@ export type Database = {
         | "llaveros"
         | "cuenta"
         | "otro"
+      destino_notificacion_canje_regis: "vecino" | "negocio" | "admin_regalones"
       estado_alerta_riesgo:
         | "abierta"
         | "en_revision"
@@ -2721,6 +2824,11 @@ export const Constants = {
         "llaveros",
         "cuenta",
         "otro",
+      ],
+      destino_notificacion_canje_regis: [
+        "vecino",
+        "negocio",
+        "admin_regalones",
       ],
       estado_alerta_riesgo: [
         "abierta",

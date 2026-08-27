@@ -1,5 +1,6 @@
 import type { FormEvent } from 'react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { calcularCompraParaDescuentoCompleto } from '@club-regalones/domain'
 import { useSesion } from './hooks/useSesion'
 import {
   cambiarEstadoBeneficio,
@@ -12,6 +13,7 @@ import type {
   ConfiguracionBeneficio,
   EventoSupervisionBeneficio,
   NegocioGestionBeneficios,
+  ReglaRegisGestion,
   VersionBeneficioGestion,
 } from './lib/beneficios'
 import { mensajeSupabase } from './lib/mensajesSupabase'
@@ -130,12 +132,40 @@ function formatearFecha(fecha: string) {
   }).format(new Date(fecha))
 }
 
+function formatearPesos(valor: number) {
+  return new Intl.NumberFormat('es-CL', {
+    style: 'currency',
+    currency: 'CLP',
+    maximumFractionDigits: 0,
+  }).format(valor)
+}
+
+function describirReglaVersion(version: VersionBeneficioGestion) {
+  const compraCompleta = Math.max(
+    version.compra_minima_clp,
+    calcularCompraParaDescuentoCompleto({
+      tipo: version.tipo,
+      porcentajeDescuentoBp: version.porcentaje_descuento_bp,
+      montoDescuentoFijoClp: version.monto_descuento_fijo_clp,
+      topeDescuentoClp: version.tope_descuento_clp,
+      porcentajeMaximoCanjeBp: version.porcentaje_maximo_canje_bp,
+    }) ?? version.compra_minima_clp,
+  )
+  const descuentoMaximo =
+    version.tipo === 'monto_fijo'
+      ? version.monto_descuento_fijo_clp
+      : version.tope_descuento_clp
+
+  return `Hasta ${formatearPesos(descuentoMaximo ?? 0)} · máximo ${version.porcentaje_maximo_canje_bp / 100}% · completo desde ${formatearPesos(compraCompleta)}`
+}
+
 function GestionBeneficios() {
   const { sesion } = useSesion()
   const [puedeGestionar, setPuedeGestionar] = useState<boolean | null>(null)
   const [negocios, setNegocios] = useState<NegocioGestionBeneficios[]>([])
   const [beneficios, setBeneficios] = useState<BeneficioGestion[]>([])
   const [eventos, setEventos] = useState<EventoSupervisionBeneficio[]>([])
+  const [reglas, setReglas] = useState<ReglaRegisGestion[]>([])
   const [seleccionId, setSeleccionId] = useState<string | null>(null)
   const [formulario, setFormulario] = useState<Formulario>(nuevoFormulario())
   const [motivoEstado, setMotivoEstado] = useState('')
@@ -149,6 +179,57 @@ function GestionBeneficios() {
     [beneficios, seleccionId],
   )
 
+  const reglaVigente = useMemo(
+    () =>
+      reglas.find(({ negocio_id }) => negocio_id === formulario.negocioId) ??
+      reglas.find(({ negocio_id }) => negocio_id === null) ??
+      null,
+    [formulario.negocioId, reglas],
+  )
+
+  const resumenEconomico = useMemo(() => {
+    if (!reglaVigente) return null
+
+    const montoDescuento = entero(formulario.montoDescuentoFijoClp)
+    const topeDescuento = entero(formulario.topeDescuentoClp)
+    const compraMinima = entero(formulario.compraMinimaClp)
+    const porcentajeDescuentoBp = Math.round(
+      Number.parseFloat(formulario.porcentajeDescuento) * 100,
+    )
+    const compraCompletaCalculada = calcularCompraParaDescuentoCompleto({
+      tipo: formulario.tipo,
+      porcentajeDescuentoBp:
+        formulario.tipo === 'porcentaje_descuento'
+          ? porcentajeDescuentoBp
+          : null,
+      montoDescuentoFijoClp:
+        formulario.tipo === 'monto_fijo' ? montoDescuento : null,
+      topeDescuentoClp:
+        formulario.tipo === 'porcentaje_descuento' ? topeDescuento : null,
+      porcentajeMaximoCanjeBp: reglaVigente.porcentaje_maximo_canje_bp,
+    })
+
+    if (
+      compraCompletaCalculada === null ||
+      !Number.isFinite(compraCompletaCalculada) ||
+      !Number.isFinite(compraMinima)
+    ) {
+      return null
+    }
+
+    const compraCompleta = Math.max(compraMinima, compraCompletaCalculada)
+    const porcentajeMaximo = reglaVigente.porcentaje_maximo_canje_bp / 100
+    const descuentoMaximo =
+      formulario.tipo === 'monto_fijo' ? montoDescuento : topeDescuento
+
+    return {
+      porcentajeMaximo,
+      descuentoMaximo,
+      compraCompleta,
+      valorRegis: reglaVigente.valor_regis_clp,
+    }
+  }, [formulario, reglaVigente])
+
   const cargar = useCallback(async () => {
     if (!sesion) return
 
@@ -161,6 +242,7 @@ function GestionBeneficios() {
       setNegocios(resultado.negocios)
       setBeneficios(resultado.beneficios)
       setEventos(resultado.eventos)
+      setReglas(resultado.reglas)
       setFormulario((actual) =>
         actual.negocioId || resultado.negocios.length === 0
           ? actual
@@ -386,6 +468,7 @@ function GestionBeneficios() {
                           ? `${etiquetasEstado[version.estado]} · ${version.costo_regis} REGIS`
                           : 'Sin versión'}
                       </span>
+                      {version && <small>{describirReglaVersion(version)}</small>}
                     </button>
                   )
                 })
@@ -409,7 +492,22 @@ function GestionBeneficios() {
 
               <div className="terminal-beneficios__nota">
                 <strong>Regla económica actual</strong>
-                <span>1 REGIS = $50. El sistema rechazará una configuración incoherente.</span>
+                {resumenEconomico ? (
+                  <>
+                    <span>
+                      1 REGIS = {formatearPesos(resumenEconomico.valorRegis)}.
+                      El descuento nunca supera el {resumenEconomico.porcentajeMaximo}% de la compra.
+                    </span>
+                    <span className="terminal-beneficios__regla-destacada">
+                      Hasta {formatearPesos(resumenEconomico.descuentoMaximo)} de descuento.
+                      Se recibe completo en compras desde {formatearPesos(resumenEconomico.compraCompleta)}.
+                    </span>
+                  </>
+                ) : (
+                  <span>
+                    Selecciona un comercio y completa los montos para revisar la regla antes de publicar.
+                  </span>
+                )}
               </div>
 
               <fieldset>

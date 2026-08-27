@@ -9,3 +9,9 @@ export type {
 } from './database.types'
 
 export { Constants } from './database.types'
+
+export {
+  calcularCompraParaDescuentoCompleto,
+  calcularDescuentoBeneficio,
+} from './reglas-beneficios'
+export type { ReglaDescuentoBeneficio } from './reglas-beneficios'

@@ -623,6 +623,29 @@
   line-height: 1.5;
 }
 
+.llaveros__beneficio-regla {
+  display: grid;
+  gap: 0.3rem;
+  padding: 0.85rem;
+  border: 1px solid rgb(225 108 38 / 24%);
+  border-radius: 0.85rem;
+  color: var(--verde-900);
+  background: #fff4e9;
+}
+
+.llaveros__beneficio-regla strong {
+  color: #a34813;
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.llaveros__beneficio-regla span {
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
 .llaveros__beneficio dl {
   display: grid;
   gap: 0.4rem;
@@ -666,6 +689,164 @@
   background: #eceee8;
 }
 
+.llaveros__historial-canjes {
+  display: grid;
+  gap: 1.2rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+}
+
+.llaveros__historial-encabezado {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.llaveros__historial-encabezado h2 {
+  margin: 0.25rem 0 0;
+  color: var(--verde-900);
+  font-family: var(--fuente-marca);
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+}
+
+.llaveros__historial-encabezado p {
+  max-width: 680px;
+  margin: 0.4rem 0 0;
+  color: var(--texto-suave);
+  line-height: 1.5;
+}
+
+.llaveros__historial-aviso {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.65rem;
+  border-radius: 1rem;
+  color: var(--verde-900);
+  background: var(--verde-100);
+}
+
+.llaveros__historial-aviso strong {
+  padding-left: 0.35rem;
+  font-size: 0.82rem;
+}
+
+.llaveros__historial-aviso button {
+  min-height: 38px;
+  padding: 0.55rem 0.8rem;
+  border-radius: 999px;
+  color: white;
+  background: var(--verde-800);
+  cursor: pointer;
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.llaveros__historial-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 0.85rem;
+}
+
+.llaveros__historial-item {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1rem;
+  border: 1px solid var(--borde);
+  border-radius: 1rem;
+  background: white;
+}
+
+.llaveros__historial-item--nuevo {
+  border-color: var(--naranjo-500);
+  box-shadow: 0 8px 24px rgb(225 108 38 / 10%);
+}
+
+.llaveros__historial-titulo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.llaveros__historial-titulo > div {
+  display: grid;
+  gap: 0.18rem;
+}
+
+.llaveros__historial-titulo span {
+  width: fit-content;
+  padding: 0.2rem 0.45rem;
+  border-radius: 999px;
+  color: #8b3d12;
+  background: #fff0e4;
+  font-size: 0.65rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.llaveros__historial-titulo h3,
+.llaveros__historial-titulo p {
+  margin: 0;
+}
+
+.llaveros__historial-titulo h3 {
+  color: var(--verde-900);
+  font-family: var(--fuente-marca);
+  font-size: 1.15rem;
+}
+
+.llaveros__historial-titulo p,
+.llaveros__historial-item > small {
+  color: var(--texto-suave);
+  font-size: 0.78rem;
+}
+
+.llaveros__historial-titulo > strong {
+  color: #8b2419;
+  white-space: nowrap;
+}
+
+.llaveros__historial-item dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.45rem;
+  margin: 0;
+}
+
+.llaveros__historial-item dl div {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.65rem;
+  border-radius: 0.7rem;
+  background: #f7f5ed;
+}
+
+.llaveros__historial-item dt,
+.llaveros__historial-item dd {
+  margin: 0;
+  font-size: 0.75rem;
+}
+
+.llaveros__historial-item dt {
+  color: var(--texto-suave);
+}
+
+.llaveros__historial-item dd {
+  color: var(--verde-900);
+  font-weight: 800;
+}
+
+.llaveros__historial-vacio {
+  padding: 1.1rem;
+  border: 1px dashed var(--borde);
+  border-radius: 1rem;
+  color: var(--texto-suave);
+  background: rgb(255 255 255 / 55%);
+}
+
 .llaveros__modal-fondo {
   position: fixed;
   z-index: 50;
@@ -679,6 +860,7 @@
 }
 
 .llaveros__modal-canje {
+  position: relative;
   width: min(520px, 100%);
   display: grid;
   gap: 1rem;
@@ -688,6 +870,76 @@
   background: var(--crema-50);
   box-shadow: 0 28px 80px rgb(0 0 0 / 30%);
   text-align: center;
+}
+
+.llaveros__modal-minimizar {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  min-height: 36px;
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  color: var(--verde-800);
+  background: var(--verde-100);
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.llaveros__canje-minimizado {
+  position: fixed;
+  z-index: 45;
+  bottom: 1.25rem;
+  left: 1.25rem;
+  width: min(430px, calc(100vw - 2.5rem));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.85rem;
+  border: 1px solid rgb(255 255 255 / 24%);
+  border-radius: 1rem;
+  color: white;
+  background: var(--verde-900);
+  box-shadow: 0 18px 45px rgb(4 35 25 / 30%);
+}
+
+.llaveros__canje-minimizado > div {
+  display: grid;
+  gap: 0.12rem;
+  min-width: 0;
+}
+
+.llaveros__canje-minimizado > div span {
+  color: #ffd3a8;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.llaveros__canje-minimizado > div strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.llaveros__canje-minimizado-tiempo {
+  min-width: 3.8rem;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.llaveros__canje-minimizado button {
+  min-height: 40px;
+  padding: 0.55rem 0.8rem;
+  border-radius: 999px;
+  color: var(--verde-900);
+  background: white;
+  cursor: pointer;
+  font-weight: 800;
+  white-space: nowrap;
 }
 
 .llaveros__modal-canje h2 {
@@ -719,6 +971,17 @@
 .llaveros__qr svg {
   width: min(220px, 58vw);
   height: auto;
+}
+
+.llaveros__copiar-qr {
+  min-height: 42px;
+  justify-self: center;
+  padding: 0.65rem 1rem;
+  border-radius: 999px;
+  color: var(--verde-800);
+  background: var(--verde-100);
+  cursor: pointer;
+  font-weight: 800;
 }
 
 .llaveros__canje-tiempo {
@@ -1076,6 +1339,32 @@
   .llaveros__metricas,
   .llaveros__herramientas {
     grid-template-columns: 1fr;
+  }
+
+  .llaveros__historial-encabezado,
+  .llaveros__historial-titulo {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .llaveros__historial-aviso {
+    justify-content: space-between;
+  }
+
+  .llaveros__historial-item dl {
+    grid-template-columns: 1fr;
+  }
+
+  .llaveros__canje-minimizado {
+    right: 0.75rem;
+    bottom: 0.75rem;
+    left: 0.75rem;
+    width: auto;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .llaveros__canje-minimizado button {
+    grid-column: 1 / -1;
   }
 
   .llaveros__tarjeta--llavero .llaveros__estado {

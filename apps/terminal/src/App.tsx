@@ -15,6 +15,7 @@ import { consultarSaldoRegisLlavero } from './lib/regis'
 import type { SaldoRegisLlavero } from './lib/regis'
 import { mensajeSupabase } from './lib/mensajesSupabase'
 import { supabase } from './lib/supabase'
+import CanjesRegis from './CanjesRegis'
 import GestionBeneficios from './GestionBeneficios'
 import Asistencia from './Asistencia'
 import EnlaceAsistencia from './EnlaceAsistencia'
@@ -23,6 +24,7 @@ type Solicitud = Tables<'solicitudes_compra'>
 
 type CajaOperador = {
   id: string
+  negocioId: string
   nombre: string
   codigo: string | null
   sucursal: string
@@ -192,7 +194,10 @@ function PanelTerminal() {
     }
 
     const sucursalesPorId = new Map(
-      sucursales.map((sucursal) => [sucursal.id, sucursal.nombre]),
+      sucursales.map((sucursal) => [
+        sucursal.id,
+        { nombre: sucursal.nombre, negocioId: sucursal.negocio_id },
+      ]),
     )
     const sucursalesIds = sucursales.map((sucursal) => sucursal.id)
     const { data: cajasActivas, error: errorCajas } = sucursalesIds.length
@@ -210,12 +215,18 @@ function PanelTerminal() {
       return
     }
 
-    const cajasDisponibles = cajasActivas.map((caja) => ({
-      id: caja.id,
-      nombre: caja.nombre,
-      codigo: caja.codigo,
-      sucursal: sucursalesPorId.get(caja.sucursal_id) ?? 'Sucursal',
-    }))
+    const cajasDisponibles = cajasActivas.flatMap((caja) => {
+      const sucursal = sucursalesPorId.get(caja.sucursal_id)
+      if (!sucursal) return []
+
+      return [{
+        id: caja.id,
+        negocioId: sucursal.negocioId,
+        nombre: caja.nombre,
+        codigo: caja.codigo,
+        sucursal: sucursal.nombre,
+      }]
+    })
 
     setCajas(cajasDisponibles)
     setCajaId((actual) =>
@@ -515,6 +526,24 @@ function PanelTerminal() {
     await cargarSolicitudes()
   }
 
+  const actualizarDespuesDeCompra = async () => {
+    await cargarSolicitudes()
+
+    if (
+      contextoLlavero?.estado === 'activo' &&
+      tokenLlavero.trim().length >= 8 &&
+      cajaId
+    ) {
+      try {
+        setSaldoRegisLlavero(
+          await consultarSaldoRegisLlavero(tokenLlavero.trim(), cajaId),
+        )
+      } catch {
+        setSaldoRegisLlavero(null)
+      }
+    }
+  }
+
   const aprobar = async (solicitud: Solicitud) => {
     const montoEnEdicion = Number(montos[solicitud.id])
     const montoVigente = obtenerMontoVigente(solicitud)
@@ -545,20 +574,7 @@ function PanelTerminal() {
     }
 
     setMensaje('Compra aprobada correctamente.')
-    await cargarSolicitudes()
-    if (
-      contextoLlavero?.estado === 'activo' &&
-      tokenLlavero.trim().length >= 8 &&
-      cajaId
-    ) {
-      try {
-        setSaldoRegisLlavero(
-          await consultarSaldoRegisLlavero(tokenLlavero.trim(), cajaId),
-        )
-      } catch {
-        setSaldoRegisLlavero(null)
-      }
-    }
+    await actualizarDespuesDeCompra()
   }
 
   const rechazar = async (solicitud: Solicitud) => {
@@ -832,6 +848,17 @@ function PanelTerminal() {
             </div>
           )}
         </section>
+      )}
+
+      {!cargando && !sinMembresia && (
+        <CanjesRegis
+          cajas={cajas}
+          cajaId={cajaId}
+          tokenLlavero={tokenLlavero}
+          llaveroActivo={contextoLlavero?.estado === 'activo'}
+          saldoLlavero={saldoRegisLlavero}
+          alConfirmar={actualizarDespuesDeCompra}
+        />
       )}
 
       {cargando ? (

@@ -4,7 +4,7 @@
 
 .beneficios-admin__metricas {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1rem;
 }
 
@@ -31,6 +31,22 @@
   font-family: var(--fuente-marca);
   font-size: 2.4rem;
   line-height: 1;
+}
+
+.beneficios-admin__metrica-canjes {
+  flex-wrap: wrap;
+}
+
+.beneficios-admin__metrica-canjes button {
+  width: 100%;
+  min-height: 38px;
+  padding: 0.55rem 0.75rem;
+  border-radius: 999px;
+  color: white;
+  background: var(--verde-800);
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 800;
 }
 
 .beneficios-admin__panel {
@@ -552,6 +568,50 @@
   font-weight: 800;
 }
 
+.beneficios-admin__canjes {
+  display: grid;
+  gap: 0.9rem;
+  padding: 1.1rem;
+  border: 1px solid var(--borde);
+  border-radius: 1rem;
+  background: linear-gradient(145deg, #fff 55%, #f4f8ef 100%);
+}
+
+.beneficios-admin__canjes-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.beneficios-admin__canjes-cabecera h3,
+.beneficios-admin__canjes-cabecera p {
+  margin: 0;
+}
+
+.beneficios-admin__canjes-cabecera h3 {
+  color: var(--verde-900);
+  font-family: var(--fuente-marca);
+  font-size: 1.25rem;
+}
+
+.beneficios-admin__canjes-cabecera p {
+  margin-top: 0.25rem;
+  color: var(--texto-suave);
+  line-height: 1.45;
+}
+
+.beneficios-admin__canjes-cabecera > strong {
+  display: grid;
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  place-items: center;
+  border-radius: 999px;
+  color: var(--verde-900);
+  background: var(--verde-100);
+  font-size: 1.2rem;
+}
+
 .beneficios-admin__historial-supervision,
 .beneficios-admin__versiones {
   padding: 1.1rem;
@@ -605,6 +665,10 @@
 }
 
 @media (max-width: 900px) {
+  .beneficios-admin__metricas {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .beneficios-admin__panel {
     grid-template-columns: 1fr;
   }
@@ -641,6 +705,7 @@
   }
 
   .beneficios-admin__detalle-cabecera,
+  .beneficios-admin__canjes-cabecera,
   .beneficios-admin__historial-supervision li > div {
     align-items: flex-start;
     flex-direction: column;
