@@ -41,6 +41,7 @@ import {
   consultarTurnoTerminal,
   corregirMontoTerminal,
   informarMontoTerminal,
+  listarSolicitudesTerminal,
   rechazarSolicitudCompraEnTurno,
   solicitarReingresoMontoTerminal,
 } from './lib/turnos'
@@ -56,11 +57,6 @@ type CajaOperador = {
   sucursal: string
 }
 
-const estadosAbiertos: Solicitud['estado'][] = [
-  'esperando_monto',
-  'esperando_cajero',
-  'pendiente_validacion',
-]
 
 function formatearMonto(monto: number | null) {
   if (monto === null) return 'Monto pendiente'
@@ -386,32 +382,40 @@ function PanelTerminal() {
         : (cajasDisponibles[0]?.id ?? ''),
     )
 
-    const { data, error: errorSolicitudes } = await supabase
-      .from('solicitudes_compra')
-      .select('*')
-      .in('estado', estadosAbiertos)
-      .gt('expira_en', new Date().toISOString())
-      .order('creado_en', { ascending: false })
-
-    setCargando(false)
-
-    if (errorSolicitudes) {
-      setError(mensajeSupabase(errorSolicitudes))
+    if (!turno || !credencialTerminal) {
+      setSolicitudes([])
+      setCargando(false)
       return
     }
 
-    setSolicitudes(data)
-    setMontos((actuales) => {
-      const siguientes = { ...actuales }
-      data.forEach((solicitud) => {
-        const montoVigente = obtenerMontoVigente(solicitud)
-        if (montoVigente !== null) {
-          siguientes[solicitud.id] = String(montoVigente)
-        }
+    try {
+      const data = await listarSolicitudesTerminal(
+        turno.turno_id,
+        credencialTerminal,
+      )
+
+      setSolicitudes(data)
+
+      setMontos((actuales) => {
+        const siguientes = { ...actuales }
+
+        data.forEach((solicitud) => {
+          const montoVigente = obtenerMontoVigente(solicitud)
+
+          if (montoVigente !== null) {
+            siguientes[solicitud.id] = String(montoVigente)
+          }
+        })
+
+        return siguientes
       })
-      return siguientes
-    })
-  }, [sesion])
+    } catch (errorCapturado) {
+      setSolicitudes([])
+      setError(mensajeSupabase(errorCapturado))
+    } finally {
+      setCargando(false)
+    }
+  }, [credencialTerminal, sesion, turno])
 
   useEffect(() => {
     const cargaInicial = window.setTimeout(() => {

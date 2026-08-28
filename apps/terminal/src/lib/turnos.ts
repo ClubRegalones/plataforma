@@ -141,6 +141,23 @@ export async function rechazarSolicitudCompraEnTurno(
   return data
 }
 
+export async function listarSolicitudesTerminal(
+  turnoId: string,
+  credencial: CredencialTerminalLocal,
+) {
+  const { data, error } = await supabase.rpc(
+    'terminal_listar_solicitudes',
+    {
+      p_terminal_id: credencial.terminalId,
+      p_token_terminal: credencial.tokenTerminal,
+      p_turno_id: turnoId,
+    },
+  )
+
+  if (error) throw error
+  return data
+}
+
 /*
  * Canjes todavía usan su wrapper autenticado actual.
  * Los separaremos en la siguiente etapa de la API Terminal.
