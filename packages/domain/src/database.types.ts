@@ -337,7 +337,7 @@ export type Database = {
         Row: {
           aporte_promocional_clp: number
           caja_id: string
-          cajero_id: string
+          cajero_id: string | null
           creado_en: string
           descuento_total_clp: number
           estado: Database["public"]["Enums"]["estado_compra"]
@@ -364,7 +364,7 @@ export type Database = {
         Insert: {
           aporte_promocional_clp?: number
           caja_id: string
-          cajero_id: string
+          cajero_id?: string | null
           creado_en?: string
           descuento_total_clp?: number
           estado?: Database["public"]["Enums"]["estado_compra"]
@@ -391,7 +391,7 @@ export type Database = {
         Update: {
           aporte_promocional_clp?: number
           caja_id?: string
-          cajero_id?: string
+          cajero_id?: string | null
           creado_en?: string
           descuento_total_clp?: number
           estado?: Database["public"]["Enums"]["estado_compra"]
@@ -1899,7 +1899,7 @@ export type Database = {
         Returns: {
           aporte_promocional_clp: number
           caja_id: string
-          cajero_id: string
+          cajero_id: string | null
           creado_en: string
           descuento_total_clp: number
           estado: Database["public"]["Enums"]["estado_compra"]
@@ -1942,7 +1942,7 @@ export type Database = {
         Returns: {
           aporte_promocional_clp: number
           caja_id: string
-          cajero_id: string
+          cajero_id: string | null
           creado_en: string
           descuento_total_clp: number
           estado: Database["public"]["Enums"]["estado_compra"]
@@ -2882,6 +2882,38 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      obtener_solicitud_terminal_interna: {
+        Args: {
+          p_solicitud_id: string
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          actualizado_en: string
+          caja_id: string
+          creado_en: string
+          estado: Database["public"]["Enums"]["estado_solicitud_compra"]
+          expira_en: string
+          id: string
+          idempotency_key: string
+          informado_por: Database["public"]["Enums"]["informado_por"] | null
+          lectura_terminal_id: string | null
+          llavero_id: string | null
+          monto_corregido: number | null
+          monto_informado: number | null
+          motivo_correccion: string | null
+          motivo_rechazo: string | null
+          turno_caja_id: string | null
+          vecino_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "solicitudes_compra"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       preparar_llavero: {
         Args: {
           p_codigo_publico: string
@@ -3165,6 +3197,49 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      terminal_aprobar_compra: {
+        Args: {
+          p_folio_boleta?: string
+          p_origen?: Database["public"]["Enums"]["origen_compra"]
+          p_solicitud_id: string
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          aporte_promocional_clp: number
+          caja_id: string
+          cajero_id: string | null
+          creado_en: string
+          descuento_total_clp: number
+          estado: Database["public"]["Enums"]["estado_compra"]
+          folio_boleta: string | null
+          id: string
+          monto_base_regis_clp: number | null
+          monto_bruto_clp: number | null
+          monto_final: number
+          negocio_id: string
+          origen: Database["public"]["Enums"]["origen_compra"]
+          regis_generados: number
+          regis_procesados_en: string | null
+          regis_utilizados: number
+          regla_regis_id: string | null
+          revertido_en: string | null
+          riesgo: Database["public"]["Enums"]["severidad_riesgo"] | null
+          solicitud_id: string
+          sucursal_id: string
+          tasa_acumulacion_bp_aplicada: number | null
+          turno_caja_id: string | null
+          valor_regis_clp_aplicado: number | null
+          vecino_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "compras"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       terminal_cerrar_turno: {
         Args: {
           p_terminal_id: string
@@ -3201,6 +3276,73 @@ export type Database = {
           terminal_id: string
           turno_id: string
         }[]
+      }
+      terminal_corregir_monto: {
+        Args: {
+          p_monto: number
+          p_motivo: string
+          p_solicitud_id: string
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          actualizado_en: string
+          caja_id: string
+          creado_en: string
+          estado: Database["public"]["Enums"]["estado_solicitud_compra"]
+          expira_en: string
+          id: string
+          idempotency_key: string
+          informado_por: Database["public"]["Enums"]["informado_por"] | null
+          lectura_terminal_id: string | null
+          llavero_id: string | null
+          monto_corregido: number | null
+          monto_informado: number | null
+          motivo_correccion: string | null
+          motivo_rechazo: string | null
+          turno_caja_id: string | null
+          vecino_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "solicitudes_compra"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      terminal_informar_monto: {
+        Args: {
+          p_monto: number
+          p_solicitud_id: string
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          actualizado_en: string
+          caja_id: string
+          creado_en: string
+          estado: Database["public"]["Enums"]["estado_solicitud_compra"]
+          expira_en: string
+          id: string
+          idempotency_key: string
+          informado_por: Database["public"]["Enums"]["informado_por"] | null
+          lectura_terminal_id: string | null
+          llavero_id: string | null
+          monto_corregido: number | null
+          monto_informado: number | null
+          motivo_correccion: string | null
+          motivo_rechazo: string | null
+          turno_caja_id: string | null
+          vecino_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "solicitudes_compra"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       terminal_iniciar_turno: {
         Args: {
@@ -3269,6 +3411,72 @@ export type Database = {
           sucursal_nombre: string
           terminal_id: string
         }[]
+      }
+      terminal_rechazar_compra: {
+        Args: {
+          p_motivo: string
+          p_solicitud_id: string
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          actualizado_en: string
+          caja_id: string
+          creado_en: string
+          estado: Database["public"]["Enums"]["estado_solicitud_compra"]
+          expira_en: string
+          id: string
+          idempotency_key: string
+          informado_por: Database["public"]["Enums"]["informado_por"] | null
+          lectura_terminal_id: string | null
+          llavero_id: string | null
+          monto_corregido: number | null
+          monto_informado: number | null
+          motivo_correccion: string | null
+          motivo_rechazo: string | null
+          turno_caja_id: string | null
+          vecino_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "solicitudes_compra"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      terminal_solicitar_reingreso_monto: {
+        Args: {
+          p_motivo: string
+          p_solicitud_id: string
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          actualizado_en: string
+          caja_id: string
+          creado_en: string
+          estado: Database["public"]["Enums"]["estado_solicitud_compra"]
+          expira_en: string
+          id: string
+          idempotency_key: string
+          informado_por: Database["public"]["Enums"]["informado_por"] | null
+          lectura_terminal_id: string | null
+          llavero_id: string | null
+          monto_corregido: number | null
+          monto_informado: number | null
+          motivo_correccion: string | null
+          motivo_rechazo: string | null
+          turno_caja_id: string | null
+          vecino_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "solicitudes_compra"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       validar_configuracion_beneficio_regis: {
         Args: {
@@ -3339,6 +3547,31 @@ export type Database = {
           terminal_id: string
           valida: boolean
         }[]
+      }
+      validar_turno_terminal_interno: {
+        Args: {
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          caja_id: string
+          cerrado_en: string | null
+          creado_en: string
+          estado: Database["public"]["Enums"]["estado_turno_caja"]
+          id: string
+          iniciado_en: string
+          negocio_id: string
+          nombre_cajero: string
+          terminal_id: string
+          ultima_actividad_en: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "turnos_caja"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       versionar_beneficio_regis: {
         Args: {

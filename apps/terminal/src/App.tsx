@@ -39,7 +39,10 @@ import {
   aprobarCompraEnTurno,
   cerrarTurnoTerminal,
   consultarTurnoTerminal,
+  corregirMontoTerminal,
+  informarMontoTerminal,
   rechazarSolicitudCompraEnTurno,
+  solicitarReingresoMontoTerminal,
 } from './lib/turnos'
 import type { TurnoTerminal } from './lib/turnos'
 
@@ -630,24 +633,30 @@ function PanelTerminal() {
       return
     }
 
+    if (!turno || !credencialTerminal) {
+      setError('Debes iniciar un turno antes de informar montos.')
+      return
+    }
+
     setProcesandoId(solicitud.id)
     setError(null)
     setMensaje(null)
 
-    const { error: errorMonto } = await supabase.rpc('informar_monto_cajero', {
-      p_solicitud_id: solicitud.id,
-      p_monto: monto,
-    })
+    try {
+      await informarMontoTerminal(
+        solicitud.id,
+        monto,
+        turno.turno_id,
+        credencialTerminal,
+      )
 
-    setProcesandoId(null)
-
-    if (errorMonto) {
-      setError(mensajeSupabase(errorMonto))
-      return
+      setMensaje('Monto ingresado con ayuda del cajero.')
+      await cargarSolicitudes()
+    } catch (errorCapturado) {
+      setError(mensajeSupabase(errorCapturado))
+    } finally {
+      setProcesandoId(null)
     }
-
-    setMensaje('Monto ingresado con ayuda del cajero.')
-    await cargarSolicitudes()
   }
 
   const corregirMonto = async (solicitud: Solicitud) => {
@@ -664,28 +673,31 @@ function PanelTerminal() {
       return
     }
 
+    if (!turno || !credencialTerminal) {
+      setError('Debes iniciar un turno antes de corregir montos.')
+      return
+    }
+
     setProcesandoId(solicitud.id)
     setError(null)
     setMensaje(null)
 
-    const { error: errorCorreccion } = await supabase.rpc(
-      'corregir_solicitud_compra',
-      {
-        p_solicitud_id: solicitud.id,
-        p_monto: monto,
-        p_motivo: motivo,
-      },
-    )
+    try {
+      await corregirMontoTerminal(
+        solicitud.id,
+        monto,
+        motivo,
+        turno.turno_id,
+        credencialTerminal,
+      )
 
-    setProcesandoId(null)
-
-    if (errorCorreccion) {
-      setError(mensajeSupabase(errorCorreccion))
-      return
+      setMensaje('Monto corregido directamente por el cajero.')
+      await cargarSolicitudes()
+    } catch (errorCapturado) {
+      setError(mensajeSupabase(errorCapturado))
+    } finally {
+      setProcesandoId(null)
     }
-
-    setMensaje('Monto corregido directamente por el cajero.')
-    await cargarSolicitudes()
   }
 
   const solicitarReingreso = async (solicitud: Solicitud) => {
@@ -696,28 +708,34 @@ function PanelTerminal() {
       return
     }
 
+    if (!turno || !credencialTerminal) {
+      setError('Debes iniciar un turno antes de solicitar un reingreso.')
+      return
+    }
+
     setProcesandoId(solicitud.id)
     setError(null)
     setMensaje(null)
 
-    const { error: errorReingreso } = await supabase.rpc(
-      'solicitar_reingreso_monto',
-      {
-        p_solicitud_id: solicitud.id,
-        p_motivo: motivo,
-      },
-    )
+    try {
+      await solicitarReingresoMontoTerminal(
+        solicitud.id,
+        motivo,
+        turno.turno_id,
+        credencialTerminal,
+      )
 
-    setProcesandoId(null)
-
-    if (errorReingreso) {
-      setError(mensajeSupabase(errorReingreso))
-      return
+      setMontos((actuales) => ({
+        ...actuales,
+        [solicitud.id]: '',
+      }))
+      setMensaje('Se solicitó al vecino que vuelva a ingresar el monto.')
+      await cargarSolicitudes()
+    } catch (errorCapturado) {
+      setError(mensajeSupabase(errorCapturado))
+    } finally {
+      setProcesandoId(null)
     }
-
-    setMontos((actuales) => ({ ...actuales, [solicitud.id]: '' }))
-    setMensaje('Se solicitó al vecino que vuelva a ingresar el monto.')
-    await cargarSolicitudes()
   }
 
   const actualizarDespuesDeCompra = async () => {
