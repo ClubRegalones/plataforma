@@ -34,6 +34,14 @@ import type {
   CredencialTerminalLocal,
   LecturaOperativaTerminal,
 } from './lib/terminalPwa'
+import InicioTurno from './InicioTurno'
+import {
+  aprobarCompraEnTurno,
+  cerrarTurnoTerminal,
+  consultarTurnoTerminal,
+  rechazarSolicitudCompraEnTurno,
+} from './lib/turnos'
+import type { TurnoTerminal } from './lib/turnos'
 
 type Solicitud = Tables<'solicitudes_compra'>
 
@@ -148,6 +156,9 @@ function PanelTerminal() {
   const [tokenLlavero, setTokenLlavero] = useState('')
   const [credencialTerminal, setCredencialTerminal] =
     useState<CredencialTerminalLocal | null>(null)
+  const [turno, setTurno] = useState<TurnoTerminal | null>(null)
+  const [cargandoTurno, setCargandoTurno] = useState(false)
+  const [cerrandoTurno, setCerrandoTurno] = useState(false)
   const [lecturaLlavero, setLecturaLlavero] =
     useState<LecturaOperativaTerminal | null>(null)
   const [contextoLlavero, setContextoLlavero] =
@@ -208,10 +219,41 @@ function PanelTerminal() {
   const cambiarCredencialTerminal = useCallback(
     (credencial: CredencialTerminalLocal | null) => {
       setCredencialTerminal(credencial)
+      setTurno(null)
+      setCargandoTurno(Boolean(credencial))
+      setCerrandoTurno(false)
       if (!credencial) limpiarLecturaOperativa()
     },
     [limpiarLecturaOperativa],
   )
+
+  useEffect(() => {
+    let vigente = true
+
+    if (!credencialTerminal) {
+      return () => {
+        vigente = false
+      }
+    }
+
+    void consultarTurnoTerminal(credencialTerminal)
+      .then((turnoAbierto) => {
+        if (!vigente) return
+        setTurno(turnoAbierto)
+      })
+      .catch((errorCapturado) => {
+        if (!vigente) return
+        setTurno(null)
+        setError(mensajeSupabase(errorCapturado))
+      })
+      .finally(() => {
+        if (vigente) setCargandoTurno(false)
+      })
+
+    return () => {
+      vigente = false
+    }
+  }, [credencialTerminal])
 
   const recibirLecturaOperativa = useCallback(
     (lectura: LecturaOperativaTerminal) => {
@@ -710,23 +752,29 @@ function PanelTerminal() {
       return
     }
 
+    if (!turno || !credencialTerminal) {
+      setError('Debes iniciar un turno antes de aprobar compras.')
+      return
+    }
+
     setProcesandoId(solicitud.id)
     setError(null)
     setMensaje(null)
 
-    const { error: errorAprobacion } = await supabase.rpc('aprobar_compra', {
-      p_solicitud_id: solicitud.id,
-    })
+    try {
+      await aprobarCompraEnTurno(
+        solicitud.id,
+        turno.turno_id,
+        credencialTerminal,
+      )
 
-    setProcesandoId(null)
-
-    if (errorAprobacion) {
-      setError(mensajeSupabase(errorAprobacion))
-      return
+      setMensaje('Compra aprobada correctamente.')
+      await actualizarDespuesDeCompra()
+    } catch (errorCapturado) {
+      setError(mensajeSupabase(errorCapturado))
+    } finally {
+      setProcesandoId(null)
     }
-
-    setMensaje('Compra aprobada correctamente.')
-    await actualizarDespuesDeCompra()
   }
 
   const rechazar = async (solicitud: Solicitud) => {
@@ -737,27 +785,49 @@ function PanelTerminal() {
       return
     }
 
+    if (!turno || !credencialTerminal) {
+      setError('Debes iniciar un turno antes de rechazar compras.')
+      return
+    }
+
     setProcesandoId(solicitud.id)
     setError(null)
     setMensaje(null)
 
-    const { error: errorRechazo } = await supabase.rpc(
-      'rechazar_solicitud_compra',
-      {
-        p_solicitud_id: solicitud.id,
-        p_motivo: motivo,
-      },
-    )
+    try {
+      await rechazarSolicitudCompraEnTurno(
+        solicitud.id,
+        motivo,
+        turno.turno_id,
+        credencialTerminal,
+      )
 
-    setProcesandoId(null)
-
-    if (errorRechazo) {
-      setError(mensajeSupabase(errorRechazo))
-      return
+      setMensaje('Solicitud rechazada.')
+      await cargarSolicitudes()
+    } catch (errorCapturado) {
+      setError(mensajeSupabase(errorCapturado))
+    } finally {
+      setProcesandoId(null)
     }
+  }
 
-    setMensaje('Solicitud rechazada.')
-    await cargarSolicitudes()
+  const finalizarTurno = async () => {
+    if (!turno || !credencialTerminal) return
+
+    setCerrandoTurno(true)
+    setError(null)
+    setMensaje(null)
+
+    try {
+      await cerrarTurnoTerminal(turno.turno_id, credencialTerminal)
+      setTurno(null)
+      limpiarLecturaOperativa()
+      setMensaje('Turno finalizado correctamente.')
+    } catch (errorCapturado) {
+      setError(mensajeSupabase(errorCapturado))
+    } finally {
+      setCerrandoTurno(false)
+    }
   }
 
   const cerrarSesion = async () => {
@@ -780,10 +850,19 @@ function PanelTerminal() {
         <div>
           <span className="terminal-eyebrow">Club Regalones</span>
           <h1>Solicitudes de compra</h1>
-          <p>{sesion?.user.email}</p>
+          <p>{turno ? `Cajero: ${turno.nombre_cajero}` : sesion?.user.email}</p>
         </div>
         <div className="terminal-panel__acciones">
           <EstadoPwa />
+          {turno && (
+            <button
+              type="button"
+              disabled={cerrandoTurno}
+              onClick={() => void finalizarTurno()}
+            >
+              {cerrandoTurno ? 'Finalizando…' : 'Finalizar turno'}
+            </button>
+          )}
           <button type="button" onClick={() => void cargarSolicitudes()}>
             Actualizar
           </button>
@@ -807,7 +886,21 @@ function PanelTerminal() {
         <p className="terminal-alert terminal-alert--success">{mensaje}</p>
       )}
 
-      {!cargando && !sinMembresia && (
+      {!cargando &&
+        !sinMembresia &&
+        credencialTerminal &&
+        !cargandoTurno &&
+        !turno && (
+          <InicioTurno
+            credencial={credencialTerminal}
+            alIniciar={(nuevoTurno) => {
+              setTurno(nuevoTurno)
+              setMensaje(`Turno iniciado por ${nuevoTurno.nombre_cajero}.`)
+            }}
+          />
+        )}
+
+      {!cargando && !sinMembresia && turno && (
         <section className="terminal-llavero" aria-labelledby="activar-llavero-title">
           <div className="terminal-llavero__encabezado">
             <div>
@@ -1063,10 +1156,11 @@ function PanelTerminal() {
         </section>
       )}
 
-      {!cargando && !sinMembresia && (
+      {!cargando && !sinMembresia && turno && (
         <CanjesRegis
           cajas={cajas}
           cajaId={cajaId}
+          turnoId={turno.turno_id}
           tokenLlavero={tokenLlavero}
           lecturaLlaveroId={lecturaLlavero?.lectura_id ?? null}
           credencialTerminal={credencialTerminal}
@@ -1084,7 +1178,13 @@ function PanelTerminal() {
           Esta cuenta no pertenece a ningún negocio activo. Debes agregarla en
           `miembros_negocio` antes de usar la terminal.
         </p>
-      ) : solicitudes.length === 0 ? (
+      ) : !credencialTerminal ? (
+        <p className="terminal-empty">
+          Vincula esta Terminal PWA a una caja para comenzar.
+        </p>
+      ) : cargandoTurno ? (
+        <p className="terminal-empty">Comprobando turno…</p>
+      ) : !turno ? null : solicitudes.length === 0 ? (
         <p className="terminal-empty">No hay solicitudes pendientes.</p>
       ) : (
         <section className="terminal-list" aria-label="Solicitudes pendientes">

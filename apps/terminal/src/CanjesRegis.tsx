@@ -7,7 +7,6 @@ import {
 import type { SaldoRegisLlavero } from './lib/regis'
 import {
   cancelarCanjeRegis,
-  confirmarCompraConCanje,
   consultarCanjeRegisQr,
   listarBeneficiosCanjeTerminal,
   listarHistorialCanjesNegocio,
@@ -24,6 +23,7 @@ import type {
 } from './lib/canjes'
 import { mensajeSupabase } from './lib/mensajesSupabase'
 import type { CredencialTerminalLocal } from './lib/terminalPwa'
+import { confirmarCompraConCanjeEnTurno } from './lib/turnos'
 import './canjes.css'
 
 export type CajaCanjeRegis = {
@@ -55,6 +55,7 @@ type CanjeEnRevision = {
 type CanjesRegisProps = {
   cajas: CajaCanjeRegis[]
   cajaId: string
+  turnoId: string
   tokenLlavero: string
   lecturaLlaveroId: string | null
   credencialTerminal: CredencialTerminalLocal | null
@@ -182,6 +183,7 @@ function revisionDesdeLlavero(
 function CanjesRegis({
   cajas,
   cajaId,
+  turnoId,
   tokenLlavero,
   lecturaLlaveroId,
   credencialTerminal,
@@ -421,6 +423,11 @@ function CanjesRegis({
     evento.preventDefault()
     if (!canje) return
 
+    if (!credencialTerminal) {
+      setError('La credencial segura de esta Terminal PWA no está disponible.')
+      return
+    }
+
     const monto = Number(montoBruto)
     if (!Number.isInteger(monto) || monto <= 0) {
       setError('El monto bruto debe ser un número entero mayor que cero.')
@@ -439,10 +446,12 @@ function CanjesRegis({
     setMensaje(null)
 
     try {
-      const confirmado = await confirmarCompraConCanje(
+      const confirmado = await confirmarCompraConCanjeEnTurno(
         canje.canjeId,
         canje.cajaId,
         monto,
+        turnoId,
+        credencialTerminal,
         folioBoleta,
         canje.tokenQr,
       )
