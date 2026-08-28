@@ -2,8 +2,12 @@ import type { Tables } from '@club-regalones/domain'
 import type { FormEvent } from 'react'
 import { useCallback, useEffect, useState } from 'react'
 import { useSesion } from './hooks/useSesion'
-import { crearCompraAsistida } from './lib/compras'
 import {
+  crearCompraAsistida,
+  crearCompraAsistidaDesdeLectura,
+} from './lib/compras'
+import {
+  activarLlaveroDesdeLectura,
   activarLlaveroPrimerUso,
   consultarLlaveroActivacion,
 } from './lib/llaveros'
@@ -11,14 +15,28 @@ import type {
   ContextoActivacionLlavero,
   MetodoActivacionLlavero,
 } from './lib/llaveros'
-import { consultarSaldoRegisLlavero } from './lib/regis'
-import type { SaldoRegisLlavero } from './lib/regis'
+import {
+  calcularVistaPreviaRegis,
+  consultarSaldoRegisLlavero,
+  obtenerReglaAcumulacionVigente,
+} from './lib/regis'
+import type {
+  ReglaAcumulacionRegis,
+  SaldoRegisLlavero,
+} from './lib/regis'
 import { mensajeSupabase } from './lib/mensajesSupabase'
 import { supabase } from './lib/supabase'
 import CanjesRegis from './CanjesRegis'
 import GestionBeneficios from './GestionBeneficios'
 import Asistencia from './Asistencia'
 import EnlaceAsistencia from './EnlaceAsistencia'
+import EstadoPwa from './EstadoPwa'
+import LectorMovil from './LectorMovil'
+import VinculacionLector from './VinculacionLector'
+import type {
+  CredencialTerminalLocal,
+  LecturaOperativaTerminal,
+} from './lib/terminalPwa'
 
 type Solicitud = Tables<'solicitudes_compra'>
 
@@ -131,10 +149,18 @@ function PanelTerminal() {
   const [cajas, setCajas] = useState<CajaOperador[]>([])
   const [cajaId, setCajaId] = useState('')
   const [tokenLlavero, setTokenLlavero] = useState('')
+  const [credencialTerminal, setCredencialTerminal] =
+    useState<CredencialTerminalLocal | null>(null)
+  const [lecturaLlavero, setLecturaLlavero] =
+    useState<LecturaOperativaTerminal | null>(null)
   const [contextoLlavero, setContextoLlavero] =
     useState<ContextoActivacionLlavero | null>(null)
   const [saldoRegisLlavero, setSaldoRegisLlavero] =
     useState<SaldoRegisLlavero | null>(null)
+  const [reglaAcumulacion, setReglaAcumulacion] =
+    useState<ReglaAcumulacionRegis | null>(null)
+  const [errorReglaAcumulacion, setErrorReglaAcumulacion] =
+    useState<string | null>(null)
   const [metodoActivacion, setMetodoActivacion] =
     useState<MetodoActivacionLlavero>('cedula')
   const [pinActivacion, setPinActivacion] = useState('')
@@ -145,6 +171,89 @@ function PanelTerminal() {
   const [procesandoLlavero, setProcesandoLlavero] = useState(false)
   const [mensaje, setMensaje] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const negocioId = cajas.find((caja) => caja.id === cajaId)?.negocioId
+    let activa = true
+
+    if (!negocioId) {
+      return () => { activa = false }
+    }
+
+    void obtenerReglaAcumulacionVigente(negocioId)
+      .then((regla) => {
+        if (!activa) return
+        setReglaAcumulacion(regla)
+        setErrorReglaAcumulacion(null)
+        if (!regla) {
+          setErrorReglaAcumulacion(
+            'No hay una regla REGIS vigente para calcular esta compra.',
+          )
+        }
+      })
+      .catch((errorCapturado) => {
+        if (!activa) return
+        setReglaAcumulacion(null)
+        setErrorReglaAcumulacion(mensajeSupabase(errorCapturado))
+      })
+
+    return () => { activa = false }
+  }, [cajaId, cajas])
+
+  const limpiarLecturaOperativa = useCallback(() => {
+    setLecturaLlavero(null)
+    setContextoLlavero(null)
+    setSaldoRegisLlavero(null)
+    setMontoCompraAsistida('')
+    setIdempotenciaCompraAsistida(crypto.randomUUID())
+  }, [])
+
+  const cambiarCredencialTerminal = useCallback(
+    (credencial: CredencialTerminalLocal | null) => {
+      setCredencialTerminal(credencial)
+      if (!credencial) limpiarLecturaOperativa()
+    },
+    [limpiarLecturaOperativa],
+  )
+
+  const recibirLecturaOperativa = useCallback(
+    (lectura: LecturaOperativaTerminal) => {
+      setLecturaLlavero(lectura)
+      setTokenLlavero('')
+      setContextoLlavero({
+        codigo_publico: lectura.codigo_publico,
+        nombre_vecino: lectura.nombre_vecino,
+        estado: lectura.estado,
+        entregado: lectura.entregado,
+        puede_activar: lectura.puede_activar,
+        tiene_pin: lectura.tiene_pin,
+      })
+      setSaldoRegisLlavero(
+        lectura.estado === 'activo'
+          ? {
+              actualizado_en: lectura.saldo_actualizado_en,
+              canjeados: lectura.canjeados,
+              disponibles: lectura.disponibles,
+              negocio_id: lectura.negocio_id,
+              nombre_negocio: lectura.nombre_negocio,
+              pendientes: lectura.pendientes,
+              remanente_valor_clp: lectura.remanente_valor_clp,
+              reservados: lectura.reservados,
+            }
+          : null,
+      )
+      setMetodoActivacion('cedula')
+      setPinActivacion('')
+      setCedulaVerificada(false)
+      setMontoCompraAsistida('')
+      setIdempotenciaCompraAsistida(crypto.randomUUID())
+      setError(null)
+      setMensaje(
+        `${lectura.codigo_publico} recibido desde el celular lector. Elige la operación.`,
+      )
+    },
+    [],
+  )
 
   const cargarSolicitudes = useCallback(async () => {
     if (!sesion) return
@@ -284,6 +393,7 @@ function PanelTerminal() {
     }
 
     setProcesandoLlavero(true)
+    setLecturaLlavero(null)
     setError(null)
     setMensaje(null)
 
@@ -341,12 +451,24 @@ function PanelTerminal() {
     setMensaje(null)
 
     try {
-      const solicitud = await crearCompraAsistida(
-        tokenLlavero.trim(),
-        cajaId,
-        monto,
-        idempotenciaCompraAsistida,
-      )
+      if (lecturaLlavero && !credencialTerminal) {
+        setError('La credencial segura de esta Terminal PWA ya no está disponible.')
+        return
+      }
+
+      const solicitud = lecturaLlavero && credencialTerminal
+        ? await crearCompraAsistidaDesdeLectura(
+            lecturaLlavero.lectura_id,
+            credencialTerminal,
+            monto,
+            idempotenciaCompraAsistida,
+          )
+        : await crearCompraAsistida(
+            tokenLlavero.trim(),
+            cajaId,
+            monto,
+            idempotenciaCompraAsistida,
+          )
 
       if (!solicitud) {
         setError('Supabase no devolvió la solicitud de compra asistida.')
@@ -358,6 +480,11 @@ function PanelTerminal() {
       )
       setMontoCompraAsistida('')
       setIdempotenciaCompraAsistida(crypto.randomUUID())
+      if (lecturaLlavero) {
+        setLecturaLlavero(null)
+        setContextoLlavero(null)
+        setSaldoRegisLlavero(null)
+      }
       await cargarSolicitudes()
     } catch (errorCapturado) {
       setError(mensajeSupabase(errorCapturado))
@@ -388,13 +515,26 @@ function PanelTerminal() {
     setMensaje(null)
 
     try {
-      const resultado = await activarLlaveroPrimerUso(
-        tokenLlavero.trim(),
-        cajaId,
-        metodoActivacion,
-        metodoActivacion === 'pin' ? pinActivacion : null,
-        metodoActivacion === 'cedula' && cedulaVerificada,
-      )
+      if (lecturaLlavero && !credencialTerminal) {
+        setError('La credencial segura de esta Terminal PWA ya no está disponible.')
+        return
+      }
+
+      const resultado = lecturaLlavero && credencialTerminal
+        ? await activarLlaveroDesdeLectura(
+            lecturaLlavero.lectura_id,
+            credencialTerminal,
+            metodoActivacion,
+            metodoActivacion === 'pin' ? pinActivacion : null,
+            metodoActivacion === 'cedula' && cedulaVerificada,
+          )
+        : await activarLlaveroPrimerUso(
+            tokenLlavero.trim(),
+            cajaId,
+            metodoActivacion,
+            metodoActivacion === 'pin' ? pinActivacion : null,
+            metodoActivacion === 'cedula' && cedulaVerificada,
+          )
 
       if (!resultado) {
         setError('Supabase no devolvió el resultado de la activación.')
@@ -402,7 +542,22 @@ function PanelTerminal() {
       }
 
       if (!resultado.activado) {
-        setError(resultado.mensaje)
+        if (lecturaLlavero) limpiarLecturaOperativa()
+        setError(
+          lecturaLlavero
+            ? `${resultado.mensaje}. Acerca nuevamente el llavero para reintentar.`
+            : resultado.mensaje,
+        )
+        return
+      }
+
+      if (lecturaLlavero) {
+        limpiarLecturaOperativa()
+        setMensaje(
+          `${resultado.mensaje}. Acerca nuevamente el llavero para iniciar una compra o un canje.`,
+        )
+        setPinActivacion('')
+        setCedulaVerificada(false)
         return
       }
 
@@ -613,6 +768,15 @@ function PanelTerminal() {
     if (errorCierre) setError(mensajeSupabase(errorCierre))
   }
 
+  const montoVistaPrevia = Number(montoCompraAsistida)
+  const vistaPreviaRegis = reglaAcumulacion
+    ? calcularVistaPreviaRegis(
+        montoVistaPrevia,
+        reglaAcumulacion,
+        saldoRegisLlavero?.remanente_valor_clp ?? 0,
+      )
+    : null
+
   return (
     <main className="terminal-panel">
       <header className="terminal-panel__header">
@@ -622,6 +786,7 @@ function PanelTerminal() {
           <p>{sesion?.user.email}</p>
         </div>
         <div className="terminal-panel__acciones">
+          <EstadoPwa />
           <EnlaceAsistencia />
           {puedeGestionarBeneficios && (
             <a href="#beneficios">Gestionar beneficios</a>
@@ -635,6 +800,15 @@ function PanelTerminal() {
         </div>
       </header>
 
+      {!cargando && !sinMembresia && cajaId && (
+        <VinculacionLector
+          cajaId={cajaId}
+          puedeRegistrar={puedeGestionarBeneficios}
+          alCambiarCredencial={cambiarCredencialTerminal}
+          alReclamarLectura={recibirLecturaOperativa}
+        />
+      )}
+
       {error && <p className="terminal-alert terminal-alert--error">{error}</p>}
       {mensaje && (
         <p className="terminal-alert terminal-alert--success">{mensaje}</p>
@@ -644,12 +818,12 @@ function PanelTerminal() {
         <section className="terminal-llavero" aria-labelledby="activar-llavero-title">
           <div className="terminal-llavero__encabezado">
             <div>
-              <span className="terminal-eyebrow">Primera utilización</span>
-              <h2 id="activar-llavero-title">Leer y activar llavero</h2>
+              <span className="terminal-eyebrow">Identificación asistida</span>
+              <h2 id="activar-llavero-title">Leer llavero</h2>
             </div>
             <p>
-              El llavero solo se activará si fue entregado y la identidad se
-              verifica mediante cédula o PIN.
+              El celular lector envía la identidad a esta Terminal PWA. Si es
+              el primer uso, se solicitará verificar cédula o PIN.
             </p>
           </div>
 
@@ -669,6 +843,8 @@ function PanelTerminal() {
                   value={cajaId}
                   onChange={(evento) => {
                     setCajaId(evento.target.value)
+                    setCredencialTerminal(null)
+                    setLecturaLlavero(null)
                     setContextoLlavero(null)
                     setSaldoRegisLlavero(null)
                     setMontoCompraAsistida('')
@@ -684,7 +860,7 @@ function PanelTerminal() {
                 </select>
               </label>
               <label>
-                Token del llavero
+                Token manual de respaldo
                 <input
                   required
                   type="password"
@@ -694,12 +870,13 @@ function PanelTerminal() {
                   value={tokenLlavero}
                   onChange={(evento) => {
                     setTokenLlavero(evento.target.value)
+                    setLecturaLlavero(null)
                     setContextoLlavero(null)
                     setSaldoRegisLlavero(null)
                     setMontoCompraAsistida('')
                     setIdempotenciaCompraAsistida(crypto.randomUUID())
                   }}
-                  placeholder="Acerca el llavero al lector NFC"
+                  placeholder="Solo si el celular lector no está disponible"
                 />
               </label>
               <button type="submit" disabled={procesandoLlavero}>
@@ -768,6 +945,49 @@ function PanelTerminal() {
                         : 'Continuar a revisión'}
                     </button>
                   </form>
+                  {montoCompraAsistida &&
+                    reglaAcumulacion &&
+                    vistaPreviaRegis && (
+                    <aside
+                      className={`terminal-llavero__prevision${
+                        vistaPreviaRegis.cumpleMinimo
+                          ? ''
+                          : ' terminal-llavero__prevision--sin-acumulacion'
+                      }`}
+                      aria-live="polite"
+                    >
+                      {vistaPreviaRegis.cumpleMinimo ? (
+                        <>
+                          <span>Recompensa estimada</span>
+                          <strong>
+                            Ganará {vistaPreviaRegis.regis} REGIS
+                          </strong>
+                          <small>
+                            Equivale al{' '}
+                            {reglaAcumulacion.tasa_acumulacion_bp / 100}% de la
+                            compra. Se acreditará únicamente después de aprobar
+                            el monto final.
+                          </small>
+                        </>
+                      ) : vistaPreviaRegis.montoValido ? (
+                        <>
+                          <strong>Esta compra todavía no acumula REGIS</strong>
+                          <small>
+                            El monto mínimo es{' '}
+                            {formatearMonto(
+                              reglaAcumulacion.monto_minimo_compra_clp,
+                            )}.
+                          </small>
+                        </>
+                      ) : null}
+                    </aside>
+                  )}
+                  {errorReglaAcumulacion && (
+                    <small className="terminal-llavero__prevision-error">
+                      No pudimos calcular la recompensa estimada. La aprobación
+                      final seguirá aplicando la regla segura de Supabase.
+                    </small>
+                  )}
                   <small>
                     La compra todavía no queda aprobada. El monto aparecerá
                     abajo para una confirmación final del cajero.
@@ -855,8 +1075,11 @@ function PanelTerminal() {
           cajas={cajas}
           cajaId={cajaId}
           tokenLlavero={tokenLlavero}
+          lecturaLlaveroId={lecturaLlavero?.lectura_id ?? null}
+          credencialTerminal={credencialTerminal}
           llaveroActivo={contextoLlavero?.estado === 'activo'}
           saldoLlavero={saldoRegisLlavero}
+          alConsumirLectura={limpiarLecturaOperativa}
           alConfirmar={actualizarDespuesDeCompra}
         />
       )}
@@ -1094,6 +1317,8 @@ function App() {
     window.addEventListener('hashchange', actualizarRuta)
     return () => window.removeEventListener('hashchange', actualizarRuta)
   }, [])
+
+  if (ruta === 'lector-movil') return <LectorMovil />
 
   if (cargando) {
     return (

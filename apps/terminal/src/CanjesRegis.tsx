@@ -12,6 +12,7 @@ import {
   listarBeneficiosCanjeTerminal,
   listarHistorialCanjesNegocio,
   marcarCanjeNegocioLeido,
+  reservarCanjeRegisDesdeLectura,
   reservarCanjeRegisLlavero,
 } from './lib/canjes'
 import type {
@@ -22,6 +23,7 @@ import type {
   ResultadoCanje,
 } from './lib/canjes'
 import { mensajeSupabase } from './lib/mensajesSupabase'
+import type { CredencialTerminalLocal } from './lib/terminalPwa'
 import './canjes.css'
 
 export type CajaCanjeRegis = {
@@ -54,8 +56,11 @@ type CanjesRegisProps = {
   cajas: CajaCanjeRegis[]
   cajaId: string
   tokenLlavero: string
+  lecturaLlaveroId: string | null
+  credencialTerminal: CredencialTerminalLocal | null
   llaveroActivo: boolean
   saldoLlavero: SaldoRegisLlavero | null
+  alConsumirLectura: () => void
   alConfirmar: () => Promise<void> | void
 }
 
@@ -178,8 +183,11 @@ function CanjesRegis({
   cajas,
   cajaId,
   tokenLlavero,
+  lecturaLlaveroId,
+  credencialTerminal,
   llaveroActivo,
   saldoLlavero,
+  alConsumirLectura,
   alConfirmar,
 }: CanjesRegisProps) {
   const [tokenQr, setTokenQr] = useState('')
@@ -357,7 +365,16 @@ function CanjesRegis({
   }
 
   const reservarConLlavero = async (beneficio: BeneficioCanjeTerminal) => {
-    if (!llaveroActivo || tokenLlavero.trim().length < 8 || !cajaId) {
+    const tieneLecturaSegura = Boolean(
+      lecturaLlaveroId && credencialTerminal,
+    )
+    const tieneTokenManual = tokenLlavero.trim().length >= 8
+
+    if (
+      !llaveroActivo ||
+      (!tieneLecturaSegura && !tieneTokenManual) ||
+      !cajaId
+    ) {
       setError('Lee un llavero activo antes de elegir el beneficio.')
       return
     }
@@ -368,12 +385,20 @@ function CanjesRegis({
     setResultado(null)
 
     try {
-      const reserva = await reservarCanjeRegisLlavero(
-        tokenLlavero.trim(),
-        cajaId,
-        beneficio.id,
-        `terminal-llavero-${crypto.randomUUID()}`,
-      )
+      const idempotencia = `terminal-llavero-${crypto.randomUUID()}`
+      const reserva = lecturaLlaveroId && credencialTerminal
+        ? await reservarCanjeRegisDesdeLectura(
+            lecturaLlaveroId,
+            credencialTerminal,
+            beneficio.id,
+            idempotencia,
+          )
+        : await reservarCanjeRegisLlavero(
+            tokenLlavero.trim(),
+            cajaId,
+            beneficio.id,
+            idempotencia,
+          )
 
       if (!reserva) {
         setError('Supabase no devolvió la reserva del beneficio.')
@@ -384,6 +409,7 @@ function CanjesRegis({
       setMontoBruto('')
       setFolioBoleta('')
       setMensaje('REGIS reservados. Revisa el monto antes de confirmar.')
+      if (lecturaLlaveroId) alConsumirLectura()
     } catch (errorCapturado) {
       setError(mensajeSupabase(errorCapturado))
     } finally {

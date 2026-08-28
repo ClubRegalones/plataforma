@@ -3,7 +3,7 @@ begin;
 create extension if not exists pgtap with schema extensions;
 set local search_path = extensions, public, pg_catalog;
 
-select plan(52);
+select plan(54);
 
 select ok(
   to_regtype('public.metodo_verificacion_llavero') is not null,
@@ -536,6 +536,35 @@ select is(
   ),
   '00000000-0000-0000-0000-00000000e002'::uuid,
   'El administrador identifica la cuenta por UUID'
+);
+
+set local request.jwt.claim.sub = '00000000-0000-0000-0000-00000000e002';
+
+select lives_ok(
+  $$
+    insert into public.solicitudes_llavero (
+      vecino_id,
+      negocio_solicitud_id,
+      observaciones
+    ) values (
+      '00000000-0000-0000-0000-00000000e002',
+      '21000000-0000-0000-0000-00000000e001',
+      'Solicitud posterior sin llavero preparado'
+    )
+  $$,
+  'Un vecino con un llavero anterior puede crear una nueva solicitud de reposición'
+);
+
+set local request.jwt.claim.sub = '00000000-0000-0000-0000-00000000e001';
+
+select is(
+  (
+    select llavero_id
+    from public.listar_gestion_llaveros_detalle()
+    where observaciones = 'Solicitud posterior sin llavero preparado'
+  ),
+  null::uuid,
+  'Una solicitud nueva no hereda el llavero activo de una solicitud anterior'
 );
 select ok(
   not has_column_privilege(

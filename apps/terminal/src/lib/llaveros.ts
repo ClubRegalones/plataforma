@@ -1,5 +1,6 @@
 import type { Enums } from '@club-regalones/domain'
 import { supabase } from './supabase'
+import type { CredencialTerminalLocal } from './terminalPwa'
 
 export type ContextoActivacionLlavero = {
   codigo_publico: string
@@ -51,5 +52,28 @@ export async function activarLlaveroPrimerUso(
 
   if (error) throw error
 
+  return data[0] ?? null
+}
+
+export async function activarLlaveroDesdeLectura(
+  lecturaId: string,
+  credencial: CredencialTerminalLocal,
+  metodo: MetodoActivacionLlavero,
+  pin: string | null,
+  identidadVerificada: boolean,
+) {
+  const { data, error } = await supabase.rpc(
+    'activar_llavero_desde_lectura',
+    {
+      p_lectura_id: lecturaId,
+      p_terminal_id: credencial.terminalId,
+      p_token_terminal: credencial.tokenTerminal,
+      p_metodo: metodo,
+      p_pin: pin ?? undefined,
+      p_identidad_verificada: identidadVerificada,
+    },
+  )
+
+  if (error) throw error
   return data[0] ?? null
 }

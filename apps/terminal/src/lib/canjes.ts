@@ -1,5 +1,6 @@
 import type { Database, Tables } from '@club-regalones/domain'
 import { supabase } from './supabase'
+import type { CredencialTerminalLocal } from './terminalPwa'
 
 export type BeneficioCanjeTerminal = Pick<
   Tables<'versiones_beneficio_regis'>,
@@ -90,6 +91,27 @@ export async function reservarCanjeRegisLlavero(
 
   if (error) throw error
 
+  return data[0] ?? null
+}
+
+export async function reservarCanjeRegisDesdeLectura(
+  lecturaId: string,
+  credencial: CredencialTerminalLocal,
+  beneficioVersionId: string,
+  idempotencyKey: string,
+) {
+  const { data, error } = await supabase.rpc(
+    'reservar_canje_regis_desde_lectura',
+    {
+      p_lectura_id: lecturaId,
+      p_terminal_id: credencial.terminalId,
+      p_token_terminal: credencial.tokenTerminal,
+      p_beneficio_version_id: beneficioVersionId,
+      p_idempotency_key: idempotencyKey,
+    },
+  )
+
+  if (error) throw error
   return data[0] ?? null
 }
 
