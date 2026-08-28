@@ -27,9 +27,6 @@ import type {
 import { mensajeSupabase } from './lib/mensajesSupabase'
 import { supabase } from './lib/supabase'
 import CanjesRegis from './CanjesRegis'
-import GestionBeneficios from './GestionBeneficios'
-import Asistencia from './Asistencia'
-import EnlaceAsistencia from './EnlaceAsistencia'
 import EstadoPwa from './EstadoPwa'
 import LectorMovil from './LectorMovil'
 import VinculacionLector from './VinculacionLector'
@@ -787,10 +784,6 @@ function PanelTerminal() {
         </div>
         <div className="terminal-panel__acciones">
           <EstadoPwa />
-          <EnlaceAsistencia />
-          {puedeGestionarBeneficios && (
-            <a href="#beneficios">Gestionar beneficios</a>
-          )}
           <button type="button" onClick={() => void cargarSolicitudes()}>
             Actualizar
           </button>
@@ -1329,9 +1322,6 @@ function App() {
   }
 
   if (!sesion) return <AccesoTerminal />
-
-  if (ruta === 'beneficios') return <GestionBeneficios />
-  if (ruta === 'asistencia') return <Asistencia />
 
   return <PanelTerminal />
 }

@@ -73,16 +73,6 @@ export async function listarHistorialCanjesVecino(limite = 50) {
   return data
 }
 
-export async function listarHistorialCanjesAdmin(limite = 200) {
-  const { data, error } = await supabase.rpc(
-    'listar_historial_canjes_admin',
-    { p_limite: limite },
-  )
-
-  if (error) throw error
-  return data
-}
-
 export async function marcarCanjeRegisLeido(
   canjeId: string,
   destino: 'vecino' | 'negocio' | 'admin_regalones',

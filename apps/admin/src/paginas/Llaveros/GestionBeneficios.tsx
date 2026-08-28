@@ -19,7 +19,7 @@ import {
 import type { HistorialCanjeRegis } from '../../lib/regis'
 import { supabase } from '../../lib/supabase'
 import './BeneficiosAdmin.css'
-import './Llaveros.css'
+import '../../../../../packages/ui/llaveros.css'
 
 type PerfilAdmin = Pick<Tables<'perfiles'>, 'nombre' | 'rol_plataforma'>
 

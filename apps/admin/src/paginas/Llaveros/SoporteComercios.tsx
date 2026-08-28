@@ -18,7 +18,7 @@ import type {
   TicketSoporteAdmin,
 } from '../../lib/soporte'
 import { supabase } from '../../lib/supabase'
-import './Llaveros.css'
+import '../../../../../packages/ui/llaveros.css'
 import './SoporteAdmin.css'
 
 type PerfilAdmin = Pick<Tables<'perfiles'>, 'nombre' | 'rol_plataforma'>

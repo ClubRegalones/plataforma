@@ -14,7 +14,7 @@ import {
 import type { FilaGestionLlavero } from '../../lib/llaveros'
 import { mensajeSupabase } from '../../lib/mensajesSupabase'
 import { supabase } from '../../lib/supabase'
-import './Llaveros.css'
+import '../../../../../packages/ui/llaveros.css'
 
 type PerfilAdmin = Pick<
   Tables<'perfiles'>,

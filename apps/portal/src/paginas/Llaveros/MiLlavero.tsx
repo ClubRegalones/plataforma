@@ -3,7 +3,6 @@ import type { Tables } from '@club-regalones/domain'
 import type { FormEvent } from 'react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { QRCodeSVG } from 'qrcode.react'
-import EnlaceSoporteAdmin from '../../componentes/EnlaceSoporteAdmin'
 import { useSesion } from '../../hooks/useSesion'
 import {
   cancelarSolicitudLlavero,
@@ -24,7 +23,7 @@ import type {
   SaldoRegisPropio,
 } from '../../lib/regis'
 import { supabase } from '../../lib/supabase'
-import './Llaveros.css'
+import '../../../../../packages/ui/llaveros.css'
 
 type Perfil = Pick<
   Tables<'perfiles'>,
@@ -495,7 +494,6 @@ function MiLlavero() {
             <>
               <a href="#administrar-beneficios">Beneficios</a>
               <a href="#administrar-llaveros">Llaveros</a>
-              <EnlaceSoporteAdmin />
             </>
           )}
           {sesion && (
