@@ -3,7 +3,7 @@ import { supabase } from './supabase'
 import type { CredencialTerminalLocal } from './terminalPwa'
 
 export type SaldoRegisLlavero =
-  Database['public']['Functions']['consultar_saldo_regis_llavero']['Returns'][number]
+  Database['public']['Functions']['terminal_consultar_saldo_llavero']['Returns'][number]
 
 export type ReglaAcumulacionRegis = Pick<
   Tables<'reglas_regis'>,
@@ -28,13 +28,16 @@ export type VistaPreviaRegis = {
 
 export async function consultarSaldoRegisLlavero(
   token: string,
-  cajaId: string,
+  turnoId: string,
+  credencial: CredencialTerminalLocal,
 ) {
   const { data, error } = await supabase.rpc(
-    'consultar_saldo_regis_llavero',
+    'terminal_consultar_saldo_llavero',
     {
       p_token: token,
-      p_caja_id: cajaId,
+      p_turno_id: turnoId,
+      p_terminal_id: credencial.terminalId,
+      p_token_terminal: credencial.tokenTerminal,
     },
   )
 

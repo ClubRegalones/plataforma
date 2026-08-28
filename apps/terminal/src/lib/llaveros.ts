@@ -23,38 +23,52 @@ export type MetodoActivacionLlavero = 'cedula' | 'pin'
 
 export async function consultarLlaveroActivacion(
   token: string,
-  cajaId: string,
+  turnoId: string,
+  credencial: CredencialTerminalLocal,
 ) {
-  const { data, error } = await supabase.rpc('consultar_llavero_activacion', {
-    p_token: token,
-    p_caja_id: cajaId,
-  })
+  const { data, error } = await supabase.rpc(
+    'terminal_consultar_llavero',
+    {
+      p_token: token,
+      p_turno_id: turnoId,
+      p_terminal_id: credencial.terminalId,
+      p_token_terminal: credencial.tokenTerminal,
+    },
+  )
 
   if (error) throw error
-
   return data[0] ?? null
 }
 
 export async function activarLlaveroPrimerUso(
   token: string,
-  cajaId: string,
+  turnoId: string,
+  credencial: CredencialTerminalLocal,
   metodo: MetodoActivacionLlavero,
   pin: string | null,
   identidadVerificada: boolean,
 ) {
-  const { data, error } = await supabase.rpc('activar_llavero_primer_uso', {
-    p_token: token,
-    p_caja_id: cajaId,
-    p_metodo: metodo,
-    p_pin: pin ?? undefined,
-    p_identidad_verificada: identidadVerificada,
-  })
+  const { data, error } = await supabase.rpc(
+    'terminal_activar_llavero',
+    {
+      p_token: token,
+      p_metodo: metodo,
+      p_pin: pin ?? '',
+      p_identidad_verificada: identidadVerificada,
+      p_turno_id: turnoId,
+      p_terminal_id: credencial.terminalId,
+      p_token_terminal: credencial.tokenTerminal,
+    },
+  )
 
   if (error) throw error
-
   return data[0] ?? null
 }
 
+/*
+ * Esta ruta corresponde al celular lector NFC.
+ * Se migrará en la etapa específica del lector móvil.
+ */
 export async function activarLlaveroDesdeLectura(
   lecturaId: string,
   credencial: CredencialTerminalLocal,

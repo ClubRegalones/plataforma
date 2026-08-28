@@ -441,8 +441,8 @@ function PanelTerminal() {
   const consultarLlavero = async (evento: FormEvent<HTMLFormElement>) => {
     evento.preventDefault()
 
-    if (!cajaId) {
-      setError('Selecciona la caja donde se utilizará el llavero.')
+    if (!turno || !credencialTerminal) {
+      setError('Debes iniciar un turno antes de consultar llaveros.')
       return
     }
 
@@ -459,7 +459,8 @@ function PanelTerminal() {
     try {
       const contexto = await consultarLlaveroActivacion(
         tokenLlavero.trim(),
-        cajaId,
+        turno.turno_id,
+        credencialTerminal,
       )
 
       if (!contexto) {
@@ -471,7 +472,11 @@ function PanelTerminal() {
       setContextoLlavero(contexto)
       setSaldoRegisLlavero(
         contexto.estado === 'activo'
-          ? await consultarSaldoRegisLlavero(tokenLlavero.trim(), cajaId)
+          ? await consultarSaldoRegisLlavero(
+              tokenLlavero.trim(),
+              turno.turno_id,
+              credencialTerminal,
+            )
           : null,
       )
       setMetodoActivacion('cedula')
@@ -493,8 +498,15 @@ function PanelTerminal() {
   ) => {
     evento.preventDefault()
 
-    if (!contextoLlavero || contextoLlavero.estado !== 'activo' || !cajaId) {
-      setError('Lee un llavero activo antes de iniciar la compra asistida.')
+    if (
+      !contextoLlavero ||
+      contextoLlavero.estado !== 'activo' ||
+      !turno ||
+      !credencialTerminal
+    ) {
+      setError(
+        'Lee un llavero activo e inicia un turno antes de preparar la compra.',
+      )
       return
     }
 
@@ -524,7 +536,8 @@ function PanelTerminal() {
           )
         : await crearCompraAsistida(
             tokenLlavero.trim(),
-            cajaId,
+            turno.turno_id,
+            credencialTerminal,
             monto,
             idempotenciaCompraAsistida,
           )
@@ -554,7 +567,10 @@ function PanelTerminal() {
 
   const activarLlavero = async (evento: FormEvent<HTMLFormElement>) => {
     evento.preventDefault()
-    if (!contextoLlavero || !cajaId) return
+    if (!contextoLlavero || !turno || !credencialTerminal) {
+      setError('Debes iniciar un turno antes de activar llaveros.')
+      return
+    }
 
     if (metodoActivacion === 'cedula' && !cedulaVerificada) {
       setError('Confirma que revisaste presencialmente la cédula del vecino.')
@@ -589,7 +605,8 @@ function PanelTerminal() {
           )
         : await activarLlaveroPrimerUso(
             tokenLlavero.trim(),
-            cajaId,
+            turno.turno_id,
+            credencialTerminal,
             metodoActivacion,
             metodoActivacion === 'pin' ? pinActivacion : null,
             metodoActivacion === 'cedula' && cedulaVerificada,
@@ -631,7 +648,11 @@ function PanelTerminal() {
           : null,
       )
       setSaldoRegisLlavero(
-        await consultarSaldoRegisLlavero(tokenLlavero.trim(), cajaId),
+        await consultarSaldoRegisLlavero(
+          tokenLlavero.trim(),
+          turno.turno_id,
+          credencialTerminal,
+        ),
       )
       setPinActivacion('')
       setCedulaVerificada(false)
@@ -761,11 +782,16 @@ function PanelTerminal() {
     if (
       contextoLlavero?.estado === 'activo' &&
       tokenLlavero.trim().length >= 8 &&
-      cajaId
+      turno &&
+      credencialTerminal
     ) {
       try {
         setSaldoRegisLlavero(
-          await consultarSaldoRegisLlavero(tokenLlavero.trim(), cajaId),
+          await consultarSaldoRegisLlavero(
+            tokenLlavero.trim(),
+            turno.turno_id,
+            credencialTerminal,
+          ),
         )
       } catch {
         setSaldoRegisLlavero(null)

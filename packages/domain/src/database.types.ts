@@ -666,6 +666,7 @@ export type Database = {
           reemplazado_por_id: string | null
           solicitud_id: string | null
           token_hash: string
+          turno_caja_activacion_id: string | null
           vecino_id: string | null
         }
         Insert: {
@@ -692,6 +693,7 @@ export type Database = {
           reemplazado_por_id?: string | null
           solicitud_id?: string | null
           token_hash: string
+          turno_caja_activacion_id?: string | null
           vecino_id?: string | null
         }
         Update: {
@@ -718,6 +720,7 @@ export type Database = {
           reemplazado_por_id?: string | null
           solicitud_id?: string | null
           token_hash?: string
+          turno_caja_activacion_id?: string | null
           vecino_id?: string | null
         }
         Relationships: [
@@ -747,6 +750,13 @@ export type Database = {
             columns: ["solicitud_id"]
             isOneToOne: true
             referencedRelation: "solicitudes_llavero"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "llaveros_nfc_turno_caja_activacion_id_fkey"
+            columns: ["turno_caja_activacion_id"]
+            isOneToOne: false
+            referencedRelation: "turnos_caja"
             referencedColumns: ["id"]
           },
           {
@@ -3197,6 +3207,24 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      terminal_activar_llavero: {
+        Args: {
+          p_identidad_verificada: boolean
+          p_metodo: Database["public"]["Enums"]["metodo_verificacion_llavero"]
+          p_pin: string
+          p_terminal_id: string
+          p_token: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          activado: boolean
+          activado_en: string
+          codigo_publico: string
+          estado: Database["public"]["Enums"]["estado_llavero_nfc"]
+          mensaje: string
+        }[]
+      }
       terminal_aprobar_compra: {
         Args: {
           p_folio_boleta?: string
@@ -3265,6 +3293,40 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      terminal_consultar_llavero: {
+        Args: {
+          p_terminal_id: string
+          p_token: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          codigo_publico: string
+          entregado: boolean
+          estado: Database["public"]["Enums"]["estado_llavero_nfc"]
+          nombre_vecino: string
+          puede_activar: boolean
+          tiene_pin: boolean
+        }[]
+      }
+      terminal_consultar_saldo_llavero: {
+        Args: {
+          p_terminal_id: string
+          p_token: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          actualizado_en: string
+          canjeados: number
+          disponibles: number
+          negocio_id: string
+          nombre_negocio: string
+          pendientes: number
+          remanente_valor_clp: number
+          reservados: number
+        }[]
+      }
       terminal_consultar_turno: {
         Args: { p_terminal_id: string; p_token_terminal: string }
         Returns: {
@@ -3283,6 +3345,40 @@ export type Database = {
           p_motivo: string
           p_solicitud_id: string
           p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          actualizado_en: string
+          caja_id: string
+          creado_en: string
+          estado: Database["public"]["Enums"]["estado_solicitud_compra"]
+          expira_en: string
+          id: string
+          idempotency_key: string
+          informado_por: Database["public"]["Enums"]["informado_por"] | null
+          lectura_terminal_id: string | null
+          llavero_id: string | null
+          monto_corregido: number | null
+          monto_informado: number | null
+          motivo_correccion: string | null
+          motivo_rechazo: string | null
+          turno_caja_id: string | null
+          vecino_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "solicitudes_compra"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      terminal_crear_compra_asistida: {
+        Args: {
+          p_idempotency_key: string
+          p_monto: number
+          p_terminal_id: string
+          p_token: string
           p_token_terminal: string
           p_turno_id: string
         }
