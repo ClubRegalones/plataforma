@@ -3412,6 +3412,34 @@ export type Database = {
           terminal_id: string
         }[]
       }
+      terminal_obtener_regla_acumulacion: {
+        Args: {
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          activa: boolean
+          conservar_remanente: boolean
+          creado_en: string
+          creado_por: string | null
+          id: string
+          monto_minimo_compra_clp: number
+          negocio_id: string | null
+          porcentaje_maximo_canje_bp: number
+          tasa_acumulacion_bp: number
+          valor_regis_clp: number
+          version: number
+          vigencia_desde: string
+          vigencia_hasta: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "reglas_regis"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       terminal_rechazar_compra: {
         Args: {
           p_motivo: string

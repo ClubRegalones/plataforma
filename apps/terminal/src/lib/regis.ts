@@ -1,5 +1,6 @@
 import type { Database, Tables } from '@club-regalones/domain'
 import { supabase } from './supabase'
+import type { CredencialTerminalLocal } from './terminalPwa'
 
 export type SaldoRegisLlavero =
   Database['public']['Functions']['consultar_saldo_regis_llavero']['Returns'][number]
@@ -42,41 +43,22 @@ export async function consultarSaldoRegisLlavero(
   return data[0] ?? null
 }
 
-export async function obtenerReglaAcumulacionVigente(negocioId: string) {
-  const { data, error } = await supabase
-    .from('reglas_regis')
-    .select(
-      'id, negocio_id, version, tasa_acumulacion_bp, valor_regis_clp, monto_minimo_compra_clp, conservar_remanente, vigencia_desde, vigencia_hasta',
-    )
-    .eq('activa', true)
-    .or(`negocio_id.is.null,negocio_id.eq.${negocioId}`)
+export async function obtenerReglaAcumulacionVigente(
+  turnoId: string,
+  credencial: CredencialTerminalLocal,
+) {
+  const { data, error } = await supabase.rpc(
+    'terminal_obtener_regla_acumulacion',
+    {
+      p_turno_id: turnoId,
+      p_terminal_id: credencial.terminalId,
+      p_token_terminal: credencial.tokenTerminal,
+    },
+  )
 
   if (error) throw error
 
-  const ahora = Date.now()
-  const candidatas = (data as ReglaAcumulacionRegis[])
-    .filter((regla) => {
-      const desde = new Date(regla.vigencia_desde).getTime()
-      const hasta = regla.vigencia_hasta
-        ? new Date(regla.vigencia_hasta).getTime()
-        : Number.POSITIVE_INFINITY
-
-      return desde <= ahora && ahora < hasta
-    })
-    .sort((a, b) => {
-      const alcanceA = a.negocio_id === negocioId ? 1 : 0
-      const alcanceB = b.negocio_id === negocioId ? 1 : 0
-      if (alcanceA !== alcanceB) return alcanceB - alcanceA
-
-      const vigencia =
-        new Date(b.vigencia_desde).getTime() -
-        new Date(a.vigencia_desde).getTime()
-      if (vigencia !== 0) return vigencia
-
-      return b.version - a.version
-    })
-
-  return candidatas[0] ?? null
+  return data as ReglaAcumulacionRegis | null
 }
 
 export function calcularVistaPreviaRegis(

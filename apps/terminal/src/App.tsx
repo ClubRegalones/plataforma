@@ -180,18 +180,24 @@ function PanelTerminal() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    const negocioId = cajas.find((caja) => caja.id === cajaId)?.negocioId
     let activa = true
 
-    if (!negocioId) {
-      return () => { activa = false }
+    if (!turno || !credencialTerminal) {
+      return () => {
+        activa = false
+      }
     }
 
-    void obtenerReglaAcumulacionVigente(negocioId)
+    void obtenerReglaAcumulacionVigente(
+      turno.turno_id,
+      credencialTerminal,
+    )
       .then((regla) => {
         if (!activa) return
+
         setReglaAcumulacion(regla)
         setErrorReglaAcumulacion(null)
+
         if (!regla) {
           setErrorReglaAcumulacion(
             'No hay una regla REGIS vigente para calcular esta compra.',
@@ -200,12 +206,17 @@ function PanelTerminal() {
       })
       .catch((errorCapturado) => {
         if (!activa) return
+
         setReglaAcumulacion(null)
-        setErrorReglaAcumulacion(mensajeSupabase(errorCapturado))
+        setErrorReglaAcumulacion(
+          mensajeSupabase(errorCapturado),
+        )
       })
 
-    return () => { activa = false }
-  }, [cajaId, cajas])
+    return () => {
+      activa = false
+    }
+  }, [credencialTerminal, turno])
 
   const limpiarLecturaOperativa = useCallback(() => {
     setLecturaLlavero(null)
@@ -219,6 +230,8 @@ function PanelTerminal() {
     (credencial: CredencialTerminalLocal | null) => {
       setCredencialTerminal(credencial)
       setTurno(null)
+      setReglaAcumulacion(null)
+      setErrorReglaAcumulacion(null)
       setCargandoTurno(Boolean(credencial))
       setCerrandoTurno(false)
       if (!credencial) limpiarLecturaOperativa()
@@ -843,6 +856,8 @@ function PanelTerminal() {
     try {
       await cerrarTurnoTerminal(turno.turno_id, credencialTerminal)
       setTurno(null)
+      setReglaAcumulacion(null)
+      setErrorReglaAcumulacion(null)
       limpiarLecturaOperativa()
       setMensaje('Turno finalizado correctamente.')
     } catch (errorCapturado) {
