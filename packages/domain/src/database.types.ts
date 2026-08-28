@@ -3165,6 +3165,111 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      terminal_cerrar_turno: {
+        Args: {
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          caja_id: string
+          cerrado_en: string | null
+          creado_en: string
+          estado: Database["public"]["Enums"]["estado_turno_caja"]
+          id: string
+          iniciado_en: string
+          negocio_id: string
+          nombre_cajero: string
+          terminal_id: string
+          ultima_actividad_en: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "turnos_caja"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      terminal_consultar_turno: {
+        Args: { p_terminal_id: string; p_token_terminal: string }
+        Returns: {
+          caja_id: string
+          estado: Database["public"]["Enums"]["estado_turno_caja"]
+          iniciado_en: string
+          negocio_id: string
+          nombre_cajero: string
+          terminal_id: string
+          turno_id: string
+        }[]
+      }
+      terminal_iniciar_turno: {
+        Args: {
+          p_nombre_cajero: string
+          p_terminal_id: string
+          p_token_terminal: string
+        }
+        Returns: {
+          caja_id: string
+          estado: Database["public"]["Enums"]["estado_turno_caja"]
+          iniciado_en: string
+          negocio_id: string
+          nombre_cajero: string
+          terminal_id: string
+          turno_id: string
+        }[]
+      }
+      terminal_listar_solicitudes: {
+        Args: {
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          actualizado_en: string
+          caja_id: string
+          creado_en: string
+          estado: Database["public"]["Enums"]["estado_solicitud_compra"]
+          expira_en: string
+          id: string
+          idempotency_key: string
+          informado_por: Database["public"]["Enums"]["informado_por"] | null
+          lectura_terminal_id: string | null
+          llavero_id: string | null
+          monto_corregido: number | null
+          monto_informado: number | null
+          motivo_correccion: string | null
+          motivo_rechazo: string | null
+          turno_caja_id: string | null
+          vecino_id: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "solicitudes_compra"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      terminal_obtener_contexto: {
+        Args: {
+          p_terminal_id: string
+          p_token_terminal: string
+          p_version_app?: string
+        }
+        Returns: {
+          caja_codigo: string
+          caja_id: string
+          caja_nombre: string
+          estado_terminal: Database["public"]["Enums"]["estado_terminal"]
+          identificador_publico: string
+          negocio_id: string
+          negocio_nombre: string
+          negocio_rut: string
+          nombre_dispositivo: string
+          sucursal_id: string
+          sucursal_nombre: string
+          terminal_id: string
+        }[]
+      }
       validar_configuracion_beneficio_regis: {
         Args: {
           p_compra_minima_clp: number
@@ -3177,6 +3282,27 @@ export type Database = {
           p_valor_regis_clp: number
         }
         Returns: undefined
+      }
+      validar_credencial_terminal_interna: {
+        Args: { p_terminal_id: string; p_token_terminal: string }
+        Returns: {
+          actualizado_en: string
+          caja_id: string
+          creado_en: string
+          estado: Database["public"]["Enums"]["estado_terminal"]
+          id: string
+          identificador_publico: string
+          nombre_dispositivo: string | null
+          token_hash: string
+          ultima_conexion_en: string | null
+          version_app: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "terminales"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       validar_terminal_operacion_interna: {
         Args: { p_terminal_id: string; p_token_terminal: string }
