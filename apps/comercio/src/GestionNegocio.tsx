@@ -139,7 +139,7 @@ export default function GestionNegocio() {
 
           <section className="bloque"><div className="titulo"><div><span>Equipo</span><h2>Personal del negocio</h2></div><p>Los propietarios y administradores gestionan; los cajeros solo operan la Terminal.</p></div>
             <div className="tarjetas">{miembros.map((m) => <article key={m.id}><div><strong>{m.nombre} {m.apellido ?? ''}</strong><p>ID de cuenta: {m.usuario_id}</p></div><span className={`estado ${m.estado}`}>{m.rol} · {m.estado}</span></article>)}</div>
-            <p className="nota">La invitación segura por correo se incorporará en la siguiente migración; no se ingresan usuarios manualmente por ID.</p>
+            <p className="nota">Para el MVP, cada cajero se identifica al iniciar su turno directamente en la Terminal PWA. No necesita una cuenta ni invitación por correo.</p>
           </section>
         </>
       )}

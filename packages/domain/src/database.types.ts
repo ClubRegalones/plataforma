@@ -1,4 +1,4 @@
-﻿export type Json =
+export type Json =
   | string
   | number
   | boolean
@@ -7,11 +7,6 @@
   | Json[]
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
-  __InternalSupabase: {
-    PostgrestVersion: "14.17"
-  }
   graphql_public: {
     Tables: {
       [_ in never]: never
@@ -206,6 +201,7 @@ export type Database = {
           qr_token_hash: string | null
           regla_regis_id: string
           reservado_en: string
+          turno_caja_id: string | null
           valor_financiado_regis_clp: number | null
           valor_regis_clp: number
           vecino_id: string
@@ -239,6 +235,7 @@ export type Database = {
           qr_token_hash?: string | null
           regla_regis_id: string
           reservado_en?: string
+          turno_caja_id?: string | null
           valor_financiado_regis_clp?: number | null
           valor_regis_clp: number
           vecino_id: string
@@ -272,6 +269,7 @@ export type Database = {
           qr_token_hash?: string | null
           regla_regis_id?: string
           reservado_en?: string
+          turno_caja_id?: string | null
           valor_financiado_regis_clp?: number | null
           valor_regis_clp?: number
           vecino_id?: string
@@ -326,6 +324,13 @@ export type Database = {
             referencedRelation: "reglas_regis"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "canjes_regis_turno_caja_id_fkey"
+            columns: ["turno_caja_id"]
+            isOneToOne: false
+            referencedRelation: "turnos_caja"
+            referencedColumns: ["id"]
+          },
         ]
       }
       compras: {
@@ -352,6 +357,7 @@ export type Database = {
           solicitud_id: string
           sucursal_id: string
           tasa_acumulacion_bp_aplicada: number | null
+          turno_caja_id: string | null
           valor_regis_clp_aplicado: number | null
           vecino_id: string
         }
@@ -378,6 +384,7 @@ export type Database = {
           solicitud_id: string
           sucursal_id: string
           tasa_acumulacion_bp_aplicada?: number | null
+          turno_caja_id?: string | null
           valor_regis_clp_aplicado?: number | null
           vecino_id: string
         }
@@ -404,6 +411,7 @@ export type Database = {
           solicitud_id?: string
           sucursal_id?: string
           tasa_acumulacion_bp_aplicada?: number | null
+          turno_caja_id?: string | null
           valor_regis_clp_aplicado?: number | null
           vecino_id?: string
         }
@@ -441,6 +449,13 @@ export type Database = {
             columns: ["sucursal_id"]
             isOneToOne: false
             referencedRelation: "sucursales"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "compras_turno_caja_id_fkey"
+            columns: ["turno_caja_id"]
+            isOneToOne: false
+            referencedRelation: "turnos_caja"
             referencedColumns: ["id"]
           },
         ]
@@ -1289,6 +1304,7 @@ export type Database = {
           monto_informado: number | null
           motivo_correccion: string | null
           motivo_rechazo: string | null
+          turno_caja_id: string | null
           vecino_id: string
         }
         Insert: {
@@ -1306,6 +1322,7 @@ export type Database = {
           monto_informado?: number | null
           motivo_correccion?: string | null
           motivo_rechazo?: string | null
+          turno_caja_id?: string | null
           vecino_id: string
         }
         Update: {
@@ -1323,6 +1340,7 @@ export type Database = {
           monto_informado?: number | null
           motivo_correccion?: string | null
           motivo_rechazo?: string | null
+          turno_caja_id?: string | null
           vecino_id?: string
         }
         Relationships: [
@@ -1345,6 +1363,13 @@ export type Database = {
             columns: ["llavero_id"]
             isOneToOne: false
             referencedRelation: "llaveros_nfc"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "solicitudes_compra_turno_caja_id_fkey"
+            columns: ["turno_caja_id"]
+            isOneToOne: false
+            referencedRelation: "turnos_caja"
             referencedColumns: ["id"]
           },
         ]
@@ -1605,6 +1630,67 @@ export type Database = {
           },
         ]
       }
+      turnos_caja: {
+        Row: {
+          caja_id: string
+          cerrado_en: string | null
+          creado_en: string
+          estado: Database["public"]["Enums"]["estado_turno_caja"]
+          id: string
+          iniciado_en: string
+          negocio_id: string
+          nombre_cajero: string
+          terminal_id: string
+          ultima_actividad_en: string
+        }
+        Insert: {
+          caja_id: string
+          cerrado_en?: string | null
+          creado_en?: string
+          estado?: Database["public"]["Enums"]["estado_turno_caja"]
+          id?: string
+          iniciado_en?: string
+          negocio_id: string
+          nombre_cajero: string
+          terminal_id: string
+          ultima_actividad_en?: string
+        }
+        Update: {
+          caja_id?: string
+          cerrado_en?: string | null
+          creado_en?: string
+          estado?: Database["public"]["Enums"]["estado_turno_caja"]
+          id?: string
+          iniciado_en?: string
+          negocio_id?: string
+          nombre_cajero?: string
+          terminal_id?: string
+          ultima_actividad_en?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "turnos_caja_caja_id_fkey"
+            columns: ["caja_id"]
+            isOneToOne: false
+            referencedRelation: "cajas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "turnos_caja_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "turnos_caja_terminal_id_fkey"
+            columns: ["terminal_id"]
+            isOneToOne: false
+            referencedRelation: "terminales"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       vecinos_negocios: {
         Row: {
           actualizado_en: string
@@ -1833,6 +1919,50 @@ export type Database = {
           solicitud_id: string
           sucursal_id: string
           tasa_acumulacion_bp_aplicada: number | null
+          turno_caja_id: string | null
+          valor_regis_clp_aplicado: number | null
+          vecino_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "compras"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      aprobar_compra_en_turno: {
+        Args: {
+          p_folio_boleta?: string
+          p_origen?: Database["public"]["Enums"]["origen_compra"]
+          p_solicitud_id: string
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          aporte_promocional_clp: number
+          caja_id: string
+          cajero_id: string
+          creado_en: string
+          descuento_total_clp: number
+          estado: Database["public"]["Enums"]["estado_compra"]
+          folio_boleta: string | null
+          id: string
+          monto_base_regis_clp: number | null
+          monto_bruto_clp: number | null
+          monto_final: number
+          negocio_id: string
+          origen: Database["public"]["Enums"]["origen_compra"]
+          regis_generados: number
+          regis_procesados_en: string | null
+          regis_utilizados: number
+          regla_regis_id: string | null
+          revertido_en: string | null
+          riesgo: Database["public"]["Enums"]["severidad_riesgo"] | null
+          solicitud_id: string
+          sucursal_id: string
+          tasa_acumulacion_bp_aplicada: number | null
+          turno_caja_id: string | null
           valor_regis_clp_aplicado: number | null
           vecino_id: string
         }
@@ -1955,6 +2085,31 @@ export type Database = {
         Args: { p_terminal_id: string }
         Returns: undefined
       }
+      cerrar_turno_terminal: {
+        Args: {
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          caja_id: string
+          cerrado_en: string | null
+          creado_en: string
+          estado: Database["public"]["Enums"]["estado_turno_caja"]
+          id: string
+          iniciado_en: string
+          negocio_id: string
+          nombre_cajero: string
+          terminal_id: string
+          ultima_actividad_en: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "turnos_caja"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       confirmar_compra_con_canje: {
         Args: {
           p_caja_id: string
@@ -1962,6 +2117,29 @@ export type Database = {
           p_folio_boleta?: string
           p_monto_bruto_clp: number
           p_qr_token?: string
+        }
+        Returns: {
+          aporte_promocional_negocio_clp: number
+          canje_id: string
+          compra_id: string
+          descuento_total_clp: number
+          estado: Database["public"]["Enums"]["estado_canje_regis"]
+          monto_compra_bruto_clp: number
+          monto_final_pagado_clp: number
+          regis_utilizados: number
+          valor_financiado_regis_clp: number
+        }[]
+      }
+      confirmar_compra_con_canje_en_turno: {
+        Args: {
+          p_caja_id: string
+          p_canje_id: string
+          p_folio_boleta?: string
+          p_monto_bruto_clp: number
+          p_qr_token?: string
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
         }
         Returns: {
           aporte_promocional_negocio_clp: number
@@ -2038,6 +2216,18 @@ export type Database = {
           reservados: number
         }[]
       }
+      consultar_turno_terminal: {
+        Args: { p_terminal_id: string; p_token_terminal: string }
+        Returns: {
+          caja_id: string
+          estado: Database["public"]["Enums"]["estado_turno_caja"]
+          iniciado_en: string
+          negocio_id: string
+          nombre_cajero: string
+          terminal_id: string
+          turno_id: string
+        }[]
+      }
       consumir_lectura_llavero_terminal: {
         Args: { p_lectura_id: string }
         Returns: {
@@ -2080,6 +2270,7 @@ export type Database = {
           monto_informado: number | null
           motivo_correccion: string | null
           motivo_rechazo: string | null
+          turno_caja_id: string | null
           vecino_id: string
         }
         SetofOptions: {
@@ -2207,6 +2398,7 @@ export type Database = {
           qr_token_hash: string | null
           regla_regis_id: string
           reservado_en: string
+          turno_caja_id: string | null
           valor_financiado_regis_clp: number | null
           valor_regis_clp: number
           vecino_id: string
@@ -2240,6 +2432,7 @@ export type Database = {
           monto_informado: number | null
           motivo_correccion: string | null
           motivo_rechazo: string | null
+          turno_caja_id: string | null
           vecino_id: string
         }
         SetofOptions: {
@@ -2271,6 +2464,7 @@ export type Database = {
           monto_informado: number | null
           motivo_correccion: string | null
           motivo_rechazo: string | null
+          turno_caja_id: string | null
           vecino_id: string
         }
         SetofOptions: {
@@ -2303,6 +2497,7 @@ export type Database = {
           monto_informado: number | null
           motivo_correccion: string | null
           motivo_rechazo: string | null
+          turno_caja_id: string | null
           vecino_id: string
         }
         SetofOptions: {
@@ -2413,6 +2608,7 @@ export type Database = {
           monto_informado: number | null
           motivo_correccion: string | null
           motivo_rechazo: string | null
+          turno_caja_id: string | null
           vecino_id: string
         }
         SetofOptions: {
@@ -2439,6 +2635,7 @@ export type Database = {
           monto_informado: number | null
           motivo_correccion: string | null
           motivo_rechazo: string | null
+          turno_caja_id: string | null
           vecino_id: string
         }
         SetofOptions: {
@@ -2447,6 +2644,22 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      iniciar_turno_terminal: {
+        Args: {
+          p_nombre_cajero: string
+          p_terminal_id: string
+          p_token_terminal: string
+        }
+        Returns: {
+          caja_id: string
+          estado: Database["public"]["Enums"]["estado_turno_caja"]
+          iniciado_en: string
+          negocio_id: string
+          nombre_cajero: string
+          terminal_id: string
+          turno_id: string
+        }[]
       }
       listar_beneficios_regis_disponibles: {
         Args: { p_negocio_id?: string }
@@ -2732,6 +2945,40 @@ export type Database = {
           monto_informado: number | null
           motivo_correccion: string | null
           motivo_rechazo: string | null
+          turno_caja_id: string | null
+          vecino_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "solicitudes_compra"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      rechazar_solicitud_compra_en_turno: {
+        Args: {
+          p_motivo: string
+          p_solicitud_id: string
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          actualizado_en: string
+          caja_id: string
+          creado_en: string
+          estado: Database["public"]["Enums"]["estado_solicitud_compra"]
+          expira_en: string
+          id: string
+          idempotency_key: string
+          informado_por: Database["public"]["Enums"]["informado_por"] | null
+          lectura_terminal_id: string | null
+          llavero_id: string | null
+          monto_corregido: number | null
+          monto_informado: number | null
+          motivo_correccion: string | null
+          motivo_rechazo: string | null
+          turno_caja_id: string | null
           vecino_id: string
         }
         SetofOptions: {
@@ -2908,6 +3155,7 @@ export type Database = {
           monto_informado: number | null
           motivo_correccion: string | null
           motivo_rechazo: string | null
+          turno_caja_id: string | null
           vecino_id: string
         }
         SetofOptions: {
@@ -3114,6 +3362,7 @@ export type Database = {
         | "esperando_comercio"
         | "resuelto"
         | "cerrado"
+      estado_turno_caja: "abierto" | "cerrado" | "cerrado_automaticamente"
       informado_por: "vecino" | "cajero"
       metodo_verificacion_llavero: "cedula" | "pin" | "sms"
       modalidad_atencion: "digital" | "asistida"
@@ -3364,6 +3613,7 @@ export const Constants = {
         "resuelto",
         "cerrado",
       ],
+      estado_turno_caja: ["abierto", "cerrado", "cerrado_automaticamente"],
       informado_por: ["vecino", "cajero"],
       metodo_verificacion_llavero: ["cedula", "pin", "sms"],
       modalidad_atencion: ["digital", "asistida"],
@@ -3385,3 +3635,4 @@ export const Constants = {
     },
   },
 } as const
+
