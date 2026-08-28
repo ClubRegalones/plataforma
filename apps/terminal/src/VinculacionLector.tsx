@@ -21,6 +21,7 @@ import type {
 type Props = {
   cajaId: string
   puedeRegistrar: boolean
+  mostrarControles?: boolean
   alCambiarCredencial: (credencial: CredencialTerminalLocal | null) => void
   alReclamarLectura: (lectura: LecturaOperativaTerminal) => void
 }
@@ -28,6 +29,7 @@ type Props = {
 export default function VinculacionLector({
   cajaId,
   puedeRegistrar,
+  mostrarControles = true,
   alCambiarCredencial,
   alReclamarLectura,
 }: Props) {
@@ -196,6 +198,8 @@ export default function VinculacionLector({
   }
 
   if (!cajaId || cargando) return null
+
+  if (credencial && !mostrarControles) return null
 
   return (
     <section className="vinculacion-lector" aria-labelledby="lector-terminal-title">

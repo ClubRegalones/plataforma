@@ -846,15 +846,17 @@ function PanelTerminal() {
 
   return (
     <main className="terminal-panel">
-      <header className="terminal-panel__header">
-        <div>
-          <span className="terminal-eyebrow">Club Regalones</span>
-          <h1>Solicitudes de compra</h1>
-          <p>{turno ? `Cajero: ${turno.nombre_cajero}` : sesion?.user.email}</p>
-        </div>
-        <div className="terminal-panel__acciones">
-          <EstadoPwa />
-          {turno && (
+      {turno && (
+        <header className="terminal-panel__header">
+          <div>
+            <span className="terminal-eyebrow">Club Regalones</span>
+            <h1>Terminal de caja</h1>
+            <p>Cajero: {turno.nombre_cajero}</p>
+          </div>
+
+          <div className="terminal-panel__acciones">
+            <EstadoPwa />
+
             <button
               type="button"
               disabled={cerrandoTurno}
@@ -862,20 +864,23 @@ function PanelTerminal() {
             >
               {cerrandoTurno ? 'Finalizando…' : 'Finalizar turno'}
             </button>
-          )}
-          <button type="button" onClick={() => void cargarSolicitudes()}>
-            Actualizar
-          </button>
-          <button type="button" onClick={() => void cerrarSesion()}>
-            Cerrar sesión
-          </button>
-        </div>
-      </header>
+
+            <button type="button" onClick={() => void cargarSolicitudes()}>
+              Actualizar
+            </button>
+
+            <button type="button" onClick={() => void cerrarSesion()}>
+              Cerrar sesión
+            </button>
+          </div>
+        </header>
+      )}
 
       {!cargando && !sinMembresia && cajaId && (
         <VinculacionLector
           cajaId={cajaId}
           puedeRegistrar={puedeGestionarBeneficios}
+          mostrarControles={Boolean(turno)}
           alCambiarCredencial={cambiarCredencialTerminal}
           alReclamarLectura={recibirLecturaOperativa}
         />
