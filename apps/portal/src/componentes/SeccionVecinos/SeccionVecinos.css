@@ -75,37 +75,47 @@
   pointer-events: none;
 }
 
+/* =========================================================
+   CURVA VERDE INFERIOR — MÁS OVALADA
+   ========================================================= */
 
-/* Curva verde inferior */
 .seccion-vecinos::after {
   content: '';
+
   position: absolute;
   z-index: 2;
 
-  left: -5%;
-  bottom: -118px;
+  /* La hacemos mucho más ancha que la pantalla */
+  left: 50%;
+  bottom: -195px;
 
-  width: 110%;
-  height: 175px;
+  width: 140%;
+  height: 310px;
 
-  border-radius: 50% 50% 0 0 / 38% 38% 0 0;
+  /* La centramos */
+  transform: translateX(-50%);
 
-  /* VERDE TOTALMENTE OPACO */
-  background: linear-gradient(
-    90deg,
-    var(--verde-900) 0%,
-    var(--verde-800) 50%,
-    var(--verde-900) 100%
-  );
+  /*
+    Esta forma genera una loma amplia y redondeada
+    hacia arriba.
+  */
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+
+  background:
+    linear-gradient(
+      90deg,
+      var(--verde-900) 0%,
+      var(--verde-800) 48%,
+      var(--verde-900) 100%
+    );
 
   opacity: 1;
 
   box-shadow:
-    0 -5px 16px rgba(8, 63, 41, 0.12);
+    0 -8px 24px rgba(8, 63, 41, 0.12);
 
   pointer-events: none;
 }
-
 
 .seccion-vecinos__contenido {
   position: relative;
@@ -128,42 +138,48 @@
 }
 
 /* =========================================================
-   HALO ORGÁNICO DETRÁS DEL REGALÓN
+   MANCHA ORGÁNICA DETRÁS DEL REGALÓN
    ========================================================= */
 
 .seccion-vecinos__circulo {
   position: absolute;
 
-  width: min(100%, 500px);
-  aspect-ratio: 1;
+  width: min(100%, 505px);
+  height: 450px;
 
+  /*
+    Forma orgánica similar a la referencia:
+    más estrecha arriba y más ancha abajo.
+  */
   border-radius:
-    46% 54% 52% 48%
-    / 44% 46% 54% 56%;
+    43% 57% 48% 52%
+    / 38% 43% 57% 62%;
 
   background:
     radial-gradient(
-      circle at 35% 28%,
+      circle at 34% 25%,
       rgba(255, 249, 220, 0.95) 0%,
       transparent 32%
     ),
     radial-gradient(
-      circle at 62% 68%,
-      rgba(255, 177, 61, 0.18) 0%,
-      transparent 48%
+      circle at 67% 69%,
+      rgba(255, 177, 61, 0.22) 0%,
+      transparent 46%
     ),
     linear-gradient(
       145deg,
-      #ffe8ad 0%,
-      #f7d48c 55%,
-      #f3c975 100%
+      #ffe7a8 0%,
+      #f7d58e 52%,
+      #f2c66e 100%
     );
 
   box-shadow:
-    0 20px 50px rgba(169, 111, 31, 0.12),
-    inset 0 0 45px rgba(255, 255, 255, 0.2);
+    0 22px 50px rgba(169, 111, 31, 0.13),
+    inset 0 0 45px rgba(255, 255, 255, 0.23);
 
-  transform: rotate(-4deg);
+  transform:
+    translateY(8px)
+    rotate(-3deg);
 }
 
 
@@ -260,6 +276,10 @@
     transform 180ms ease,
     box-shadow 180ms ease,
     border-color 180ms ease;
+
+    position: relative;
+    overflow: hidden;
+    cursor: default;
 }
 
 
@@ -293,14 +313,94 @@
 
 
 /* Hover muy suave */
-.seccion-vecinos li:hover {
-  transform: translateX(4px);
+/* =========================================================
+   ANIMACIÓN DE BENEFICIOS
+   ========================================================= */
 
-  border-color:
-    rgba(255, 100, 16, 0.18);
+.seccion-vecinos li {
+  position: relative;
+  overflow: hidden;
+
+  transition:
+    transform 240ms cubic-bezier(.22, 1, .36, 1),
+    box-shadow 240ms ease,
+    border-color 240ms ease,
+    background 240ms ease;
+}
+
+
+/* Brillo suave que entra desde la izquierda */
+.seccion-vecinos li::after {
+  content: '';
+
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      110deg,
+      transparent 0%,
+      rgba(255, 164, 74, 0.08) 38%,
+      rgba(255, 164, 74, 0.18) 50%,
+      transparent 65%
+    );
+
+  transform: translateX(-120%);
+  transition: transform 1200ms ease;
+
+  pointer-events: none;
+}
+
+
+/* Movimiento de la card */
+.seccion-vecinos li:hover {
+  transform:
+    translateX(7px)
+    translateY(-3px)
+    scale(1.015);
+
+  border-color: rgba(255, 100, 16, 0.25);
+
+  background:
+    rgba(255, 255, 255, 0.96);
 
   box-shadow:
-    0 7px 17px rgba(65, 48, 22, 0.09);
+    0 12px 24px rgba(65, 48, 22, 0.11),
+    0 4px 10px rgba(255, 100, 16, 0.08);
+}
+
+
+/* El brillo atraviesa la card */
+.seccion-vecinos li:hover::after {
+  transform: translateX(120%);
+}
+
+
+/* Check */
+.seccion-vecinos li span {
+  transition:
+    transform 240ms cubic-bezier(.22, 1, .36, 1),
+    box-shadow 240ms ease,
+    background 240ms ease;
+}
+
+
+/* Animación del check */
+.seccion-vecinos li:hover span {
+  transform:
+    scale(1.16)
+    rotate(-6deg);
+
+  background:
+    linear-gradient(
+      145deg,
+      var(--verde-700),
+      var(--verde-900)
+    );
+
+  box-shadow:
+    0 6px 13px rgba(8, 63, 41, 0.27),
+    0 0 0 4px rgba(255, 100, 16, 0.08);
 }
 
 /* =========================================================
@@ -312,6 +412,7 @@
   margin-top: 14px;
 
   color: var(--verde-900);
+
 
   font-family: var(--fuente-marca);
   font-size: clamp(2.8rem, 4.7vw, 4.7rem);
