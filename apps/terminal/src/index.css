@@ -1201,3 +1201,22 @@ button:disabled {
     transition: none;
   }
 }
+.terminal-reintentar {
+  width: 100%;
+  margin-top: 0.6rem;
+  padding: 0.95rem 1.2rem;
+  border: 0;
+  border-radius: 0.85rem;
+  color: white;
+  background: var(--verde-800);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.terminal-reintentar:hover {
+  background: var(--verde-700);
+}
+
+.terminal-alert--error p {
+  margin-bottom: 0;
+}

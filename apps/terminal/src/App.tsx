@@ -1,7 +1,6 @@
 import type { Tables } from '@club-regalones/domain'
 import type { FormEvent } from 'react'
-import { useCallback, useEffect, useState } from 'react'
-import { useSesion } from './hooks/useSesion'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   crearCompraAsistida,
   crearCompraAsistidaDesdeLectura,
@@ -25,7 +24,15 @@ import type {
   SaldoRegisLlavero,
 } from './lib/regis'
 import { mensajeSupabase } from './lib/mensajesSupabase'
-import { supabase } from './lib/supabase'
+import ConfiguracionInicialTerminal from './ConfiguracionInicialTerminal'
+import {
+  guardarConfiguracionTerminal,
+  leerConfiguracionTerminal,
+  validarConfiguracionTerminal,
+} from './lib/configuracionTerminal'
+import type {
+  ConfiguracionTerminalLocal,
+} from './lib/configuracionTerminal'
 import CanjesRegis from './CanjesRegis'
 import EstadoPwa from './EstadoPwa'
 import LectorMovil from './LectorMovil'
@@ -35,6 +42,7 @@ import type {
   LecturaOperativaTerminal,
 } from './lib/terminalPwa'
 import InicioTurno from './InicioTurno'
+import RecuperarTurno from './RecuperarTurno'
 import {
   aprobarCompraEnTurno,
   cerrarTurnoTerminal,
@@ -72,71 +80,11 @@ function obtenerMontoVigente(solicitud: Solicitud) {
   return solicitud.monto_corregido ?? solicitud.monto_informado
 }
 
-function AccesoTerminal() {
-  const [correo, setCorreo] = useState('')
-  const [contrasena, setContrasena] = useState('')
-  const [procesando, setProcesando] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-
-  const iniciarSesion = async (evento: FormEvent<HTMLFormElement>) => {
-    evento.preventDefault()
-    setProcesando(true)
-    setError(null)
-
-    const { error: errorIngreso } = await supabase.auth.signInWithPassword({
-      email: correo.trim(),
-      password: contrasena,
-    })
-
-    setProcesando(false)
-
-    if (errorIngreso) {
-      setError(mensajeSupabase(errorIngreso))
-    }
-  }
-
-  return (
-    <main className="terminal-shell">
-      <section className="terminal-card" aria-labelledby="terminal-title">
-        <span className="terminal-eyebrow">Club Regalones</span>
-        <h1 id="terminal-title">Terminal del comercio</h1>
-        <p>
-          Inicia sesión con una cuenta que sea miembro activo del negocio.
-        </p>
-
-        <form className="terminal-form" onSubmit={iniciarSesion}>
-          <label>
-            Correo electrónico
-            <input
-              required
-              type="email"
-              autoComplete="email"
-              value={correo}
-              onChange={(evento) => setCorreo(evento.target.value)}
-            />
-          </label>
-          <label>
-            Contraseña
-            <input
-              required
-              type="password"
-              autoComplete="current-password"
-              value={contrasena}
-              onChange={(evento) => setContrasena(evento.target.value)}
-            />
-          </label>
-          {error && <p className="terminal-alert terminal-alert--error">{error}</p>}
-          <button type="submit" disabled={procesando}>
-            {procesando ? 'Ingresando…' : 'Ingresar a la terminal'}
-          </button>
-        </form>
-      </section>
-    </main>
-  )
-}
-
-function PanelTerminal() {
-  const { sesion } = useSesion()
+function PanelTerminal({
+  configuracion,
+}: {
+  configuracion: ConfiguracionTerminalLocal
+}) {
   const [solicitudes, setSolicitudes] = useState<Solicitud[]>([])
   const [montos, setMontos] = useState<Record<string, string>>({})
   const [motivosCorreccion, setMotivosCorreccion] = useState<
@@ -147,16 +95,29 @@ function PanelTerminal() {
   )
   const [cargando, setCargando] = useState(true)
   const [procesandoId, setProcesandoId] = useState<string | null>(null)
-  const [sinMembresia, setSinMembresia] = useState(false)
-  const [puedeGestionarBeneficios, setPuedeGestionarBeneficios] =
-    useState(false)
-  const [cajas, setCajas] = useState<CajaOperador[]>([])
-  const [cajaId, setCajaId] = useState('')
   const [tokenLlavero, setTokenLlavero] = useState('')
-  const [credencialTerminal, setCredencialTerminal] =
-    useState<CredencialTerminalLocal | null>(null)
+
+  const credencialTerminal: CredencialTerminalLocal =
+    configuracion
+
+  const cajaId = configuracion.cajaId
+
+  const cajas = useMemo<CajaOperador[]>(
+    () => [
+      {
+        id: configuracion.cajaId,
+        negocioId: configuracion.negocioId,
+        nombre: configuracion.nombreCaja,
+        codigo: configuracion.codigoCaja,
+        sucursal: configuracion.nombreSucursal,
+      },
+    ],
+    [configuracion],
+  )
   const [turno, setTurno] = useState<TurnoTerminal | null>(null)
-  const [cargandoTurno, setCargandoTurno] = useState(false)
+  const [recuperacionPendiente, setRecuperacionPendiente] =
+    useState(false)
+  const [cargandoTurno, setCargandoTurno] = useState(true)
   const [cerrandoTurno, setCerrandoTurno] = useState(false)
   const [lecturaLlavero, setLecturaLlavero] =
     useState<LecturaOperativaTerminal | null>(null)
@@ -178,6 +139,67 @@ function PanelTerminal() {
   const [procesandoLlavero, setProcesandoLlavero] = useState(false)
   const [mensaje, setMensaje] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [enLinea, setEnLinea] = useState(
+    navigator.onLine,
+  )
+
+  useEffect(() => {
+    let vigente = true
+
+    const comprobarConexion = async () => {
+      if (!navigator.onLine) {
+        if (vigente) {
+          setEnLinea(false)
+          setError(null)
+        }
+        return
+      }
+
+      try {
+        await consultarTurnoTerminal(
+          credencialTerminal,
+        )
+
+        if (!vigente) return
+
+        setEnLinea(true)
+        setError(null)
+      } catch {
+        if (!vigente) return
+
+        setEnLinea(false)
+        setError(null)
+      }
+    }
+
+    const conectar = () => {
+      void comprobarConexion()
+    }
+
+    const desconectar = () => {
+      setEnLinea(false)
+      setError(null)
+    }
+
+    const inicio = window.setTimeout(() => {
+      void comprobarConexion()
+    }, 0)
+
+    const intervalo = window.setInterval(() => {
+      void comprobarConexion()
+    }, 10_000)
+
+    window.addEventListener('online', conectar)
+    window.addEventListener('offline', desconectar)
+
+    return () => {
+      vigente = false
+      window.clearTimeout(inicio)
+      window.clearInterval(intervalo)
+      window.removeEventListener('online', conectar)
+      window.removeEventListener('offline', desconectar)
+    }
+  }, [credencialTerminal])
 
   useEffect(() => {
     let activa = true
@@ -226,32 +248,17 @@ function PanelTerminal() {
     setIdempotenciaCompraAsistida(crypto.randomUUID())
   }, [])
 
-  const cambiarCredencialTerminal = useCallback(
-    (credencial: CredencialTerminalLocal | null) => {
-      setCredencialTerminal(credencial)
-      setTurno(null)
-      setReglaAcumulacion(null)
-      setErrorReglaAcumulacion(null)
-      setCargandoTurno(Boolean(credencial))
-      setCerrandoTurno(false)
-      if (!credencial) limpiarLecturaOperativa()
-    },
-    [limpiarLecturaOperativa],
-  )
-
   useEffect(() => {
     let vigente = true
-
-    if (!credencialTerminal) {
-      return () => {
-        vigente = false
-      }
-    }
 
     void consultarTurnoTerminal(credencialTerminal)
       .then((turnoAbierto) => {
         if (!vigente) return
+
         setTurno(turnoAbierto)
+        setRecuperacionPendiente(
+          Boolean(turnoAbierto),
+        )
       })
       .catch((errorCapturado) => {
         if (!vigente) return
@@ -266,7 +273,6 @@ function PanelTerminal() {
       vigente = false
     }
   }, [credencialTerminal])
-
   const recibirLecturaOperativa = useCallback(
     (lectura: LecturaOperativaTerminal) => {
       setLecturaLlavero(lectura)
@@ -307,95 +313,10 @@ function PanelTerminal() {
   )
 
   const cargarSolicitudes = useCallback(async () => {
-    if (!sesion) return
-
     setCargando(true)
     setError(null)
 
-    const { data: membresias, error: errorMembresias } = await supabase
-      .from('miembros_negocio')
-      .select('negocio_id, rol')
-      .eq('usuario_id', sesion.user.id)
-      .eq('estado', 'activo')
-
-    if (errorMembresias) {
-      setError(mensajeSupabase(errorMembresias))
-      setCargando(false)
-      return
-    }
-
-    if (membresias.length === 0) {
-      setSinMembresia(true)
-      setPuedeGestionarBeneficios(false)
-      setSolicitudes([])
-      setCajas([])
-      setCargando(false)
-      return
-    }
-
-    setSinMembresia(false)
-    setPuedeGestionarBeneficios(
-      membresias.some(
-        ({ rol }) => rol === 'propietario' || rol === 'administrador',
-      ),
-    )
-
-    const negociosIds = membresias.map((membresia) => membresia.negocio_id)
-    const { data: sucursales, error: errorSucursales } = await supabase
-      .from('sucursales')
-      .select('id, negocio_id, nombre')
-      .in('negocio_id', negociosIds)
-      .eq('estado', 'activa')
-
-    if (errorSucursales) {
-      setError(mensajeSupabase(errorSucursales))
-      setCargando(false)
-      return
-    }
-
-    const sucursalesPorId = new Map(
-      sucursales.map((sucursal) => [
-        sucursal.id,
-        { nombre: sucursal.nombre, negocioId: sucursal.negocio_id },
-      ]),
-    )
-    const sucursalesIds = sucursales.map((sucursal) => sucursal.id)
-    const { data: cajasActivas, error: errorCajas } = sucursalesIds.length
-      ? await supabase
-          .from('cajas')
-          .select('id, nombre, codigo, sucursal_id')
-          .in('sucursal_id', sucursalesIds)
-          .eq('estado', 'activa')
-          .order('nombre')
-      : { data: [], error: null }
-
-    if (errorCajas) {
-      setError(mensajeSupabase(errorCajas))
-      setCargando(false)
-      return
-    }
-
-    const cajasDisponibles = cajasActivas.flatMap((caja) => {
-      const sucursal = sucursalesPorId.get(caja.sucursal_id)
-      if (!sucursal) return []
-
-      return [{
-        id: caja.id,
-        negocioId: sucursal.negocioId,
-        nombre: caja.nombre,
-        codigo: caja.codigo,
-        sucursal: sucursal.nombre,
-      }]
-    })
-
-    setCajas(cajasDisponibles)
-    setCajaId((actual) =>
-      cajasDisponibles.some((caja) => caja.id === actual)
-        ? actual
-        : (cajasDisponibles[0]?.id ?? ''),
-    )
-
-    if (!turno || !credencialTerminal) {
+    if (!enLinea || !turno) {
       setSolicitudes([])
       setCargando(false)
       return
@@ -413,10 +334,12 @@ function PanelTerminal() {
         const siguientes = { ...actuales }
 
         data.forEach((solicitud) => {
-          const montoVigente = obtenerMontoVigente(solicitud)
+          const montoVigente =
+            obtenerMontoVigente(solicitud)
 
           if (montoVigente !== null) {
-            siguientes[solicitud.id] = String(montoVigente)
+            siguientes[solicitud.id] =
+              String(montoVigente)
           }
         })
 
@@ -428,8 +351,7 @@ function PanelTerminal() {
     } finally {
       setCargando(false)
     }
-  }, [credencialTerminal, sesion, turno])
-
+  }, [credencialTerminal, enLinea, turno])
   useEffect(() => {
     const cargaInicial = window.setTimeout(() => {
       void cargarSolicitudes()
@@ -884,6 +806,7 @@ function PanelTerminal() {
     try {
       await cerrarTurnoTerminal(turno.turno_id, credencialTerminal)
       setTurno(null)
+      setRecuperacionPendiente(false)
       setReglaAcumulacion(null)
       setErrorReglaAcumulacion(null)
       limpiarLecturaOperativa()
@@ -895,11 +818,6 @@ function PanelTerminal() {
     }
   }
 
-  const cerrarSesion = async () => {
-    const { error: errorCierre } = await supabase.auth.signOut()
-    if (errorCierre) setError(mensajeSupabase(errorCierre))
-  }
-
   const montoVistaPrevia = Number(montoCompraAsistida)
   const vistaPreviaRegis = reglaAcumulacion
     ? calcularVistaPreviaRegis(
@@ -909,69 +827,136 @@ function PanelTerminal() {
       )
     : null
 
+  if (turno && recuperacionPendiente) {
+    return (
+      <RecuperarTurno
+        turno={turno}
+        credencial={credencialTerminal}
+        alContinuar={() => {
+          setRecuperacionPendiente(false)
+
+          setMensaje(
+            `Turno de ${turno.nombre_cajero} recuperado correctamente.`,
+          )
+        }}
+        alCerrarTurno={() => {
+          setTurno(null)
+          setRecuperacionPendiente(false)
+          setReglaAcumulacion(null)
+          setErrorReglaAcumulacion(null)
+          limpiarLecturaOperativa()
+
+          setMensaje(
+            'Turno anterior finalizado. Ingresa el nombre del nuevo cajero.',
+          )
+        }}
+      />
+    )
+  }
+
   return (
     <main className="terminal-panel">
-      {turno && (
-        <header className="terminal-panel__header">
-          <div>
-            <span className="terminal-eyebrow">Club Regalones</span>
-            <h1>Terminal de caja</h1>
-            <p>Cajero: {turno.nombre_cajero}</p>
-          </div>
+      <header className="terminal-panel__header">
+        <div>
+          <span className="terminal-eyebrow">
+            Club Regalones
+          </span>
 
-          <div className="terminal-panel__acciones">
-            <EstadoPwa />
+          <h1>{configuracion.nombreNegocio}</h1>
 
-            <button
-              type="button"
-              disabled={cerrandoTurno}
-              onClick={() => void finalizarTurno()}
-            >
-              {cerrandoTurno ? 'Finalizando…' : 'Finalizar turno'}
-            </button>
+          <p>
+            {configuracion.nombreCaja}
+            {configuracion.codigoCaja
+              ? ` (${configuracion.codigoCaja})`
+              : ''}
+            {turno
+              ? ` · Cajero: ${turno.nombre_cajero}`
+              : ' · Sin turno activo'}
+          </p>
 
-            <button type="button" onClick={() => void cargarSolicitudes()}>
-              Actualizar
-            </button>
+          <small>
+            {configuracion.nombreSucursal}
+          </small>
+        </div>
 
-            <button type="button" onClick={() => void cerrarSesion()}>
-              Cerrar sesión
-            </button>
-          </div>
-        </header>
-      )}
+        <div className="terminal-panel__acciones">
+          <EstadoPwa disponible={enLinea} />
 
-      {!cargando && !sinMembresia && cajaId && (
+          {turno && (
+            <>
+              <button
+                type="button"
+                disabled={cerrandoTurno || !enLinea}
+                onClick={() => void finalizarTurno()}
+              >
+                {cerrandoTurno
+                  ? 'Finalizando…'
+                  : 'Finalizar turno'}
+              </button>
+
+              <button
+                type="button"
+                disabled={!enLinea}
+                onClick={() =>
+                  void cargarSolicitudes()
+                }
+              >
+                Actualizar
+              </button>
+            </>
+          )}
+        </div>
+      </header>
+
+      {turno && enLinea && (
         <VinculacionLector
-          cajaId={cajaId}
-          turnoId={turno?.turno_id ?? null}
-          puedeRegistrar={puedeGestionarBeneficios}
-          mostrarControles={Boolean(turno)}
-          alCambiarCredencial={cambiarCredencialTerminal}
+          credencial={credencialTerminal}
+          turnoId={turno.turno_id}
           alReclamarLectura={recibirLecturaOperativa}
         />
       )}
+      {!enLinea && (
+        <div
+          className="terminal-alert terminal-alert--error"
+          role="status"
+        >
+          <strong>
+            Sin conexión con Club Regalones
+          </strong>
+          <p>
+            Esta Terminal sigue vinculada a su negocio y
+            caja. El turno actual permanece protegido.
+            Las operaciones se habilitarán
+            automáticamente cuando vuelva la conexión.
+          </p>
+        </div>
+      )}
 
-      {error && <p className="terminal-alert terminal-alert--error">{error}</p>}
+      {error && enLinea && (
+        <p className="terminal-alert terminal-alert--error">
+          {error}
+        </p>
+      )}
       {mensaje && (
         <p className="terminal-alert terminal-alert--success">{mensaje}</p>
       )}
 
-      {!cargando &&
-        !sinMembresia &&
-        credencialTerminal &&
+      {enLinea &&
         !cargandoTurno &&
         !turno && (
           <InicioTurno
             credencial={credencialTerminal}
             alIniciar={(nuevoTurno) => {
               setTurno(nuevoTurno)
-              setMensaje(`Turno iniciado por ${nuevoTurno.nombre_cajero}.`)
+              setRecuperacionPendiente(false)
+              setMensaje(
+                `Turno iniciado por ${nuevoTurno.nombre_cajero}.`,
+              )
             }}
           />
         )}
 
-      {!cargando && !sinMembresia && turno && (
+      {turno && enLinea && (
         <section className="terminal-llavero" aria-labelledby="activar-llavero-title">
           <div className="terminal-llavero__encabezado">
             <div>
@@ -984,64 +969,42 @@ function PanelTerminal() {
             </p>
           </div>
 
-          {cajas.length === 0 ? (
-            <p className="terminal-llavero__aviso">
-              No hay cajas activas disponibles para esta cuenta.
-            </p>
-          ) : (
-            <form
-              className="terminal-llavero__consulta"
-              onSubmit={consultarLlavero}
-            >
-              <label>
-                Caja
-                <select
-                  required
-                  value={cajaId}
-                  onChange={(evento) => {
-                    setCajaId(evento.target.value)
-                    setCredencialTerminal(null)
-                    setLecturaLlavero(null)
-                    setContextoLlavero(null)
-                    setSaldoRegisLlavero(null)
-                    setMontoCompraAsistida('')
-                    setIdempotenciaCompraAsistida(crypto.randomUUID())
-                  }}
-                >
-                  {cajas.map((caja) => (
-                    <option key={caja.id} value={caja.id}>
-                      {caja.sucursal} · {caja.nombre}
-                      {caja.codigo ? ` (${caja.codigo})` : ''}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label>
-                Token manual de respaldo
-                <input
-                  required
-                  type="password"
-                  minLength={8}
-                  maxLength={500}
-                  autoComplete="off"
-                  value={tokenLlavero}
-                  onChange={(evento) => {
-                    setTokenLlavero(evento.target.value)
-                    setLecturaLlavero(null)
-                    setContextoLlavero(null)
-                    setSaldoRegisLlavero(null)
-                    setMontoCompraAsistida('')
-                    setIdempotenciaCompraAsistida(crypto.randomUUID())
-                  }}
-                  placeholder="Solo si el celular lector no está disponible"
-                />
-              </label>
-              <button type="submit" disabled={procesandoLlavero}>
-                {procesandoLlavero ? 'Consultando…' : 'Leer llavero'}
-              </button>
-            </form>
-          )}
+          <form
+            className="terminal-llavero__consulta"
+            onSubmit={consultarLlavero}
+          >
+            <label>
+              Token manual de respaldo
+              <input
+                required
+                type="password"
+                minLength={8}
+                maxLength={500}
+                autoComplete="off"
+                value={tokenLlavero}
+                onChange={(evento) => {
+                  setTokenLlavero(evento.target.value)
+                  setLecturaLlavero(null)
+                  setContextoLlavero(null)
+                  setSaldoRegisLlavero(null)
+                  setMontoCompraAsistida('')
+                  setIdempotenciaCompraAsistida(
+                    crypto.randomUUID(),
+                  )
+                }}
+                placeholder="Solo si el celular lector no está disponible"
+              />
+            </label>
 
+            <button
+              type="submit"
+              disabled={procesandoLlavero}
+            >
+              {procesandoLlavero
+                ? 'Consultando…'
+                : 'Leer llavero'}
+            </button>
+          </form>
           {contextoLlavero && (
             <div className="terminal-llavero__resultado">
               <div className="terminal-llavero__identidad">
@@ -1227,7 +1190,7 @@ function PanelTerminal() {
         </section>
       )}
 
-      {!cargando && !sinMembresia && turno && (
+      {turno && enLinea && (
         <CanjesRegis
           cajas={cajas}
           cajaId={cajaId}
@@ -1242,20 +1205,15 @@ function PanelTerminal() {
         />
       )}
 
-      {cargando ? (
-        <p className="terminal-empty">Cargando solicitudes…</p>
-      ) : sinMembresia ? (
+      {cargandoTurno ? (
         <p className="terminal-empty">
-          Esta cuenta no pertenece a ningún negocio activo. Debes agregarla en
-          `miembros_negocio` antes de usar la terminal.
+          Comprobando turno…
         </p>
-      ) : !credencialTerminal ? (
+      ) : !turno ? null : cargando ? (
         <p className="terminal-empty">
-          Vincula esta Terminal PWA a una caja para comenzar.
+          Cargando solicitudes…
         </p>
-      ) : cargandoTurno ? (
-        <p className="terminal-empty">Comprobando turno…</p>
-      ) : !turno ? null : solicitudes.length === 0 ? (
+      ) : solicitudes.length === 0 ? (
         <p className="terminal-empty">No hay solicitudes pendientes.</p>
       ) : (
         <section className="terminal-list" aria-label="Solicitudes pendientes">
@@ -1470,31 +1428,182 @@ function PanelTerminal() {
 }
 
 function App() {
-  const { sesion, cargando } = useSesion()
   const [ruta, setRuta] = useState(() =>
-    window.location.hash.replace(/^#\/?/, '').split('?')[0],
+    window.location.hash
+      .replace(/^#\/?/, '')
+      .split('?')[0],
   )
+
+  const [
+    estadoConfiguracion,
+    setEstadoConfiguracion,
+  ] = useState(() => {
+    const guardada =
+      leerConfiguracionTerminal()
+
+    return {
+      configuracion: guardada,
+      validando: Boolean(guardada),
+      errorValidacion: null as string | null,
+    }
+  })
+
+  const [
+    intentoValidacion,
+    setIntentoValidacion,
+  ] = useState(0)
 
   useEffect(() => {
     const actualizarRuta = () =>
-      setRuta(window.location.hash.replace(/^#\/?/, '').split('?')[0])
-    window.addEventListener('hashchange', actualizarRuta)
-    return () => window.removeEventListener('hashchange', actualizarRuta)
+      setRuta(
+        window.location.hash
+          .replace(/^#\/?/, '')
+          .split('?')[0],
+      )
+
+    window.addEventListener(
+      'hashchange',
+      actualizarRuta,
+    )
+
+    return () =>
+      window.removeEventListener(
+        'hashchange',
+        actualizarRuta,
+      )
   }, [])
 
-  if (ruta === 'lector-movil') return <LectorMovil />
+  useEffect(() => {
+    const guardada =
+      leerConfiguracionTerminal()
 
-  if (cargando) {
+    if (!guardada) return
+
+    let vigente = true
+
+    void validarConfiguracionTerminal(
+      guardada,
+    )
+      .then((actualizada) => {
+        if (!vigente) return
+
+        guardarConfiguracionTerminal(
+          actualizada,
+        )
+
+        setEstadoConfiguracion({
+          configuracion: actualizada,
+          validando: false,
+          errorValidacion: null,
+        })
+      })
+      .catch((errorCapturado) => {
+        if (!vigente) return
+
+        setEstadoConfiguracion({
+          configuracion: guardada,
+          validando: false,
+          errorValidacion:
+            mensajeSupabase(errorCapturado),
+        })
+      })
+
+    return () => {
+      vigente = false
+    }
+  }, [intentoValidacion])
+
+  if (ruta === 'lector-movil') {
+    return <LectorMovil />
+  }
+
+  if (estadoConfiguracion.validando) {
     return (
       <main className="terminal-shell">
-        <p className="terminal-empty">Comprobando sesión…</p>
+        <p className="terminal-empty">
+          Comprobando Terminal…
+        </p>
       </main>
     )
   }
 
-  if (!sesion) return <AccesoTerminal />
+  if (
+    estadoConfiguracion.configuracion &&
+    estadoConfiguracion.errorValidacion
+  ) {
+    return (
+      <main className="terminal-shell">
+        <section
+          className="terminal-card"
+          aria-labelledby="terminal-sin-conexion-title"
+        >
+          <span className="terminal-eyebrow">
+            Club Regalones
+          </span>
 
-  return <PanelTerminal />
+          <h1 id="terminal-sin-conexion-title">
+            No pudimos validar esta Terminal
+          </h1>
+
+          <p>
+            La vinculación con el negocio y la caja se
+            conserva de forma segura.
+          </p>
+
+          <p>
+            Revisa la conexión a Internet y vuelve a
+            intentarlo. Si el problema continúa, contacta
+            a administración de Club Regalones.
+          </p>
+
+          <p className="terminal-alert terminal-alert--error">
+            No hay conexión con Club Regalones. La
+            configuración permanente de esta caja sigue
+            guardada y no se ha desvinculado la Terminal.
+          </p>
+
+          <button
+            className="terminal-reintentar"
+            type="button"
+            onClick={() => {
+              setEstadoConfiguracion((actual) => ({
+                ...actual,
+                validando: true,
+                errorValidacion: null,
+              }))
+
+              setIntentoValidacion(
+                (actual) => actual + 1,
+              )
+            }}
+          >
+            Reintentar conexión
+          </button>
+        </section>
+      </main>
+    )
+  }
+
+  if (!estadoConfiguracion.configuracion) {
+    return (
+      <ConfiguracionInicialTerminal
+        alConfigurar={(configuracion) => {
+          setEstadoConfiguracion({
+            configuracion,
+            validando: false,
+            errorValidacion: null,
+          })
+        }}
+      />
+    )
+  }
+
+  return (
+    <PanelTerminal
+      configuracion={
+        estadoConfiguracion.configuracion
+      }
+    />
+  )
 }
-
 export default App
