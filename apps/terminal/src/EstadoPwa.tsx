@@ -2,10 +2,14 @@ import { useEffect, useState } from 'react'
 
 type Props = {
   disponible?: boolean
+  etiquetaEnLinea?: string
+  mostrarInstalacion?: boolean
 }
 
 export default function EstadoPwa({
   disponible,
+  etiquetaEnLinea = 'En línea',
+  mostrarInstalacion = true,
 }: Props) {
   const [navegadorEnLinea, setNavegadorEnLinea] =
     useState(navigator.onLine)
@@ -36,16 +40,8 @@ export default function EstadoPwa({
     )
 
     return () => {
-      window.removeEventListener(
-        'online',
-        conectar,
-      )
-
-      window.removeEventListener(
-        'offline',
-        desconectar,
-      )
-
+      window.removeEventListener('online', conectar)
+      window.removeEventListener('offline', desconectar)
       window.removeEventListener(
         'beforeinstallprompt',
         prepararInstalacion,
@@ -67,10 +63,7 @@ export default function EstadoPwa({
   }
 
   return (
-    <div
-      className="estado-pwa"
-      aria-live="polite"
-    >
+    <div className="estado-pwa" aria-live="polite">
       <span
         className={
           enLinea
@@ -79,11 +72,11 @@ export default function EstadoPwa({
         }
       >
         {enLinea
-          ? 'En línea'
-          : 'Sin conexión · operaciones bloqueadas'}
+          ? etiquetaEnLinea
+          : 'Sin conexión'}
       </span>
 
-      {instalacion && (
+      {mostrarInstalacion && instalacion && (
         <button
           type="button"
           onClick={() => void instalar()}

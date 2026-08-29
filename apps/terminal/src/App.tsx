@@ -43,6 +43,7 @@ import type {
 } from './lib/terminalPwa'
 import InicioTurno from './InicioTurno'
 import RecuperarTurno from './RecuperarTurno'
+import RelojTerminal from './RelojTerminal'
 import {
   aprobarCompraEnTurno,
   cerrarTurnoTerminal,
@@ -856,56 +857,95 @@ function PanelTerminal({
 
   return (
     <main className="terminal-panel">
-      <header className="terminal-panel__header">
-        <div>
-          <span className="terminal-eyebrow">
+      <header className="terminal-cabecera-ref">
+        <div className="terminal-cabecera-ref__marca">
+          <strong>
             Club Regalones
-          </span>
-
-          <h1>{configuracion.nombreNegocio}</h1>
-
-          <p>
-            {configuracion.nombreCaja}
-            {configuracion.codigoCaja
-              ? ` (${configuracion.codigoCaja})`
-              : ''}
-            {turno
-              ? ` · Cajero: ${turno.nombre_cajero}`
-              : ' · Sin turno activo'}
-          </p>
+            <span aria-hidden="true">♥</span>
+          </strong>
 
           <small>
-            {configuracion.nombreSucursal}
+            Más barrio, más beneficios
           </small>
         </div>
 
-        <div className="terminal-panel__acciones">
-          <EstadoPwa disponible={enLinea} />
+        <div className="terminal-cabecera-ref__negocio">
+          <div
+            className="terminal-cabecera-ref__tienda"
+            aria-hidden="true"
+          >
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M5 10v10h14V10M4 5h16l1 5c0 1.3-1 2.3-2.3 2.3S16.5 11.3 16.5 10c0 1.3-1 2.3-2.3 2.3S12 11.3 12 10c0 1.3-1 2.3-2.3 2.3S7.5 11.3 7.5 10c0 1.3-1 2.3-2.2 2.3S3 11.3 3 10l1-5Z"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M9 20v-5h6v5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              />
+            </svg>
+          </div>
 
-          {turno && (
-            <>
-              <button
-                type="button"
-                disabled={cerrandoTurno || !enLinea}
-                onClick={() => void finalizarTurno()}
-              >
-                {cerrandoTurno
-                  ? 'Finalizando…'
-                  : 'Finalizar turno'}
-              </button>
+          <div className="terminal-cabecera-ref__datos">
+            <strong>
+              {configuracion.nombreNegocio}
+            </strong>
 
-              <button
-                type="button"
-                disabled={!enLinea}
-                onClick={() =>
-                  void cargarSolicitudes()
-                }
-              >
-                Actualizar
-              </button>
-            </>
-          )}
+            <div>
+              <span className="terminal-cabecera-ref__caja">
+                {configuracion.nombreCaja}
+              </span>
+
+              {turno && (
+                <>
+                  <i />
+                  <span className="terminal-cabecera-ref__cajero">
+                    {turno.nombre_cajero}
+                  </span>
+                </>
+              )}
+            </div>
+          </div>
+
+          <EstadoPwa
+            disponible={enLinea}
+            etiquetaEnLinea={
+              turno ? 'Turno activo' : 'Terminal lista'
+            }
+            mostrarInstalacion={false}
+          />
         </div>
+
+        <RelojTerminal />
+
+        {turno && (
+          <div className="terminal-cabecera-ref__acciones">
+            <button
+              type="button"
+              disabled={cerrandoTurno || !enLinea}
+              onClick={() => void finalizarTurno()}
+            >
+              {cerrandoTurno
+                ? 'Finalizando…'
+                : 'Finalizar turno'}
+            </button>
+
+            <button
+              type="button"
+              disabled={!enLinea}
+              onClick={() =>
+                void cargarSolicitudes()
+              }
+            >
+              Actualizar
+            </button>
+          </div>
+        )}
       </header>
 
       {turno && enLinea && (
