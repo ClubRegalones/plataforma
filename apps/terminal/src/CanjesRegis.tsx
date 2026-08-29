@@ -13,6 +13,7 @@ import {
   marcarCanjeNegocioLeido,
   reservarCanjeRegisDesdeLectura,
   reservarCanjeRegisLlavero,
+  confirmarCompraConCanje,
 } from './lib/canjes'
 import type {
   BeneficioCanjeTerminal,
@@ -23,7 +24,6 @@ import type {
 } from './lib/canjes'
 import { mensajeSupabase } from './lib/mensajesSupabase'
 import type { CredencialTerminalLocal } from './lib/terminalPwa'
-import { confirmarCompraConCanjeEnTurno } from './lib/turnos'
 import './canjes.css'
 
 export type CajaCanjeRegis = {
@@ -257,15 +257,20 @@ function CanjesRegis({
   }, [canje, montoBruto])
 
   useEffect(() => {
-    if (!cajaActual) return
+    if (!cajaActual || !credencialTerminal) return
+
+    const contextoTerminal = {
+      turnoId,
+      credencial: credencialTerminal,
+    }
 
     let vigente = true
     const inicio = window.setTimeout(() => {
       setCargandoBeneficios(true)
 
       void Promise.all([
-        listarBeneficiosCanjeTerminal(cajaActual.negocioId),
-        listarHistorialCanjesNegocio(cajaActual.negocioId),
+        listarBeneficiosCanjeTerminal(contextoTerminal),
+        listarHistorialCanjesNegocio(contextoTerminal),
       ])
         .then(([beneficiosDisponibles, historialCanjes]) => {
           if (!vigente) return
@@ -284,19 +289,24 @@ function CanjesRegis({
       vigente = false
       window.clearTimeout(inicio)
     }
-  }, [cajaActual])
+  }, [cajaActual, credencialTerminal, turnoId])
 
   useEffect(() => {
-    if (!cajaActual) return
+    if (!cajaActual || !credencialTerminal) return
+
+    const contextoTerminal = {
+      turnoId,
+      credencial: credencialTerminal,
+    }
 
     const intervalo = window.setInterval(() => {
-      void listarHistorialCanjesNegocio(cajaActual.negocioId)
+      void listarHistorialCanjesNegocio(contextoTerminal)
         .then(setHistorial)
         .catch(() => undefined)
     }, 15_000)
 
     return () => window.clearInterval(intervalo)
-  }, [cajaActual])
+  }, [cajaActual, credencialTerminal, turnoId])
 
   useEffect(() => {
     if (!canje) return
@@ -329,8 +339,8 @@ function CanjesRegis({
   const consultarQr = async (evento: FormEvent<HTMLFormElement>) => {
     evento.preventDefault()
 
-    if (!cajaId) {
-      setError('Selecciona una caja antes de leer el QR.')
+    if (!credencialTerminal) {
+      setError('La credencial segura de esta Terminal PWA no está disponible.')
       return
     }
 
@@ -345,7 +355,10 @@ function CanjesRegis({
     setResultado(null)
 
     try {
-      const consultado = await consultarCanjeRegisQr(tokenQr.trim(), cajaId)
+      const consultado = await consultarCanjeRegisQr(tokenQr.trim(), {
+        turnoId,
+        credencial: credencialTerminal,
+      })
       if (!consultado) {
         setError('No encontramos una reserva asociada a ese QR.')
         return
@@ -388,18 +401,24 @@ function CanjesRegis({
 
     try {
       const idempotencia = `terminal-llavero-${crypto.randomUUID()}`
-      const reserva = lecturaLlaveroId && credencialTerminal
+
+      if (!credencialTerminal) {
+        setError('La credencial segura de esta Terminal PWA no está disponible.')
+        return
+      }
+
+      const reserva = tieneLecturaSegura && lecturaLlaveroId
         ? await reservarCanjeRegisDesdeLectura(
             lecturaLlaveroId,
-            credencialTerminal,
             beneficio.id,
             idempotencia,
+            { turnoId, credencial: credencialTerminal },
           )
         : await reservarCanjeRegisLlavero(
             tokenLlavero.trim(),
-            cajaId,
             beneficio.id,
             idempotencia,
+            { turnoId, credencial: credencialTerminal },
           )
 
       if (!reserva) {
@@ -446,14 +465,12 @@ function CanjesRegis({
     setMensaje(null)
 
     try {
-      const confirmado = await confirmarCompraConCanjeEnTurno(
+      const confirmado = await confirmarCompraConCanje(
         canje.canjeId,
-        canje.cajaId,
         monto,
-        turnoId,
-        credencialTerminal,
         folioBoleta,
         canje.tokenQr,
+        { turnoId, credencial: credencialTerminal },
       )
 
       if (!confirmado) {
@@ -470,7 +487,10 @@ function CanjesRegis({
       await alConfirmar()
       if (cajaActual) {
         setHistorial(
-          await listarHistorialCanjesNegocio(cajaActual.negocioId),
+          await listarHistorialCanjesNegocio({
+            turnoId,
+            credencial: credencialTerminal,
+          }),
         )
       }
     } catch (errorCapturado) {
@@ -496,7 +516,15 @@ function CanjesRegis({
     setMensaje(null)
 
     try {
-      await cancelarCanjeRegis(canje.canjeId)
+      if (!credencialTerminal) {
+        setError('La credencial segura de esta Terminal PWA no está disponible.')
+        return
+      }
+
+      await cancelarCanjeRegis(canje.canjeId, {
+        turnoId,
+        credencial: credencialTerminal,
+      })
       setCanje(null)
       setMontoBruto('')
       setFolioBoleta('')
@@ -510,6 +538,11 @@ function CanjesRegis({
   }
 
   const marcarHistorialComoLeido = async () => {
+    if (!credencialTerminal) {
+      setError('La credencial segura de esta Terminal PWA no está disponible.')
+      return
+    }
+
     const pendientes = historial.filter(({ leido }) => !leido)
     if (pendientes.length === 0) return
 
@@ -517,7 +550,12 @@ function CanjesRegis({
     setError(null)
     try {
       await Promise.all(
-        pendientes.map(({ canje_id }) => marcarCanjeNegocioLeido(canje_id)),
+        pendientes.map(({ canje_id }) =>
+          marcarCanjeNegocioLeido(canje_id, {
+            turnoId,
+            credencial: credencialTerminal,
+          }),
+        ),
       )
       setHistorial((actual) =>
         actual.map((registro) => ({ ...registro, leido: true })),

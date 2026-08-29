@@ -1241,7 +1241,7 @@ export type Database = {
           actualizado_en: string
           caja_id: string
           cerrada_en: string | null
-          creada_por: string
+          creada_por: string | null
           creado_en: string
           estado: Database["public"]["Enums"]["estado_sesion_lector_movil"]
           expira_en: string
@@ -1251,6 +1251,7 @@ export type Database = {
           terminal_id: string
           token_lector_hash: string | null
           token_vinculacion_hash: string | null
+          turno_caja_id: string | null
           ultima_lectura_en: string | null
           vinculada_en: string | null
         }
@@ -1258,7 +1259,7 @@ export type Database = {
           actualizado_en?: string
           caja_id: string
           cerrada_en?: string | null
-          creada_por: string
+          creada_por?: string | null
           creado_en?: string
           estado?: Database["public"]["Enums"]["estado_sesion_lector_movil"]
           expira_en: string
@@ -1268,6 +1269,7 @@ export type Database = {
           terminal_id: string
           token_lector_hash?: string | null
           token_vinculacion_hash?: string | null
+          turno_caja_id?: string | null
           ultima_lectura_en?: string | null
           vinculada_en?: string | null
         }
@@ -1275,7 +1277,7 @@ export type Database = {
           actualizado_en?: string
           caja_id?: string
           cerrada_en?: string | null
-          creada_por?: string
+          creada_por?: string | null
           creado_en?: string
           estado?: Database["public"]["Enums"]["estado_sesion_lector_movil"]
           expira_en?: string
@@ -1285,6 +1287,7 @@ export type Database = {
           terminal_id?: string
           token_lector_hash?: string | null
           token_vinculacion_hash?: string | null
+          turno_caja_id?: string | null
           ultima_lectura_en?: string | null
           vinculada_en?: string | null
         }
@@ -1295,6 +1298,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "terminales"
             referencedColumns: ["id", "caja_id"]
+          },
+          {
+            foreignKeyName: "sesiones_lector_movil_turno_caja_id_fkey"
+            columns: ["turno_caja_id"]
+            isOneToOne: false
+            referencedRelation: "turnos_caja"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -2252,6 +2262,10 @@ export type Database = {
         }[]
       }
       consumir_lectura_operacion_interna: {
+        Args: { p_lectura_id: string }
+        Returns: undefined
+      }
+      consumir_lectura_terminal_turno_interna: {
         Args: { p_lectura_id: string }
         Returns: undefined
       }
@@ -3225,6 +3239,24 @@ export type Database = {
           mensaje: string
         }[]
       }
+      terminal_activar_llavero_desde_lectura: {
+        Args: {
+          p_identidad_verificada: boolean
+          p_lectura_id: string
+          p_metodo: Database["public"]["Enums"]["metodo_verificacion_llavero"]
+          p_pin: string
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          activado: boolean
+          activado_en: string
+          codigo_publico: string
+          estado: Database["public"]["Enums"]["estado_llavero_nfc"]
+          mensaje: string
+        }[]
+      }
       terminal_aprobar_compra: {
         Args: {
           p_folio_boleta?: string
@@ -3268,6 +3300,27 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      terminal_cancelar_canje: {
+        Args: {
+          p_canje_id: string
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          canje_id: string
+          costo_regis: number
+          estado: Database["public"]["Enums"]["estado_canje_regis"]
+        }[]
+      }
+      terminal_cerrar_lector: {
+        Args: {
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: undefined
+      }
       terminal_cerrar_turno: {
         Args: {
           p_terminal_id: string
@@ -3292,6 +3345,50 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      terminal_confirmar_compra_con_canje: {
+        Args: {
+          p_canje_id: string
+          p_folio_boleta?: string
+          p_monto_bruto_clp: number
+          p_qr_token?: string
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          aporte_promocional_negocio_clp: number
+          canje_id: string
+          compra_id: string
+          descuento_total_clp: number
+          estado: Database["public"]["Enums"]["estado_canje_regis"]
+          monto_compra_bruto_clp: number
+          monto_final_pagado_clp: number
+          regis_utilizados: number
+          valor_financiado_regis_clp: number
+        }[]
+      }
+      terminal_consultar_canje_qr: {
+        Args: {
+          p_qr_token: string
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          canje_id: string
+          codigo_publico: string
+          compra_minima_clp: number
+          costo_regis: number
+          estado: Database["public"]["Enums"]["estado_canje_regis"]
+          expira_en: string
+          monto_descuento_fijo_clp: number
+          nombre_beneficio: string
+          porcentaje_descuento_bp: number
+          porcentaje_maximo_canje_bp: number
+          tipo: Database["public"]["Enums"]["tipo_beneficio_regis"]
+          tope_descuento_clp: number
+        }[]
       }
       terminal_consultar_llavero: {
         Args: {
@@ -3407,6 +3504,56 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      terminal_crear_compra_desde_lectura: {
+        Args: {
+          p_idempotency_key: string
+          p_lectura_id: string
+          p_monto: number
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          actualizado_en: string
+          caja_id: string
+          creado_en: string
+          estado: Database["public"]["Enums"]["estado_solicitud_compra"]
+          expira_en: string
+          id: string
+          idempotency_key: string
+          informado_por: Database["public"]["Enums"]["informado_por"] | null
+          lectura_terminal_id: string | null
+          llavero_id: string | null
+          monto_corregido: number | null
+          monto_informado: number | null
+          motivo_correccion: string | null
+          motivo_rechazo: string | null
+          turno_caja_id: string | null
+          vecino_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "solicitudes_compra"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      terminal_crear_vinculacion_lector: {
+        Args: {
+          p_nombre_lector?: string
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          caja_id: string
+          expira_sesion_en: string
+          expira_vinculacion_en: string
+          sesion_id: string
+          terminal_id: string
+          token_vinculacion: string
+        }[]
+      }
       terminal_informar_monto: {
         Args: {
           p_monto: number
@@ -3456,6 +3603,68 @@ export type Database = {
           turno_id: string
         }[]
       }
+      terminal_listar_beneficios_canje: {
+        Args: {
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          beneficio_id: string
+          compra_minima_clp: number
+          costo_regis: number
+          cupos_totales: number
+          descripcion: string
+          id: string
+          monto_descuento_fijo_clp: number
+          nombre: string
+          porcentaje_descuento_bp: number
+          porcentaje_maximo_canje_bp: number
+          tipo: Database["public"]["Enums"]["tipo_beneficio_regis"]
+          tope_descuento_clp: number
+          vigencia_hasta: string
+        }[]
+      }
+      terminal_listar_historial_canjes: {
+        Args: {
+          p_limite?: number
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          beneficio_id: string
+          beneficio_version_id: string
+          canje_id: string
+          codigo_publico: string
+          confirmado_en: string
+          costo_regis: number
+          descuento_total_clp: number
+          leido: boolean
+          monto_compra_bruto_clp: number
+          monto_final_pagado_clp: number
+          negocio_id: string
+          nombre_beneficio: string
+          nombre_negocio: string
+          origen: Database["public"]["Enums"]["origen_canje_regis"]
+        }[]
+      }
+      terminal_listar_lecturas_lector: {
+        Args: {
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          codigo_publico_llavero: string
+          expira_en: string
+          lectura_id: string
+          leido_en: string
+          llavero_id: string
+          nombre_vecino: string
+          vecino_id: string
+        }[]
+      }
       terminal_listar_solicitudes: {
         Args: {
           p_terminal_id: string
@@ -3486,6 +3695,19 @@ export type Database = {
           isOneToOne: false
           isSetofReturn: true
         }
+      }
+      terminal_marcar_canje_leido: {
+        Args: {
+          p_canje_id: string
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          canje_id: string
+          destino: Database["public"]["Enums"]["destino_notificacion_canje_regis"]
+          leido_en: string
+        }[]
       }
       terminal_obtener_contexto: {
         Args: {
@@ -3569,6 +3791,69 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      terminal_reclamar_lectura_lector: {
+        Args: {
+          p_lectura_id: string
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          caja_id: string
+          canjeados: number
+          codigo_publico: string
+          disponibles: number
+          entregado: boolean
+          estado: Database["public"]["Enums"]["estado_llavero_nfc"]
+          expira_en: string
+          lectura_id: string
+          llavero_id: string
+          negocio_id: string
+          nombre_negocio: string
+          nombre_vecino: string
+          pendientes: number
+          puede_activar: boolean
+          remanente_valor_clp: number
+          reservados: number
+          saldo_actualizado_en: string
+          tiene_pin: boolean
+          vecino_id: string
+        }[]
+      }
+      terminal_reservar_canje_desde_lectura: {
+        Args: {
+          p_beneficio_version_id: string
+          p_idempotency_key: string
+          p_lectura_id: string
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          canje_id: string
+          codigo_publico: string
+          costo_regis: number
+          estado: Database["public"]["Enums"]["estado_canje_regis"]
+          expira_en: string
+        }[]
+      }
+      terminal_reservar_canje_llavero: {
+        Args: {
+          p_beneficio_version_id: string
+          p_idempotency_key: string
+          p_terminal_id: string
+          p_token_llavero: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          canje_id: string
+          codigo_publico: string
+          costo_regis: number
+          estado: Database["public"]["Enums"]["estado_canje_regis"]
+          expira_en: string
+        }[]
+      }
       terminal_solicitar_reingreso_monto: {
         Args: {
           p_motivo: string
@@ -3632,6 +3917,35 @@ export type Database = {
         SetofOptions: {
           from: "*"
           to: "terminales"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      validar_lectura_terminal_turno_interna: {
+        Args: {
+          p_lectura_id: string
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          caja_id: string
+          consumida_en: string | null
+          consumida_por: string | null
+          creado_en: string
+          estado: Database["public"]["Enums"]["estado_lectura_llavero_terminal"]
+          expira_en: string
+          id: string
+          leido_en: string
+          llavero_id: string
+          reclamada_en: string | null
+          reclamada_por: string | null
+          sesion_id: string
+          terminal_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "lecturas_llavero_terminal"
           isOneToOne: true
           isSetofReturn: false
         }

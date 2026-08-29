@@ -24,20 +24,18 @@ export async function crearCompraAsistida(
   return data
 }
 
-/*
- * Esta operación pertenece al flujo del celular lector NFC.
- * Se migrará junto con la API independiente del lector.
- */
 export async function crearCompraAsistidaDesdeLectura(
   lecturaId: string,
+  turnoId: string,
   credencial: CredencialTerminalLocal,
   monto: number,
   idempotencyKey: string,
 ) {
   const { data, error } = await supabase.rpc(
-    'crear_solicitud_compra_desde_lectura',
+    'terminal_crear_compra_desde_lectura',
     {
       p_lectura_id: lecturaId,
+      p_turno_id: turnoId,
       p_terminal_id: credencial.terminalId,
       p_token_terminal: credencial.tokenTerminal,
       p_monto: monto,

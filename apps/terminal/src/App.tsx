@@ -530,6 +530,7 @@ function PanelTerminal() {
       const solicitud = lecturaLlavero && credencialTerminal
         ? await crearCompraAsistidaDesdeLectura(
             lecturaLlavero.lectura_id,
+            turno.turno_id,
             credencialTerminal,
             monto,
             idempotenciaCompraAsistida,
@@ -598,6 +599,7 @@ function PanelTerminal() {
       const resultado = lecturaLlavero && credencialTerminal
         ? await activarLlaveroDesdeLectura(
             lecturaLlavero.lectura_id,
+            turno.turno_id,
             credencialTerminal,
             metodoActivacion,
             metodoActivacion === 'pin' ? pinActivacion : null,
@@ -942,6 +944,7 @@ function PanelTerminal() {
       {!cargando && !sinMembresia && cajaId && (
         <VinculacionLector
           cajaId={cajaId}
+          turnoId={turno?.turno_id ?? null}
           puedeRegistrar={puedeGestionarBeneficios}
           mostrarControles={Boolean(turno)}
           alCambiarCredencial={cambiarCredencialTerminal}

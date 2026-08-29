@@ -65,25 +65,23 @@ export async function activarLlaveroPrimerUso(
   return data[0] ?? null
 }
 
-/*
- * Esta ruta corresponde al celular lector NFC.
- * Se migrará en la etapa específica del lector móvil.
- */
 export async function activarLlaveroDesdeLectura(
   lecturaId: string,
+  turnoId: string,
   credencial: CredencialTerminalLocal,
   metodo: MetodoActivacionLlavero,
   pin: string | null,
   identidadVerificada: boolean,
 ) {
   const { data, error } = await supabase.rpc(
-    'activar_llavero_desde_lectura',
+    'terminal_activar_llavero_desde_lectura',
     {
       p_lectura_id: lecturaId,
+      p_turno_id: turnoId,
       p_terminal_id: credencial.terminalId,
       p_token_terminal: credencial.tokenTerminal,
       p_metodo: metodo,
-      p_pin: pin ?? undefined,
+      p_pin: pin ?? '',
       p_identidad_verificada: identidadVerificada,
     },
   )

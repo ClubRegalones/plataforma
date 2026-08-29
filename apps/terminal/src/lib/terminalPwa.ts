@@ -20,7 +20,7 @@ export type LecturaPendienteTerminal = {
 }
 
 export type LecturaOperativaTerminal =
-  Database['public']['Functions']['reclamar_lectura_llavero_terminal']['Returns'][number]
+  Database['public']['Functions']['terminal_reclamar_lectura_lector']['Returns'][number]
 
 const claveTerminal = (cajaId: string) =>
   `club-regalones:terminal-pwa:${cajaId}`
@@ -91,10 +91,12 @@ export async function validarTerminalPwa(
 
 export async function crearVinculacionLector(
   credencial: CredencialTerminalLocal,
+  turnoId: string,
 ) {
   const { data, error } = await supabase.rpc(
-    'crear_vinculacion_lector_terminal',
+    'terminal_crear_vinculacion_lector',
     {
+      p_turno_id: turnoId,
       p_terminal_id: credencial.terminalId,
       p_token_terminal: credencial.tokenTerminal,
       p_nombre_lector: 'Celular lector del turno',
@@ -105,10 +107,17 @@ export async function crearVinculacionLector(
   return data[0] ?? null
 }
 
-export async function listarLecturasPendientes(terminalId: string) {
+export async function listarLecturasPendientes(
+  credencial: CredencialTerminalLocal,
+  turnoId: string,
+) {
   const { data, error } = await supabase.rpc(
-    'listar_lecturas_pendientes_terminal',
-    { p_terminal_id: terminalId },
+    'terminal_listar_lecturas_lector',
+    {
+      p_turno_id: turnoId,
+      p_terminal_id: credencial.terminalId,
+      p_token_terminal: credencial.tokenTerminal,
+    },
   )
 
   if (error) throw error
@@ -117,12 +126,14 @@ export async function listarLecturasPendientes(terminalId: string) {
 
 export async function reclamarLecturaTerminal(
   credencial: CredencialTerminalLocal,
+  turnoId: string,
   lecturaId: string,
 ) {
   const { data, error } = await supabase.rpc(
-    'reclamar_lectura_llavero_terminal',
+    'terminal_reclamar_lectura_lector',
     {
       p_lectura_id: lecturaId,
+      p_turno_id: turnoId,
       p_terminal_id: credencial.terminalId,
       p_token_terminal: credencial.tokenTerminal,
     },
@@ -132,9 +143,14 @@ export async function reclamarLecturaTerminal(
   return data[0] ?? null
 }
 
-export async function cerrarLector(terminalId: string) {
-  const { error } = await supabase.rpc('cerrar_sesion_lector_movil', {
-    p_terminal_id: terminalId,
+export async function cerrarLector(
+  credencial: CredencialTerminalLocal,
+  turnoId: string,
+) {
+  const { error } = await supabase.rpc('terminal_cerrar_lector', {
+    p_turno_id: turnoId,
+    p_terminal_id: credencial.terminalId,
+    p_token_terminal: credencial.tokenTerminal,
   })
   if (error) throw error
 }
