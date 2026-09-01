@@ -2258,3 +2258,1228 @@ body {
     animation: none;
   }
 }
+/* ==========================================================
+   POS ACTIVO V5
+   Turno activo + lector + identificación
+   ========================================================== */
+
+
+/* ----------------------------------------------------------
+   HEADER ACTIVO MÁS COMPACTO
+   ---------------------------------------------------------- */
+
+.terminal-cabecera-ref {
+  position: relative;
+}
+
+.terminal-cabecera-ref__acciones {
+  position: absolute;
+  right: 0;
+  bottom: 1.25rem;
+  display: flex;
+  gap: 0.65rem;
+}
+
+.terminal-cabecera-ref__acciones button {
+  min-height: 2.8rem;
+  padding: 0.7rem 1rem;
+  border: 1px solid rgb(255 255 255 / 11%);
+  border-radius: 0.8rem;
+  color: #eaf2ed;
+  background: rgb(255 255 255 / 5%);
+  box-shadow: none;
+  font-size: 0.78rem;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+
+.terminal-cabecera-ref__acciones button:not(:disabled):hover {
+  transform: translateY(-1px);
+  border-color: rgb(123 222 127 / 25%);
+  background: rgb(83 191 89 / 10%);
+}
+
+.terminal-cabecera-ref__acciones button:first-child {
+  color: #ffd5ce;
+  border-color: rgb(255 109 91 / 16%);
+}
+
+.terminal-cabecera-ref__acciones button:first-child:not(:disabled):hover {
+  border-color: rgb(255 109 91 / 35%);
+  background: rgb(155 51 39 / 14%);
+}
+
+
+/* ----------------------------------------------------------
+   LECTOR INALÁMBRICO
+   ---------------------------------------------------------- */
+
+.terminal-panel .vinculacion-lector {
+  display: grid;
+  width: 100%;
+  gap: 1.25rem;
+  margin: 1.8rem auto 1.2rem;
+  padding: clamp(1.4rem, 3vw, 2rem);
+  border: 1px solid rgb(111 184 137 / 15%);
+  border-radius: 1.15rem;
+  color: #eef7f1;
+  background:
+    radial-gradient(
+      circle at 95% 0%,
+      rgb(54 154 80 / 9%),
+      transparent 22rem
+    ),
+    linear-gradient(
+      145deg,
+      rgb(7 31 21 / 90%),
+      rgb(3 21 14 / 92%)
+    );
+  box-shadow:
+    inset 0 1px rgb(255 255 255 / 2%),
+    0 1rem 2.8rem rgb(0 0 0 / 12%);
+}
+
+.terminal-panel .vinculacion-lector__encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.terminal-panel .vinculacion-lector .terminal-eyebrow {
+  color: #ff6b2e;
+}
+
+.terminal-panel .vinculacion-lector__encabezado h2 {
+  margin: 0.35rem 0 0;
+  color: #fff8e9;
+  font-family: var(--fuente-marca);
+  font-size: clamp(1.7rem, 3vw, 2.45rem);
+  line-height: 1;
+}
+
+.terminal-panel .vinculacion-lector__terminal {
+  padding: 0.55rem 0.85rem;
+  border: 1px solid rgb(94 207 100 / 16%);
+  border-radius: 999px;
+  color: #78ea7d;
+  background: rgb(40 133 58 / 13%);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.025em;
+}
+
+.terminal-panel .vinculacion-lector__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.terminal-panel .vinculacion-lector__acciones button {
+  min-height: 3rem;
+  padding: 0.75rem 1.15rem;
+  border-radius: 0.8rem;
+}
+
+.terminal-panel .vinculacion-lector__acciones button:first-child {
+  color: #07160f;
+  background:
+    linear-gradient(
+      90deg,
+      #4caf45,
+      #59c451
+    );
+}
+
+.terminal-panel .vinculacion-lector__acciones button:first-child:not(:disabled):hover {
+  filter: brightness(1.06);
+}
+
+.terminal-panel .vinculacion-lector__acciones button:last-child {
+  color: #ff9b8c;
+  border: 1px solid rgb(255 112 94 / 16%);
+  background: rgb(124 38 28 / 10%);
+}
+
+.terminal-panel .vinculacion-lector__acciones button:last-child:not(:disabled):hover {
+  background: rgb(124 38 28 / 18%);
+}
+
+
+/* ----------------------------------------------------------
+   QR
+   Importante: el QR conserva fondo blanco para lectura
+   ---------------------------------------------------------- */
+
+.terminal-panel .vinculacion-lector__qr {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 1.5rem;
+  padding: 1.2rem;
+  border: 1px solid rgb(118 181 140 / 13%);
+  border-radius: 1rem;
+  color: #e6eee9;
+  background: rgb(1 15 10 / 55%);
+}
+
+.terminal-panel .vinculacion-lector__qr svg {
+  padding: 0.45rem;
+  border-radius: 0.75rem;
+  background: white;
+}
+
+.terminal-panel .vinculacion-lector__qr strong {
+  color: #fff8e9;
+}
+
+.terminal-panel .vinculacion-lector__qr p,
+.terminal-panel .vinculacion-lector__qr small {
+  color: #9eaea5;
+}
+
+.terminal-panel .vinculacion-lector__prueba {
+  color: #74df78;
+  background: rgb(51 151 66 / 12%);
+}
+
+
+/* ----------------------------------------------------------
+   LECTURAS RECIBIDAS
+   ---------------------------------------------------------- */
+
+.terminal-panel .vinculacion-lector__lecturas {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid rgb(84 204 92 / 26%);
+  border-radius: 0.95rem;
+  background: rgb(32 113 48 / 9%);
+}
+
+.terminal-panel .vinculacion-lector__lecturas > strong {
+  color: #75e87a;
+}
+
+.terminal-panel .vinculacion-lector__lecturas article {
+  padding: 0.85rem;
+  border: 1px solid rgb(255 255 255 / 5%);
+  border-radius: 0.75rem;
+  background: rgb(255 255 255 / 3%);
+}
+
+.terminal-panel .vinculacion-lector__lecturas h3 {
+  color: #fff8e9;
+}
+
+.terminal-panel .vinculacion-lector__lecturas small {
+  color: #9caaa2;
+}
+
+
+/* ----------------------------------------------------------
+   IDENTIFICACIÓN / LEER LLAVERO
+   ---------------------------------------------------------- */
+
+.terminal-panel .terminal-llavero {
+  display: grid;
+  width: 100%;
+  gap: 1.35rem;
+  margin: 1.2rem auto;
+  padding: clamp(1.4rem, 3vw, 2rem);
+  border: 1px solid rgb(111 184 137 / 15%);
+  border-radius: 1.15rem;
+  color: #eaf2ed;
+  background:
+    radial-gradient(
+      circle at 90% 20%,
+      rgb(58 151 78 / 7%),
+      transparent 22rem
+    ),
+    rgb(4 24 16 / 70%);
+  box-shadow:
+    inset 0 1px rgb(255 255 255 / 2%);
+}
+
+.terminal-panel .terminal-llavero__encabezado {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(20rem, 0.85fr);
+  gap: 2rem;
+  align-items: end;
+}
+
+.terminal-panel .terminal-llavero__encabezado h2 {
+  margin: 0.35rem 0 0;
+  color: #fff8e9;
+  font-family: var(--fuente-marca);
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+}
+
+.terminal-panel .terminal-llavero__encabezado p {
+  margin: 0;
+  color: #9eaea5;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.terminal-panel .terminal-llavero label {
+  color: #74e678;
+}
+
+.terminal-panel .terminal-llavero input,
+.terminal-panel .terminal-llavero select {
+  color: #fff8e9;
+  border: 1px solid rgb(83 201 90 / 42%);
+  background: rgb(1 15 10 / 66%);
+}
+
+.terminal-panel .terminal-llavero input::placeholder {
+  color: #66766d;
+}
+
+.terminal-panel .terminal-llavero input:focus,
+.terminal-panel .terminal-llavero select:focus {
+  border-color: #72e477;
+  box-shadow:
+    0 0 0 3px rgb(81 209 88 / 9%);
+}
+
+.terminal-panel .terminal-llavero__consulta button {
+  min-height: 3.15rem;
+  color: #07160f;
+  background:
+    linear-gradient(
+      90deg,
+      #4daf46,
+      #59c451
+    );
+}
+
+
+/* ----------------------------------------------------------
+   RESULTADO DEL LLAVERO
+   ---------------------------------------------------------- */
+
+.terminal-panel .terminal-llavero__resultado {
+  border: 1px solid rgb(112 183 138 / 12%);
+  background: rgb(1 15 10 / 46%);
+}
+
+.terminal-panel .terminal-llavero__identidad h3 {
+  color: #fff8e9;
+}
+
+.terminal-panel .terminal-llavero__identidad p {
+  color: #9dacA4;
+}
+
+.terminal-panel .terminal-llavero__saldo {
+  border-color: rgb(87 204 95 / 18%);
+  background: rgb(22 84 37 / 11%);
+}
+
+.terminal-panel .terminal-llavero__saldo span,
+.terminal-panel .terminal-llavero__saldo p {
+  color: #a8b6ae;
+}
+
+.terminal-panel .terminal-llavero__saldo strong {
+  color: #78e77b;
+}
+
+
+/* ----------------------------------------------------------
+   MENSAJES DEL POS
+   ---------------------------------------------------------- */
+
+.terminal-panel .terminal-alert {
+  width: 100%;
+  margin: 1rem auto;
+  border: 1px solid rgb(255 255 255 / 6%);
+  color: #dce7e0;
+  background: rgb(255 255 255 / 4%);
+}
+
+.terminal-panel .terminal-alert--success {
+  color: #84e88a;
+  border-color: rgb(83 204 92 / 17%);
+  background: rgb(31 115 47 / 12%);
+}
+
+.terminal-panel .terminal-alert--error {
+  color: #ff9f91;
+  border-color: rgb(255 111 93 / 17%);
+  background: rgb(135 43 32 / 13%);
+}
+
+.terminal-panel .terminal-empty {
+  width: 100%;
+  color: #8f9f96;
+  border: 1px solid rgb(120 181 141 / 9%);
+  background: rgb(255 255 255 / 2.5%);
+}
+
+
+/* ----------------------------------------------------------
+   RESPONSIVE
+   ---------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .terminal-cabecera-ref__acciones {
+    position: static;
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+    margin-top: 0.5rem;
+  }
+
+  .terminal-panel .terminal-llavero__encabezado {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .terminal-panel .vinculacion-lector__encabezado,
+  .terminal-panel .vinculacion-lector__qr {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+/* ==========================================================
+   POS ACTIVO V5
+   Turno activo + lector + identificación
+   ========================================================== */
+
+
+/* ----------------------------------------------------------
+   HEADER ACTIVO MÁS COMPACTO
+   ---------------------------------------------------------- */
+
+.terminal-cabecera-ref {
+  position: relative;
+}
+
+.terminal-cabecera-ref__acciones {
+  position: absolute;
+  right: 0;
+  bottom: 1.25rem;
+  display: flex;
+  gap: 0.65rem;
+}
+
+.terminal-cabecera-ref__acciones button {
+  min-height: 2.8rem;
+  padding: 0.7rem 1rem;
+  border: 1px solid rgb(255 255 255 / 11%);
+  border-radius: 0.8rem;
+  color: #eaf2ed;
+  background: rgb(255 255 255 / 5%);
+  box-shadow: none;
+  font-size: 0.78rem;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+
+.terminal-cabecera-ref__acciones button:not(:disabled):hover {
+  transform: translateY(-1px);
+  border-color: rgb(123 222 127 / 25%);
+  background: rgb(83 191 89 / 10%);
+}
+
+.terminal-cabecera-ref__acciones button:first-child {
+  color: #ffd5ce;
+  border-color: rgb(255 109 91 / 16%);
+}
+
+.terminal-cabecera-ref__acciones button:first-child:not(:disabled):hover {
+  border-color: rgb(255 109 91 / 35%);
+  background: rgb(155 51 39 / 14%);
+}
+
+
+/* ----------------------------------------------------------
+   LECTOR INALÁMBRICO
+   ---------------------------------------------------------- */
+
+.terminal-panel .vinculacion-lector {
+  display: grid;
+  width: 100%;
+  gap: 1.25rem;
+  margin: 1.8rem auto 1.2rem;
+  padding: clamp(1.4rem, 3vw, 2rem);
+  border: 1px solid rgb(111 184 137 / 15%);
+  border-radius: 1.15rem;
+  color: #eef7f1;
+  background:
+    radial-gradient(
+      circle at 95% 0%,
+      rgb(54 154 80 / 9%),
+      transparent 22rem
+    ),
+    linear-gradient(
+      145deg,
+      rgb(7 31 21 / 90%),
+      rgb(3 21 14 / 92%)
+    );
+  box-shadow:
+    inset 0 1px rgb(255 255 255 / 2%),
+    0 1rem 2.8rem rgb(0 0 0 / 12%);
+}
+
+.terminal-panel .vinculacion-lector__encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.terminal-panel .vinculacion-lector .terminal-eyebrow {
+  color: #ff6b2e;
+}
+
+.terminal-panel .vinculacion-lector__encabezado h2 {
+  margin: 0.35rem 0 0;
+  color: #fff8e9;
+  font-family: var(--fuente-marca);
+  font-size: clamp(1.7rem, 3vw, 2.45rem);
+  line-height: 1;
+}
+
+.terminal-panel .vinculacion-lector__terminal {
+  padding: 0.55rem 0.85rem;
+  border: 1px solid rgb(94 207 100 / 16%);
+  border-radius: 999px;
+  color: #78ea7d;
+  background: rgb(40 133 58 / 13%);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.025em;
+}
+
+.terminal-panel .vinculacion-lector__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.terminal-panel .vinculacion-lector__acciones button {
+  min-height: 3rem;
+  padding: 0.75rem 1.15rem;
+  border-radius: 0.8rem;
+}
+
+.terminal-panel .vinculacion-lector__acciones button:first-child {
+  color: #07160f;
+  background:
+    linear-gradient(
+      90deg,
+      #4caf45,
+      #59c451
+    );
+}
+
+.terminal-panel .vinculacion-lector__acciones button:first-child:not(:disabled):hover {
+  filter: brightness(1.06);
+}
+
+.terminal-panel .vinculacion-lector__acciones button:last-child {
+  color: #ff9b8c;
+  border: 1px solid rgb(255 112 94 / 16%);
+  background: rgb(124 38 28 / 10%);
+}
+
+.terminal-panel .vinculacion-lector__acciones button:last-child:not(:disabled):hover {
+  background: rgb(124 38 28 / 18%);
+}
+
+
+/* ----------------------------------------------------------
+   QR
+   Importante: el QR conserva fondo blanco para lectura
+   ---------------------------------------------------------- */
+
+.terminal-panel .vinculacion-lector__qr {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 1.5rem;
+  padding: 1.2rem;
+  border: 1px solid rgb(118 181 140 / 13%);
+  border-radius: 1rem;
+  color: #e6eee9;
+  background: rgb(1 15 10 / 55%);
+}
+
+.terminal-panel .vinculacion-lector__qr svg {
+  padding: 0.45rem;
+  border-radius: 0.75rem;
+  background: white;
+}
+
+.terminal-panel .vinculacion-lector__qr strong {
+  color: #fff8e9;
+}
+
+.terminal-panel .vinculacion-lector__qr p,
+.terminal-panel .vinculacion-lector__qr small {
+  color: #9eaea5;
+}
+
+.terminal-panel .vinculacion-lector__prueba {
+  color: #74df78;
+  background: rgb(51 151 66 / 12%);
+}
+
+
+/* ----------------------------------------------------------
+   LECTURAS RECIBIDAS
+   ---------------------------------------------------------- */
+
+.terminal-panel .vinculacion-lector__lecturas {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid rgb(84 204 92 / 26%);
+  border-radius: 0.95rem;
+  background: rgb(32 113 48 / 9%);
+}
+
+.terminal-panel .vinculacion-lector__lecturas > strong {
+  color: #75e87a;
+}
+
+.terminal-panel .vinculacion-lector__lecturas article {
+  padding: 0.85rem;
+  border: 1px solid rgb(255 255 255 / 5%);
+  border-radius: 0.75rem;
+  background: rgb(255 255 255 / 3%);
+}
+
+.terminal-panel .vinculacion-lector__lecturas h3 {
+  color: #fff8e9;
+}
+
+.terminal-panel .vinculacion-lector__lecturas small {
+  color: #9caaa2;
+}
+
+
+/* ----------------------------------------------------------
+   IDENTIFICACIÓN / LEER LLAVERO
+   ---------------------------------------------------------- */
+
+.terminal-panel .terminal-llavero {
+  display: grid;
+  width: 100%;
+  gap: 1.35rem;
+  margin: 1.2rem auto;
+  padding: clamp(1.4rem, 3vw, 2rem);
+  border: 1px solid rgb(111 184 137 / 15%);
+  border-radius: 1.15rem;
+  color: #eaf2ed;
+  background:
+    radial-gradient(
+      circle at 90% 20%,
+      rgb(58 151 78 / 7%),
+      transparent 22rem
+    ),
+    rgb(4 24 16 / 70%);
+  box-shadow:
+    inset 0 1px rgb(255 255 255 / 2%);
+}
+
+.terminal-panel .terminal-llavero__encabezado {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(20rem, 0.85fr);
+  gap: 2rem;
+  align-items: end;
+}
+
+.terminal-panel .terminal-llavero__encabezado h2 {
+  margin: 0.35rem 0 0;
+  color: #fff8e9;
+  font-family: var(--fuente-marca);
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+}
+
+.terminal-panel .terminal-llavero__encabezado p {
+  margin: 0;
+  color: #9eaea5;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.terminal-panel .terminal-llavero label {
+  color: #74e678;
+}
+
+.terminal-panel .terminal-llavero input,
+.terminal-panel .terminal-llavero select {
+  color: #fff8e9;
+  border: 1px solid rgb(83 201 90 / 42%);
+  background: rgb(1 15 10 / 66%);
+}
+
+.terminal-panel .terminal-llavero input::placeholder {
+  color: #66766d;
+}
+
+.terminal-panel .terminal-llavero input:focus,
+.terminal-panel .terminal-llavero select:focus {
+  border-color: #72e477;
+  box-shadow:
+    0 0 0 3px rgb(81 209 88 / 9%);
+}
+
+.terminal-panel .terminal-llavero__consulta button {
+  min-height: 3.15rem;
+  color: #07160f;
+  background:
+    linear-gradient(
+      90deg,
+      #4daf46,
+      #59c451
+    );
+}
+
+
+/* ----------------------------------------------------------
+   RESULTADO DEL LLAVERO
+   ---------------------------------------------------------- */
+
+.terminal-panel .terminal-llavero__resultado {
+  border: 1px solid rgb(112 183 138 / 12%);
+  background: rgb(1 15 10 / 46%);
+}
+
+.terminal-panel .terminal-llavero__identidad h3 {
+  color: #fff8e9;
+}
+
+.terminal-panel .terminal-llavero__identidad p {
+  color: #9dacA4;
+}
+
+.terminal-panel .terminal-llavero__saldo {
+  border-color: rgb(87 204 95 / 18%);
+  background: rgb(22 84 37 / 11%);
+}
+
+.terminal-panel .terminal-llavero__saldo span,
+.terminal-panel .terminal-llavero__saldo p {
+  color: #a8b6ae;
+}
+
+.terminal-panel .terminal-llavero__saldo strong {
+  color: #78e77b;
+}
+
+
+/* ----------------------------------------------------------
+   MENSAJES DEL POS
+   ---------------------------------------------------------- */
+
+.terminal-panel .terminal-alert {
+  width: 100%;
+  margin: 1rem auto;
+  border: 1px solid rgb(255 255 255 / 6%);
+  color: #dce7e0;
+  background: rgb(255 255 255 / 4%);
+}
+
+.terminal-panel .terminal-alert--success {
+  color: #84e88a;
+  border-color: rgb(83 204 92 / 17%);
+  background: rgb(31 115 47 / 12%);
+}
+
+.terminal-panel .terminal-alert--error {
+  color: #ff9f91;
+  border-color: rgb(255 111 93 / 17%);
+  background: rgb(135 43 32 / 13%);
+}
+
+.terminal-panel .terminal-empty {
+  width: 100%;
+  color: #8f9f96;
+  border: 1px solid rgb(120 181 141 / 9%);
+  background: rgb(255 255 255 / 2.5%);
+}
+
+
+/* ----------------------------------------------------------
+   RESPONSIVE
+   ---------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .terminal-cabecera-ref__acciones {
+    position: static;
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+    margin-top: 0.5rem;
+  }
+
+  .terminal-panel .terminal-llavero__encabezado {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .terminal-panel .vinculacion-lector__encabezado,
+  .terminal-panel .vinculacion-lector__qr {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+/* ==========================================================
+   POS OPERATIVO V7
+   ========================================================== */
+
+
+/* ----------------------------------------------------------
+   RELOJ + ACCIONES
+   ---------------------------------------------------------- */
+
+.terminal-cabecera-ref__derecha {
+  display: grid;
+  justify-items: end;
+  align-self: center;
+  gap: 0.7rem;
+  min-width: 14rem;
+}
+
+.terminal-cabecera-ref__derecha .terminal-reloj-ref {
+  justify-content: flex-end;
+}
+
+.terminal-cabecera-ref__acciones {
+  position: static !important;
+  display: flex;
+  grid-column: auto;
+  justify-self: auto;
+  gap: 0.55rem;
+  margin: 0 !important;
+}
+
+.terminal-cabecera-ref__acciones button {
+  min-height: 2.55rem;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.74rem;
+}
+
+
+/* ----------------------------------------------------------
+   NAVEGACION
+   ---------------------------------------------------------- */
+
+.terminal-navegacion {
+  gap: 0.55rem;
+  padding: 0.45rem;
+}
+
+.terminal-panel .terminal-navegacion button {
+  gap: 0.7rem !important;
+  min-height: 3.4rem;
+  padding: 0.65rem 0.8rem;
+  color: #9aaba1;
+  border: 1px solid rgb(111 184 137 / 7%);
+  background: rgb(255 255 255 / 2%);
+}
+
+.terminal-panel .terminal-navegacion button > span {
+  display: grid !important;
+  width: 2rem !important;
+  height: 2rem !important;
+  flex: 0 0 2rem;
+  place-items: center;
+  border-radius: 50%;
+  color: #70df75;
+  background: rgb(45 139 60 / 14%);
+  font-size: 0.62rem;
+}
+
+.terminal-panel
+  .terminal-navegacion
+  button.terminal-navegacion__activo {
+  color: #fff9ec;
+  border-color: rgb(87 213 95 / 26%);
+  background:
+    linear-gradient(
+      135deg,
+      rgb(38 139 54 / 34%),
+      rgb(16 72 30 / 23%)
+    );
+  box-shadow:
+    inset 0 1px rgb(255 255 255 / 3%),
+    0 0 1.4rem rgb(52 171 64 / 5%);
+}
+
+.terminal-panel
+  .terminal-navegacion
+  button.terminal-navegacion__activo
+  > span {
+  color: #07160f;
+  background: #5bce5b;
+  box-shadow: 0 0 1rem rgb(83 207 91 / 24%);
+}
+
+
+/* ----------------------------------------------------------
+   CANJES REGIS - TEMA OSCURO
+   CanjesRegis tiene su propio canjes.css.
+   Estas reglas tienen mayor especificidad.
+   ---------------------------------------------------------- */
+
+.terminal-panel .canjes {
+  width: 100%;
+  margin: 1.2rem 0;
+  color: #e9f2ec;
+  border: 1px solid rgb(111 184 137 / 14%);
+  background:
+    radial-gradient(
+      circle at 90% 5%,
+      rgb(55 151 78 / 8%),
+      transparent 24rem
+    ),
+    rgb(4 24 16 / 70%);
+  box-shadow:
+    inset 0 1px rgb(255 255 255 / 2%);
+}
+
+.terminal-panel .canjes__encabezado h2,
+.terminal-panel .canjes__metodo h3,
+.terminal-panel .canjes__revision h3,
+.terminal-panel .canjes__historial h3 {
+  color: #fff8e9;
+  font-family: var(--fuente-marca);
+}
+
+.terminal-panel .canjes__encabezado p,
+.terminal-panel .canjes__metodo p,
+.terminal-panel .canjes__revision p,
+.terminal-panel .canjes__historial-encabezado p {
+  color: #9dadA4;
+}
+
+.terminal-panel .canjes__metodo,
+.terminal-panel .canjes__revision,
+.terminal-panel .canjes__historial-item {
+  border-color: rgb(111 184 137 / 13%);
+  color: #e9f2ec;
+  background:
+    linear-gradient(
+      145deg,
+      rgb(7 31 21 / 78%),
+      rgb(3 20 14 / 76%)
+    );
+}
+
+.terminal-panel .canjes__numero {
+  color: #ff9a67;
+  background: rgb(255 100 43 / 11%);
+}
+
+.terminal-panel .canjes label {
+  color: #72e477;
+}
+
+.terminal-panel .canjes input,
+.terminal-panel .canjes select {
+  color: #fff8e9;
+  border-color: rgb(83 201 90 / 35%);
+  background: rgb(1 15 10 / 68%);
+}
+
+.terminal-panel .canjes input::placeholder {
+  color: #67776e;
+}
+
+.terminal-panel .canjes input:focus,
+.terminal-panel .canjes select:focus {
+  border-color: #70df75;
+  box-shadow: 0 0 0 3px rgb(81 209 88 / 9%);
+}
+
+.terminal-panel .canjes button {
+  color: #06140d;
+  background:
+    linear-gradient(
+      90deg,
+      #4daf46,
+      #59c451
+    );
+}
+
+.terminal-panel .canjes__estado-vacio {
+  color: #9dadA4;
+  border: 1px solid rgb(111 184 137 / 9%);
+  background: rgb(255 255 255 / 3%);
+}
+
+.terminal-panel .canjes__beneficio {
+  border-color: rgb(111 184 137 / 12%);
+  background: rgb(255 255 255 / 3%);
+}
+
+.terminal-panel .canjes__beneficio span,
+.terminal-panel .canjes__beneficio small,
+.terminal-panel .canjes label small {
+  color: #91a298;
+}
+
+.terminal-panel .canjes__regla-beneficio {
+  color: #c5d2ca;
+  border-color: rgb(255 115 54 / 15%);
+  background: rgb(141 56 23 / 10%);
+}
+
+.terminal-panel .canjes__regla-beneficio strong {
+  color: #ff8d53;
+}
+
+.terminal-panel .canjes__detalle div,
+.terminal-panel .canjes__resultado dl div {
+  color: #dfe9e2;
+  background: rgb(255 255 255 / 3%);
+}
+
+.terminal-panel .canjes__detalle dt,
+.terminal-panel .canjes__resultado dt {
+  color: #899c91;
+}
+
+.terminal-panel .canjes__vista-previa,
+.terminal-panel .canjes__resultado {
+  color: #79e87e;
+  border: 1px solid rgb(83 204 92 / 15%);
+  background: rgb(31 115 47 / 11%);
+}
+
+.terminal-panel .canjes__resultado dl div {
+  background: rgb(1 15 10 / 35%);
+}
+
+.terminal-panel .canjes__acciones .secundario {
+  color: #d8e4dc;
+  border: 1px solid rgb(255 255 255 / 9%);
+  background: rgb(255 255 255 / 5%);
+}
+
+.terminal-panel .canjes__historial {
+  border-top-color: rgb(111 184 137 / 12%);
+}
+
+.terminal-panel .canjes__historial-item--nuevo {
+  border-color: rgb(255 106 46 / 45%);
+  box-shadow: 0 0 1.5rem rgb(255 100 43 / 7%);
+}
+
+.terminal-panel .canjes__historial-item header time,
+.terminal-panel .canjes__historial-item small {
+  color: #82968a;
+}
+
+
+/* ----------------------------------------------------------
+   ALERTAS
+   ---------------------------------------------------------- */
+
+.terminal-alertas-panel {
+  min-height: 18rem;
+  align-content: start;
+  gap: 1.25rem;
+  padding: 2rem;
+  border: 1px solid rgb(111 184 137 / 15%);
+  background:
+    radial-gradient(
+      circle at 90% 0%,
+      rgb(55 151 78 / 9%),
+      transparent 22rem
+    ),
+    rgb(4 24 16 / 68%);
+}
+
+.terminal-alertas-panel__estado {
+  max-width: 46rem;
+  padding: 1.25rem;
+  border-color: rgb(83 204 92 / 13%);
+  background: rgb(35 117 49 / 8%);
+}
+
+
+/* ----------------------------------------------------------
+   MENSAJE DE TURNO
+   ---------------------------------------------------------- */
+
+.terminal-panel .terminal-alert--success {
+  border-color: rgb(83 204 92 / 15%);
+  border-radius: 0.9rem;
+  color: #74e779;
+  background: rgb(29 104 44 / 10%);
+}
+
+@media (max-width: 1050px) {
+  .terminal-cabecera-ref__derecha {
+    grid-column: 2;
+    grid-row: 1 / 3;
+  }
+}
+
+@media (max-width: 700px) {
+  .terminal-cabecera-ref__derecha {
+    grid-column: 1;
+    grid-row: auto;
+    justify-items: start;
+  }
+
+  .terminal-cabecera-ref__derecha .terminal-reloj-ref {
+    justify-content: flex-start;
+  }
+}
+/* ==========================================================
+   ALERTAS POS V8
+   ========================================================== */
+
+.terminal-alertas-panel__encabezado {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.terminal-alertas-panel__encabezado h2 {
+  margin: 0.35rem 0 0;
+}
+
+.terminal-alertas-panel__resumen {
+  padding: 0.55rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.terminal-alertas-panel__resumen--ok {
+  color: #78e97d;
+  border: 1px solid rgb(87 209 94 / 18%);
+  background: rgb(37 126 52 / 14%);
+}
+
+.terminal-alertas-panel__resumen--error {
+  color: #ff9283;
+  border: 1px solid rgb(255 114 95 / 18%);
+  background: rgb(136 43 32 / 13%);
+}
+
+.terminal-alertas-panel__grilla {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.terminal-alertas-panel__grilla article {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1rem;
+  min-height: 7.4rem;
+  padding: 1.1rem;
+  border: 1px solid rgb(111 184 137 / 11%);
+  border-radius: 0.9rem;
+  background: rgb(255 255 255 / 2.5%);
+}
+
+.terminal-alertas-panel__grilla article > div {
+  min-width: 0;
+}
+
+.terminal-alertas-panel__grilla small {
+  display: block;
+  margin-bottom: 0.18rem;
+  color: #71867a;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.terminal-alertas-panel__grilla strong {
+  display: block;
+  color: #f2f7f3;
+  font-size: 0.88rem;
+  line-height: 1.35;
+}
+
+.terminal-alertas-panel__grilla p {
+  margin: 0.25rem 0 0;
+  color: #879a8f;
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+
+.terminal-alertas-panel__icono,
+.terminal-alertas-panel__contador {
+  display: grid;
+  width: 2.6rem;
+  height: 2.6rem;
+  place-items: center;
+  border-radius: 50%;
+  color: #71e276;
+  background: rgb(42 132 56 / 16%);
+  font-family: var(--fuente-marca);
+  font-weight: 800;
+}
+
+.terminal-alertas-panel__contador--pendiente {
+  color: #ff9a62;
+  background: rgb(164 70 29 / 15%);
+}
+
+.terminal-alertas-panel__pie {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.95rem 1.1rem;
+  border-radius: 0.85rem;
+}
+
+.terminal-alertas-panel__pie strong {
+  font-size: 0.82rem;
+}
+
+.terminal-alertas-panel__pie span {
+  font-size: 0.76rem;
+}
+
+.terminal-alertas-panel__pie--ok {
+  color: #79e87e;
+  border: 1px solid rgb(83 204 92 / 13%);
+  background: rgb(31 115 47 / 9%);
+}
+
+.terminal-alertas-panel__pie--error {
+  color: #ff9d8f;
+  border: 1px solid rgb(255 111 93 / 14%);
+  background: rgb(135 43 32 / 11%);
+}
+
+@media (max-width: 1000px) {
+  .terminal-alertas-panel__grilla {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 650px) {
+  .terminal-alertas-panel__grilla {
+    grid-template-columns: 1fr;
+  }
+
+  .terminal-alertas-panel__encabezado,
+  .terminal-alertas-panel__pie {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

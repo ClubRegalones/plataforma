@@ -140,6 +140,30 @@ function PanelTerminal({
   const [procesandoLlavero, setProcesandoLlavero] = useState(false)
   const [mensaje, setMensaje] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+
+  const [seccionActiva, setSeccionActiva] = useState<
+    'compras' | 'lector' | 'canjes' | 'alertas'
+  >('compras')
+
+  useEffect(() => {
+    if (
+      !mensaje ||
+      !mensaje.includes('recuperado correctamente')
+    ) {
+      return
+    }
+
+    const temporizador = window.setTimeout(() => {
+      setMensaje((actual) =>
+        actual === mensaje ? null : actual,
+      )
+    }, 5_000)
+
+    return () => {
+      window.clearTimeout(temporizador)
+    }
+  }, [mensaje])
+
   const [enLinea, setEnLinea] = useState(
     navigator.onLine,
   )
@@ -921,39 +945,105 @@ function PanelTerminal({
           />
         </div>
 
-        <RelojTerminal />
+        <div className="terminal-cabecera-ref__derecha">
+          <RelojTerminal />
 
-        {turno && (
-          <div className="terminal-cabecera-ref__acciones">
-            <button
-              type="button"
-              disabled={cerrandoTurno || !enLinea}
-              onClick={() => void finalizarTurno()}
-            >
-              {cerrandoTurno
-                ? 'Finalizando…'
-                : 'Finalizar turno'}
-            </button>
+          {turno && (
+            <div className="terminal-cabecera-ref__acciones">
+              <button
+                type="button"
+                disabled={cerrandoTurno || !enLinea}
+                onClick={() => void finalizarTurno()}
+              >
+                {cerrandoTurno
+                  ? 'Finalizando…'
+                  : 'Finalizar turno'}
+              </button>
 
-            <button
-              type="button"
-              disabled={!enLinea}
-              onClick={() =>
-                void cargarSolicitudes()
-              }
-            >
-              Actualizar
-            </button>
-          </div>
-        )}
+              <button
+                type="button"
+                disabled={!enLinea}
+                onClick={() =>
+                  void cargarSolicitudes()
+                }
+              >
+                Actualizar
+              </button>
+            </div>
+          )}
+        </div>
       </header>
 
+      {turno && (
+        <nav
+          className="terminal-navegacion"
+          aria-label="Operaciones de caja"
+        >
+          <button
+            type="button"
+            className={
+              seccionActiva === 'compras'
+                ? 'terminal-navegacion__activo'
+                : ''
+            }
+            onClick={() => setSeccionActiva('compras')}
+          >
+            <span aria-hidden="true">01</span>
+            Compras
+          </button>
+
+          <button
+            type="button"
+            className={
+              seccionActiva === 'lector'
+                ? 'terminal-navegacion__activo'
+                : ''
+            }
+            onClick={() => setSeccionActiva('lector')}
+          >
+            <span aria-hidden="true">02</span>
+            Lector
+          </button>
+
+          <button
+            type="button"
+            className={
+              seccionActiva === 'canjes'
+                ? 'terminal-navegacion__activo'
+                : ''
+            }
+            onClick={() => setSeccionActiva('canjes')}
+          >
+            <span aria-hidden="true">03</span>
+            Canjes REGIS
+          </button>
+
+          <button
+            type="button"
+            className={
+              seccionActiva === 'alertas'
+                ? 'terminal-navegacion__activo'
+                : ''
+            }
+            onClick={() => setSeccionActiva('alertas')}
+          >
+            <span aria-hidden="true">04</span>
+            Alertas
+          </button>
+        </nav>
+      )}
+
       {turno && enLinea && (
-        <VinculacionLector
-          credencial={credencialTerminal}
-          turnoId={turno.turno_id}
-          alReclamarLectura={recibirLecturaOperativa}
-        />
+        <div
+          className="terminal-seccion-contenido"
+          hidden={seccionActiva !== 'lector'}
+        >
+          <VinculacionLector
+            credencial={credencialTerminal}
+            turnoId={turno.turno_id}
+            alReclamarLectura={recibirLecturaOperativa}
+          />
+        </div>
       )}
       {!enLinea && (
         <div
@@ -996,7 +1086,9 @@ function PanelTerminal({
           />
         )}
 
-      {turno && enLinea && (
+      {turno &&
+        enLinea &&
+        seccionActiva === 'compras' && (
         <section className="terminal-llavero" aria-labelledby="activar-llavero-title">
           <div className="terminal-llavero__encabezado">
             <div>
@@ -1231,7 +1323,11 @@ function PanelTerminal({
       )}
 
       {turno && enLinea && (
-        <CanjesRegis
+        <div
+          className="terminal-seccion-contenido"
+          hidden={seccionActiva !== 'canjes'}
+        >
+          <CanjesRegis
           cajas={cajas}
           cajaId={cajaId}
           turnoId={turno.turno_id}
@@ -1243,9 +1339,199 @@ function PanelTerminal({
           alConsumirLectura={limpiarLecturaOperativa}
           alConfirmar={actualizarDespuesDeCompra}
         />
+        </div>
       )}
 
-      {cargandoTurno ? (
+      {turno && seccionActiva === 'alertas' && (
+        <section className="terminal-alertas-panel">
+          <div className="terminal-alertas-panel__encabezado">
+            <div>
+              <span className="terminal-eyebrow">
+                Centro de alertas
+              </span>
+
+              <h2>Estado de la terminal</h2>
+            </div>
+
+            <span
+              className={
+                enLinea
+                  ? 'terminal-alertas-panel__resumen terminal-alertas-panel__resumen--ok'
+                  : 'terminal-alertas-panel__resumen terminal-alertas-panel__resumen--error'
+              }
+            >
+              {enLinea
+                ? 'Operativa'
+                : 'Requiere atención'}
+            </span>
+          </div>
+
+          <div className="terminal-alertas-panel__grilla">
+            <article>
+              <span
+                className={
+                  enLinea
+                    ? 'terminal-alertas-panel__punto terminal-alertas-panel__punto--ok'
+                    : 'terminal-alertas-panel__punto terminal-alertas-panel__punto--error'
+                }
+              />
+
+              <div>
+                <small>Conexión</small>
+
+                <strong>
+                  {enLinea
+                    ? 'Club Regalones conectado'
+                    : 'Sin conexión'}
+                </strong>
+
+                <p>
+                  {enLinea
+                    ? 'Las operaciones están habilitadas.'
+                    : 'Las operaciones permanecen bloqueadas.'}
+                </p>
+              </div>
+            </article>
+
+            <article>
+              <span className="terminal-alertas-panel__icono">
+                C
+              </span>
+
+              <div>
+                <small>Caja vinculada</small>
+
+                <strong>
+                  {configuracion.nombreCaja}
+                </strong>
+
+                <p>
+                  {configuracion.codigoCaja
+                    ? configuracion.codigoCaja
+                    : configuracion.nombreNegocio}
+                </p>
+              </div>
+            </article>
+
+            <article>
+              <span className="terminal-alertas-panel__icono">
+                T
+              </span>
+
+              <div>
+                <small>Turno activo</small>
+
+                <strong>
+                  {turno.nombre_cajero}
+                </strong>
+
+                <p>
+                  El turno sigue asociado a esta caja.
+                </p>
+              </div>
+            </article>
+
+            <article>
+              <span
+                className={
+                  solicitudes.length > 0
+                    ? 'terminal-alertas-panel__contador terminal-alertas-panel__contador--pendiente'
+                    : 'terminal-alertas-panel__contador'
+                }
+              >
+                {solicitudes.length}
+              </span>
+
+              <div>
+                <small>Compras pendientes</small>
+
+                <strong>
+                  {solicitudes.length === 0
+                    ? 'Sin compras esperando revisión'
+                    : solicitudes.length === 1
+                      ? '1 compra pendiente'
+                      : `${solicitudes.length} compras pendientes`}
+                </strong>
+
+                <p>
+                  {solicitudes.length === 0
+                    ? 'No hay compras pendientes en esta caja.'
+                    : 'Entra a Compras para revisarlas.'}
+                </p>
+              </div>
+            </article>
+
+            <article>
+              <span className="terminal-alertas-panel__icono">
+                L
+              </span>
+
+              <div>
+                <small>Lector NFC</small>
+
+                <strong>
+                  {enLinea
+                    ? 'Lector disponible'
+                    : 'Lector no disponible'}
+                </strong>
+
+                <p>
+                  {enLinea
+                    ? 'Puedes vincular el celular o recibir lecturas de llaveros.'
+                    : 'Se habilitará nuevamente al recuperar la conexión.'}
+                </p>
+              </div>
+            </article>
+
+            <article>
+              <span className="terminal-alertas-panel__icono">
+                R
+              </span>
+
+              <div>
+                <small>Canjes REGIS</small>
+
+                <strong>
+                  {enLinea
+                    ? 'Módulo disponible'
+                    : 'Canjes bloqueados'}
+                </strong>
+
+                <p>
+                  {enLinea
+                    ? 'Revisa Canjes REGIS para reservas y beneficios.'
+                    : 'No se pueden confirmar canjes sin conexión.'}
+                </p>
+              </div>
+            </article>
+          </div>
+
+          <div
+            className={
+              enLinea
+                ? 'terminal-alertas-panel__pie terminal-alertas-panel__pie--ok'
+                : 'terminal-alertas-panel__pie terminal-alertas-panel__pie--error'
+            }
+          >
+            <strong>
+              {enLinea
+                ? 'Terminal funcionando correctamente'
+                : 'La Terminal conserva su vinculación'}
+            </strong>
+
+            <span>
+              {enLinea
+                ? solicitudes.length === 0
+                  ? 'No hay compras pendientes de revisión.'
+                  : 'Hay compras que requieren atención del cajero.'
+                : 'Negocio, caja y turno permanecen protegidos hasta recuperar la conexión.'}
+            </span>
+          </div>
+        </section>
+      )}
+
+      {seccionActiva === 'compras' && (
+        cargandoTurno ? (
         <p className="terminal-empty">
           Comprobando turno…
         </p>
@@ -1462,6 +1748,7 @@ function PanelTerminal({
             )
           })}
         </section>
+      )
       )}
     </main>
   )
