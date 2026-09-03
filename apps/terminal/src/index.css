@@ -10236,6 +10236,102 @@ body,
   filter: blur(2.4rem);
 }
 
+/* COMPRA NORMAL: pulido visual aislado de las variantes asistidas */
+.terminal-compra-detectada--compra {
+  min-height: 18rem;
+  max-height: calc(100vh - 2rem);
+}
+
+.terminal-compra-detectada--compra .terminal-compra-detectada__contenido {
+  padding: 1.15rem 1.35rem;
+}
+
+.terminal-compra-detectada--compra .terminal-eyebrow {
+  line-height: 1;
+}
+
+.terminal-compra-detectada--compra .terminal-compra-detectada__contenido h2 {
+  margin: .22rem 0 .58rem;
+  font-size: 1.6rem;
+}
+
+.terminal-compra-detectada--compra .terminal-compra-detectada__vecino {
+  grid-template-columns: 4.4rem minmax(0, 1fr);
+  gap: .72rem;
+  padding: .35rem 0 .58rem;
+}
+
+.terminal-compra-detectada--compra .terminal-compra-detectada__vecino img {
+  width: 4.4rem;
+  height: 4.4rem;
+  align-self: center;
+}
+
+.terminal-compra-detectada--compra .terminal-compra-detectada__vecino > div {
+  align-self: center;
+}
+
+.terminal-compra-detectada--compra .terminal-compra-detectada__monto {
+  display: flex;
+  align-items: center;
+  gap: .72rem;
+  margin-top: .62rem;
+  padding: .55rem .72rem;
+  border: 1px solid rgba(92, 210, 105, .16);
+  background: linear-gradient(135deg, rgba(17, 74, 39, .7), rgba(5, 36, 22, .9));
+}
+
+.terminal-compra-detectada--compra .terminal-compra-detectada__monto-icono {
+  display: grid;
+  width: 2.45rem;
+  height: 2.45rem;
+  flex: 0 0 2.45rem;
+  place-items: center;
+  border: 1px solid rgba(124, 235, 136, .28);
+  border-radius: 50%;
+  color: #8aee91;
+  background: rgba(92, 202, 98, .14);
+}
+
+.terminal-compra-detectada--compra .terminal-compra-detectada__monto-icono svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.terminal-compra-detectada--compra .terminal-compra-detectada__monto strong {
+  font-size: 2.05rem;
+  line-height: 1;
+}
+
+.terminal-compra-detectada--compra .terminal-compra-detectada__principal {
+  min-height: 3.15rem;
+  margin-top: .68rem;
+  color: #06140b;
+  background: #68df70;
+  font-size: .9rem;
+  box-shadow:
+    0 .65rem 1.6rem rgba(73, 205, 86, .24),
+    0 0 1.25rem rgba(92, 220, 103, .12);
+}
+
+.terminal-compra-detectada--compra .terminal-compra-detectada__visual {
+  padding: .7rem;
+}
+
+.terminal-compra-detectada--compra .terminal-compra-detectada__visual > img {
+  width: min(100%, 16.25rem);
+  max-height: 17rem;
+}
+
+.terminal-compra-detectada--compra .terminal-compra-detectada__cerrar {
+  top: .55rem;
+  right: .65rem;
+  width: 1.65rem;
+  height: 1.65rem;
+  font-size: 1rem;
+  background: rgba(255,255,255,.025);
+}
+
 /* ==========================================================
    REVISION COMPRA ESTRUCTURAL V3
    ========================================================== */
@@ -10743,4 +10839,203 @@ body,
   min-width: 1.25rem;
   height: 1.25rem;
   flex: 0 0 1.25rem;
+}
+
+/* ==========================================================
+   REVISION COMPRA ESCALA VISUAL V6
+   ========================================================== */
+
+.terminal-panel--turno-activo .terminal-revision-compra {
+  grid-template-columns: minmax(0, 1fr) clamp(19rem, 22vw, 21rem) !important;
+  gap: .9rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__principal {
+  padding: 1.3rem 1.5rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__cabecera h2 {
+  margin-top: .3rem !important;
+  font-size: 2.25rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__cabecera p {
+  margin-top: .12rem !important;
+  font-size: .78rem !important;
+  line-height: 1.4 !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__estado small {
+  font-size: .63rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__estado span {
+  padding: .42rem .78rem !important;
+  font-size: .65rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__datos {
+  gap: .75rem !important;
+  margin-top: 1rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__datos article {
+  min-height: 5rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__monto-informado small {
+  font-size: .62rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__monto-informado strong {
+  margin-top: .2rem !important;
+  font-size: 2rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__vecino strong {
+  font-size: .9rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__vecino span {
+  margin-top: .2rem !important;
+  font-size: .66rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__formulario {
+  gap: .75rem !important;
+  margin-top: .85rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__formulario label {
+  font-size: .68rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__formulario label > small {
+  font-size: .57rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__input-monto,
+.terminal-panel--turno-activo .terminal-revision-compra__formulario textarea {
+  min-height: 3.35rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__formulario textarea {
+  max-height: 3.35rem !important;
+  font-size: .78rem !important;
+  line-height: 1.35 !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__input-monto > span {
+  font-size: 1rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__input-monto input {
+  font-size: 1.12rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__comparacion {
+  margin-top: .8rem !important;
+  padding: .72rem .9rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__comparacion small {
+  font-size: .63rem !important;
+  line-height: 1.35 !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__comparacion strong {
+  margin-top: .16rem !important;
+  font-size: 1rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__igual {
+  text-align: center !important;
+  font-size: 1.05rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__acciones {
+  grid-template-columns:
+    minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1.25fr) minmax(0, 1fr) !important;
+  gap: .55rem !important;
+  margin-top: 1rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__acciones button {
+  min-height: 3.85rem !important;
+  padding: .5rem .55rem !important;
+  font-size: clamp(.84rem, .95vw, 1rem) !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__acciones .terminal-boton__contenido {
+  gap: clamp(.35rem, .5vw, .6rem) !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__acciones .terminal-boton__icono {
+  width: 1.35rem !important;
+  min-width: 1.35rem !important;
+  height: 1.35rem !important;
+  flex-basis: 1.35rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__seguridad {
+  margin-top: .65rem !important;
+  font-size: .58rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__lateral {
+  gap: .9rem !important;
+  padding: 1.2rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__lateral .terminal-eyebrow {
+  font-size: .63rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__lateral h3 {
+  margin-top: .35rem !important;
+  font-size: 1.28rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__origen,
+.terminal-panel--turno-activo .terminal-revision-compra__regis {
+  padding: .95rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__origen strong {
+  font-size: .78rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__origen span {
+  margin-top: .3rem !important;
+  font-size: .69rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__regis strong {
+  margin-top: .4rem !important;
+  font-size: 1rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__regis small {
+  margin-top: .28rem !important;
+  font-size: .66rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__mascota {
+  grid-template-columns: 6.35rem minmax(0, 1fr) !important;
+  gap: .7rem !important;
+  margin-bottom: .35rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__mascota img {
+  width: 6.55rem !important;
+  max-height: 6.55rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__mascota strong {
+  font-size: .78rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-revision-compra__mascota span {
+  margin-top: .2rem !important;
+  font-size: .66rem !important;
 }

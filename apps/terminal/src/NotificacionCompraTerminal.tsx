@@ -49,7 +49,11 @@ export default function NotificacionCompraTerminal({
   return (
     <div className="terminal-compra-detectada__fondo">
       <section
-        className="terminal-compra-detectada"
+        className={`terminal-compra-detectada${
+          esCompraNormal
+            ? ' terminal-compra-detectada--compra'
+            : ''
+        }`}
         role="dialog"
         aria-modal="true"
         aria-labelledby="terminal-compra-detectada-title"
@@ -100,8 +104,27 @@ export default function NotificacionCompraTerminal({
 
           {esCompraNormal && monto !== null && (
             <div className="terminal-compra-detectada__monto">
-              <span>Monto informado</span>
-              <strong>{formatearMonto(monto)}</strong>
+              <div
+                className="terminal-compra-detectada__monto-icono"
+                aria-hidden="true"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M6 3.5h12v17l-3-2-3 2-3-2-3 2v-17Z" />
+                  <path d="M9 8h6M9 12h6M9 16h3" />
+                </svg>
+              </div>
+
+              <div className="terminal-compra-detectada__monto-contenido">
+                <span>Monto informado</span>
+                <strong>{formatearMonto(monto)}</strong>
+              </div>
             </div>
           )}
 
