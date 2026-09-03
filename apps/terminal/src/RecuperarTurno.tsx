@@ -54,7 +54,7 @@ export default function RecuperarTurno({
 
   return (
     <section
-      className="inicio-turno"
+      className="inicio-turno inicio-turno--recuperar"
       aria-labelledby="recuperar-turno-title"
     >
       <div className="inicio-turno__contenido">
@@ -72,7 +72,7 @@ export default function RecuperarTurno({
             finalizado antes de cerrarse o reiniciarse.
           </p>
 
-          <div className="terminal-card">
+          <div className="terminal-card recuperar-turno__tarjeta">
             <strong>
               {turno.nombre_cajero}
             </strong>
@@ -91,7 +91,7 @@ export default function RecuperarTurno({
             </p>
           )}
 
-          <div className="terminal-form">
+          <div className="terminal-form recuperar-turno__acciones">
             <button
               type="button"
               disabled={procesando}

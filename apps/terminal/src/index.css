@@ -3483,3 +3483,6093 @@ body {
     flex-direction: column;
   }
 }
+/* ==========================================================
+   CONFIGURACION POS PANTALLA 1
+   ========================================================== */
+
+.configuracion-pos {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: clamp(1rem, 3vw, 2rem);
+  color: #eef7f1;
+  background:
+    radial-gradient(
+      circle at 22% 45%,
+      rgb(45 146 65 / 8%),
+      transparent 28rem
+    ),
+    #03100c;
+}
+
+.configuracion-pos__panel {
+  width: min(100%, 72rem);
+  min-height: 38rem;
+  overflow: hidden;
+  border: 1px solid rgb(100 184 132 / 17%);
+  border-radius: 1.25rem;
+  background:
+    linear-gradient(
+      145deg,
+      rgb(4 26 17 / 96%),
+      rgb(2 18 12 / 97%)
+    );
+  box-shadow:
+    0 2rem 6rem rgb(0 0 0 / 24%),
+    inset 0 1px rgb(255 255 255 / 2%);
+}
+
+.configuracion-pos__panel--login {
+  display: grid;
+  grid-template-columns: minmax(18rem, 0.75fr) minmax(0, 1.35fr);
+}
+
+.configuracion-pos__presentacion {
+  position: relative;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 1.2rem;
+  padding: 2.25rem;
+  border-right: 1px solid rgb(108 181 133 / 13%);
+  background:
+    radial-gradient(
+      circle at 50% 48%,
+      rgb(56 165 75 / 10%),
+      transparent 15rem
+    ),
+    rgb(3 25 16 / 36%);
+}
+
+.configuracion-pos__marca {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  display: grid;
+  gap: 0.05rem;
+}
+
+.configuracion-pos__marca strong {
+  color: #fff9ea;
+  font-family: var(--fuente-marca);
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.configuracion-pos__marca strong span {
+  margin-left: 0.2rem;
+  color: #ff652f;
+}
+
+.configuracion-pos__marca small {
+  color: #ff6b32;
+  font-size: 0.48rem;
+  font-weight: 800;
+}
+
+.configuracion-pos__mascota {
+  position: relative;
+  display: grid;
+  width: min(100%, 17rem);
+  min-height: 18rem;
+  place-items: center;
+}
+
+.configuracion-pos__halo {
+  position: absolute;
+  width: 13rem;
+  height: 13rem;
+  border-radius: 50%;
+  background: rgb(51 178 75 / 12%);
+  filter: blur(1px);
+}
+
+.configuracion-pos__mascota img {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-height: 18rem;
+  object-fit: contain;
+  filter:
+    drop-shadow(0 1.2rem 1.6rem rgb(0 0 0 / 30%));
+}
+
+.configuracion-pos__presentacion > p {
+  max-width: 15rem;
+  margin: -1rem 0 0;
+  color: #dce8df;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.configuracion-pos__progreso-mini {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  color: #6e8377;
+  font-size: 0.62rem;
+}
+
+.configuracion-pos__progreso-mini > span {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: #284637;
+}
+
+.configuracion-pos__progreso-mini > span.activo {
+  background: #66df6c;
+  box-shadow: 0 0 0.8rem rgb(102 223 108 / 40%);
+}
+
+.configuracion-pos__progreso-mini b {
+  font-size: 0.58rem;
+}
+
+.configuracion-pos__contenido {
+  display: grid;
+  align-content: center;
+  gap: 1.5rem;
+  padding: clamp(2rem, 5vw, 4.5rem);
+}
+
+.configuracion-pos__contenido header {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.configuracion-pos__contenido h1 {
+  margin: 0;
+  color: #fff8e8;
+  font-family: var(--fuente-marca);
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1;
+}
+
+.configuracion-pos__contenido header p {
+  max-width: 31rem;
+  margin: 0;
+  color: #93a69b;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.configuracion-pos__formulario {
+  display: grid;
+  gap: 1rem;
+}
+
+.configuracion-pos__formulario label {
+  display: grid;
+  gap: 0.45rem;
+  color: #e8f2eb;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.configuracion-pos__formulario input {
+  width: 100%;
+  min-height: 3.25rem;
+  padding: 0 1rem;
+  border: 1px solid rgb(90 189 100 / 28%);
+  border-radius: 0.7rem;
+  color: #fff9ec;
+  background: rgb(1 15 10 / 66%);
+  outline: none;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.configuracion-pos__formulario input::placeholder {
+  color: #65766d;
+}
+
+.configuracion-pos__formulario input:focus {
+  border-color: #67da6d;
+  box-shadow: 0 0 0 3px rgb(85 206 91 / 9%);
+}
+
+.configuracion-pos__contrasena {
+  position: relative;
+}
+
+.configuracion-pos__contrasena input {
+  padding-right: 3rem;
+}
+
+.configuracion-pos__ver-contrasena {
+  position: absolute;
+  top: 50%;
+  right: 0.65rem;
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  min-height: 0;
+  padding: 0;
+  place-items: center;
+  transform: translateY(-50%);
+  border: 0;
+  color: #91a49a;
+  background: transparent;
+}
+
+.configuracion-pos__ver-contrasena:hover {
+  color: #6ce172;
+  background: transparent;
+}
+
+.configuracion-pos__ver-contrasena svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.configuracion-pos__principal {
+  display: flex;
+  min-height: 3.3rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.35rem;
+  padding: 0 1.2rem;
+  border: 0;
+  border-radius: 0.7rem;
+  color: #06140d;
+  background:
+    linear-gradient(
+      90deg,
+      #4caf45,
+      #61ce59
+    );
+  font-weight: 850;
+  box-shadow: 0 0.8rem 2rem rgb(65 190 73 / 10%);
+}
+
+.configuracion-pos__principal:not(:disabled):hover {
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+}
+
+.configuracion-pos__nota {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding-top: 0.4rem;
+  color: #71847a;
+  font-size: 0.65rem;
+}
+
+.configuracion-pos__nota svg {
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 auto;
+  color: #6bdc70;
+}
+
+@media (max-width: 760px) {
+  .configuracion-pos__panel--login {
+    grid-template-columns: 1fr;
+  }
+
+  .configuracion-pos__presentacion {
+    min-height: 20rem;
+    border-right: 0;
+    border-bottom: 1px solid rgb(108 181 133 / 13%);
+  }
+
+  .configuracion-pos__mascota {
+    width: 12rem;
+    min-height: 12rem;
+  }
+
+  .configuracion-pos__mascota img {
+    max-height: 12rem;
+  }
+
+  .configuracion-pos__contenido {
+    padding: 2rem;
+  }
+}
+/* ==========================================================
+   PANTALLA 1 AJUSTES FINALES
+   ========================================================== */
+
+.configuracion-pos__mascota {
+  width: min(100%, 24rem);
+  min-height: 25rem;
+}
+
+.configuracion-pos__mascota img {
+  max-height: 25rem;
+}
+
+.configuracion-pos__pasos span {
+  width: 2.15rem;
+  height: 2.15rem;
+  font-size: 0.78rem;
+}
+
+.configuracion-pos__pasos i {
+  width: 3.25rem;
+}
+
+.configuracion-pos__progreso > p {
+  font-size: 0.82rem;
+}
+
+.configuracion-pos__contenido header {
+  max-width: 34rem;
+}
+
+.configuracion-pos__contenido h2 {
+  max-width: 31rem;
+  font-size: clamp(1.9rem, 2.8vw, 2.45rem);
+  line-height: 1.08;
+}
+
+@media (max-width: 900px) {
+  .configuracion-pos__mascota {
+    width: 17rem;
+    min-height: 18rem;
+  }
+
+  .configuracion-pos__mascota img {
+    max-height: 18rem;
+  }
+}
+/* ==========================================================
+   PROGRESO CONFIGURACION FINAL
+   ========================================================== */
+
+.configuracion-pos__progreso-final {
+  display: grid;
+  justify-items: center;
+  gap: 0.8rem;
+  margin-top: 0.6rem;
+}
+
+.configuracion-pos__pasos-final {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.configuracion-pos__paso {
+  display: grid !important;
+  width: 2.35rem !important;
+  height: 2.35rem !important;
+  min-width: 2.35rem;
+  place-items: center;
+  border: 1px solid #377544;
+  border-radius: 999px;
+  color: #72d779;
+  background: #061a11;
+  font-size: 0.82rem !important;
+  font-weight: 850;
+  line-height: 1 !important;
+}
+
+.configuracion-pos__paso--activo {
+  color: #06140d;
+  border-color: #68df6e;
+  background: #68df6e;
+  box-shadow:
+    0 0 0 4px rgb(104 223 110 / 7%),
+    0 0 1.2rem rgb(104 223 110 / 26%);
+}
+
+.configuracion-pos__linea-paso {
+  display: block !important;
+  width: 3.4rem;
+  height: 1px;
+  background: #2d6538;
+}
+
+.configuracion-pos__texto-paso {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  font-size: 0.84rem;
+}
+
+.configuracion-pos__texto-paso strong {
+  color: #6fe076;
+  font-weight: 800;
+}
+
+.configuracion-pos__texto-paso span {
+  color: #86998e;
+}
+/* ==========================================================
+   PANTALLA 1 MATCH REFERENCIA V3
+   Ajuste fino contra mockup aprobado
+   ========================================================== */
+
+
+/* ----------------------------------------------------------
+   PANEL GENERAL
+   ---------------------------------------------------------- */
+
+.configuracion-pos__panel {
+  width: min(100%, 73rem);
+  min-height: 40rem;
+}
+
+
+/* ----------------------------------------------------------
+   COLUMNA IZQUIERDA
+   ---------------------------------------------------------- */
+
+.configuracion-pos__presentacion {
+  align-content: center;
+  gap: 1rem;
+  padding:
+    2.5rem
+    2.75rem
+    2.25rem;
+}
+
+
+/* Logo más grande y CENTRADO */
+
+.configuracion-pos__marca {
+  position: static !important;
+  display: grid;
+  justify-items: center;
+  width: 100%;
+  margin: 0 0 0.25rem;
+  text-align: center;
+}
+
+.configuracion-pos__marca strong {
+  color: #fff9eb;
+  font-size: 1.75rem !important;
+  line-height: 1;
+}
+
+.configuracion-pos__marca strong span {
+  margin-left: 0.2rem;
+}
+
+.configuracion-pos__marca small {
+  margin-top: 0.35rem;
+  font-size: 0.68rem !important;
+}
+
+
+/* Regalón un poquito más contenido como referencia */
+
+.configuracion-pos__mascota {
+  width: min(100%, 21rem);
+  min-height: 20rem;
+  margin: 0;
+}
+
+.configuracion-pos__mascota img {
+  max-height: 20rem;
+}
+
+.configuracion-pos__halo {
+  width: 16.5rem;
+  height: 16.5rem;
+}
+
+
+/* Texto debajo de mascota */
+
+.configuracion-pos__presentacion > p {
+  max-width: 16rem;
+  margin: 0.15rem 0 0;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+
+/* ----------------------------------------------------------
+   COLUMNA DERECHA
+   ---------------------------------------------------------- */
+
+.configuracion-pos__contenido {
+  align-content: center;
+  gap: 1.4rem;
+  padding:
+    3.2rem
+    3.6rem;
+}
+
+
+/* Eyebrow naranja */
+
+.configuracion-pos__contenido .terminal-eyebrow {
+  margin-bottom: 0.1rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+}
+
+
+/* Título MUCHO más parecido a la referencia */
+
+.configuracion-pos__contenido h1,
+.configuracion-pos__contenido h2 {
+  max-width: none !important;
+  margin: 0;
+  color: #fff8e9;
+  font-family: var(--fuente-marca);
+  font-size: clamp(1.7rem, 2.3vw, 2.15rem) !important;
+  line-height: 1.08 !important;
+}
+
+
+/* Evitar el salto grande que tiene ahora */
+
+.configuracion-pos__contenido header {
+  max-width: 34rem;
+  gap: 0.55rem;
+}
+
+.configuracion-pos__contenido header p {
+  max-width: 30rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+
+/* ----------------------------------------------------------
+   FORMULARIO
+   ---------------------------------------------------------- */
+
+.configuracion-pos__formulario {
+  gap: 1rem;
+}
+
+.configuracion-pos__formulario label {
+  gap: 0.42rem;
+  font-size: 0.78rem;
+}
+
+.configuracion-pos__formulario input {
+  min-height: 3.3rem;
+  padding: 0 1rem;
+  font-size: 0.9rem;
+}
+
+
+/* ----------------------------------------------------------
+   BOTÓN PRINCIPAL
+   Texto centrado + flecha independiente
+   ---------------------------------------------------------- */
+
+.configuracion-pos__principal {
+  position: relative;
+  display: grid !important;
+  min-height: 3.55rem;
+  place-items: center;
+  margin-top: 0.35rem;
+  padding: 0 3.5rem !important;
+  border-radius: 0.7rem;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.configuracion-pos__principal > span:first-child {
+  justify-self: center;
+}
+
+.configuracion-pos__principal > span:last-child,
+.configuracion-pos__flecha {
+  position: absolute;
+  right: 1.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.35rem;
+}
+
+
+/* ----------------------------------------------------------
+   NOTA INFERIOR
+   ---------------------------------------------------------- */
+
+.configuracion-pos__nota {
+  margin-top: 0.15rem;
+  padding-top: 0.9rem;
+  font-size: 0.68rem;
+}
+
+
+/* ----------------------------------------------------------
+   RESPONSIVE
+   ---------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .configuracion-pos__marca {
+    margin-bottom: 0;
+  }
+
+  .configuracion-pos__mascota {
+    width: 16rem;
+    min-height: 16rem;
+  }
+
+  .configuracion-pos__mascota img {
+    max-height: 16rem;
+  }
+}
+/* ==========================================================
+   BOTON LOGIN CENTRADO DEFINITIVO
+   ========================================================== */
+
+.configuracion-pos
+.configuracion-pos__principal {
+  position: relative !important;
+  display: block !important;
+  width: 100% !important;
+  min-height: 3.7rem !important;
+  padding: 0 4rem !important;
+  text-align: center !important;
+}
+
+.configuracion-pos
+.configuracion-pos__principal
+> span:first-child {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  width: max-content !important;
+  transform: translate(-50%, -50%) !important;
+  text-align: center !important;
+}
+
+.configuracion-pos
+.configuracion-pos__principal
+> span:last-child {
+  position: absolute !important;
+  top: 50% !important;
+  right: 1.35rem !important;
+  left: auto !important;
+  transform: translateY(-50%) !important;
+  font-size: 1.4rem !important;
+  line-height: 1 !important;
+}
+
+/* ==========================================================
+   BOTON LOGIN TEXTO FINAL
+   ========================================================== */
+
+.configuracion-pos
+.configuracion-pos__principal
+> span:first-child {
+  font-size: 1.05rem !important;
+  font-weight: 850 !important;
+}
+
+.configuracion-pos
+.configuracion-pos__principal
+> span:last-child {
+  font-size: 1.5rem !important;
+}
+
+/* ==========================================================
+   BOTON LOGIN BLANCO FINAL
+   ========================================================== */
+
+.configuracion-pos
+.configuracion-pos__principal {
+  color: #ffffff !important;
+}
+
+.configuracion-pos
+.configuracion-pos__principal
+> span:first-child {
+  color: #ffffff !important;
+  font-size: 1.05rem !important;
+  font-weight: 850 !important;
+}
+
+.configuracion-pos
+.configuracion-pos__principal
+> span:last-child {
+  color: #ffffff !important;
+  font-size: 1.5rem !important;
+}
+
+/* ==========================================================
+   BOTON LOGIN VERDE FINAL
+   ========================================================== */
+
+.configuracion-pos
+.configuracion-pos__principal {
+  color: #ffffff !important;
+  background:
+    linear-gradient(
+      90deg,
+      #55c752,
+      #63d25f
+    ) !important;
+  box-shadow:
+    0 0.75rem 1.8rem rgb(80 201 86 / 14%) !important;
+}
+
+.configuracion-pos
+.configuracion-pos__principal:not(:disabled):hover {
+  background:
+    linear-gradient(
+      90deg,
+      #5dce59,
+      #6adb66
+    ) !important;
+  box-shadow:
+    0 0.9rem 2rem rgb(83 207 91 / 20%) !important;
+  transform: translateY(-1px);
+}
+
+.configuracion-pos
+.configuracion-pos__principal
+> span:first-child {
+  color: #ffffff !important;
+}
+
+.configuracion-pos
+.configuracion-pos__principal
+> span:last-child {
+  color: #ffffff !important;
+}
+
+/* ==========================================================
+   BOTON LOGIN VERDE SOBRIO
+   ========================================================== */
+
+.configuracion-pos
+.configuracion-pos__principal {
+  color: #ffffff !important;
+  background:
+    linear-gradient(
+      90deg,
+      #4caf45,
+      #58c451
+    ) !important;
+  box-shadow:
+    0 0.45rem 1.1rem rgb(71 166 77 / 8%) !important;
+}
+
+.configuracion-pos
+.configuracion-pos__principal:not(:disabled):hover {
+  background:
+    linear-gradient(
+      90deg,
+      #50b849,
+      #5ac653
+    ) !important;
+  box-shadow:
+    0 0.55rem 1.2rem rgb(71 166 77 / 10%) !important;
+  transform: translateY(-1px);
+}
+
+.configuracion-pos
+.configuracion-pos__principal
+> span:first-child,
+.configuracion-pos
+.configuracion-pos__principal
+> span:last-child {
+  color: #ffffff !important;
+}
+
+/* ==========================================================
+   PANTALLA 1 TIPOGRAFIA FINAL
+   ========================================================== */
+
+.configuracion-pos__titulo-pagina {
+  font-size: clamp(2.2rem, 3.4vw, 3rem) !important;
+}
+
+.configuracion-pos__marca small {
+  font-size: 0.76rem !important;
+}
+
+/* ==========================================================
+   CONFIGURACION POS PANTALLA 2
+   ========================================================== */
+
+.configuracion-negocio {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  background:
+    radial-gradient(
+      circle at 50% 20%,
+      rgb(28 94 52 / 9%),
+      transparent 34rem
+    ),
+    #00120c;
+  color: #fff9eb;
+}
+
+.configuracion-negocio__panel {
+  width: min(94vw, 86rem);
+  min-height: min(84vh, 46rem);
+  overflow: hidden;
+  border: 1px solid #245c39;
+  border-radius: 1.55rem;
+  background:
+    linear-gradient(
+      135deg,
+      rgb(3 31 20 / 98%),
+      rgb(0 20 13 / 99%)
+    );
+  box-shadow:
+    0 1.8rem 5rem rgb(0 0 0 / 22%);
+}
+
+.configuracion-negocio__cabecera {
+  min-height: 7.6rem;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 2rem;
+  padding: 1.6rem 2.8rem;
+}
+
+.configuracion-negocio__marca {
+  display: grid;
+  justify-self: start;
+}
+
+.configuracion-negocio__marca strong {
+  font-family: var(--fuente-marca);
+  font-size: 1.6rem;
+  line-height: 1;
+  color: #fff9eb;
+}
+
+.configuracion-negocio__marca strong span {
+  margin-left: 0.2rem;
+  color: #ff6427;
+}
+
+.configuracion-negocio__marca small {
+  margin-top: 0.38rem;
+  color: #ff6427;
+  font-size: 0.66rem;
+  font-weight: 750;
+}
+
+.configuracion-negocio__etiqueta {
+  justify-self: end;
+  color: #fff9eb;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.configuracion-negocio__progreso {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.configuracion-negocio__paso {
+  position: relative;
+  display: grid;
+  width: 2.55rem;
+  height: 2.55rem;
+  place-items: center;
+  flex: 0 0 auto;
+  border: 1px solid #58cf60;
+  border-radius: 999px;
+  background: #031d12;
+  color: #66dc6c;
+  font-size: 0.9rem;
+  font-weight: 850;
+}
+
+.configuracion-negocio__paso--completado,
+.configuracion-negocio__paso--activo {
+  border-color: #64dc69;
+  background: #64dc69;
+  color: #06200f;
+}
+
+.configuracion-negocio__paso--activo {
+  box-shadow:
+    0 0 0 0.35rem rgb(100 220 105 / 6%),
+    0 0 1.5rem rgb(100 220 105 / 25%);
+}
+
+.configuracion-negocio__paso i {
+  position: absolute;
+  top: -0.45rem;
+  right: -0.35rem;
+  display: grid;
+  width: 1.15rem;
+  height: 1.15rem;
+  place-items: center;
+  border-radius: 999px;
+  background: #67df6d;
+  color: #06200f;
+  font-size: 0.65rem;
+  font-style: normal;
+}
+
+.configuracion-negocio__progreso b {
+  display: block;
+  width: 5.4rem;
+  height: 1px;
+  background: #61d667;
+}
+
+.configuracion-negocio__separador {
+  height: 1px;
+  margin: 0 2.8rem;
+  background: rgb(88 139 104 / 30%);
+}
+
+.configuracion-negocio__cuerpo {
+  min-height: 35rem;
+  display: flex;
+  flex-direction: column;
+  padding: 3.2rem 4rem 2.7rem;
+}
+
+.configuracion-negocio__titulo h1 {
+  margin: 0;
+  font-family: var(--fuente-marca);
+  font-size: clamp(2rem, 3vw, 2.7rem);
+  line-height: 1;
+  color: #fff9eb;
+}
+
+.configuracion-negocio__titulo p {
+  margin: 0.8rem 0 0;
+  color: #a7b8ae;
+  font-size: 1.15rem;
+}
+
+.configuracion-negocio__selector {
+  position: relative;
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr) 2rem;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+  min-height: 10.5rem;
+  margin-top: 2.8rem;
+  padding: 1.4rem 2.1rem;
+  border: 1px solid #356f43;
+  border-radius: 1.15rem;
+  background:
+    linear-gradient(
+      90deg,
+      rgb(9 36 24 / 86%),
+      rgb(4 25 17 / 86%)
+    );
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.configuracion-negocio__selector:hover {
+  border-color: #55a864;
+  box-shadow:
+    0 0.8rem 2rem rgb(0 0 0 / 12%);
+  transform: translateY(-1px);
+}
+
+.configuracion-negocio__icono {
+  display: grid;
+  width: 6.5rem;
+  height: 6.5rem;
+  place-items: center;
+  border: 1px solid rgb(62 114 76 / 34%);
+  border-radius: 1rem;
+  background: rgb(3 27 18 / 72%);
+}
+
+.configuracion-negocio__icono img {
+  width: 5.2rem;
+  height: 5.2rem;
+  object-fit: contain;
+}
+
+.configuracion-negocio__datos {
+  min-width: 0;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.configuracion-negocio__datos select {
+  width: 100%;
+  min-width: 0;
+  appearance: none;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #fff9eb;
+  font-family: var(--fuente-marca);
+  font-size: clamp(1.45rem, 2vw, 1.8rem);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.configuracion-negocio__datos select option {
+  background: #052116;
+  color: #fff9eb;
+  font-family: var(--fuente-texto);
+}
+
+.configuracion-negocio__datos small {
+  color: #8ca097;
+  font-size: 0.88rem;
+}
+
+.configuracion-negocio__chevron {
+  width: 1.8rem;
+  height: 1.8rem;
+  color: #fff9eb;
+  pointer-events: none;
+}
+
+.configuracion-negocio__acciones {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-top: auto;
+  padding-top: 3rem;
+}
+
+.configuracion-negocio__acciones button {
+  min-height: 4rem;
+  border-radius: 0.85rem;
+  font-family: var(--fuente-texto);
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    transform 150ms ease,
+    border-color 150ms ease,
+    background 150ms ease;
+}
+
+.configuracion-negocio__volver {
+  min-width: 17rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1.7rem;
+  padding: 0 2.1rem;
+  border: 1px solid #3b7049;
+  background: rgb(6 28 19 / 72%);
+  color: #fff;
+}
+
+.configuracion-negocio__volver span {
+  font-size: 1.7rem;
+  font-weight: 400;
+}
+
+.configuracion-negocio__continuar {
+  position: relative;
+  min-width: 20rem;
+  display: grid;
+  place-items: center;
+  padding: 0 4rem;
+  border: 1px solid #63cb60;
+  background:
+    linear-gradient(
+      90deg,
+      #4caf45,
+      #58c451
+    );
+  color: #fff;
+}
+
+.configuracion-negocio__continuar span:first-child {
+  color: #fff;
+  font-size: 1.05rem;
+}
+
+.configuracion-negocio__continuar span:last-child {
+  position: absolute;
+  top: 50%;
+  right: 1.7rem;
+  color: #fff;
+  font-size: 1.65rem;
+  transform: translateY(-50%);
+}
+
+.configuracion-negocio__continuar:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.configuracion-negocio__acciones button:not(:disabled):hover {
+  transform: translateY(-1px);
+}
+
+.configuracion-negocio__error {
+  margin: 1.5rem 0 0;
+  padding: 0.9rem 1rem;
+  border: 1px solid rgb(255 102 82 / 35%);
+  border-radius: 0.7rem;
+  background: rgb(103 24 18 / 18%);
+  color: #ffaaa0;
+}
+
+.configuracion-negocio__cargando {
+  display: grid;
+  min-height: 10.5rem;
+  place-items: center;
+  margin-top: 2.8rem;
+  border: 1px solid #315f3d;
+  border-radius: 1.15rem;
+  color: #95aa9e;
+}
+
+@media (max-width: 900px) {
+  .configuracion-negocio {
+    padding: 1rem;
+  }
+
+  .configuracion-negocio__cabecera {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 1.2rem;
+    padding: 1.8rem;
+    text-align: center;
+  }
+
+  .configuracion-negocio__marca,
+  .configuracion-negocio__etiqueta {
+    justify-self: center;
+  }
+
+  .configuracion-negocio__cuerpo {
+    padding: 2.2rem 1.5rem;
+  }
+
+  .configuracion-negocio__selector {
+    grid-template-columns: 5rem minmax(0, 1fr) 1.5rem;
+    gap: 1rem;
+    min-height: 8rem;
+    padding: 1rem;
+  }
+
+  .configuracion-negocio__icono {
+    width: 4.8rem;
+    height: 4.8rem;
+  }
+
+  .configuracion-negocio__icono img {
+    width: 4rem;
+    height: 4rem;
+  }
+
+  .configuracion-negocio__acciones {
+    align-items: stretch;
+    flex-direction: column-reverse;
+  }
+
+  .configuracion-negocio__acciones button {
+    width: 100%;
+    min-width: 0;
+  }
+}
+/* ==========================================================
+   PANTALLA 2 NEGOCIO + SUCURSAL V2
+   ========================================================== */
+
+.configuracion-negocio__seccion {
+  margin-top: 2.1rem;
+}
+
+.configuracion-negocio__seccion h2 {
+  margin: 0 0 1rem;
+  color: #66db6a;
+  font-family: var(--fuente-texto);
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.configuracion-negocio__negocios {
+  display: grid;
+  grid-template-columns:
+    repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1rem;
+}
+
+.configuracion-negocio__tarjeta-negocio {
+  position: relative;
+  min-height: 8rem;
+  display: grid;
+  grid-template-columns:
+    1.5rem
+    4.5rem
+    minmax(0, 1fr);
+  align-items: center;
+  gap: 1rem;
+  padding: 1.2rem;
+  border: 1px solid #315d3c;
+  border-radius: 1rem;
+  background: rgb(4 28 18 / 68%);
+  color: #fff9eb;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    transform 160ms ease;
+}
+
+.configuracion-negocio__tarjeta-negocio:hover {
+  border-color: #4c985b;
+  transform: translateY(-1px);
+}
+
+.configuracion-negocio__tarjeta-negocio--activa {
+  border-color: #65d968;
+  background:
+    linear-gradient(
+      135deg,
+      rgb(20 70 38 / 30%),
+      rgb(5 31 20 / 80%)
+    );
+  box-shadow:
+    0 0 1.5rem rgb(78 197 88 / 6%);
+}
+
+.configuracion-negocio__tarjeta-negocio img {
+  width: 4.2rem;
+  height: 4.2rem;
+  object-fit: contain;
+}
+
+.configuracion-negocio__radio {
+  width: 1.4rem;
+  height: 1.4rem;
+  border: 1px solid #477251;
+  border-radius: 999px;
+  background: #052016;
+}
+
+.configuracion-negocio__radio--activo {
+  border: 0.35rem solid #62d968;
+  background: #0a301c;
+  box-shadow:
+    0 0 0 0.18rem rgb(98 217 104 / 13%);
+}
+
+.configuracion-negocio__info-negocio {
+  min-width: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.configuracion-negocio__info-negocio strong {
+  overflow: hidden;
+  color: #fff9eb;
+  font-family: var(--fuente-marca);
+  font-size: 1.25rem;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+}
+
+.configuracion-negocio__info-negocio small {
+  color: #9cad9f;
+  font-size: 0.78rem;
+}
+
+
+/* SUCURSALES */
+
+.configuracion-negocio__sucursales {
+  overflow: hidden;
+  border: 1px solid #315d3c;
+  border-radius: 1rem;
+  background: rgb(4 28 18 / 58%);
+}
+
+.configuracion-negocio__sucursal {
+  width: 100%;
+  min-height: 6.2rem;
+  display: grid;
+  grid-template-columns:
+    1.5rem
+    2.9rem
+    minmax(0, 1fr)
+    auto
+    1.2rem;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.3rem;
+  border: 0;
+  border-bottom: 1px solid rgb(69 107 78 / 32%);
+  background: transparent;
+  color: #fff9eb;
+  text-align: left;
+  cursor: pointer;
+}
+
+.configuracion-negocio__sucursal:last-child {
+  border-bottom: 0;
+}
+
+.configuracion-negocio__sucursal:hover {
+  background: rgb(19 59 34 / 18%);
+}
+
+.configuracion-negocio__sucursal--activa {
+  background:
+    linear-gradient(
+      90deg,
+      rgb(20 71 39 / 22%),
+      transparent
+    );
+}
+
+.configuracion-negocio__icono-sucursal {
+  display: grid;
+  width: 2.6rem;
+  height: 2.6rem;
+  place-items: center;
+  border-radius: 0.6rem;
+  background: rgb(60 176 76 / 8%);
+  color: #63d769;
+}
+
+.configuracion-negocio__icono-sucursal svg {
+  width: 1.65rem;
+  height: 1.65rem;
+}
+
+.configuracion-negocio__info-sucursal {
+  min-width: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.configuracion-negocio__info-sucursal strong {
+  color: #fff9eb;
+  font-family: var(--fuente-marca);
+  font-size: 1.08rem;
+}
+
+.configuracion-negocio__info-sucursal small {
+  overflow: hidden;
+  color: #9cad9f;
+  font-size: 0.78rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.configuracion-negocio__cantidad-cajas {
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  background: rgb(60 180 76 / 10%);
+  color: #64d96a;
+  font-size: 0.78rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.configuracion-negocio__flecha-sucursal {
+  color: #fff9eb;
+  font-size: 1.7rem;
+  font-weight: 300;
+}
+
+.configuracion-negocio__sin-sucursales {
+  min-height: 5rem;
+  display: grid;
+  place-items: center;
+  border: 1px dashed #365e40;
+  border-radius: 0.9rem;
+  color: #91a398;
+}
+
+
+/* AVISO */
+
+.configuracion-negocio__aviso {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-top: 1.8rem;
+  padding: 0.9rem 1.1rem;
+  border: 1px dashed #315c3b;
+  border-radius: 0.85rem;
+  background: rgb(5 34 21 / 48%);
+  color: #99aaa0;
+}
+
+.configuracion-negocio__aviso > span {
+  display: grid;
+  width: 1.7rem;
+  height: 1.7rem;
+  place-items: center;
+  flex: 0 0 auto;
+  border: 1px solid #63d769;
+  border-radius: 999px;
+  color: #63d769;
+  font-weight: 800;
+  font-style: normal;
+}
+
+.configuracion-negocio__aviso p {
+  margin: 0;
+  font-size: 0.76rem;
+}
+
+
+/* Un poco más compacto para que quepa bien
+   negocio + sucursal + acciones. */
+
+.configuracion-negocio__cuerpo {
+  padding-top: 2.35rem;
+  padding-bottom: 2rem;
+}
+
+.configuracion-negocio__acciones {
+  padding-top: 1.9rem;
+}
+
+
+@media (max-width: 760px) {
+  .configuracion-negocio__sucursal {
+    grid-template-columns:
+      1.4rem
+      2.6rem
+      minmax(0, 1fr)
+      1rem;
+  }
+
+  .configuracion-negocio__cantidad-cajas {
+    display: none;
+  }
+}
+/* ==========================================================
+   CONFIGURACION POS PANTALLA 3
+   VINCULAR CAJA
+   ========================================================== */
+
+.configuracion-caja {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  background:
+    radial-gradient(
+      circle at 50% 16%,
+      rgb(29 96 54 / 10%),
+      transparent 34rem
+    ),
+    #00120c;
+  color: #fff9eb;
+}
+
+.configuracion-caja__panel {
+  width: min(94vw, 86rem);
+  min-height: min(88vh, 49rem);
+  overflow: hidden;
+  border: 1px solid #245c39;
+  border-radius: 1.55rem;
+  background:
+    linear-gradient(
+      135deg,
+      rgb(3 31 20 / 98%),
+      rgb(0 20 13 / 99%)
+    );
+  box-shadow:
+    0 1.8rem 5rem rgb(0 0 0 / 24%);
+}
+
+
+/* ==========================================================
+   CABECERA
+   ========================================================== */
+
+.configuracion-caja__cabecera {
+  min-height: 7.6rem;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 2rem;
+  padding: 1.6rem 2.8rem;
+}
+
+.configuracion-caja__marca {
+  display: grid;
+  justify-self: start;
+}
+
+.configuracion-caja__marca strong {
+  font-family: var(--fuente-marca);
+  font-size: 1.6rem;
+  line-height: 1;
+  color: #fff9eb;
+}
+
+.configuracion-caja__marca strong span {
+  margin-left: 0.2rem;
+  color: #ff6427;
+}
+
+.configuracion-caja__marca small {
+  margin-top: 0.38rem;
+  color: #ff6427;
+  font-size: 0.66rem;
+  font-weight: 750;
+}
+
+.configuracion-caja__etiqueta {
+  justify-self: end;
+  color: #fff9eb;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.configuracion-caja__separador {
+  height: 1px;
+  margin: 0 2.8rem;
+  background: rgb(88 139 104 / 30%);
+}
+
+
+/* ==========================================================
+   PROGRESO 1 — 2 — 3
+   ========================================================== */
+
+.configuracion-caja__progreso {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.configuracion-caja__paso {
+  position: relative;
+  display: grid;
+  width: 2.55rem;
+  height: 2.55rem;
+  place-items: center;
+  flex: 0 0 auto;
+  border: 1px solid #58cf60;
+  border-radius: 999px;
+  background: #031d12;
+  color: #66dc6c;
+  font-size: 0.9rem;
+  font-weight: 850;
+}
+
+.configuracion-caja__paso--completado,
+.configuracion-caja__paso--activo {
+  border-color: #64dc69;
+  background: #64dc69;
+  color: #06200f;
+}
+
+.configuracion-caja__paso--activo {
+  box-shadow:
+    0 0 0 0.35rem rgb(100 220 105 / 7%),
+    0 0 1.5rem rgb(100 220 105 / 24%);
+}
+
+.configuracion-caja__paso i {
+  position: absolute;
+  top: -0.45rem;
+  right: -0.35rem;
+  display: grid;
+  width: 1.15rem;
+  height: 1.15rem;
+  place-items: center;
+  border-radius: 999px;
+  background: #67df6d;
+  color: #06200f;
+  font-size: 0.65rem;
+  font-style: normal;
+}
+
+.configuracion-caja__progreso b {
+  display: block;
+  width: 5.4rem;
+  height: 1px;
+  background: #61d667;
+}
+
+
+/* ==========================================================
+   CONTENIDO
+   ========================================================== */
+
+.configuracion-caja__cuerpo {
+  min-height: 39rem;
+  display: flex;
+  flex-direction: column;
+  padding: 2.5rem 4rem 2.2rem;
+}
+
+.configuracion-caja__titulo h1 {
+  margin: 0;
+  font-family: var(--fuente-marca);
+  font-size: clamp(2rem, 3vw, 2.75rem);
+  line-height: 1;
+  color: #fff9eb;
+}
+
+.configuracion-caja__titulo p {
+  margin: 0.75rem 0 0;
+  color: #a7b8ae;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+
+/* ==========================================================
+   NEGOCIO > SUCURSAL
+   ========================================================== */
+
+.configuracion-caja__contexto {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-top: 1.7rem;
+  padding: 0.85rem 1.1rem;
+  border: 1px solid #315e3d;
+  border-radius: 0.85rem;
+  background: rgb(6 31 20 / 62%);
+}
+
+.configuracion-caja__contexto > span {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.configuracion-caja__contexto small {
+  color: #7f9588;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.configuracion-caja__contexto strong {
+  color: #fff9eb;
+  font-size: 0.9rem;
+}
+
+.configuracion-caja__contexto > i {
+  color: #5fd066;
+  font-size: 1.5rem;
+  font-style: normal;
+}
+
+
+/* ==========================================================
+   LISTA DE CAJAS
+   ========================================================== */
+
+.configuracion-caja__seccion {
+  margin-top: 1.8rem;
+}
+
+.configuracion-caja__seccion > h2 {
+  margin: 0 0 0.85rem;
+  color: #65d96a;
+  font-family: var(--fuente-texto);
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.configuracion-caja__lista {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.configuracion-caja__fila {
+  min-height: 5.8rem;
+  display: grid;
+  grid-template-columns:
+    2rem
+    3rem
+    minmax(12rem, 1fr)
+    auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 1.15rem;
+  border: 1px solid #325f3e;
+  border-radius: 0.95rem;
+  background:
+    linear-gradient(
+      90deg,
+      rgb(6 33 21 / 77%),
+      rgb(3 25 17 / 78%)
+    );
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    transform 160ms ease,
+    opacity 160ms ease;
+}
+
+.configuracion-caja__fila:hover {
+  border-color: #438651;
+}
+
+.configuracion-caja__fila--seleccionada {
+  border-color: #60d367;
+  background:
+    linear-gradient(
+      90deg,
+      rgb(17 63 34 / 43%),
+      rgb(4 29 19 / 88%)
+    );
+  box-shadow:
+    0 0 1.6rem rgb(91 205 99 / 7%);
+}
+
+.configuracion-caja__fila--ocupada {
+  border-color: #364d3d;
+  opacity: 0.67;
+}
+
+
+/* ==========================================================
+   RADIO
+   ========================================================== */
+
+.configuracion-caja__seleccion {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.configuracion-caja__seleccion:disabled {
+  cursor: not-allowed;
+}
+
+.configuracion-caja__radio {
+  width: 1.4rem;
+  height: 1.4rem;
+  border: 1px solid #477251;
+  border-radius: 999px;
+  background: #052016;
+}
+
+.configuracion-caja__radio--activo {
+  border: 0.35rem solid #62d968;
+  background: #0a301c;
+  box-shadow:
+    0 0 0 0.18rem rgb(98 217 104 / 13%);
+}
+
+
+/* ==========================================================
+   ICONO CAJA
+   ========================================================== */
+
+.configuracion-caja__icono {
+  display: grid;
+  width: 2.8rem;
+  height: 2.8rem;
+  place-items: center;
+  border: 1px solid rgb(77 139 88 / 30%);
+  border-radius: 0.65rem;
+  background: rgb(24 78 42 / 18%);
+  color: #63d769;
+}
+
+.configuracion-caja__icono svg {
+  width: 1.65rem;
+  height: 1.65rem;
+}
+
+
+/* ==========================================================
+   NOMBRE EDITABLE
+   ========================================================== */
+
+.configuracion-caja__nombre {
+  min-width: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.configuracion-caja__nombre small {
+  color: #81968a;
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+
+.configuracion-caja__nombre input,
+.configuracion-caja__nueva input {
+  width: 100%;
+  min-height: 2.65rem;
+  border: 1px solid transparent;
+  border-radius: 0.55rem;
+  outline: 0;
+  background: transparent;
+  color: #fff9eb;
+  font-family: var(--fuente-texto);
+  font-size: 0.96rem;
+  font-weight: 750;
+  transition:
+    border-color 150ms ease,
+    background 150ms ease;
+}
+
+.configuracion-caja__nombre input {
+  padding: 0 0.65rem;
+  margin-left: -0.65rem;
+}
+
+.configuracion-caja__nombre input:hover,
+.configuracion-caja__nombre input:focus {
+  border-color: #3f7b4b;
+  background: rgb(10 42 27 / 58%);
+}
+
+.configuracion-caja__nombre input:focus {
+  border-color: #5ac662;
+}
+
+
+/* ==========================================================
+   ESTADOS
+   ========================================================== */
+
+.configuracion-caja__estado {
+  justify-self: end;
+  padding: 0.48rem 0.8rem;
+  border: 1px solid rgb(86 164 97 / 15%);
+  border-radius: 999px;
+  background: rgb(64 150 79 / 8%);
+  color: #78d97e;
+  font-size: 0.72rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.configuracion-caja__estado--seleccionada {
+  border-color: rgb(100 217 105 / 25%);
+  background: rgb(69 168 79 / 14%);
+  color: #75df79;
+}
+
+.configuracion-caja__estado--ocupada {
+  border-color: rgb(150 159 151 / 14%);
+  background: rgb(117 127 119 / 8%);
+  color: #97a49b;
+}
+
+
+/* ==========================================================
+   SIN CAJAS
+   ========================================================== */
+
+.configuracion-caja__vacia {
+  min-height: 5.5rem;
+  display: grid;
+  place-items: center;
+  margin-bottom: 0.8rem;
+  border: 1px dashed #365e40;
+  border-radius: 0.9rem;
+  color: #91a398;
+}
+
+
+/* ==========================================================
+   AGREGAR NUEVA CAJA
+   ========================================================== */
+
+.configuracion-caja__agregar {
+  width: fit-content;
+  min-height: 2.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-top: 1rem;
+  padding: 0 1rem;
+  border: 1px solid #386c45;
+  border-radius: 0.7rem;
+  background: rgb(7 32 21 / 56%);
+  color: #b8c7bc;
+  font-family: var(--fuente-texto);
+  font-size: 0.8rem;
+  font-weight: 750;
+  cursor: pointer;
+  transition:
+    color 150ms ease,
+    border-color 150ms ease,
+    background 150ms ease;
+}
+
+.configuracion-caja__agregar span {
+  color: #63d769;
+  font-size: 1.15rem;
+}
+
+.configuracion-caja__agregar:hover {
+  border-color: #55a962;
+  background: rgb(16 56 32 / 42%);
+  color: #fff9eb;
+}
+
+
+/* ==========================================================
+   CREAR NUEVA CAJA
+   ========================================================== */
+
+.configuracion-caja__nueva {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    auto
+    auto;
+  align-items: end;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid #4c9559;
+  border-radius: 0.85rem;
+  background: rgb(10 45 28 / 58%);
+}
+
+.configuracion-caja__nueva > div {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.configuracion-caja__nueva small {
+  color: #8fa194;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.configuracion-caja__nueva input {
+  min-height: 3rem;
+  padding: 0 0.9rem;
+  border-color: #356b42;
+  background: #041e14;
+  font-weight: 600;
+}
+
+.configuracion-caja__nueva input:focus {
+  border-color: #5bca62;
+}
+
+.configuracion-caja__guardar-nueva,
+.configuracion-caja__cancelar-nueva {
+  min-height: 3rem;
+  padding: 0 1.2rem;
+  border-radius: 0.65rem;
+  font-family: var(--fuente-texto);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.configuracion-caja__guardar-nueva {
+  border: 1px solid #58c65e;
+  background: #4caf45;
+  color: #fff;
+}
+
+.configuracion-caja__cancelar-nueva {
+  border: 1px solid #40684a;
+  background: transparent;
+  color: #a9b8ae;
+}
+
+.configuracion-caja__guardar-nueva:disabled,
+.configuracion-caja__cancelar-nueva:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+
+/* ==========================================================
+   AVISO
+   ========================================================== */
+
+.configuracion-caja__aviso {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-top: 1.25rem;
+  padding: 0.85rem 1rem;
+  border: 1px dashed #315c3b;
+  border-radius: 0.8rem;
+  background: rgb(5 34 21 / 48%);
+  color: #99aaa0;
+}
+
+.configuracion-caja__aviso > span {
+  display: grid;
+  width: 1.65rem;
+  height: 1.65rem;
+  place-items: center;
+  flex: 0 0 auto;
+  border: 1px solid #63d769;
+  border-radius: 999px;
+  color: #63d769;
+  font-weight: 800;
+}
+
+.configuracion-caja__aviso p {
+  margin: 0;
+  font-size: 0.72rem;
+  line-height: 1.45;
+}
+
+
+/* ==========================================================
+   ERROR
+   ========================================================== */
+
+.configuracion-caja__error {
+  margin: 1rem 0 0;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgb(255 102 82 / 35%);
+  border-radius: 0.7rem;
+  background: rgb(103 24 18 / 18%);
+  color: #ffaaa0;
+  font-size: 0.82rem;
+}
+
+
+/* ==========================================================
+   ACCIONES INFERIORES
+   ========================================================== */
+
+.configuracion-caja__acciones {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-top: auto;
+  padding-top: 1.8rem;
+}
+
+.configuracion-caja__acciones button {
+  min-height: 3.8rem;
+  border-radius: 0.8rem;
+  font-family: var(--fuente-texto);
+  font-size: 0.95rem;
+  font-weight: 800;
+  transition:
+    transform 150ms ease,
+    border-color 150ms ease,
+    background 150ms ease;
+}
+
+.configuracion-caja__volver {
+  min-width: 16rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1.6rem;
+  padding: 0 2rem;
+  border: 1px solid #3b7049;
+  background: rgb(6 28 19 / 72%);
+  color: #fff;
+  cursor: pointer;
+}
+
+.configuracion-caja__volver > span {
+  font-size: 1.6rem;
+  font-weight: 400;
+}
+
+.configuracion-caja__vincular {
+  position: relative;
+  min-width: 21rem;
+  display: grid;
+  place-items: center;
+  padding: 0 4rem;
+  border: 1px solid #57bd58;
+  background:
+    linear-gradient(
+      90deg,
+      #4caf45,
+      #58c451
+    );
+  color: #fff;
+  cursor: pointer;
+  box-shadow:
+    0 0.45rem 1.1rem rgb(71 166 77 / 8%);
+}
+
+.configuracion-caja__vincular > span:first-child {
+  color: #fff;
+  font-size: 1rem;
+}
+
+.configuracion-caja__vincular > span:last-child {
+  position: absolute;
+  top: 50%;
+  right: 1.6rem;
+  color: #fff;
+  font-size: 1.55rem;
+  transform: translateY(-50%);
+}
+
+.configuracion-caja__acciones button:not(:disabled):hover {
+  transform: translateY(-1px);
+}
+
+.configuracion-caja__vincular:not(:disabled):hover {
+  background:
+    linear-gradient(
+      90deg,
+      #50b849,
+      #5ac653
+    );
+}
+
+.configuracion-caja__acciones button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+
+/* ==========================================================
+   RESPONSIVE
+   ========================================================== */
+
+@media (max-width: 900px) {
+  .configuracion-caja {
+    padding: 1rem;
+  }
+
+  .configuracion-caja__cabecera {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 1.2rem;
+    padding: 1.8rem;
+    text-align: center;
+  }
+
+  .configuracion-caja__marca,
+  .configuracion-caja__etiqueta {
+    justify-self: center;
+  }
+
+  .configuracion-caja__cuerpo {
+    padding: 2rem 1.4rem;
+  }
+
+  .configuracion-caja__fila {
+    grid-template-columns:
+      2rem
+      2.8rem
+      minmax(0, 1fr);
+  }
+
+  .configuracion-caja__estado {
+    grid-column: 3;
+    justify-self: start;
+  }
+
+  .configuracion-caja__nueva {
+    grid-template-columns: 1fr;
+  }
+
+  .configuracion-caja__acciones {
+    align-items: stretch;
+    flex-direction: column-reverse;
+  }
+
+  .configuracion-caja__acciones button {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+/* ==========================================================
+   MODAL ELIMINAR CAJA REGALONES
+   ========================================================== */
+
+.configuracion-caja__acciones-fila {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.configuracion-caja__eliminar {
+  display: grid;
+  width: 2.55rem;
+  height: 2.55rem;
+  place-items: center;
+  flex: 0 0 auto;
+  padding: 0;
+  border: 1px solid rgb(225 103 88 / 30%);
+  border-radius: 0.65rem;
+  background: rgb(110 33 25 / 14%);
+  color: #d77a6e;
+  cursor: pointer;
+  transition:
+    color 150ms ease,
+    border-color 150ms ease,
+    background 150ms ease,
+    transform 150ms ease;
+}
+
+.configuracion-caja__eliminar svg {
+  display: block;
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.configuracion-caja__eliminar:hover:not(:disabled) {
+  border-color: rgb(239 110 94 / 60%);
+  background: rgb(129 38 29 / 27%);
+  color: #ff9789;
+  transform: translateY(-1px);
+}
+
+.configuracion-caja__eliminar:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+
+/* Fondo oscuro */
+
+.configuracion-caja__modal-fondo {
+  position: fixed;
+  z-index: 9999;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  background: rgb(0 10 7 / 78%);
+  backdrop-filter: blur(7px);
+  animation: configuracion-modal-fondo 160ms ease-out;
+}
+
+
+/* Ventana */
+
+.configuracion-caja__modal {
+  width: min(92vw, 32rem);
+  overflow: hidden;
+  border: 1px solid #396f49;
+  border-radius: 1.35rem;
+  background:
+    linear-gradient(
+      145deg,
+      #06291b,
+      #021b12
+    );
+  box-shadow:
+    0 2rem 5rem rgb(0 0 0 / 45%),
+    0 0 2rem rgb(73 184 87 / 5%);
+  animation: configuracion-modal-entrada 180ms ease-out;
+}
+
+
+/* Icono */
+
+.configuracion-caja__modal-icono {
+  display: grid;
+  width: 3.5rem;
+  height: 3.5rem;
+  place-items: center;
+  margin: 2rem auto 0;
+  border: 1px solid rgb(229 103 88 / 35%);
+  border-radius: 999px;
+  background: rgb(119 35 27 / 18%);
+  color: #ed8376;
+}
+
+.configuracion-caja__modal-icono svg {
+  width: 1.65rem;
+  height: 1.65rem;
+}
+
+
+/* Texto */
+
+.configuracion-caja__modal-contenido {
+  padding: 1.25rem 2rem 0;
+  text-align: center;
+}
+
+.configuracion-caja__modal-contenido > span {
+  color: #65d96a;
+  font-size: 0.72rem;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.configuracion-caja__modal-contenido h2 {
+  margin: 0.55rem 0 0;
+  font-family: var(--fuente-marca);
+  color: #fff9eb;
+  font-size: 1.7rem;
+  line-height: 1.15;
+}
+
+.configuracion-caja__modal-contenido > p {
+  margin: 0.8rem auto 0;
+  max-width: 26rem;
+  color: #a6b6ac;
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+
+
+/* Aviso */
+
+.configuracion-caja__modal-aviso {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-top: 1.35rem;
+  padding: 0.9rem 1rem;
+  border: 1px dashed #376746;
+  border-radius: 0.75rem;
+  background: rgb(11 45 29 / 52%);
+  text-align: left;
+}
+
+.configuracion-caja__modal-aviso > span {
+  display: grid;
+  width: 1.4rem;
+  height: 1.4rem;
+  place-items: center;
+  flex: 0 0 auto;
+  border: 1px solid #62d568;
+  border-radius: 999px;
+  color: #62d568;
+  font-size: 0.7rem;
+  font-weight: 850;
+}
+
+.configuracion-caja__modal-aviso p {
+  margin: 0;
+  color: #8fa297;
+  font-size: 0.72rem;
+  line-height: 1.5;
+}
+
+
+/* Acciones */
+
+.configuracion-caja__modal-acciones {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+  padding: 1.6rem 2rem 2rem;
+}
+
+.configuracion-caja__modal-acciones button {
+  min-height: 3.2rem;
+  border-radius: 0.7rem;
+  font-family: var(--fuente-texto);
+  font-size: 0.86rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    transform 150ms ease,
+    background 150ms ease,
+    border-color 150ms ease;
+}
+
+.configuracion-caja__modal-cancelar {
+  border: 1px solid #3e6c4b;
+  background: rgb(5 29 19 / 70%);
+  color: #c1cdc5;
+}
+
+.configuracion-caja__modal-cancelar:hover:not(:disabled) {
+  border-color: #579364;
+  background: rgb(16 51 31 / 65%);
+}
+
+.configuracion-caja__modal-eliminar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  border: 1px solid #d66558;
+  background:
+    linear-gradient(
+      90deg,
+      #b9473d,
+      #cc5649
+    );
+  color: #fff;
+}
+
+.configuracion-caja__modal-eliminar svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.configuracion-caja__modal-eliminar:hover:not(:disabled) {
+  background:
+    linear-gradient(
+      90deg,
+      #c34d42,
+      #d45d50
+    );
+}
+
+.configuracion-caja__modal-acciones button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.configuracion-caja__modal-acciones button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+
+/* Animaciones */
+
+@keyframes configuracion-modal-fondo {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes configuracion-modal-entrada {
+  from {
+    opacity: 0;
+    transform: translateY(0.8rem) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+
+@media (max-width: 600px) {
+  .configuracion-caja__modal-fondo {
+    padding: 1rem;
+  }
+
+  .configuracion-caja__modal-contenido {
+    padding-inline: 1.3rem;
+  }
+
+  .configuracion-caja__modal-acciones {
+    grid-template-columns: 1fr;
+    padding-inline: 1.3rem;
+  }
+}
+
+/* ==========================================================
+   PANTALLA 4 VINCULACION EXITOSA
+   ========================================================== */
+
+.vinculacion-exitosa {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      circle at 24% 54%,
+      rgb(54 170 65 / 9%),
+      transparent 26rem
+    ),
+    radial-gradient(
+      circle at 74% 20%,
+      rgb(32 126 60 / 7%),
+      transparent 28rem
+    ),
+    #00120c;
+  color: #fff9eb;
+}
+
+.vinculacion-exitosa__panel {
+  width: min(94vw, 91rem);
+  min-height: min(88vh, 50rem);
+  overflow: hidden;
+  border: 1px solid #245c39;
+  border-radius: 1.55rem;
+  background:
+    linear-gradient(
+      135deg,
+      rgb(3 31 20 / 98%),
+      rgb(0 19 13 / 99%)
+    );
+  box-shadow:
+    0 2rem 5rem rgb(0 0 0 / 28%);
+}
+
+
+/* CABECERA */
+
+.vinculacion-exitosa__cabecera {
+  min-height: 7.6rem;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 2rem;
+  padding: 1.6rem 2.8rem;
+}
+
+.vinculacion-exitosa__marca {
+  display: grid;
+  justify-self: start;
+}
+
+.vinculacion-exitosa__marca strong {
+  font-family: var(--fuente-marca);
+  color: #fff9eb;
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.vinculacion-exitosa__marca strong span {
+  margin-left: 0.25rem;
+  color: #ff6427;
+}
+
+.vinculacion-exitosa__marca small {
+  margin-top: 0.38rem;
+  color: #ff6427;
+  font-size: 0.66rem;
+  font-weight: 750;
+}
+
+.vinculacion-exitosa__etiqueta {
+  justify-self: end;
+  color: #fff9eb;
+  font-size: 0.95rem;
+  font-weight: 650;
+}
+
+.vinculacion-exitosa__separador {
+  height: 1px;
+  margin: 0 2.8rem;
+  background: rgb(88 139 104 / 30%);
+}
+
+
+/* PROGRESO */
+
+.vinculacion-exitosa__progreso {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vinculacion-exitosa__paso {
+  position: relative;
+  display: grid;
+  width: 2.55rem;
+  height: 2.55rem;
+  place-items: center;
+  flex: 0 0 auto;
+  border: 1px solid #64dc69;
+  border-radius: 999px;
+  background: #64dc69;
+  color: #06200f;
+  font-size: 0.9rem;
+  font-weight: 850;
+}
+
+.vinculacion-exitosa__paso i {
+  position: absolute;
+  top: -0.45rem;
+  right: -0.35rem;
+  display: grid;
+  width: 1.15rem;
+  height: 1.15rem;
+  place-items: center;
+  border-radius: 999px;
+  background: #67df6d;
+  color: #06200f;
+  font-size: 0.65rem;
+  font-style: normal;
+}
+
+.vinculacion-exitosa__paso--final {
+  box-shadow:
+    0 0 0 0.38rem rgb(100 220 105 / 10%),
+    0 0 1.8rem rgb(100 220 105 / 38%);
+}
+
+.vinculacion-exitosa__progreso b {
+  display: block;
+  width: 6.6rem;
+  height: 1px;
+  background: #61d667;
+}
+
+
+/* CUERPO */
+
+.vinculacion-exitosa__cuerpo {
+  min-height: 40rem;
+  display: grid;
+  grid-template-columns:
+    minmax(20rem, 0.78fr)
+    minmax(31rem, 1.22fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 5rem);
+  padding: 2.6rem 4.5rem 3.2rem;
+}
+
+
+/* MASCOTA */
+
+.vinculacion-exitosa__ilustracion {
+  position: relative;
+  min-height: 31rem;
+  display: grid;
+  place-items: center;
+}
+
+.vinculacion-exitosa__ilustracion::after {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  width: 21rem;
+  height: 6rem;
+  bottom: 1.6rem;
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      ellipse,
+      rgb(63 185 70 / 22%),
+      transparent 68%
+    );
+  filter: blur(0.6rem);
+}
+
+.vinculacion-exitosa__ilustracion img {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 27rem);
+  max-height: 29rem;
+  object-fit: contain;
+  filter:
+    drop-shadow(
+      0 1.3rem 2rem rgb(0 0 0 / 26%)
+    );
+}
+
+.vinculacion-exitosa__check {
+  position: absolute;
+  z-index: 3;
+  top: 0.7rem;
+  left: 13%;
+  display: grid;
+  width: 6.4rem;
+  height: 6.4rem;
+  place-items: center;
+  border: 1px solid #80ec75;
+  border-radius: 999px;
+  background:
+    linear-gradient(
+      145deg,
+      #5bd44f,
+      #32b737
+    );
+  color: #fff;
+  box-shadow:
+    0 0 0 0.85rem rgb(78 212 74 / 7%),
+    0 0 2.3rem rgb(67 218 72 / 34%);
+}
+
+.vinculacion-exitosa__check svg {
+  width: 3.7rem;
+  height: 3.7rem;
+}
+
+.vinculacion-exitosa__brillo {
+  position: absolute;
+  z-index: 4;
+  color: #ffd127;
+  text-shadow:
+    0 0 1rem rgb(255 205 39 / 45%);
+}
+
+.vinculacion-exitosa__brillo--uno {
+  top: 27%;
+  right: 4%;
+  font-size: 2.4rem;
+}
+
+.vinculacion-exitosa__brillo--dos {
+  bottom: 21%;
+  left: 7%;
+  font-size: 1.7rem;
+}
+
+
+/* CONTENIDO */
+
+.vinculacion-exitosa__contenido {
+  width: 100%;
+  max-width: 46rem;
+}
+
+.vinculacion-exitosa__pretitulo {
+  display: block;
+  margin-bottom: 0.75rem;
+  color: #ff6427;
+  font-size: 0.9rem;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: 0.035em;
+}
+
+.vinculacion-exitosa__contenido h1 {
+  margin: 0;
+  font-family: var(--fuente-marca);
+  color: #fff9eb;
+  font-size: clamp(2.4rem, 4vw, 3.7rem);
+  line-height: 1.03;
+}
+
+.vinculacion-exitosa__subtitulo {
+  margin: 0.8rem 0 0;
+  color: #b1c0b7;
+  font-size: 1.18rem;
+  line-height: 1.5;
+}
+
+
+/* RESUMEN */
+
+.vinculacion-exitosa__resumen {
+  margin-top: 1.7rem;
+  overflow: hidden;
+  border: 1px solid #315e3d;
+  border-radius: 1rem;
+  background:
+    linear-gradient(
+      145deg,
+      rgb(5 35 22 / 86%),
+      rgb(2 25 17 / 88%)
+    );
+}
+
+.vinculacion-exitosa__resumen > div {
+  min-height: 5rem;
+  display: grid;
+  grid-template-columns: 9rem 1fr;
+  align-items: center;
+  gap: 1.6rem;
+  padding: 0 1.5rem;
+}
+
+.vinculacion-exitosa__resumen > div + div {
+  border-top: 1px solid rgb(73 112 82 / 32%);
+}
+
+.vinculacion-exitosa__resumen span {
+  color: #66dc6c;
+  font-size: 0.96rem;
+  font-weight: 800;
+}
+
+.vinculacion-exitosa__resumen strong {
+  color: #fff9eb;
+  font-size: 1rem;
+  font-weight: 750;
+}
+
+.vinculacion-exitosa__explicacion {
+  max-width: 39rem;
+  margin: 1.7rem 0 0;
+  color: #acbbb2;
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+
+/* CTA */
+
+.vinculacion-exitosa__comenzar {
+  position: relative;
+  width: min(100%, 29rem);
+  min-height: 4.4rem;
+  display: grid;
+  place-items: center;
+  margin: 2rem 0 0 auto;
+  padding: 0 4.2rem;
+  border: 1px solid #65dc61;
+  border-radius: 0.85rem;
+  background:
+    linear-gradient(
+      90deg,
+      #54c94b,
+      #45bb43
+    );
+  color: #fff;
+  font-family: var(--fuente-texto);
+  font-size: 1.08rem;
+  font-weight: 850;
+  cursor: pointer;
+  box-shadow:
+    0 0.7rem 1.6rem rgb(61 177 68 / 12%);
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    filter 160ms ease;
+}
+
+.vinculacion-exitosa__comenzar span:last-child {
+  position: absolute;
+  top: 50%;
+  right: 1.6rem;
+  font-size: 1.7rem;
+  font-weight: 400;
+  transform: translateY(-50%);
+}
+
+.vinculacion-exitosa__comenzar:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+  box-shadow:
+    0 0.9rem 2rem rgb(61 177 68 / 18%);
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 980px) {
+  .vinculacion-exitosa {
+    padding: 1rem;
+  }
+
+  .vinculacion-exitosa__cabecera {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 1.2rem;
+    padding: 1.8rem;
+    text-align: center;
+  }
+
+  .vinculacion-exitosa__marca,
+  .vinculacion-exitosa__etiqueta {
+    justify-self: center;
+  }
+
+  .vinculacion-exitosa__cuerpo {
+    grid-template-columns: 1fr;
+    padding: 2rem 1.5rem 2.5rem;
+  }
+
+  .vinculacion-exitosa__ilustracion {
+    min-height: 22rem;
+  }
+
+  .vinculacion-exitosa__ilustracion img {
+    max-height: 21rem;
+  }
+
+  .vinculacion-exitosa__check {
+    left: 24%;
+    width: 5rem;
+    height: 5rem;
+  }
+
+  .vinculacion-exitosa__contenido {
+    max-width: none;
+  }
+
+  .vinculacion-exitosa__comenzar {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .vinculacion-exitosa__progreso b {
+    width: 3rem;
+  }
+
+  .vinculacion-exitosa__resumen > div {
+    grid-template-columns: 1fr;
+    gap: 0.2rem;
+    padding-block: 1rem;
+  }
+}
+
+/* ==========================================================
+   CONFIGURACION POS SIN SCROLL V1
+
+   Pantallas 1 — 4:
+   - exactamente 100dvh
+   - sin scroll de página
+   - sin scroll interno
+   - acciones siempre visibles
+   ========================================================== */
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+
+/* ==========================================================
+   VIEWPORT COMÚN
+   ========================================================== */
+
+.configuracion-pos,
+.configuracion-negocio,
+.configuracion-caja,
+.vinculacion-exitosa {
+  width: 100%;
+  height: 100dvh !important;
+  min-height: 0 !important;
+  max-height: 100dvh !important;
+  box-sizing: border-box;
+  overflow: hidden !important;
+  padding:
+    clamp(0.55rem, 1.5dvh, 1rem)
+    !important;
+}
+
+
+/* ==========================================================
+   MARCO COMÚN
+   ========================================================== */
+
+.configuracion-pos > section,
+.configuracion-negocio__panel,
+.configuracion-caja__panel,
+.vinculacion-exitosa__panel {
+  width: min(96vw, 91rem) !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
+  box-sizing: border-box;
+  overflow: hidden !important;
+}
+
+
+/* ==========================================================
+   PANTALLA 1
+   ========================================================== */
+
+.configuracion-pos > section {
+  max-height: 100% !important;
+}
+
+.configuracion-pos__contenido,
+.configuracion-pos__principal {
+  min-height: 0 !important;
+  max-height: 100% !important;
+  overflow: hidden !important;
+}
+
+
+/* ==========================================================
+   PANTALLAS 2 Y 3
+   ========================================================== */
+
+.configuracion-negocio__panel,
+.configuracion-caja__panel {
+  display: grid !important;
+  grid-template-rows:
+    auto
+    1px
+    minmax(0, 1fr);
+}
+
+.configuracion-negocio__cabecera,
+.configuracion-caja__cabecera {
+  min-height:
+    clamp(4.8rem, 10dvh, 6.2rem)
+    !important;
+
+  padding:
+    clamp(0.75rem, 1.5dvh, 1.2rem)
+    clamp(1.7rem, 3vw, 2.8rem)
+    !important;
+}
+
+.configuracion-negocio__cuerpo,
+.configuracion-caja__cuerpo {
+  min-height: 0 !important;
+  height: 100% !important;
+  overflow: hidden !important;
+
+  display: flex !important;
+  flex-direction: column;
+
+  padding:
+    clamp(1rem, 2.2dvh, 1.8rem)
+    clamp(1.8rem, 3.5vw, 4rem)
+    clamp(0.8rem, 1.8dvh, 1.4rem)
+    !important;
+}
+
+
+/* ==========================================================
+   PANTALLA 2 — NEGOCIO / SUCURSAL
+   ========================================================== */
+
+.configuracion-negocio__seccion {
+  flex: 0 0 auto;
+  min-height: 0;
+}
+
+.configuracion-negocio__seccion + .configuracion-negocio__seccion {
+  margin-top:
+    clamp(0.85rem, 1.7dvh, 1.35rem)
+    !important;
+}
+
+.configuracion-negocio__acciones {
+  position: static !important;
+  flex: 0 0 auto;
+  margin-top: auto !important;
+  padding-top:
+    clamp(0.8rem, 1.6dvh, 1.25rem)
+    !important;
+  padding-bottom: 0 !important;
+  background: transparent !important;
+}
+
+
+/* ==========================================================
+   PANTALLA 3 — CAJAS
+   ========================================================== */
+
+.configuracion-caja__titulo p {
+  margin-top: 0.5rem !important;
+}
+
+.configuracion-caja__contexto {
+  flex: 0 0 auto;
+  margin-top:
+    clamp(0.8rem, 1.6dvh, 1.35rem)
+    !important;
+}
+
+.configuracion-caja__seccion {
+  flex: 0 1 auto;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  margin-top:
+    clamp(0.9rem, 1.8dvh, 1.4rem)
+    !important;
+}
+
+.configuracion-caja__lista {
+  gap:
+    clamp(0.45rem, 1dvh, 0.7rem)
+    !important;
+}
+
+.configuracion-caja__fila {
+  min-height:
+    clamp(4.2rem, 8.2dvh, 5.4rem)
+    !important;
+
+  padding:
+    clamp(0.55rem, 1.1dvh, 0.85rem)
+    1rem
+    !important;
+}
+
+.configuracion-caja__agregar {
+  min-height: 2.7rem !important;
+  margin-top:
+    clamp(0.6rem, 1.2dvh, 0.9rem)
+    !important;
+}
+
+.configuracion-caja__aviso {
+  flex: 0 0 auto;
+  margin-top:
+    clamp(0.65rem, 1.3dvh, 1rem)
+    !important;
+
+  padding:
+    clamp(0.55rem, 1.1dvh, 0.8rem)
+    1rem
+    !important;
+}
+
+.configuracion-caja__acciones {
+  position: static !important;
+  flex: 0 0 auto;
+  margin-top: auto !important;
+
+  padding-top:
+    clamp(0.7rem, 1.4dvh, 1.1rem)
+    !important;
+}
+
+
+/* ==========================================================
+   PANTALLA 4 — VINCULACIÓN EXITOSA
+   ========================================================== */
+
+.vinculacion-exitosa__panel {
+  display: grid !important;
+  grid-template-rows:
+    auto
+    1px
+    minmax(0, 1fr);
+}
+
+.vinculacion-exitosa__cabecera {
+  min-height:
+    clamp(4.8rem, 10dvh, 6.2rem)
+    !important;
+
+  padding:
+    clamp(0.75rem, 1.5dvh, 1.2rem)
+    clamp(1.7rem, 3vw, 2.8rem)
+    !important;
+}
+
+.vinculacion-exitosa__cuerpo {
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+
+  grid-template-columns:
+    minmax(17rem, 0.78fr)
+    minmax(28rem, 1.22fr)
+    !important;
+
+  align-items: center !important;
+
+  gap:
+    clamp(1.5rem, 3.5vw, 3.6rem)
+    !important;
+
+  padding:
+    clamp(0.9rem, 2dvh, 1.6rem)
+    clamp(2rem, 4vw, 4rem)
+    clamp(0.9rem, 2dvh, 1.5rem)
+    !important;
+}
+
+.vinculacion-exitosa__ilustracion {
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
+}
+
+.vinculacion-exitosa__ilustracion img {
+  width:
+    min(100%, clamp(18rem, 26vw, 25rem))
+    !important;
+
+  max-height:
+    min(52dvh, 27rem)
+    !important;
+}
+
+.vinculacion-exitosa__check {
+  width:
+    clamp(4.2rem, 8.5dvh, 5.8rem)
+    !important;
+
+  height:
+    clamp(4.2rem, 8.5dvh, 5.8rem)
+    !important;
+}
+
+.vinculacion-exitosa__check svg {
+  width: 58% !important;
+  height: 58% !important;
+}
+
+.vinculacion-exitosa__contenido {
+  min-height: 0;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+.vinculacion-exitosa__pretitulo {
+  margin-bottom:
+    clamp(0.3rem, 0.8dvh, 0.6rem)
+    !important;
+}
+
+.vinculacion-exitosa__contenido h1 {
+  font-size:
+    clamp(
+      2rem,
+      min(3.6vw, 6dvh),
+      3.4rem
+    )
+    !important;
+}
+
+.vinculacion-exitosa__subtitulo {
+  margin-top:
+    clamp(0.35rem, 1dvh, 0.65rem)
+    !important;
+
+  font-size:
+    clamp(0.95rem, 2.1dvh, 1.12rem)
+    !important;
+}
+
+.vinculacion-exitosa__resumen {
+  margin-top:
+    clamp(0.8rem, 1.8dvh, 1.35rem)
+    !important;
+}
+
+.vinculacion-exitosa__resumen > div {
+  min-height:
+    clamp(3.15rem, 6.4dvh, 4.2rem)
+    !important;
+}
+
+.vinculacion-exitosa__explicacion {
+  margin-top:
+    clamp(0.7rem, 1.5dvh, 1.2rem)
+    !important;
+
+  font-size:
+    clamp(0.86rem, 1.9dvh, 0.98rem)
+    !important;
+}
+
+.vinculacion-exitosa__comenzar {
+  min-height:
+    clamp(3.25rem, 6.8dvh, 4rem)
+    !important;
+
+  margin-top:
+    clamp(0.75rem, 1.6dvh, 1.25rem)
+    !important;
+}
+
+
+/* ==========================================================
+   MONITORES MÁS BAJOS
+   ========================================================== */
+
+@media (max-height: 760px) {
+
+  .configuracion-negocio__cabecera,
+  .configuracion-caja__cabecera,
+  .vinculacion-exitosa__cabecera {
+    min-height: 4.6rem !important;
+  }
+
+  .configuracion-negocio__cuerpo,
+  .configuracion-caja__cuerpo {
+    padding-top: 0.8rem !important;
+    padding-bottom: 0.65rem !important;
+  }
+
+  .configuracion-caja__contexto {
+    margin-top: 0.6rem !important;
+  }
+
+  .configuracion-caja__seccion {
+    margin-top: 0.7rem !important;
+  }
+
+  .configuracion-caja__fila {
+    min-height: 3.9rem !important;
+  }
+
+  .configuracion-caja__aviso {
+    margin-top: 0.5rem !important;
+  }
+
+  .vinculacion-exitosa__cuerpo {
+    padding-block: 0.7rem !important;
+  }
+
+  .vinculacion-exitosa__ilustracion img {
+    max-height: 46dvh !important;
+  }
+
+  .vinculacion-exitosa__resumen > div {
+    min-height: 2.9rem !important;
+  }
+
+  .vinculacion-exitosa__explicacion {
+    margin-top: 0.55rem !important;
+  }
+
+  .vinculacion-exitosa__comenzar {
+    min-height: 3.1rem !important;
+    margin-top: 0.6rem !important;
+  }
+}
+
+
+/* ==========================================================
+   MÓVIL / PANTALLA MUY ANGOSTA
+   La Terminal de caja está pensada para pantalla horizontal.
+   ========================================================== */
+
+@media (max-width: 760px) {
+  .vinculacion-exitosa__cuerpo {
+    grid-template-columns: 0.65fr 1fr !important;
+    gap: 1rem !important;
+    padding-inline: 1rem !important;
+  }
+
+  .vinculacion-exitosa__ilustracion img {
+    max-width: 16rem !important;
+  }
+}
+
+/* ==========================================================
+   PANTALLA 5 VIEWPORT POS V1
+   Inicio de turno completo en 100dvh
+   ========================================================== */
+
+.terminal-panel--inicio-turno {
+  width: calc(100% - 2rem) !important;
+  height: calc(100dvh - 2rem) !important;
+  min-height: 0 !important;
+  max-height: calc(100dvh - 2rem) !important;
+  display: grid !important;
+  grid-template-rows:
+    auto
+    minmax(0, 1fr);
+  margin: 1rem auto !important;
+  padding:
+    clamp(0.9rem, 1.8dvh, 1.4rem)
+    clamp(1.8rem, 3.5vw, 3rem)
+    clamp(0.7rem, 1.5dvh, 1.1rem)
+    !important;
+  overflow: hidden !important;
+}
+
+
+/* ==========================================================
+   HEADER MÁS COMPACTO — SOLO INICIO DE TURNO
+   ========================================================== */
+
+.terminal-panel--inicio-turno .terminal-cabecera-ref {
+  min-height: 0 !important;
+  height: auto !important;
+
+  display: grid;
+  grid-template-columns:
+    minmax(14rem, 0.72fr)
+    minmax(27rem, 1.28fr)
+    auto;
+
+  align-items: center;
+
+  gap:
+    clamp(1rem, 2.5vw, 2.4rem)
+    !important;
+
+  margin: 0 !important;
+
+  padding:
+    0.4rem
+    0
+    clamp(0.8rem, 1.7dvh, 1.1rem)
+    !important;
+}
+
+
+/* MARCA */
+
+.terminal-panel--inicio-turno
+  .terminal-cabecera-ref__marca strong {
+  font-size:
+    clamp(1.45rem, 2.2vw, 2rem)
+    !important;
+}
+
+.terminal-panel--inicio-turno
+  .terminal-cabecera-ref__marca small {
+  margin-top: 0.25rem !important;
+  font-size: 0.68rem !important;
+}
+
+
+/* NEGOCIO */
+
+.terminal-panel--inicio-turno
+  .terminal-cabecera-ref__negocio {
+  gap:
+    clamp(0.65rem, 1.4vw, 1.1rem)
+    !important;
+
+  align-items: center;
+}
+
+
+/* ICONO PNG */
+
+.terminal-panel--inicio-turno
+  .terminal-cabecera-ref__tienda {
+  width:
+    clamp(3.4rem, 6dvh, 4.2rem)
+    !important;
+
+  height:
+    clamp(3.4rem, 6dvh, 4.2rem)
+    !important;
+
+  padding: 0.32rem !important;
+}
+
+.terminal-cabecera-ref__tienda img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+
+/* DATOS DEL NEGOCIO */
+
+.terminal-panel--inicio-turno
+  .terminal-cabecera-ref__datos strong {
+  font-size:
+    clamp(1.25rem, 2.2vw, 1.7rem)
+    !important;
+}
+
+.terminal-panel--inicio-turno
+  .terminal-cabecera-ref__caja {
+  font-size:
+    clamp(1rem, 1.8vw, 1.3rem)
+    !important;
+}
+
+
+/* ESTADO TERMINAL */
+
+.terminal-panel--inicio-turno
+  .terminal-cabecera-ref .estado-pwa {
+  margin-left:
+    clamp(0.35rem, 1vw, 0.8rem)
+    !important;
+}
+
+.terminal-panel--inicio-turno
+  .terminal-cabecera-ref .estado-pwa span {
+  padding:
+    0.55rem 0.9rem
+    !important;
+
+  font-size:
+    0.78rem
+    !important;
+}
+
+
+/* RELOJ */
+
+.terminal-panel--inicio-turno
+  .terminal-cabecera-ref__derecha {
+  min-width: 12rem !important;
+  gap: 0.35rem !important;
+}
+
+.terminal-panel--inicio-turno
+  .terminal-reloj-ref {
+  gap: 0.7rem !important;
+}
+
+.terminal-panel--inicio-turno
+  .terminal-reloj-ref__icono {
+  width: 2.35rem !important;
+  height: 2.35rem !important;
+}
+
+.terminal-panel--inicio-turno
+  .terminal-reloj-ref strong {
+  font-size:
+    clamp(1.35rem, 2.4vw, 1.65rem)
+    !important;
+}
+
+.terminal-panel--inicio-turno
+  .terminal-reloj-ref span {
+  max-width: 10rem !important;
+  font-size: 0.67rem !important;
+}
+
+
+/* ==========================================================
+   CONTENEDOR DE INICIO DE TURNO
+   ========================================================== */
+
+.terminal-panel--inicio-turno
+  .inicio-turno--pos {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
+
+  display: grid !important;
+  grid-template-rows:
+    minmax(0, 1fr)
+    auto
+    auto;
+
+  overflow: hidden !important;
+}
+
+
+/* ==========================================================
+   BLOQUE PRINCIPAL
+   ========================================================== */
+
+.terminal-panel--inicio-turno
+  .inicio-turno-pos__principal {
+  min-height: 0 !important;
+  height: 100% !important;
+
+  grid-template-columns:
+    minmax(24rem, 0.9fr)
+    minmax(20rem, 1.1fr)
+    !important;
+
+  gap:
+    clamp(1.5rem, 4vw, 4rem)
+    !important;
+
+  padding:
+    clamp(0.75rem, 1.7dvh, 1.25rem)
+    1rem
+    clamp(0.45rem, 1dvh, 0.75rem)
+    !important;
+
+  overflow: hidden !important;
+}
+
+
+/* FORMULARIO */
+
+.terminal-panel--inicio-turno
+  .inicio-turno-pos__formulario {
+  max-width: 38rem !important;
+}
+
+.terminal-panel--inicio-turno
+  .inicio-turno-pos__etiqueta {
+  font-size: 0.77rem !important;
+}
+
+.terminal-panel--inicio-turno
+  .inicio-turno-pos__formulario h1 {
+  margin:
+    clamp(0.35rem, 0.9dvh, 0.65rem)
+    0
+    !important;
+
+  font-size:
+    clamp(
+      2.8rem,
+      min(4.3vw, 6.6dvh),
+      4.4rem
+    )
+    !important;
+
+  line-height: 0.98 !important;
+}
+
+.terminal-panel--inicio-turno
+  .inicio-turno-pos__descripcion {
+  max-width: 34rem;
+  margin:
+    clamp(0.65rem, 1.4dvh, 1rem)
+    0
+    !important;
+
+  font-size:
+    clamp(0.88rem, 1.9dvh, 1rem)
+    !important;
+
+  line-height: 1.45 !important;
+}
+
+.terminal-panel--inicio-turno
+  .inicio-turno-pos__form {
+  gap:
+    clamp(0.55rem, 1.2dvh, 0.85rem)
+    !important;
+}
+
+.terminal-panel--inicio-turno
+  .inicio-turno-pos__input {
+  min-height:
+    clamp(3.35rem, 6.5dvh, 4rem)
+    !important;
+}
+
+.terminal-panel--inicio-turno
+  .inicio-turno-pos__boton {
+  min-height:
+    clamp(3.25rem, 6.2dvh, 3.8rem)
+    !important;
+}
+
+.terminal-panel--inicio-turno
+  .inicio-turno-pos__nota {
+  margin-top:
+    clamp(0.35rem, 0.8dvh, 0.6rem)
+    !important;
+}
+
+
+/* ==========================================================
+   MASCOTA
+   ========================================================== */
+
+.terminal-panel--inicio-turno
+  .inicio-turno-pos__mascota {
+  height: 100%;
+  min-height: 0 !important;
+  max-height: 100% !important;
+}
+
+.terminal-panel--inicio-turno
+  .inicio-turno-pos__mascota img {
+  width:
+    min(80%, 31rem)
+    !important;
+
+  max-height:
+    min(38dvh, 24rem)
+    !important;
+}
+
+.terminal-panel--inicio-turno
+  .inicio-turno-pos__halo {
+  width:
+    min(72%, 24rem)
+    !important;
+}
+
+
+/* ==========================================================
+   MÓDULOS
+   ========================================================== */
+
+.terminal-panel--inicio-turno
+  .inicio-turno-pos__modulos {
+  flex: 0 0 auto;
+
+  gap: 0.65rem !important;
+  padding: 0.65rem !important;
+
+  border-radius: 0.85rem !important;
+}
+
+.terminal-panel--inicio-turno
+  .inicio-turno-pos__modulos article {
+  gap: 0.7rem !important;
+
+  padding:
+    0.65rem
+    0.75rem
+    !important;
+
+  border-radius: 0.75rem !important;
+}
+
+.terminal-panel--inicio-turno
+  .inicio-turno-pos__modulos strong {
+  font-size: 0.92rem !important;
+}
+
+.terminal-panel--inicio-turno
+  .inicio-turno-pos__modulos p {
+  margin-top: 0.12rem !important;
+  font-size: 0.68rem !important;
+  line-height: 1.3 !important;
+}
+
+
+/* ==========================================================
+   PIE
+   ========================================================== */
+
+.terminal-panel--inicio-turno
+  .inicio-turno-pos__pie {
+  flex: 0 0 auto;
+
+  margin-top:
+    clamp(0.35rem, 0.8dvh, 0.6rem)
+    !important;
+
+  padding-bottom: 0 !important;
+
+  font-size: 0.68rem !important;
+}
+
+
+/* ==========================================================
+   MONITORES BAJOS
+   ========================================================== */
+
+@media (max-height: 760px) {
+
+  .terminal-panel--inicio-turno {
+    margin: 0.6rem auto !important;
+    width: calc(100% - 1.2rem) !important;
+    height: calc(100dvh - 1.2rem) !important;
+    max-height: calc(100dvh - 1.2rem) !important;
+    padding:
+      0.65rem
+      1.5rem
+      0.5rem
+      !important;
+  }
+
+  .terminal-panel--inicio-turno
+    .terminal-cabecera-ref {
+    padding-bottom: 0.65rem !important;
+  }
+
+  .terminal-panel--inicio-turno
+    .inicio-turno-pos__principal {
+    padding-top: 0.55rem !important;
+  }
+
+  .terminal-panel--inicio-turno
+    .inicio-turno-pos__mascota img {
+    max-height: 32dvh !important;
+  }
+
+  .terminal-panel--inicio-turno
+    .inicio-turno-pos__modulos article {
+    padding-block: 0.5rem !important;
+  }
+
+  .terminal-panel--inicio-turno
+    .inicio-turno-pos__pie {
+    margin-top: 0.3rem !important;
+  }
+}
+
+/* ==========================================================
+   AJUSTES FINOS PANTALLA 5 V3
+   Regalón + corazón + aviso de seguridad
+   ========================================================== */
+
+
+/* REGALÓN: recuperar protagonismo sin romper el viewport */
+
+.terminal-panel--inicio-turno
+  .inicio-turno-pos__mascota img {
+  width: min(94%, 36rem) !important;
+  max-height: min(45dvh, 28rem) !important;
+}
+
+
+/* Halo acorde al nuevo tamaño */
+
+.terminal-panel--inicio-turno
+  .inicio-turno-pos__halo {
+  width: min(80%, 27rem) !important;
+}
+
+
+/* CORAZÓN: más cerca de la cabeza del Regalón */
+
+.terminal-panel--inicio-turno
+  .inicio-turno-pos__corazon {
+  top: 22% !important;
+  right: 20% !important;
+
+  font-size: 2.15rem !important;
+
+  transform: none !important;
+}
+
+
+/* ==========================================================
+   AVISO DE SEGURIDAD
+   ========================================================== */
+
+.terminal-panel--inicio-turno
+  .inicio-turno-pos__seguridad {
+  width: 12.2rem !important;
+
+  right: 0.8rem !important;
+  bottom: 0.6rem !important;
+
+  gap: 0.55rem !important;
+
+  padding:
+    0.62rem
+    0.72rem
+    !important;
+
+  border-radius: 0.78rem !important;
+}
+
+
+/* Escudo */
+
+.terminal-panel--inicio-turno
+  .inicio-turno-pos__seguridad > svg {
+  width: 1.05rem !important;
+  height: 1.05rem !important;
+
+  flex: 0 0 1.05rem !important;
+}
+
+
+/* Contenedor del texto */
+
+.terminal-panel--inicio-turno
+  .inicio-turno-pos__seguridad > div {
+  min-width: 0;
+}
+
+
+/* "Esta terminal está vinculada..." */
+
+.terminal-panel--inicio-turno
+  .inicio-turno-pos__seguridad strong {
+  display: block;
+
+  font-size: 0.67rem !important;
+  line-height: 1.22 !important;
+}
+
+
+/* "Usa siempre tu nombre personal." */
+
+.terminal-panel--inicio-turno
+  .inicio-turno-pos__seguridad span {
+  display: block;
+
+  margin-top: 0.22rem !important;
+
+  font-size: 0.59rem !important;
+  line-height: 1.2 !important;
+}
+
+
+/* Pantallas un poco más bajas */
+
+@media (max-height: 760px) {
+
+  .terminal-panel--inicio-turno
+    .inicio-turno-pos__mascota img {
+    width: min(90%, 32rem) !important;
+    max-height: 39dvh !important;
+  }
+
+  .terminal-panel--inicio-turno
+    .inicio-turno-pos__corazon {
+    top: 20% !important;
+    right: 21% !important;
+    font-size: 1.85rem !important;
+  }
+
+  .terminal-panel--inicio-turno
+    .inicio-turno-pos__seguridad {
+    width: 11.5rem !important;
+    padding: 0.55rem 0.65rem !important;
+  }
+}
+
+/* ==========================================================
+   AJUSTE EXTRA MASCOTA PANTALLA 5 V4
+   ========================================================== */
+
+.terminal-panel--inicio-turno
+  .inicio-turno-pos__mascota img {
+  width: min(100%, 39rem) !important;
+  max-height: min(49dvh, 31rem) !important;
+}
+
+.terminal-panel--inicio-turno
+  .inicio-turno-pos__halo {
+  width: min(86%, 29rem) !important;
+}
+
+.terminal-panel--inicio-turno
+  .inicio-turno-pos__corazon {
+  top: 20% !important;
+  right: 27% !important;
+  font-size: 2.3rem !important;
+}
+
+/* ==========================================================
+   PANTALLA 2 COMPACTA SIN SCROLL V2
+   ========================================================== */
+
+.configuracion-negocio__cuerpo {
+  padding:
+    clamp(0.75rem, 1.5dvh, 1.2rem)
+    clamp(1.6rem, 3vw, 3.3rem)
+    clamp(0.55rem, 1.1dvh, 0.8rem)
+    !important;
+}
+
+.configuracion-negocio__titulo h1 {
+  font-size:
+    clamp(2rem, min(3vw, 4.7dvh), 2.8rem)
+    !important;
+
+  line-height: 1 !important;
+}
+
+.configuracion-negocio__titulo p {
+  margin-top: 0.45rem !important;
+
+  font-size:
+    clamp(0.9rem, 1.8dvh, 1rem)
+    !important;
+}
+
+.configuracion-negocio__seccion {
+  margin-top:
+    clamp(0.65rem, 1.2dvh, 0.95rem)
+    !important;
+}
+
+.configuracion-negocio__seccion + .configuracion-negocio__seccion {
+  margin-top:
+    clamp(0.65rem, 1.2dvh, 0.95rem)
+    !important;
+}
+
+.configuracion-negocio__seccion h2 {
+  margin-bottom:
+    clamp(0.45rem, 0.9dvh, 0.7rem)
+    !important;
+
+  font-size:
+    clamp(0.88rem, 1.65dvh, 1rem)
+    !important;
+}
+
+.configuracion-negocio__negocio {
+  min-height: 0 !important;
+
+  padding:
+    clamp(0.75rem, 1.4dvh, 1rem)
+    1.1rem
+    !important;
+}
+
+.configuracion-negocio__negocio strong {
+  font-size:
+    clamp(1rem, 1.9dvh, 1.15rem)
+    !important;
+}
+
+.configuracion-negocio__negocio small {
+  font-size: 0.72rem !important;
+}
+
+.configuracion-negocio__sucursal {
+  min-height: 0 !important;
+
+  padding:
+    clamp(0.7rem, 1.35dvh, 0.95rem)
+    1rem
+    !important;
+}
+
+.configuracion-negocio__sucursal strong {
+  font-size:
+    clamp(0.92rem, 1.75dvh, 1.05rem)
+    !important;
+}
+
+.configuracion-negocio__sucursal p,
+.configuracion-negocio__sucursal small {
+  font-size: 0.72rem !important;
+}
+
+.configuracion-negocio__aviso {
+  margin-top:
+    clamp(0.55rem, 1.05dvh, 0.8rem)
+    !important;
+
+  padding:
+    clamp(0.55rem, 1dvh, 0.75rem)
+    0.9rem
+    !important;
+}
+
+.configuracion-negocio__aviso p {
+  font-size: 0.69rem !important;
+  line-height: 1.35 !important;
+}
+
+.configuracion-negocio__acciones {
+  margin-top: auto !important;
+
+  padding-top:
+    clamp(0.55rem, 1dvh, 0.8rem)
+    !important;
+}
+
+.configuracion-negocio__acciones button {
+  min-height:
+    clamp(3.1rem, 6dvh, 3.7rem)
+    !important;
+
+  font-size:
+    clamp(0.84rem, 1.7dvh, 0.95rem)
+    !important;
+}
+
+
+/* Alturas particularmente bajas */
+
+@media (max-height: 780px) {
+  .configuracion-negocio__cabecera {
+    min-height: 4.4rem !important;
+  }
+
+  .configuracion-negocio__cuerpo {
+    padding-top: 0.6rem !important;
+  }
+
+  .configuracion-negocio__titulo h1 {
+    font-size: 2rem !important;
+  }
+
+  .configuracion-negocio__seccion {
+    margin-top: 0.5rem !important;
+  }
+
+  .configuracion-negocio__negocio,
+  .configuracion-negocio__sucursal {
+    padding-block: 0.65rem !important;
+  }
+
+  .configuracion-negocio__aviso {
+    margin-top: 0.45rem !important;
+  }
+
+  .configuracion-negocio__acciones {
+    padding-top: 0.45rem !important;
+  }
+
+  .configuracion-negocio__acciones button {
+    min-height: 3rem !important;
+  }
+}
+
+/* ==========================================================
+   PAGINACION CAJAS PANTALLA 3 V1
+   ========================================================== */
+
+.configuracion-caja__paginacion {
+  display: grid;
+  grid-template-columns:
+    minmax(7rem, auto)
+    auto
+    minmax(7rem, auto);
+
+  align-items: center;
+  justify-content: center;
+
+  gap:
+    clamp(0.65rem, 1.5vw, 1rem);
+
+  margin-top:
+    clamp(0.5rem, 1dvh, 0.75rem);
+}
+
+.configuracion-caja__paginacion button {
+  min-height: 2.45rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.45rem;
+
+  padding: 0.45rem 0.8rem;
+
+  border:
+    1px solid rgb(87 203 94 / 25%);
+
+  border-radius: 0.7rem;
+
+  color: #c6d4cb;
+
+  background:
+    rgb(20 77 38 / 13%);
+
+  font-family: var(--fuente-texto);
+  font-size: 0.7rem;
+  font-weight: 750;
+
+  cursor: pointer;
+
+  transition:
+    border-color 150ms ease,
+    background 150ms ease,
+    color 150ms ease;
+}
+
+.configuracion-caja__paginacion
+  button:hover:not(:disabled) {
+  border-color:
+    rgb(91 221 99 / 45%);
+
+  color: #fff9ec;
+
+  background:
+    rgb(34 121 50 / 18%);
+}
+
+.configuracion-caja__paginacion
+  button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.configuracion-caja__pagina-actual {
+  min-width: 3.8rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.35rem;
+
+  color: #69df6f;
+
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+
+.configuracion-caja__pagina-actual small {
+  color: #687b70;
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+
+
+/* Mantener toda la pantalla dentro del viewport */
+
+.configuracion-caja__lista {
+  flex: 0 0 auto !important;
+}
+
+.configuracion-caja__paginacion +
+  * {
+  flex: 0 0 auto;
+}
+
+@media (max-height: 760px) {
+  .configuracion-caja__paginacion {
+    margin-top: 0.4rem;
+  }
+
+  .configuracion-caja__paginacion button {
+    min-height: 2.2rem;
+    padding-block: 0.35rem;
+  }
+}
+
+/* ==========================================================
+   SCROLL INTERNO CAJAS PANTALLA 3 V1
+
+   La pantalla completa permanece fija.
+   Solo se desplaza la lista de cajas.
+   ========================================================== */
+
+.configuracion-caja__seccion {
+  min-height: 0 !important;
+  overflow: hidden !important;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.configuracion-caja__lista {
+  min-height: 0 !important;
+
+  max-height:
+    clamp(10.5rem, 24dvh, 13.5rem);
+
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+
+  padding-right: 0.4rem;
+}
+
+
+/* Scroll discreto estilo Regalones */
+
+.configuracion-caja__lista {
+  scrollbar-width: thin;
+  scrollbar-color:
+    rgb(91 210 99 / 48%)
+    rgb(7 38 25 / 35%);
+}
+
+.configuracion-caja__lista::-webkit-scrollbar {
+  width: 0.42rem;
+}
+
+.configuracion-caja__lista::-webkit-scrollbar-track {
+  border-radius: 999px;
+  background:
+    rgb(7 38 25 / 35%);
+}
+
+.configuracion-caja__lista::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background:
+    rgb(91 210 99 / 48%);
+}
+
+.configuracion-caja__lista::-webkit-scrollbar-thumb:hover {
+  background:
+    rgb(100 224 107 / 65%);
+}
+
+
+/* La paginación antigua queda anulada por seguridad */
+
+.configuracion-caja__paginacion {
+  display: none !important;
+}
+
+
+/* En monitores bajos caben aprox. dos cajas completas */
+
+@media (max-height: 760px) {
+  .configuracion-caja__lista {
+    max-height: 10.2rem;
+  }
+}
+
+/* ==========================================================
+   ICONO CAJA REGALONES FINAL V2
+   ========================================================== */
+
+/* Fila más compacta */
+.configuracion-caja__fila {
+  min-height: 4.2rem !important;
+
+  grid-template-columns:
+    2.2rem
+    3.1rem
+    minmax(0, 1fr)
+    auto
+    !important;
+
+  gap: 0.75rem !important;
+
+  padding:
+    0.48rem
+    0.75rem
+    !important;
+
+  overflow: hidden !important;
+}
+
+
+/* Contenedor del PNG */
+.configuracion-caja__fila
+  > .configuracion-caja__icono {
+  width: 3rem !important;
+  height: 3rem !important;
+
+  min-width: 3rem !important;
+  min-height: 3rem !important;
+
+  max-width: 3rem !important;
+  max-height: 3rem !important;
+
+  display: grid !important;
+  place-items: center !important;
+
+  padding: 0.2rem !important;
+
+  overflow: hidden !important;
+
+  border:
+    1px solid rgb(78 165 91 / 20%)
+    !important;
+
+  border-radius: 0.75rem !important;
+
+  background:
+    rgb(21 82 42 / 16%)
+    !important;
+}
+
+
+/* PNG: jamás puede superar el contenedor */
+.configuracion-caja__fila
+  > .configuracion-caja__icono
+  > img {
+  display: block !important;
+
+  width: 2.5rem !important;
+  height: 2.5rem !important;
+
+  min-width: 0 !important;
+  min-height: 0 !important;
+
+  max-width: 100% !important;
+  max-height: 100% !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  object-fit: contain !important;
+
+  transform: none !important;
+
+  filter:
+    drop-shadow(
+      0 0.15rem 0.25rem
+      rgb(0 0 0 / 20%)
+    );
+}
+
+
+/* Nombre de la caja */
+.configuracion-caja__nombre {
+  min-width: 0 !important;
+
+  display: grid !important;
+  align-content: center !important;
+
+  gap: 0.14rem !important;
+}
+
+.configuracion-caja__nombre small {
+  font-size: 0.61rem !important;
+  line-height: 1 !important;
+
+  color: #82958a !important;
+}
+
+
+/* Campo editable */
+.configuracion-caja__nombre input {
+  width: 100% !important;
+  min-width: 0 !important;
+
+  height: auto !important;
+  min-height: 1.65rem !important;
+
+  margin: 0 !important;
+
+  padding:
+    0.15rem
+    0.22rem
+    !important;
+
+  font-size: 0.84rem !important;
+  line-height: 1.1 !important;
+  font-weight: 750 !important;
+
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+
+  border-radius: 0.4rem !important;
+}
+
+
+/* Estado */
+.configuracion-caja__estado {
+  max-width: 13.5rem;
+
+  padding:
+    0.38rem
+    0.62rem
+    !important;
+
+  font-size: 0.6rem !important;
+  line-height: 1.15 !important;
+
+  white-space: nowrap;
+}
+
+
+/* Acciones */
+.configuracion-caja__acciones-fila {
+  gap: 0.45rem !important;
+}
+
+
+/* Basurero */
+.configuracion-caja__eliminar {
+  width: 2.1rem !important;
+  height: 2.1rem !important;
+}
+
+
+/* Radio */
+.configuracion-caja__radio {
+  width: 1.2rem !important;
+  height: 1.2rem !important;
+}
+
+
+/* Lista */
+.configuracion-caja__lista {
+  gap: 0.42rem !important;
+
+  padding:
+    0.1rem
+    0.35rem
+    0.1rem
+    0
+    !important;
+}
+
+/* ==========================================================
+   AJUSTE POS VIEWPORT Y HEADER V2
+   ========================================================== */
+
+.terminal-panel--turno-activo {
+  width: calc(100% - 1rem) !important;
+  height: calc(100dvh - 1rem) !important;
+  min-height: 0 !important;
+  max-height: calc(100dvh - 1rem) !important;
+  margin: .5rem auto !important;
+  padding: .8rem 1.3rem 1rem !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* HEADER MÁS COMPACTO */
+.terminal-panel--turno-activo .terminal-cabecera-ref {
+  flex: 0 0 auto;
+  min-height: 0 !important;
+  padding: .45rem 0 .8rem !important;
+  gap: 1rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__marca strong {
+  font-size: clamp(1.35rem, 2vw, 1.85rem) !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__marca small {
+  margin-top: .08rem !important;
+  font-size: .62rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__tienda {
+  width: 3.25rem !important;
+  height: 3.25rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__datos strong {
+  font-size: clamp(1.25rem, 1.8vw, 1.7rem) !important;
+  line-height: 1 !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__datos > div {
+  margin-top: .25rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__caja {
+  font-size: clamp(.95rem, 1.35vw, 1.25rem) !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__cajero {
+  font-size: .72rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__derecha {
+  gap: .65rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__acciones button {
+  min-height: 2.35rem !important;
+  padding: .45rem .75rem !important;
+  font-size: .63rem !important;
+}
+
+/* NAV: MÁS CERCA DE LA REFERENCIA */
+.terminal-panel--turno-activo .terminal-navegacion {
+  flex: 0 0 auto;
+  display: flex !important;
+  width: auto !important;
+  gap: .5rem !important;
+  margin: .55rem 0 .75rem !important;
+  padding: 0 !important;
+}
+
+.terminal-panel--turno-activo .terminal-navegacion button {
+  width: auto !important;
+  min-width: 8.3rem !important;
+  min-height: 2.75rem !important;
+  justify-content: flex-start !important;
+  gap: .55rem !important;
+  padding: .55rem .85rem !important;
+  border-radius: .55rem !important;
+  border: 1px solid rgba(79,185,89,.26) !important;
+  background: rgba(3,24,16,.72) !important;
+  color: #a9bbb0 !important;
+  font-size: .7rem !important;
+  box-shadow: none !important;
+}
+
+.terminal-panel--turno-activo .terminal-navegacion button.terminal-navegacion__activo {
+  color: #fff !important;
+  border-color: #4fb95a !important;
+  background: linear-gradient(100deg,#328d40,#4eb857) !important;
+}
+
+.terminal-panel--turno-activo .terminal-navegacion__icono {
+  width: 1.2rem !important;
+  height: 1.2rem !important;
+  flex: 0 0 1.2rem !important;
+  display: grid !important;
+  place-items: center !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  font-size: .8rem !important;
+}
+
+/* EL CONTENIDO OCUPA SOLO EL ESPACIO RESTANTE */
+.terminal-panel--turno-activo .terminal-seccion-contenido:not([hidden]),
+.terminal-panel--turno-activo .terminal-alertas-panel,
+.terminal-panel--turno-activo .terminal-llavero {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
+}
+
+.terminal-panel--turno-activo .terminal-seccion-contenido:not([hidden]) {
+  padding-bottom: .5rem;
+}
+
+/* Alertas y Canjes no pueden agrandar el panel exterior */
+.terminal-panel--turno-activo .terminal-alertas-panel {
+  margin-bottom: 0 !important;
+}
+
+.terminal-panel--turno-activo .terminal-seccion-contenido > * {
+  margin-bottom: 0 !important;
+}
+
+/* ==========================================================
+   HEADER POS Y SCROLL V3
+   ========================================================== */
+
+.terminal-panel--turno-activo .terminal-cabecera-ref {
+  grid-template-columns: auto minmax(0, 1fr) auto !important;
+  gap: 1.15rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__negocio {
+  display: flex !important;
+  align-items: center !important;
+  gap: .7rem !important;
+  min-width: 0;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__datos {
+  min-width: 14rem;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__datos > div {
+  display: flex !important;
+  align-items: center !important;
+  gap: .45rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__cajero {
+  display: flex !important;
+  align-items: baseline !important;
+  gap: .28rem !important;
+  width: auto !important;
+  max-width: 17rem !important;
+  white-space: nowrap;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__cajero small {
+  color: #71877a;
+  font-size: .58rem;
+  font-weight: 700;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__cajero strong {
+  color: #f2f5f2;
+  font-size: .7rem;
+  font-weight: 800;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* RELOJ JUNTO AL ESTADO DEL TURNO */
+.terminal-cabecera-ref__reloj-turno {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  margin-left: .15rem;
+  padding-left: .75rem;
+  border-left: 1px solid rgba(109,205,116,.12);
+}
+
+.terminal-cabecera-ref__reloj-turno .terminal-reloj-ref {
+  transform: scale(.78);
+  transform-origin: left center;
+  margin-right: -3rem;
+}
+
+/* ACCIONES UNA SOBRE OTRA */
+.terminal-panel--turno-activo .terminal-cabecera-ref__derecha {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  min-width: 8.6rem;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__acciones {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: .42rem !important;
+  width: 8.6rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__acciones button {
+  width: 100% !important;
+  min-height: 2.05rem !important;
+  padding: .38rem .6rem !important;
+  border-radius: .55rem !important;
+  font-size: .6rem !important;
+  font-weight: 850 !important;
+  transition: transform .15s ease, filter .15s ease !important;
+}
+
+/* FINALIZAR */
+.terminal-panel--turno-activo .terminal-cabecera-ref__acciones button:first-child {
+  color: #fff4ec !important;
+  border: 1px solid rgba(244,112,54,.42) !important;
+  background: linear-gradient(135deg,#9c3c21,#c84f27) !important;
+  box-shadow: 0 .3rem .9rem rgba(175,67,33,.12) !important;
+}
+
+/* ACTUALIZAR */
+.terminal-panel--turno-activo .terminal-cabecera-ref__acciones button:last-child {
+  color: #f2fff3 !important;
+  border: 1px solid rgba(83,202,94,.38) !important;
+  background: linear-gradient(135deg,#236e31,#359843) !important;
+  box-shadow: 0 .3rem .9rem rgba(54,152,67,.10) !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__acciones button:not(:disabled):hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+}
+
+/* ==========================================================
+   SCROLL INTERNO OSCURO
+   ========================================================== */
+
+.terminal-panel--turno-activo .terminal-seccion-contenido:not([hidden]),
+.terminal-panel--turno-activo .terminal-alertas-panel {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(77,176,88,.62) rgba(2,20,13,.35);
+}
+
+.terminal-panel--turno-activo .terminal-seccion-contenido:not([hidden])::-webkit-scrollbar,
+.terminal-panel--turno-activo .terminal-alertas-panel::-webkit-scrollbar {
+  width: 7px;
+}
+
+.terminal-panel--turno-activo .terminal-seccion-contenido:not([hidden])::-webkit-scrollbar-track,
+.terminal-panel--turno-activo .terminal-alertas-panel::-webkit-scrollbar-track {
+  background: rgba(2,20,13,.35);
+  border-radius: 999px;
+}
+
+.terminal-panel--turno-activo .terminal-seccion-contenido:not([hidden])::-webkit-scrollbar-thumb,
+.terminal-panel--turno-activo .terminal-alertas-panel::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background: rgba(77,176,88,.62);
+  background-clip: padding-box;
+}
+
+.terminal-panel--turno-activo .terminal-seccion-contenido:not([hidden])::-webkit-scrollbar-thumb:hover,
+.terminal-panel--turno-activo .terminal-alertas-panel::-webkit-scrollbar-thumb:hover {
+  background: rgba(91,202,102,.82);
+  background-clip: padding-box;
+}
+
+/* ==========================================================
+   DISTRIBUCION HEADER POS V4
+   ========================================================== */
+
+.terminal-panel--turno-activo .terminal-cabecera-ref {
+  display: grid !important;
+  grid-template-columns: minmax(13rem, .82fr) minmax(32rem, 2.7fr) 9rem !important;
+  align-items: center !important;
+  column-gap: 1.6rem !important;
+  width: 100% !important;
+}
+
+/* MARCA */
+.terminal-panel--turno-activo .terminal-cabecera-ref__marca {
+  min-width: 0;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__marca strong {
+  font-size: clamp(1.25rem, 1.7vw, 1.65rem) !important;
+}
+
+/* BLOQUE CENTRAL: NEGOCIO + ESTADO + RELOJ */
+.terminal-panel--turno-activo .terminal-cabecera-ref__negocio {
+  display: grid !important;
+  grid-template-columns: 3.2rem minmax(16rem, 1.55fr) auto minmax(12rem, .85fr) !important;
+  align-items: center !important;
+  gap: 1rem !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__tienda {
+  width: 3.1rem !important;
+  height: 3.1rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__datos {
+  min-width: 0 !important;
+}
+
+/* SOLO EL NOMBRE DEL COMERCIO GRANDE */
+.terminal-panel--turno-activo .terminal-cabecera-ref__datos > strong {
+  display: block !important;
+  font-size: clamp(1.15rem, 1.6vw, 1.55rem) !important;
+  line-height: 1.05 !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__datos > div {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: nowrap !important;
+  gap: .5rem !important;
+  margin-top: .3rem !important;
+  min-width: 0;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__caja {
+  flex: 0 0 auto;
+  font-size: .95rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__datos i {
+  flex: 0 0 auto;
+}
+
+/* CAJERO/A DISCRETO */
+.terminal-panel--turno-activo .terminal-cabecera-ref__cajero {
+  display: flex !important;
+  align-items: baseline !important;
+  gap: .25rem !important;
+  min-width: 0 !important;
+  max-width: 15rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__cajero small {
+  flex: 0 0 auto;
+  color: #73897c !important;
+  font-size: .56rem !important;
+  font-weight: 700 !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__cajero strong {
+  min-width: 0;
+  color: #f0f5f1 !important;
+  font-size: .72rem !important;
+  line-height: 1 !important;
+  font-weight: 800 !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ESTADO */
+.terminal-panel--turno-activo .terminal-cabecera-ref .estado-pwa {
+  justify-self: center !important;
+  margin: 0 !important;
+}
+
+/* RELOJ: SIN EL MARGEN NEGATIVO QUE LO AMONTONABA */
+.terminal-panel--turno-activo .terminal-cabecera-ref__reloj-turno {
+  justify-self: stretch !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding-left: 1rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__reloj-turno .terminal-reloj-ref {
+  width: 100% !important;
+  margin: 0 !important;
+  transform: scale(.82) !important;
+  transform-origin: left center !important;
+}
+
+/* ACCIONES A LA DERECHA */
+.terminal-panel--turno-activo .terminal-cabecera-ref__derecha {
+  justify-self: end !important;
+  width: 9rem !important;
+  min-width: 9rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__acciones {
+  width: 100% !important;
+}
+
+/* ==========================================================
+   HEADER POS V5 - ORDEN BONITO Y MEJOR DISTRIBUIDO
+   ========================================================== */
+
+.terminal-panel--turno-activo .terminal-cabecera-ref {
+  display: grid !important;
+  grid-template-columns:
+    minmax(14rem, 0.9fr)
+    minmax(38rem, 2.4fr)
+    minmax(19rem, 1.15fr);
+  align-items: center !important;
+  gap: 1.8rem !important;
+  width: 100% !important;
+}
+
+/* MARCA */
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__marca {
+  min-width: 0;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__marca strong {
+  font-size: clamp(1.2rem, 1.7vw, 1.7rem) !important;
+  line-height: 1.05;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__marca small {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.92rem !important;
+}
+
+/* ZONA CENTRAL */
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__centro {
+  display: grid !important;
+  grid-template-columns:
+    minmax(24rem, 1.5fr)
+    minmax(14rem, 0.85fr);
+  align-items: center !important;
+  gap: 1.6rem !important;
+  min-width: 0 !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__negocio {
+  display: flex !important;
+  align-items: center !important;
+  gap: 1rem !important;
+  min-width: 0 !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__tienda {
+  width: 3.7rem !important;
+  height: 3.7rem !important;
+  flex-shrink: 0 !important;
+  display: grid;
+  place-items: center;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__tienda img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__datos {
+  min-width: 0 !important;
+  display: grid !important;
+  gap: 0.3rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__datos > strong {
+  font-size: clamp(1.45rem, 2.2vw, 2rem) !important;
+  line-height: 1.05 !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__caja {
+  display: block;
+  color: #71ef6d !important;
+  font-size: clamp(1rem, 1.35vw, 1.35rem) !important;
+  font-weight: 800 !important;
+  line-height: 1.1 !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* BLOQUE CAJERO + TURNO */
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__turno {
+  display: grid !important;
+  gap: 0.7rem !important;
+  align-items: start !important;
+  justify-items: start !important;
+  min-width: 0 !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__cajero-bloque {
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 0.42rem !important;
+  min-width: 0 !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__cajero-label {
+  color: #7f9485 !important;
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__cajero-nombre {
+  color: #f7faf8 !important;
+  font-size: 1.08rem !important;
+  font-weight: 800 !important;
+  line-height: 1.05 !important;
+  max-width: 13rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__turno .estado-pwa {
+  margin: 0 !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__turno .estado-pwa span {
+  padding: 0.72rem 1.15rem !important;
+  border-radius: 999px !important;
+  font-size: 0.96rem !important;
+  font-weight: 800 !important;
+}
+
+/* LADO DERECHO: RELOJ + BOTONES */
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__lado-derecho {
+  display: grid !important;
+  grid-template-columns:
+    minmax(11rem, 1fr)
+    10.4rem;
+  align-items: center !important;
+  gap: 1rem !important;
+  justify-self: end !important;
+  min-width: 0 !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__reloj-turno {
+  min-width: 0 !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__reloj-turno .terminal-reloj-ref {
+  margin: 0 !important;
+  width: 100% !important;
+  transform: scale(0.92);
+  transform-origin: left center;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__acciones--vertical {
+  display: grid !important;
+  gap: 0.6rem !important;
+  width: 100% !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__acciones--vertical button {
+  width: 100% !important;
+  min-height: 2.8rem !important;
+  border-radius: 0.9rem !important;
+  font-size: 0.97rem !important;
+  font-weight: 800 !important;
+  transition:
+    transform 0.18s ease,
+    filter 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__acciones--vertical button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.04);
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__acciones--vertical button:first-child {
+  background: linear-gradient(180deg, #4fcb58, #42b84a) !important;
+  border: 1px solid rgb(136 255 149 / 25%) !important;
+  color: #fff !important;
+  box-shadow: 0 0 1.2rem rgb(87 228 101 / 16%);
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__acciones--vertical button:last-child {
+  background: linear-gradient(180deg, #d5652e, #bc4f1d) !important;
+  border: 1px solid rgb(255 180 120 / 24%) !important;
+  color: #fff !important;
+  box-shadow: 0 0 1.2rem rgb(255 124 63 / 14%);
+}
+
+/* AJUSTE SUAVE EN ANCHOS UN POCO MENORES */
+
+@media (max-width: 1500px) {
+  .terminal-panel--turno-activo .terminal-cabecera-ref {
+    grid-template-columns:
+      minmax(13rem, 0.9fr)
+      minmax(32rem, 2.2fr)
+      minmax(18rem, 1fr);
+    gap: 1.35rem !important;
+  }
+
+  .terminal-panel--turno-activo .terminal-cabecera-ref__centro {
+    grid-template-columns:
+      minmax(20rem, 1.45fr)
+      minmax(13rem, 0.8fr);
+    gap: 1.2rem !important;
+  }
+
+  .terminal-panel--turno-activo .terminal-cabecera-ref__datos > strong {
+    font-size: clamp(1.3rem, 2vw, 1.75rem) !important;
+  }
+
+  .terminal-panel--turno-activo .terminal-cabecera-ref__caja {
+    font-size: clamp(0.95rem, 1.2vw, 1.15rem) !important;
+  }
+}
+
+/* ==========================================================
+   HEADER POS V6 EQUILIBRADO
+   ========================================================== */
+
+.terminal-panel--turno-activo .terminal-cabecera-ref {
+  display: grid !important;
+  grid-template-columns: minmax(13rem, .8fr) minmax(32rem, 2.15fr) minmax(21rem, 1.15fr) !important;
+  align-items: center !important;
+  gap: 1.8rem !important;
+  width: 100% !important;
+}
+
+/* NEGOCIO + CAJERO/TURNO */
+.terminal-panel--turno-activo .terminal-cabecera-ref__centro {
+  display: grid !important;
+  grid-template-columns: minmax(20rem, 1.55fr) minmax(12rem, .75fr) !important;
+  align-items: center !important;
+  gap: 2rem !important;
+  min-width: 0 !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__negocio {
+  min-width: 0 !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__datos > strong {
+  font-size: clamp(1.3rem, 1.8vw, 1.7rem) !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__caja {
+  font-size: .95rem !important;
+}
+
+/* CAJERO/A CON TURNO DEBAJO */
+.terminal-panel--turno-activo .terminal-cabecera-ref__turno {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  align-content: center !important;
+  justify-items: start !important;
+  gap: .5rem !important;
+  min-width: 0 !important;
+  padding-left: 1.2rem !important;
+  border-left: 1px solid rgba(109,205,116,.12);
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__cajero-bloque {
+  display: flex !important;
+  align-items: baseline !important;
+  gap: .35rem !important;
+  min-width: 0 !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__cajero-label {
+  color: #778d7f !important;
+  font-size: .56rem !important;
+  letter-spacing: .05em !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__cajero-nombre {
+  color: #f5f8f6 !important;
+  font-size: .82rem !important;
+  font-weight: 800 !important;
+  max-width: 12rem !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__turno .estado-pwa {
+  margin: 0 !important;
+  justify-self: start !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__turno .estado-pwa span {
+  min-height: 2rem !important;
+  padding: .45rem .8rem !important;
+  font-size: .67rem !important;
+}
+
+/* RELOJ + BOTONES */
+.terminal-panel--turno-activo .terminal-cabecera-ref__lado-derecho {
+  display: grid !important;
+  grid-template-columns: minmax(10.5rem, 1fr) 9.6rem !important;
+  align-items: center !important;
+  gap: 1.25rem !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__reloj-turno {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  min-width: 0 !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__reloj-turno .terminal-reloj-ref {
+  width: 100% !important;
+  margin: 0 !important;
+  transform: none !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__acciones--vertical {
+  display: grid !important;
+  gap: .45rem !important;
+  width: 9.6rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__acciones--vertical button {
+  width: 100% !important;
+  min-height: 2.35rem !important;
+  padding: .4rem .65rem !important;
+  border-radius: .72rem !important;
+  font-size: .72rem !important;
+}
+
+
+/* ==========================================================
+   MODULOS SUPERIORES POS - VERSION LIMPIA
+   ========================================================== */
+
+.terminal-modulos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin: 0.6rem 0 1.15rem;
+}
+
+.terminal-modulos__boton {
+  appearance: none;
+  border: 1px solid rgb(85 170 105 / 24%);
+  background:
+    linear-gradient(
+      135deg,
+      rgb(7 36 24 / 92%),
+      rgb(4 24 16 / 96%)
+    );
+  color: #e8f5ea;
+  border-radius: 1rem;
+  min-height: 4.05rem;
+  min-width: 9.6rem;
+  padding: 0.9rem 1.15rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 2%),
+    0 0 0 transparent;
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    background 0.18s ease,
+    box-shadow 0.18s ease;
+  cursor: pointer;
+}
+
+.terminal-modulos__boton:hover {
+  transform: translateY(-1px);
+  border-color: rgb(111 225 126 / 42%);
+}
+
+.terminal-modulos__boton--activo {
+  border-color: rgb(111 225 126 / 55%);
+  background:
+    linear-gradient(
+      135deg,
+      rgb(90 208 92 / 92%),
+      rgb(70 184 76 / 94%)
+    );
+  color: #0a1b10;
+  box-shadow:
+    0 0 1.2rem rgb(92 226 104 / 16%);
+}
+
+.terminal-modulos__texto {
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* si todavía se renderizan iconos o numeritos viejos */
+.terminal-modulos__numero,
+.terminal-modulos__icono,
+.terminal-modulos__badge,
+.terminal-modulos__boton svg,
+.terminal-modulos__boton small {
+  display: none !important;
+}
+
+/* ==========================================================
+   NAVEGACION POS LIMPIA V8
+   ========================================================== */
+
+.terminal-panel--turno-activo .terminal-navegacion {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: nowrap !important;
+  gap: .5rem !important;
+  width: max-content !important;
+  height: auto !important;
+  min-height: 0 !important;
+  margin: .45rem 0 .65rem !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+.terminal-panel--turno-activo .terminal-navegacion button {
+  display: inline-flex !important;
+  flex: 0 0 auto !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: .45rem !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  height: 2.55rem !important;
+  min-height: 2.55rem !important;
+  padding: 0 .9rem !important;
+  margin: 0 !important;
+  border: 1px solid rgba(82,190,101,.22) !important;
+  border-radius: .65rem !important;
+  background: rgba(3,24,16,.76) !important;
+  color: #a9bdb1 !important;
+  box-shadow: none !important;
+  font-family: inherit !important;
+  font-size: .72rem !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  text-align: center !important;
+  overflow: visible !important;
+}
+
+.terminal-panel--turno-activo .terminal-navegacion button > span:not(.terminal-navegacion__icono) {
+  display: inline !important;
+  width: auto !important;
+  height: auto !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: inherit !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+}
+
+.terminal-panel--turno-activo .terminal-navegacion__icono {
+  display: grid !important;
+  place-items: center !important;
+  flex: 0 0 1.05rem !important;
+  width: 1.05rem !important;
+  height: 1.05rem !important;
+  min-width: 1.05rem !important;
+  min-height: 1.05rem !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: #63dc6b !important;
+  box-shadow: none !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+}
+
+.terminal-panel--turno-activo .terminal-navegacion__icono svg {
+  display: block !important;
+  width: 1rem !important;
+  height: 1rem !important;
+  min-width: 1rem !important;
+  min-height: 1rem !important;
+  overflow: visible !important;
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-width: 1.8 !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+}
+
+.terminal-panel--turno-activo .terminal-navegacion__icono svg path,
+.terminal-panel--turno-activo .terminal-navegacion__icono svg rect,
+.terminal-panel--turno-activo .terminal-navegacion__icono svg circle {
+  fill: none !important;
+  stroke: currentColor !important;
+}
+
+.terminal-panel--turno-activo .terminal-navegacion button.terminal-navegacion__activo {
+  border-color: #55c65e !important;
+  background: linear-gradient(110deg,#389944,#4db957) !important;
+  color: #ffffff !important;
+  box-shadow: 0 .35rem 1rem rgba(65,184,76,.14) !important;
+}
+
+.terminal-panel--turno-activo .terminal-navegacion button.terminal-navegacion__activo .terminal-navegacion__icono {
+  color: #ffffff !important;
+}
+
+.terminal-panel--turno-activo .terminal-navegacion button:hover:not(:disabled):not(.terminal-navegacion__activo) {
+  color: #edf8ef !important;
+  border-color: rgba(92,211,104,.45) !important;
+  background: rgba(7,37,24,.92) !important;
+}
+
+/* ==========================================================
+   NAVEGACION POS DEFINITIVA V9
+   ========================================================== */
+
+.terminal-panel--turno-activo .terminal-navegacion {
+  display: grid !important;
+  grid-template-columns: 7.8rem 9.2rem 10rem 7.8rem !important;
+  align-items: center !important;
+  gap: .65rem !important;
+  width: fit-content !important;
+  margin: .5rem 0 .75rem !important;
+  padding: 0 !important;
+}
+
+.terminal-panel--turno-activo .terminal-navegacion button {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: .5rem !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 2.65rem !important;
+  min-height: 2.65rem !important;
+  padding: 0 .7rem !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  border-radius: .65rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-navegacion button > span:not(.terminal-navegacion__icono) {
+  display: inline-block !important;
+  width: auto !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  white-space: nowrap !important;
+  color: inherit !important;
+  font-size: .69rem !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+}
+
+.terminal-panel--turno-activo .terminal-navegacion__icono {
+  display: grid !important;
+  place-items: center !important;
+  flex: 0 0 1rem !important;
+  width: 1rem !important;
+  height: 1rem !important;
+  min-width: 1rem !important;
+  min-height: 1rem !important;
+  margin: 0 !important;
+}
+
+.terminal-panel--turno-activo .terminal-navegacion__icono svg {
+  width: .95rem !important;
+  height: .95rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-navegacion button.terminal-navegacion__activo {
+  background: linear-gradient(110deg,#379744,#4fba58) !important;
+  border-color: #59c762 !important;
+  color: #fff !important;
+  box-shadow: 0 .3rem .9rem rgba(64,183,76,.13) !important;
+}
+
+/* ==========================================================
+   NAVEGACION POS CENTRADA V10
+   ========================================================== */
+
+.terminal-panel--turno-activo .terminal-navegacion {
+  grid-template-columns: 7.2rem 8.5rem 9.3rem 7.2rem !important;
+  gap: .55rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-navegacion button {
+  position: relative !important;
+  justify-content: center !important;
+  padding: 0 .65rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-navegacion__icono {
+  position: absolute !important;
+  left: .72rem !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+}
+
+.terminal-panel--turno-activo .terminal-navegacion button > span:not(.terminal-navegacion__icono) {
+  display: block !important;
+  width: 100% !important;
+  padding: 0 .5rem !important;
+  text-align: center !important;
+}
+
+/* ==========================================================
+   NAVEGACION POS GRUPO CENTRADO V11
+   ========================================================== */
+
+.terminal-panel--turno-activo .terminal-navegacion button {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: .42rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-navegacion__icono {
+  position: static !important;
+  left: auto !important;
+  top: auto !important;
+  transform: none !important;
+  flex: 0 0 1rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-navegacion button > span:not(.terminal-navegacion__icono) {
+  display: inline-block !important;
+  width: auto !important;
+  padding: 0 !important;
+  text-align: left !important;
+}
+
+/* ==========================================================
+   NAVEGACION POS ANCHO NATURAL V12
+   ========================================================== */
+
+.terminal-panel--turno-activo .terminal-navegacion {
+  display: flex !important;
+  grid-template-columns: none !important;
+  align-items: center !important;
+  gap: .55rem !important;
+  width: fit-content !important;
+}
+
+.terminal-panel--turno-activo .terminal-navegacion button {
+  flex: 0 0 auto !important;
+  width: fit-content !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  padding-left: .82rem !important;
+  padding-right: .82rem !important;
+  gap: .42rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-navegacion button > span:not(.terminal-navegacion__icono) {
+  width: auto !important;
+  min-width: 0 !important;
+  flex: 0 0 auto !important;
+  white-space: nowrap !important;
+}
+
+/* ==========================================================
+   PANEL COMPRAS POS V13
+   ========================================================== */
+
+.terminal-panel--turno-activo .terminal-llavero {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  overflow: hidden !important;
+}
+
+.terminal-pos-inicio {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.55fr) minmax(15rem, .58fr) !important;
+  grid-template-rows: minmax(0, 1fr) auto !important;
+  grid-template-areas:
+    ""espera resumen""
+    ""manual resumen"" !important;
+  gap: .75rem !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+}
+
+/* ESPERA NFC */
+
+.terminal-pos-espera {
+  grid-area: espera;
+  display: grid;
+  grid-template-columns: minmax(17rem, .9fr) minmax(19rem, 1.1fr);
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid rgba(86,190,104,.14);
+  border-radius: 1rem;
+  background:
+    radial-gradient(circle at 72% 48%, rgba(66,192,78,.15), transparent 15rem),
+    linear-gradient(145deg,rgba(4,31,20,.92),rgba(2,20,13,.95));
+}
+
+.terminal-pos-espera__copy {
+  align-self: center;
+  padding: 1.6rem 0 1.35rem 1.8rem;
+}
+
+.terminal-pos-espera__copy h2 {
+  max-width: 26rem;
+  margin: .35rem 0 .65rem;
+  color: #fff8eb;
+  font-family: var(--fuente-marca);
+  font-size: clamp(1.8rem,3.1vh,2.75rem);
+  line-height: 1;
+}
+
+.terminal-pos-espera__copy > p {
+  max-width: 25rem;
+  margin: 0;
+  color: #8ca095;
+  font-size: .76rem;
+  line-height: 1.55;
+}
+
+.terminal-pos-espera__estado {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  margin-top: .8rem;
+  padding: .36rem .68rem;
+  border-radius: 999px;
+  color: #78e57e;
+  background: rgba(53,157,65,.13);
+  font-size: .61rem;
+  font-weight: 800;
+}
+
+.terminal-pos-espera__estado i {
+  width: .4rem;
+  height: .4rem;
+  border-radius: 50%;
+  background: #65df6b;
+  box-shadow: 0 0 .7rem #65df6b;
+}
+
+.terminal-pos-espera__pasos {
+  display: grid;
+  gap: .38rem;
+  margin-top: 1rem;
+}
+
+.terminal-pos-espera__pasos span {
+  display: flex;
+  align-items: center;
+  gap: .48rem;
+  color: #81958a;
+  font-size: .61rem;
+}
+
+.terminal-pos-espera__pasos strong {
+  display: grid;
+  width: 1.4rem;
+  height: 1.4rem;
+  place-items: center;
+  border-radius: 50%;
+  color: #6fde75;
+  background: rgba(53,151,66,.15);
+}
+
+.terminal-pos-espera__visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  min-height: 0;
+}
+
+.terminal-pos-espera__visual img {
+  position: relative;
+  z-index: 2;
+  width: min(92%,25rem);
+  max-height: 17rem;
+  object-fit: contain;
+  filter: drop-shadow(0 1rem 1.4rem rgba(0,0,0,.28));
+}
+
+.terminal-pos-espera__halo {
+  position: absolute;
+  width: 14rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgba(55,181,68,.13);
+  filter: blur(2.2rem);
+}
+
+/* RESUMEN */
+
+.terminal-pos-resumen {
+  grid-area: resumen;
+  display: flex;
+  flex-direction: column;
+  gap: .65rem;
+  min-height: 0;
+  padding: .95rem;
+  border: 1px solid rgba(91,184,111,.13);
+  border-radius: 1rem;
+  background: linear-gradient(150deg,rgba(5,31,21,.94),rgba(2,20,13,.94));
+}
+
+.terminal-pos-resumen__cabecera {
+  display: flex;
+  justify-content: space-between;
+  gap: .5rem;
+}
+
+.terminal-pos-resumen__cabecera h3 {
+  margin: .2rem 0 0;
+  color: #fff8ea;
+  font-family: var(--fuente-marca);
+  font-size: 1.12rem;
+}
+
+.terminal-pos-resumen__cabecera small {
+  color: #70857a;
+  font-size: .52rem;
+}
+
+.terminal-pos-resumen__metricas {
+  display: grid;
+  gap: .42rem;
+}
+
+.terminal-pos-resumen__metricas article {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .6rem .65rem;
+  border: 1px solid rgba(104,183,123,.08);
+  border-radius: .65rem;
+  background: rgba(255,255,255,.02);
+}
+
+.terminal-pos-resumen__metricas span {
+  color: #82958a;
+  font-size: .6rem;
+}
+
+.terminal-pos-resumen__metricas strong {
+  color: #72e078;
+  font-family: var(--fuente-marca);
+  font-size: 1.12rem;
+}
+
+.terminal-pos-resumen__hora {
+  display: flex;
+  justify-content: space-between;
+  padding: .55rem .2rem;
+  border-top: 1px solid rgba(109,180,126,.09);
+  color: #81958a;
+  font-size: .59rem;
+}
+
+.terminal-pos-resumen__hora strong {
+  color: #edf5ef;
+  font-size: .7rem;
+}
+
+.terminal-pos-resumen__regalon {
+  display: grid;
+  grid-template-columns: 4.7rem 1fr;
+  align-items: center;
+  gap: .5rem;
+  min-height: 5.4rem;
+  margin-top: auto;
+  padding: .5rem;
+  overflow: hidden;
+  border-radius: .72rem;
+  background: radial-gradient(circle at 15% 55%,rgba(58,167,69,.15),transparent 5rem);
+}
+
+.terminal-pos-resumen__regalon img {
+  width: 4.9rem;
+  max-height: 4.9rem;
+  object-fit: contain;
+}
+
+.terminal-pos-resumen__regalon strong,
+.terminal-pos-resumen__regalon span {
+  display: block;
+}
+
+.terminal-pos-resumen__regalon strong {
+  color: #eff6f1;
+  font-size: .72rem;
+}
+
+.terminal-pos-resumen__regalon span {
+  margin-top: .15rem;
+  color: #7f9488;
+  font-size: .55rem;
+}
+
+/* VENTA MANUAL */
+
+.terminal-pos-manual {
+  grid-area: manual;
+  display: grid;
+  grid-template-columns: minmax(14rem,.78fr) minmax(20rem,1.22fr);
+  align-items: center;
+  gap: 1rem;
+  padding: .72rem .9rem;
+  border: 1px solid rgba(92,179,112,.12);
+  border-radius: .8rem;
+  background: rgba(4,27,18,.68);
+}
+
+.terminal-pos-manual__intro {
+  display: flex;
+  align-items: center;
+  gap: .62rem;
+}
+
+.terminal-pos-manual__icono {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 2rem;
+  place-items: center;
+  border-radius: .62rem;
+  color: #70e077;
+  background: rgba(49,140,63,.14);
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.terminal-pos-manual__intro strong {
+  display: block;
+  color: #eef5f0;
+  font-size: .72rem;
+}
+
+.terminal-pos-manual__intro p {
+  margin: .12rem 0 0;
+  color: #75897d;
+  font-size: .56rem;
+  line-height: 1.35;
+}
+
+.terminal-pos-manual form {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: .55rem;
+}
+
+.terminal-pos-manual label {
+  color: #81968a;
+  font-size: .58rem;
+  font-weight: 750;
+}
+
+.terminal-pos-manual input {
+  width: 100%;
+  min-height: 2.4rem;
+  margin-top: .25rem;
+  padding: .52rem .68rem;
+  border: 1px solid rgba(82,190,101,.20);
+  border-radius: .58rem;
+  color: #fff;
+  background: rgba(1,15,10,.78);
+}
+
+.terminal-pos-manual button {
+  min-height: 2.4rem;
+  padding: .5rem .85rem;
+  border: 0;
+  border-radius: .58rem;
+  color: #07140d;
+  background: #58c65e;
+  font-size: .63rem;
+  font-weight: 850;
+}
+
+.terminal-pos-manual__identidad {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: .6rem;
+  margin-bottom: .4rem;
+}
+
+.terminal-pos-manual__identidad small,
+.terminal-pos-manual__identidad strong {
+  display: block;
+}
+
+.terminal-pos-manual__identidad small {
+  color: #70877a;
+  font-size: .52rem;
+  text-transform: uppercase;
+}
+
+.terminal-pos-manual__identidad strong {
+  color: #f4f8f5;
+  font-size: .7rem;
+}
+
+.terminal-pos-manual__cambiar {
+  min-height: 1.8rem !important;
+  color: #9bb0a2 !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  background: rgba(255,255,255,.04) !important;
+}
+
+.terminal-pos-token-respaldo {
+  display: none !important;
+}
+
+/* ==========================================================
+   PANEL COMPRAS POS AJUSTE V14
+   ========================================================== */
+
+.terminal-pos-inicio {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.65fr) minmax(16rem, .58fr) !important;
+  grid-template-rows: minmax(18rem, 1fr) auto !important;
+  gap: .8rem !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  position: relative !important;
+}
+
+/* BLOQUE PRINCIPAL NFC */
+.terminal-pos-espera {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+  display: grid !important;
+  grid-template-columns: minmax(18rem, .9fr) minmax(18rem, 1.1fr) !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+.terminal-pos-espera__copy {
+  position: relative !important;
+  z-index: 3 !important;
+  align-self: center !important;
+  padding: 1.45rem 1rem 1.3rem 1.8rem !important;
+}
+
+.terminal-pos-espera__copy h2 {
+  font-size: clamp(1.8rem, 2.8vw, 2.7rem) !important;
+  max-width: 24rem !important;
+}
+
+.terminal-pos-espera__visual {
+  position: relative !important;
+  z-index: 2 !important;
+  display: grid !important;
+  place-items: center !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+.terminal-pos-espera__visual img {
+  width: min(82%, 20rem) !important;
+  max-width: 20rem !important;
+  max-height: 15rem !important;
+  object-fit: contain !important;
+}
+
+.terminal-pos-espera__halo {
+  width: 11rem !important;
+}
+
+/* RESUMEN: COLUMNA DERECHA COMPLETA */
+.terminal-pos-resumen {
+  grid-column: 2 !important;
+  grid-row: 1 / 3 !important;
+  position: relative !important;
+  z-index: 4 !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  background: linear-gradient(150deg, rgba(5,31,21,.98), rgba(2,20,13,.98)) !important;
+}
+
+.terminal-pos-resumen__metricas {
+  flex: 0 0 auto !important;
+}
+
+.terminal-pos-resumen__regalon {
+  margin-top: auto !important;
+}
+
+.terminal-pos-resumen__regalon img {
+  width: 4.3rem !important;
+  max-height: 4.3rem !important;
+}
+
+/* VENTA MANUAL: DEBAJO DEL NFC, SIN INVADIR RESUMEN */
+.terminal-pos-manual {
+  grid-column: 1 !important;
+  grid-row: 2 !important;
+  position: relative !important;
+  z-index: 5 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 4.8rem !important;
+  margin: 0 !important;
+}
+
+.terminal-pos-manual form {
+  min-width: 0 !important;
+}
+
+.terminal-pos-manual input {
+  min-width: 0 !important;
+}
+
+/* EN PANTALLAS NORMALES DEL POS NO PERMITIR SOLAPAMIENTOS */
+@media (min-width: 1001px) {
+  .terminal-pos-inicio > * {
+    transform: none !important;
+  }
+}
+
+@media (max-width: 1000px) {
+  .terminal-pos-inicio {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto auto auto !important;
+    height: auto !important;
+    overflow-y: auto !important;
+  }
+
+  .terminal-pos-espera {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+  }
+
+  .terminal-pos-manual {
+    grid-column: 1 !important;
+    grid-row: 2 !important;
+  }
+
+  .terminal-pos-resumen {
+    grid-column: 1 !important;
+    grid-row: 3 !important;
+  }
+}
+
+/* ==========================================================
+   PANEL COMPRAS PULIDO V15
+   ========================================================== */
+
+.terminal-pos-espera__copy h2 {
+  font-size: clamp(1.65rem, 2.55vw, 2.45rem) !important;
+  line-height: 1.02 !important;
+}
+
+.terminal-pos-espera__visual {
+  transform: translateY(-.35rem);
+}
+
+.terminal-pos-espera__visual img {
+  width: min(88%, 21.5rem) !important;
+  max-width: 21.5rem !important;
+  max-height: 16rem !important;
+}
+
+.terminal-pos-resumen__regalon {
+  grid-template-columns: 5.2rem 1fr !important;
+  min-height: 5.8rem !important;
+}
+
+.terminal-pos-resumen__regalon img {
+  width: 5.25rem !important;
+  max-height: 5.25rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-lista-vacia,
+.terminal-panel--turno-activo .terminal-solicitudes-vacias {
+  min-height: 0 !important;
+  padding: .7rem 1rem !important;
+  font-size: .72rem !important;
+}

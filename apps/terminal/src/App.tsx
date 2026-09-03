@@ -1,3 +1,6 @@
+import tiendaIcono from './recursos/iconos/tienda.png'
+import lectorNfcIcono from './recursos/iconos/lector-nfc.png'
+import regalonCorazon from './recursos/mascota/regalon-corazon.png'
 import type { Tables } from '@club-regalones/domain'
 import type { FormEvent } from 'react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -46,15 +49,22 @@ import RecuperarTurno from './RecuperarTurno'
 import RelojTerminal from './RelojTerminal'
 import {
   aprobarCompraEnTurno,
+  buscarVecinoPorTelefonoTerminal,
   cerrarTurnoTerminal,
   consultarTurnoTerminal,
   corregirMontoTerminal,
+  crearSolicitudCompraPorTelefonoTerminal,
   informarMontoTerminal,
   listarSolicitudesTerminal,
+  obtenerResumenTurnoTerminal,
   rechazarSolicitudCompraEnTurno,
   solicitarReingresoMontoTerminal,
 } from './lib/turnos'
-import type { TurnoTerminal } from './lib/turnos'
+import type {
+  ResumenTurnoTerminal,
+  TurnoTerminal,
+  VecinoTelefonoTerminal,
+} from './lib/turnos'
 
 type Solicitud = Tables<'solicitudes_compra'>
 
@@ -79,6 +89,26 @@ function formatearMonto(monto: number | null) {
 
 function obtenerMontoVigente(solicitud: Solicitud) {
   return solicitud.monto_corregido ?? solicitud.monto_informado
+}
+
+function normalizarTelefonoVecino(valor: string) {
+  const limpio = valor.trim()
+
+  if (limpio.startsWith('+')) {
+    return `+${limpio.slice(1).replace(/\D/g, '')}`
+  }
+
+  const digitos = limpio.replace(/\D/g, '')
+
+  if (digitos.length === 9 && digitos.startsWith('9')) {
+    return `+56${digitos}`
+  }
+
+  if (digitos.length === 11 && digitos.startsWith('56')) {
+    return `+${digitos}`
+  }
+
+  return limpio
 }
 
 function PanelTerminal({
@@ -141,23 +171,32 @@ function PanelTerminal({
   const [mensaje, setMensaje] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
+  const [telefonoManual, setTelefonoManual] = useState('')
+  const [vecinoManual, setVecinoManual] =
+    useState<VecinoTelefonoTerminal | null>(null)
+  const [montoManual, setMontoManual] = useState('')
+  const [procesandoVentaManual, setProcesandoVentaManual] =
+    useState(false)
+  const [idempotenciaVentaManual, setIdempotenciaVentaManual] =
+    useState(() => crypto.randomUUID())
+
+  const [resumenTurno, setResumenTurno] =
+    useState<ResumenTurnoTerminal | null>(null)
+  const [cargandoResumenTurno, setCargandoResumenTurno] =
+    useState(false)
+
   const [seccionActiva, setSeccionActiva] = useState<
     'compras' | 'lector' | 'canjes' | 'alertas'
   >('compras')
 
   useEffect(() => {
-    if (
-      !mensaje ||
-      !mensaje.includes('recuperado correctamente')
-    ) {
-      return
-    }
+    if (!mensaje) return
 
     const temporizador = window.setTimeout(() => {
       setMensaje((actual) =>
         actual === mensaje ? null : actual,
       )
-    }, 5_000)
+    }, 4_000)
 
     return () => {
       window.clearTimeout(temporizador)
@@ -384,6 +423,143 @@ function PanelTerminal({
 
     return () => window.clearTimeout(cargaInicial)
   }, [cargarSolicitudes])
+
+  const cargarResumenTurno = useCallback(async () => {
+    if (!turno || !enLinea) {
+      setResumenTurno(null)
+      return
+    }
+
+    setCargandoResumenTurno(true)
+
+    try {
+      const resumen = await obtenerResumenTurnoTerminal(
+        turno.turno_id,
+        credencialTerminal,
+      )
+
+      setResumenTurno(resumen)
+    } catch {
+      setResumenTurno(null)
+    } finally {
+      setCargandoResumenTurno(false)
+    }
+  }, [credencialTerminal, enLinea, turno])
+
+  useEffect(() => {
+    if (!turno || !enLinea) return
+
+    const temporizador = window.setTimeout(() => {
+      void cargarResumenTurno()
+    }, 0)
+
+    return () => window.clearTimeout(temporizador)
+  }, [cargarResumenTurno, enLinea, turno])
+
+  const buscarVecinoManual = async (
+    evento: FormEvent<HTMLFormElement>,
+  ) => {
+    evento.preventDefault()
+
+    if (!turno) {
+      setError('Debes iniciar un turno antes de registrar una venta.')
+      return
+    }
+
+    const telefono = normalizarTelefonoVecino(telefonoManual)
+
+    if (!/^\+[1-9][0-9]{7,14}$/.test(telefono)) {
+      setError(
+        'Ingresa un teléfono válido. Ejemplo: +56 9 1234 5678.',
+      )
+      return
+    }
+
+    setProcesandoVentaManual(true)
+    setError(null)
+    setMensaje(null)
+
+    try {
+      const vecino = await buscarVecinoPorTelefonoTerminal(
+        telefono,
+        turno.turno_id,
+        credencialTerminal,
+      )
+
+      if (!vecino) {
+        setVecinoManual(null)
+        setError(
+          'No encontramos un Vecino Regalón con ese teléfono.',
+        )
+        return
+      }
+
+      setTelefonoManual(telefono)
+      setVecinoManual(vecino)
+      setMontoManual('')
+      setIdempotenciaVentaManual(crypto.randomUUID())
+    } catch (errorCapturado) {
+      setVecinoManual(null)
+      setError(mensajeSupabase(errorCapturado))
+    } finally {
+      setProcesandoVentaManual(false)
+    }
+  }
+
+  const registrarVentaManual = async (
+    evento: FormEvent<HTMLFormElement>,
+  ) => {
+    evento.preventDefault()
+
+    if (!turno || !vecinoManual) {
+      setError('Primero identifica al Vecino Regalón.')
+      return
+    }
+
+    const monto = Number(montoManual)
+
+    if (!Number.isInteger(monto) || monto <= 0) {
+      setError(
+        'El monto debe ser un número entero mayor que cero.',
+      )
+      return
+    }
+
+    setProcesandoVentaManual(true)
+    setError(null)
+    setMensaje(null)
+
+    try {
+      const solicitud =
+        await crearSolicitudCompraPorTelefonoTerminal(
+          telefonoManual,
+          monto,
+          idempotenciaVentaManual,
+          turno.turno_id,
+          credencialTerminal,
+        )
+
+      if (!solicitud) {
+        setError('No fue posible preparar la venta manual.')
+        return
+      }
+
+      setMensaje(
+        `Venta de ${vecinoManual.nombre_vecino} preparada para revisión.`,
+      )
+
+      setTelefonoManual('')
+      setVecinoManual(null)
+      setMontoManual('')
+      setIdempotenciaVentaManual(crypto.randomUUID())
+
+      await cargarSolicitudes()
+    } catch (errorCapturado) {
+      setError(mensajeSupabase(errorCapturado))
+    } finally {
+      setProcesandoVentaManual(false)
+    }
+  }
 
   const consultarLlavero = async (evento: FormEvent<HTMLFormElement>) => {
     evento.preventDefault()
@@ -726,7 +902,10 @@ function PanelTerminal({
   }
 
   const actualizarDespuesDeCompra = async () => {
-    await cargarSolicitudes()
+    await Promise.all([
+      cargarSolicitudes(),
+      cargarResumenTurno(),
+    ])
 
     if (
       contextoLlavero?.estado === 'activo' &&
@@ -835,6 +1014,10 @@ function PanelTerminal({
       setReglaAcumulacion(null)
       setErrorReglaAcumulacion(null)
       limpiarLecturaOperativa()
+      setResumenTurno(null)
+      setTelefonoManual('')
+      setVecinoManual(null)
+      setMontoManual('')
       setMensaje('Turno finalizado correctamente.')
     } catch (errorCapturado) {
       setError(mensajeSupabase(errorCapturado))
@@ -880,157 +1063,163 @@ function PanelTerminal({
   }
 
   return (
-    <main className="terminal-panel">
+    <main
+      className={
+        turno
+          ? 'terminal-panel terminal-panel--turno-activo'
+          : 'terminal-panel terminal-panel--inicio-turno'
+      }
+    >
       <header className="terminal-cabecera-ref">
-        <div className="terminal-cabecera-ref__marca">
-          <strong>
-            Club Regalones
-            <span aria-hidden="true">♥</span>
+  <div className="terminal-cabecera-ref__marca">
+    <strong>
+      Club Regalones
+      <span aria-hidden="true">♥</span>
+    </strong>
+
+    <small>Más barrio, más beneficios</small>
+  </div>
+
+  <div className="terminal-cabecera-ref__centro">
+    <div className="terminal-cabecera-ref__negocio">
+      <div
+        className="terminal-cabecera-ref__tienda"
+        aria-hidden="true"
+      >
+        <img
+          src={tiendaIcono}
+          alt=""
+        />
+      </div>
+
+      <div className="terminal-cabecera-ref__datos">
+        <strong>
+          {configuracion.nombreNegocio}
+        </strong>
+
+        <span className="terminal-cabecera-ref__caja">
+          {configuracion.nombreCaja}
+        </span>
+      </div>
+    </div>
+
+    <div className="terminal-cabecera-ref__turno">
+      {turno && (
+        <div className="terminal-cabecera-ref__cajero-bloque">
+          <span className="terminal-cabecera-ref__cajero-label">
+            Cajero/a
+          </span>
+
+          <strong className="terminal-cabecera-ref__cajero-nombre">
+            {turno.nombre_cajero}
           </strong>
-
-          <small>
-            Más barrio, más beneficios
-          </small>
         </div>
+      )}
 
-        <div className="terminal-cabecera-ref__negocio">
-          <div
-            className="terminal-cabecera-ref__tienda"
-            aria-hidden="true"
-          >
-            <svg viewBox="0 0 24 24">
-              <path
-                d="M5 10v10h14V10M4 5h16l1 5c0 1.3-1 2.3-2.3 2.3S16.5 11.3 16.5 10c0 1.3-1 2.3-2.3 2.3S12 11.3 12 10c0 1.3-1 2.3-2.3 2.3S7.5 11.3 7.5 10c0 1.3-1 2.3-2.2 2.3S3 11.3 3 10l1-5Z"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M9 20v-5h6v5"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-              />
-            </svg>
-          </div>
+      <EstadoPwa
+        disponible={enLinea}
+        etiquetaEnLinea={
+          turno ? 'Turno activo' : 'Terminal lista'
+        }
+        mostrarInstalacion={false}
+      />
+    </div>
+  </div>
 
-          <div className="terminal-cabecera-ref__datos">
-            <strong>
-              {configuracion.nombreNegocio}
-            </strong>
+  <div className="terminal-cabecera-ref__lado-derecho">
+    <div className="terminal-cabecera-ref__reloj-turno">
+      <RelojTerminal />
+    </div>
 
-            <div>
-              <span className="terminal-cabecera-ref__caja">
-                {configuracion.nombreCaja}
-              </span>
+    {turno && (
+      <div className="terminal-cabecera-ref__acciones terminal-cabecera-ref__acciones--vertical">
+        <button
+          type="button"
+          disabled={!enLinea}
+          onClick={() =>
+            void cargarSolicitudes()
+          }
+        >
+          Actualizar
+        </button>
 
-              {turno && (
-                <>
-                  <i />
-                  <span className="terminal-cabecera-ref__cajero">
-                    {turno.nombre_cajero}
-                  </span>
-                </>
-              )}
-            </div>
-          </div>
-
-          <EstadoPwa
-            disponible={enLinea}
-            etiquetaEnLinea={
-              turno ? 'Turno activo' : 'Terminal lista'
-            }
-            mostrarInstalacion={false}
-          />
-        </div>
-
-        <div className="terminal-cabecera-ref__derecha">
-          <RelojTerminal />
-
-          {turno && (
-            <div className="terminal-cabecera-ref__acciones">
-              <button
-                type="button"
-                disabled={cerrandoTurno || !enLinea}
-                onClick={() => void finalizarTurno()}
-              >
-                {cerrandoTurno
-                  ? 'Finalizando…'
-                  : 'Finalizar turno'}
-              </button>
-
-              <button
-                type="button"
-                disabled={!enLinea}
-                onClick={() =>
-                  void cargarSolicitudes()
-                }
-              >
-                Actualizar
-              </button>
-            </div>
-          )}
-        </div>
-      </header>
+        <button
+          type="button"
+          disabled={cerrandoTurno || !enLinea}
+          onClick={() => void finalizarTurno()}
+        >
+          {cerrandoTurno
+            ? 'Finalizando…'
+            : 'Finalizar turno'}
+        </button>
+      </div>
+    )}
+  </div>
+</header>
 
       {turno && (
-        <nav
-          className="terminal-navegacion"
-          aria-label="Operaciones de caja"
-        >
-          <button
-            type="button"
-            className={
-              seccionActiva === 'compras'
-                ? 'terminal-navegacion__activo'
-                : ''
-            }
-            onClick={() => setSeccionActiva('compras')}
-          >
-            <span aria-hidden="true">01</span>
-            Compras
-          </button>
+        <nav className="terminal-navegacion" aria-label="Operaciones de caja">
+  <button
+    type="button"
+    className={seccionActiva === 'compras' ? 'terminal-navegacion__activo' : ''}
+    onClick={() => setSeccionActiva('compras')}
+  >
+    <span className="terminal-navegacion__icono" aria-hidden="true">
+      <svg viewBox="0 0 24 24">
+        <path d="M3 4h2l2 9h10l2-6H7" />
+        <circle cx="9" cy="19" r="1.3" />
+        <circle cx="17" cy="19" r="1.3" />
+      </svg>
+    </span>
+    <span>Compras</span>
+  </button>
 
-          <button
-            type="button"
-            className={
-              seccionActiva === 'lector'
-                ? 'terminal-navegacion__activo'
-                : ''
-            }
-            onClick={() => setSeccionActiva('lector')}
-          >
-            <span aria-hidden="true">02</span>
-            Lector
-          </button>
+  <button
+    type="button"
+    className={seccionActiva === 'lector' ? 'terminal-navegacion__activo' : ''}
+    onClick={() => setSeccionActiva('lector')}
+  >
+    <span className="terminal-navegacion__icono" aria-hidden="true">
+      <svg viewBox="0 0 24 24">
+        <rect x="7" y="2.5" width="10" height="19" rx="2" />
+        <path d="M10 5h4" />
+        <path d="M10.5 18.5h3" />
+      </svg>
+    </span>
+    <span>Lector móvil</span>
+  </button>
 
-          <button
-            type="button"
-            className={
-              seccionActiva === 'canjes'
-                ? 'terminal-navegacion__activo'
-                : ''
-            }
-            onClick={() => setSeccionActiva('canjes')}
-          >
-            <span aria-hidden="true">03</span>
-            Canjes REGIS
-          </button>
+  <button
+    type="button"
+    className={seccionActiva === 'canjes' ? 'terminal-navegacion__activo' : ''}
+    onClick={() => setSeccionActiva('canjes')}
+  >
+    <span className="terminal-navegacion__icono" aria-hidden="true">
+      <svg viewBox="0 0 24 24">
+        <path d="M4 10h16v10H4z" />
+        <path d="M3 7h18v3H3z" />
+        <path d="M12 7v13" />
+        <path d="M12 7c-3 0-5-1-5-2.5C7 3.2 8 2.5 9.2 2.5 11 2.5 12 5 12 7Z" />
+        <path d="M12 7c3 0 5-1 5-2.5 0-1.3-1-2-2.2-2C13 2.5 12 5 12 7Z" />
+      </svg>
+    </span>
+    <span>Canjes REGIS</span>
+  </button>
 
-          <button
-            type="button"
-            className={
-              seccionActiva === 'alertas'
-                ? 'terminal-navegacion__activo'
-                : ''
-            }
-            onClick={() => setSeccionActiva('alertas')}
-          >
-            <span aria-hidden="true">04</span>
-            Alertas
-          </button>
-        </nav>
+  <button
+    type="button"
+    className={seccionActiva === 'alertas' ? 'terminal-navegacion__activo' : ''}
+    onClick={() => setSeccionActiva('alertas')}
+  >
+    <span className="terminal-navegacion__icono" aria-hidden="true">
+      <svg viewBox="0 0 24 24">
+        <path d="M18 8a6 6 0 0 0-12 0c0 6-3 7-3 9h18c0-2-3-3-3-9Z" />
+        <path d="M10 21h4" />
+      </svg>
+    </span>
+    <span>Alertas</span>
+  </button>
+</nav>
       )}
 
       {turno && enLinea && (
@@ -1067,7 +1256,7 @@ function PanelTerminal({
           {error}
         </p>
       )}
-      {mensaje && (
+      {mensaje && turno && (
         <p className="terminal-alert terminal-alert--success">{mensaje}</p>
       )}
 
@@ -1090,53 +1279,211 @@ function PanelTerminal({
         enLinea &&
         seccionActiva === 'compras' && (
         <section className="terminal-llavero" aria-labelledby="activar-llavero-title">
-          <div className="terminal-llavero__encabezado">
+          {!contextoLlavero && (
+  <div className="terminal-pos-inicio">
+
+    <section className="terminal-pos-espera">
+      <div className="terminal-pos-espera__copy">
+        <span className="terminal-eyebrow">Compra</span>
+
+        <h2>Esperando a Vecino Regalón</h2>
+
+        <p>
+          Acerca el llavero o tarjeta NFC del Vecino Regalón
+          para comenzar la venta.
+        </p>
+
+        <span className="terminal-pos-espera__estado">
+          <i />
+          Lector listo
+        </span>
+
+        <div className="terminal-pos-espera__pasos">
+          <span><strong>1</strong> Acerca NFC o llavero</span>
+          <span><strong>2</strong> Identificamos al vecino</span>
+          <span><strong>3</strong> Registras la compra</span>
+        </div>
+      </div>
+
+      <div className="terminal-pos-espera__visual">
+        <div className="terminal-pos-espera__halo" />
+
+        <img
+          src={lectorNfcIcono}
+          alt="Lector NFC y llavero de Club Regalones"
+        />
+      </div>
+    </section>
+
+
+    <aside className="terminal-pos-resumen">
+      <div className="terminal-pos-resumen__cabecera">
+        <div>
+          <span className="terminal-eyebrow">Turno actual</span>
+          <h3>Resumen del turno</h3>
+        </div>
+
+        {cargandoResumenTurno && (
+          <small>Actualizando…</small>
+        )}
+      </div>
+
+      <div className="terminal-pos-resumen__metricas">
+        <article>
+          <span>Ventas realizadas</span>
+          <strong>{resumenTurno?.ventas_realizadas ?? 0}</strong>
+        </article>
+
+        <article>
+          <span>REGIS acumulados</span>
+          <strong>{resumenTurno?.regis_acumulados ?? 0}</strong>
+        </article>
+
+        <article>
+          <span>Canjes realizados</span>
+          <strong>{resumenTurno?.canjes_realizados ?? 0}</strong>
+        </article>
+      </div>
+
+      <div className="terminal-pos-resumen__hora">
+        <span>Inicio del turno</span>
+
+        <strong>
+          {resumenTurno?.iniciado_en
+            ? new Date(resumenTurno.iniciado_en).toLocaleTimeString(
+                'es-CL',
+                {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                },
+              )
+            : '—'}
+        </strong>
+      </div>
+
+      <div className="terminal-pos-resumen__regalon">
+        <img
+          src={regalonCorazon}
+          alt=""
+          aria-hidden="true"
+        />
+
+        <div>
+          <strong>¡Todo listo!</strong>
+          <span>Cada compra impulsa lo local.</span>
+        </div>
+      </div>
+    </aside>
+
+
+    <section className="terminal-pos-manual">
+      <div className="terminal-pos-manual__intro">
+        <div className="terminal-pos-manual__icono" aria-hidden="true">
+          +
+        </div>
+
+        <div>
+          <strong>Registrar venta manual</strong>
+          <p>
+            Si NFC no está disponible, identifica al vecino por teléfono.
+          </p>
+        </div>
+      </div>
+
+      {!vecinoManual ? (
+        <form onSubmit={buscarVecinoManual}>
+          <label>
+            Teléfono asociado a la cuenta
+
+            <input
+              required
+              type="tel"
+              autoComplete="off"
+              value={telefonoManual}
+              onChange={(evento) =>
+                setTelefonoManual(evento.target.value)
+              }
+              placeholder="+56 9 1234 5678"
+            />
+          </label>
+
+          <button
+            type="submit"
+            disabled={procesandoVentaManual}
+          >
+            {procesandoVentaManual
+              ? 'Buscando…'
+              : 'Continuar'}
+          </button>
+        </form>
+      ) : (
+        <div className="terminal-pos-manual__vecino">
+          <div className="terminal-pos-manual__identidad">
             <div>
-              <span className="terminal-eyebrow">Identificación asistida</span>
-              <h2 id="activar-llavero-title">Leer llavero</h2>
+              <small>Vecino Regalón encontrado</small>
+              <strong>{vecinoManual.nombre_vecino}</strong>
             </div>
-            <p>
-              El celular lector envía la identidad a esta Terminal PWA. Si es
-              el primer uso, se solicitará verificar cédula o PIN.
-            </p>
+
+            <button
+              type="button"
+              className="terminal-pos-manual__cambiar"
+              onClick={() => {
+                setVecinoManual(null)
+                setMontoManual('')
+              }}
+            >
+              Cambiar
+            </button>
           </div>
 
-          <form
-            className="terminal-llavero__consulta"
-            onSubmit={consultarLlavero}
-          >
+          <form onSubmit={registrarVentaManual}>
             <label>
-              Token manual de respaldo
+              Monto pagado
+
               <input
                 required
-                type="password"
-                minLength={8}
-                maxLength={500}
-                autoComplete="off"
-                value={tokenLlavero}
-                onChange={(evento) => {
-                  setTokenLlavero(evento.target.value)
-                  setLecturaLlavero(null)
-                  setContextoLlavero(null)
-                  setSaldoRegisLlavero(null)
-                  setMontoCompraAsistida('')
-                  setIdempotenciaCompraAsistida(
-                    crypto.randomUUID(),
-                  )
-                }}
-                placeholder="Solo si el celular lector no está disponible"
+                type="number"
+                inputMode="numeric"
+                min="1"
+                step="1"
+                value={montoManual}
+                onChange={(evento) =>
+                  setMontoManual(evento.target.value)
+                }
+                placeholder="Ej: 12500"
               />
             </label>
 
             <button
               type="submit"
-              disabled={procesandoLlavero}
+              disabled={procesandoVentaManual}
             >
-              {procesandoLlavero
-                ? 'Consultando…'
-                : 'Leer llavero'}
+              {procesandoVentaManual
+                ? 'Preparando…'
+                : 'Continuar a revisión'}
             </button>
           </form>
+        </div>
+      )}
+    </section>
+
+
+    <form
+      className="terminal-pos-token-respaldo"
+      onSubmit={consultarLlavero}
+    >
+      <input
+        value={tokenLlavero}
+        onChange={(evento) =>
+          setTokenLlavero(evento.target.value)
+        }
+      />
+      <button type="submit">Consultar</button>
+    </form>
+
+  </div>
+)}
+
           {contextoLlavero && (
             <div className="terminal-llavero__resultado">
               <div className="terminal-llavero__identidad">

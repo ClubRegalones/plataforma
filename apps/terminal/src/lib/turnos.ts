@@ -188,3 +188,72 @@ export async function confirmarCompraConCanjeEnTurno(
   if (error) throw error
   return data[0] ?? null
 }
+
+/* ============================================================================
+ * PANTALLA 6 - POS ACTIVO
+ * ========================================================================== */
+
+export type VecinoTelefonoTerminal =
+  Database['public']['Functions']['terminal_buscar_vecino_por_telefono']['Returns'][number]
+
+export type ResumenTurnoTerminal =
+  Database['public']['Functions']['terminal_resumen_turno']['Returns'][number]
+
+export async function buscarVecinoPorTelefonoTerminal(
+  telefono: string,
+  turnoId: string,
+  credencial: CredencialTerminalLocal,
+) {
+  const { data, error } = await supabase.rpc(
+    'terminal_buscar_vecino_por_telefono',
+    {
+      p_telefono: telefono,
+      p_turno_id: turnoId,
+      p_terminal_id: credencial.terminalId,
+      p_token_terminal: credencial.tokenTerminal,
+    },
+  )
+
+  if (error) throw error
+  return data[0] ?? null
+}
+
+export async function crearSolicitudCompraPorTelefonoTerminal(
+  telefono: string,
+  monto: number,
+  idempotencyKey: string,
+  turnoId: string,
+  credencial: CredencialTerminalLocal,
+) {
+  const { data, error } = await supabase.rpc(
+    'terminal_crear_solicitud_compra_por_telefono',
+    {
+      p_telefono: telefono,
+      p_monto: monto,
+      p_idempotency_key: idempotencyKey,
+      p_turno_id: turnoId,
+      p_terminal_id: credencial.terminalId,
+      p_token_terminal: credencial.tokenTerminal,
+    },
+  )
+
+  if (error) throw error
+  return data
+}
+
+export async function obtenerResumenTurnoTerminal(
+  turnoId: string,
+  credencial: CredencialTerminalLocal,
+) {
+  const { data, error } = await supabase.rpc(
+    'terminal_resumen_turno',
+    {
+      p_turno_id: turnoId,
+      p_terminal_id: credencial.terminalId,
+      p_token_terminal: credencial.tokenTerminal,
+    },
+  )
+
+  if (error) throw error
+  return data[0] ?? null
+}

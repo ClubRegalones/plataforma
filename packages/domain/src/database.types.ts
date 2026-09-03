@@ -7,6 +7,11 @@ export type Json =
   | Json[]
 
 export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "14.5"
+  }
   graphql_public: {
     Tables: {
       [_ in never]: never
@@ -2587,6 +2592,7 @@ export type Database = {
           token_vinculacion: string
         }[]
       }
+      eliminar_caja_sin_uso: { Args: { p_caja_id: string }; Returns: boolean }
       entregar_llavero: {
         Args: {
           p_codigo_publico: string
@@ -3300,6 +3306,18 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      terminal_buscar_vecino_por_telefono: {
+        Args: {
+          p_telefono: string
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          nombre_vecino: string
+          vecino_id: string
+        }[]
+      }
       terminal_cancelar_canje: {
         Args: {
           p_canje_id: string
@@ -3509,6 +3527,40 @@ export type Database = {
           p_idempotency_key: string
           p_lectura_id: string
           p_monto: number
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          actualizado_en: string
+          caja_id: string
+          creado_en: string
+          estado: Database["public"]["Enums"]["estado_solicitud_compra"]
+          expira_en: string
+          id: string
+          idempotency_key: string
+          informado_por: Database["public"]["Enums"]["informado_por"] | null
+          lectura_terminal_id: string | null
+          llavero_id: string | null
+          monto_corregido: number | null
+          monto_informado: number | null
+          motivo_correccion: string | null
+          motivo_rechazo: string | null
+          turno_caja_id: string | null
+          vecino_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "solicitudes_compra"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      terminal_crear_solicitud_compra_por_telefono: {
+        Args: {
+          p_idempotency_key: string
+          p_monto: number
+          p_telefono: string
           p_terminal_id: string
           p_token_terminal: string
           p_turno_id: string
@@ -3854,6 +3906,19 @@ export type Database = {
           expira_en: string
         }[]
       }
+      terminal_resumen_turno: {
+        Args: {
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          canjes_realizados: number
+          iniciado_en: string
+          regis_acumulados: number
+          ventas_realizadas: number
+        }[]
+      }
       terminal_solicitar_reingreso_monto: {
         Args: {
           p_motivo: string
@@ -4192,12 +4257,12 @@ export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -4221,11 +4286,11 @@ export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -4246,11 +4311,11 @@ export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -4271,11 +4336,11 @@ export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -4288,11 +4353,11 @@ export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
+    : never) = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -4432,4 +4497,3 @@ export const Constants = {
     },
   },
 } as const
-

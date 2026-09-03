@@ -10,17 +10,45 @@ import type { ConfiguracionTerminalLocal } from './lib/configuracionTerminal'
 import { mensajeSupabase } from './lib/mensajesSupabase'
 import { supabase } from './lib/supabase'
 import { registrarTerminalPwa } from './lib/terminalPwa'
+import PantallaConfiguracionInicial from './configuracion/PantallaConfiguracionInicial'
+import PantallaSeleccionarNegocio from './configuracion/PantallaSeleccionarNegocio'
+import PantallaVincularCaja from './configuracion/PantallaVincularCaja'
+import PantallaVinculacionExitosa from './configuracion/PantallaVinculacionExitosa'
 
 type NegocioConfigurable = {
   id: string
   nombre: string
+  rut: string | null
+}
+
+type SucursalConfigurable = {
+  id: string
+  negocioId: string
+  nombre: string
+  direccion: string
+  comuna: string
 }
 
 type CajaConfigurable = {
   id: string
   negocioId: string
+  sucursalId: string
   nombre: string
   codigo: string | null
+}
+
+type TerminalCajaConfigurable = {
+  id: string
+  cajaId: string
+  estado: string
+  nombreDispositivo: string | null
+}
+
+type ResultadoVinculacionExitosa = {
+  configuracion: ConfiguracionTerminalLocal
+  nombreNegocio: string
+  nombreSucursal: string
+  nombreCaja: string
 }
 
 type Props = {
@@ -34,29 +62,54 @@ export default function ConfiguracionInicialTerminal({
 }: Props) {
   const { sesion, cargando: cargandoSesion } = useSesion()
 
+  const [
+    vinculacionExitosa,
+    setVinculacionExitosa,
+  ] = useState<ResultadoVinculacionExitosa | null>(null)
+
   const [correo, setCorreo] = useState('')
   const [contrasena, setContrasena] = useState('')
 
   const [negocios, setNegocios] = useState<
     NegocioConfigurable[]
   >([])
+  const [sucursales, setSucursales] =
+    useState<SucursalConfigurable[]>([])
   const [cajas, setCajas] = useState<CajaConfigurable[]>([])
+  const [terminalesCaja, setTerminalesCaja] =
+    useState<TerminalCajaConfigurable[]>([])
 
   const [negocioId, setNegocioId] = useState('')
+  const [sucursalId, setSucursalId] = useState('')
   const [cajaId, setCajaId] = useState('')
 
+  const [pasoConfiguracion, setPasoConfiguracion] =
+    useState<'negocio' | 'caja'>('negocio')
+
   const [procesando, setProcesando] = useState(false)
+  const [gestionandoCaja, setGestionandoCaja] =
+    useState(false)
   const [cargandoOpciones, setCargandoOpciones] =
     useState(false)
 
   const [error, setError] = useState<string | null>(null)
 
-  const cajasDelNegocio = useMemo(
+  const sucursalesDelNegocio = useMemo(
+    () =>
+      sucursales.filter(
+        (sucursal) =>
+          sucursal.negocioId === negocioId,
+      ),
+    [sucursales, negocioId],
+  )
+
+  const cajasDeSucursal = useMemo(
     () =>
       cajas.filter(
-        (caja) => caja.negocioId === negocioId,
+        (caja) =>
+          caja.sucursalId === sucursalId,
       ),
-    [cajas, negocioId],
+    [cajas, sucursalId],
   )
 
   useEffect(() => {
@@ -100,7 +153,7 @@ export default function ConfiguracionInicialTerminal({
           error: errorNegocios,
         } = await supabase
           .from('negocios')
-          .select('id, nombre')
+          .select('id, nombre, rut')
           .in('id', negociosIds)
           .eq('estado', 'activo')
           .order('nombre')
@@ -112,7 +165,7 @@ export default function ConfiguracionInicialTerminal({
           error: errorSucursales,
         } = await supabase
           .from('sucursales')
-          .select('id, negocio_id')
+          .select('id, negocio_id, nombre, direccion, comuna')
           .in('negocio_id', negociosIds)
           .eq('estado', 'activa')
 
@@ -145,6 +198,26 @@ export default function ConfiguracionInicialTerminal({
 
         if (errorCajas) throw errorCajas
 
+        const cajasIds =
+          cajasActivas.map((caja) => caja.id)
+
+        const {
+          data: terminalesRegistradas,
+          error: errorTerminales,
+        } = cajasIds.length
+          ? await supabase
+              .from('terminales')
+              .select(
+                'id, caja_id, estado, nombre_dispositivo',
+              )
+              .in('caja_id', cajasIds)
+              .neq('estado', 'revocada')
+          : { data: [], error: null }
+
+        if (errorTerminales) {
+          throw errorTerminales
+        }
+
         const cajasDisponibles =
           cajasActivas.flatMap((caja) => {
             const negocio =
@@ -156,6 +229,7 @@ export default function ConfiguracionInicialTerminal({
               {
                 id: caja.id,
                 negocioId: negocio,
+                sucursalId: caja.sucursal_id,
                 nombre: caja.nombre,
                 codigo: caja.codigo,
               },
@@ -164,18 +238,53 @@ export default function ConfiguracionInicialTerminal({
 
         if (!vigente) return
 
+        const sucursalesDisponibles =
+          sucursales.map((sucursal) => ({
+            id: sucursal.id,
+            negocioId: sucursal.negocio_id,
+            nombre: sucursal.nombre,
+            direccion: sucursal.direccion,
+            comuna: sucursal.comuna,
+          }))
+
         const primerNegocio =
           negociosActivos[0]?.id ?? ''
+
+        const primeraSucursal =
+          sucursalesDisponibles.find(
+            (sucursal) =>
+              sucursal.negocioId === primerNegocio,
+          )?.id ?? ''
+
+        const cajasOcupadas = new Set(
+          terminalesRegistradas.map(
+            (terminal) => terminal.caja_id,
+          ),
+        )
 
         const primeraCaja =
           cajasDisponibles.find(
             (caja) =>
-              caja.negocioId === primerNegocio,
+              caja.sucursalId === primeraSucursal &&
+              !cajasOcupadas.has(caja.id),
           )?.id ?? ''
 
         setNegocios(negociosActivos)
+        setSucursales(sucursalesDisponibles)
         setCajas(cajasDisponibles)
+        setTerminalesCaja(
+          terminalesRegistradas.map(
+            (terminal) => ({
+              id: terminal.id,
+              cajaId: terminal.caja_id,
+              estado: terminal.estado,
+              nombreDispositivo:
+                terminal.nombre_dispositivo,
+            }),
+          ),
+        )
         setNegocioId(primerNegocio)
+        setSucursalId(primeraSucursal)
         setCajaId(primeraCaja)
       } catch (errorCapturado) {
         if (vigente) {
@@ -217,13 +326,297 @@ export default function ConfiguracionInicialTerminal({
   const cambiarNegocio = (nuevoNegocioId: string) => {
     setNegocioId(nuevoNegocioId)
 
+    const primeraSucursal =
+      sucursales.find(
+        (sucursal) =>
+          sucursal.negocioId === nuevoNegocioId,
+      )?.id ?? ''
+
+    const cajasOcupadas = new Set(
+      terminalesCaja
+        .filter(
+          (terminal) =>
+            terminal.estado !== 'revocada',
+        )
+        .map(
+          (terminal) => terminal.cajaId,
+        ),
+    )
+
     const primeraCaja =
       cajas.find(
         (caja) =>
-          caja.negocioId === nuevoNegocioId,
+          caja.sucursalId === primeraSucursal &&
+          !cajasOcupadas.has(caja.id),
+      )?.id ?? ''
+
+    setSucursalId(primeraSucursal)
+    setCajaId(primeraCaja)
+    setError(null)
+  }
+
+  const cambiarSucursal = (
+    nuevaSucursalId: string,
+  ) => {
+    setSucursalId(nuevaSucursalId)
+
+    const cajasOcupadas = new Set(
+      terminalesCaja
+        .filter(
+          (terminal) =>
+            terminal.estado !== 'revocada',
+        )
+        .map(
+          (terminal) => terminal.cajaId,
+        ),
+    )
+
+    const primeraCaja =
+      cajas.find(
+        (caja) =>
+          caja.sucursalId === nuevaSucursalId &&
+          !cajasOcupadas.has(caja.id),
       )?.id ?? ''
 
     setCajaId(primeraCaja)
+    setError(null)
+  }
+
+  const volverAlInicio = async () => {
+    setError(null)
+    setPasoConfiguracion('negocio')
+
+    const { error: errorSalida } =
+      await supabase.auth.signOut()
+
+    if (errorSalida) {
+      setError(mensajeSupabase(errorSalida))
+    }
+  }
+
+  const continuarACaja = () => {
+    if (!negocioId || !sucursalId) {
+      setError(
+        'Selecciona el negocio y la sucursal para continuar.',
+      )
+      return
+    }
+
+    setError(null)
+    setPasoConfiguracion('caja')
+  }
+
+  const volverANegocio = () => {
+    setPasoConfiguracion('negocio')
+    setError(null)
+  }
+
+  const renombrarCaja = async (
+    idCaja: string,
+    nuevoNombre: string,
+  ) => {
+    const nombre = nuevoNombre.trim()
+
+    if (
+      !nombre ||
+      nombre.length > 100
+    ) {
+      setError(
+        'El nombre de la caja debe tener entre 1 y 100 caracteres.',
+      )
+      return false
+    }
+
+    setGestionandoCaja(true)
+    setError(null)
+
+    try {
+      const { error: errorActualizacion } =
+        await supabase
+          .from('cajas')
+          .update({ nombre })
+          .eq('id', idCaja)
+
+      if (errorActualizacion) {
+        throw errorActualizacion
+      }
+
+      setCajas((actuales) =>
+        actuales.map((caja) =>
+          caja.id === idCaja
+            ? {
+                ...caja,
+                nombre,
+              }
+            : caja,
+        ),
+      )
+
+      return true
+    } catch (errorCapturado) {
+      setError(
+        mensajeSupabase(errorCapturado),
+      )
+      return false
+    } finally {
+      setGestionandoCaja(false)
+    }
+  }
+
+  const crearNuevaCaja = async (
+    nombreIngresado: string,
+  ) => {
+    const nombre =
+      nombreIngresado.trim()
+
+    if (!sucursalId || !negocioId) {
+      setError(
+        'Selecciona primero el negocio y la sucursal.',
+      )
+      return false
+    }
+
+    if (
+      !nombre ||
+      nombre.length > 100
+    ) {
+      setError(
+        'El nombre de la caja debe tener entre 1 y 100 caracteres.',
+      )
+      return false
+    }
+
+    setGestionandoCaja(true)
+    setError(null)
+
+    try {
+      const {
+        data: nuevaCaja,
+        error: errorCreacion,
+      } = await supabase
+        .from('cajas')
+        .insert({
+          sucursal_id: sucursalId,
+          nombre,
+          codigo: null,
+        })
+        .select(
+          'id, sucursal_id, nombre, codigo',
+        )
+        .single()
+
+      if (errorCreacion) {
+        throw errorCreacion
+      }
+
+      const cajaCreada: CajaConfigurable = {
+        id: nuevaCaja.id,
+        negocioId,
+        sucursalId:
+          nuevaCaja.sucursal_id,
+        nombre: nuevaCaja.nombre,
+        codigo: nuevaCaja.codigo,
+      }
+
+      setCajas((actuales) => [
+        ...actuales,
+        cajaCreada,
+      ])
+
+      setCajaId(cajaCreada.id)
+
+      return true
+    } catch (errorCapturado) {
+      setError(
+        mensajeSupabase(errorCapturado),
+      )
+      return false
+    } finally {
+      setGestionandoCaja(false)
+    }
+  }
+
+  const eliminarCaja = async (
+    idCaja: string,
+  ) => {
+    setGestionandoCaja(true)
+    setError(null)
+
+    try {
+      const { error: errorEliminacion } =
+        await supabase.rpc(
+          'eliminar_caja_sin_uso',
+          {
+            p_caja_id: idCaja,
+          },
+        )
+
+      if (errorEliminacion) {
+        throw errorEliminacion
+      }
+
+      const cajasRestantes =
+        cajas.filter(
+          (caja) => caja.id !== idCaja,
+        )
+
+      setCajas(cajasRestantes)
+
+      if (cajaId === idCaja) {
+        const ocupadas = new Set(
+          terminalesCaja
+            .filter(
+              (terminal) =>
+                terminal.estado !== 'revocada',
+            )
+            .map(
+              (terminal) =>
+                terminal.cajaId,
+            ),
+        )
+
+        const siguienteCaja =
+          cajasRestantes.find(
+            (caja) =>
+              caja.sucursalId === sucursalId &&
+              !ocupadas.has(caja.id),
+          )
+
+        setCajaId(
+          siguienteCaja?.id ?? '',
+        )
+      }
+
+      return true
+    } catch (errorCapturado) {
+      setError(
+        mensajeSupabase(errorCapturado),
+      )
+      return false
+    } finally {
+      setGestionandoCaja(false)
+    }
+  }
+
+  const seleccionarCaja = (
+    nuevaCajaId: string,
+  ) => {
+    const ocupada =
+      terminalesCaja.some(
+        (terminal) =>
+          terminal.cajaId === nuevaCajaId &&
+          terminal.estado !== 'revocada',
+      )
+
+    if (ocupada) {
+      setError(
+        'Esta caja ya está vinculada a otra Terminal.',
+      )
+      return
+    }
+
+    setCajaId(nuevaCajaId)
+    setError(null)
   }
 
   const configurar = async () => {
@@ -234,9 +627,27 @@ export default function ConfiguracionInicialTerminal({
       return
     }
 
-    if (!negocioId || !cajaId) {
+    if (
+      !negocioId ||
+      !sucursalId ||
+      !cajaId
+    ) {
       setError(
-        'Selecciona el negocio y la caja que quedarán vinculados.',
+        'Selecciona el negocio, la sucursal y la caja que quedarán vinculados.',
+      )
+      return
+    }
+
+    const cajaOcupada =
+      terminalesCaja.some(
+        (terminal) =>
+          terminal.cajaId === cajaId &&
+          terminal.estado !== 'revocada',
+      )
+
+    if (cajaOcupada) {
+      setError(
+        'Esta caja ya está vinculada a otra Terminal.',
       )
       return
     }
@@ -283,6 +694,24 @@ export default function ConfiguracionInicialTerminal({
           contexto,
         )
 
+      const negocioVinculado =
+        negocios.find(
+          (negocio) =>
+            negocio.id === negocioId,
+        )
+
+      const sucursalVinculada =
+        sucursales.find(
+          (sucursal) =>
+            sucursal.id === sucursalId,
+        )
+
+      const cajaVinculada =
+        cajas.find(
+          (caja) =>
+            caja.id === cajaId,
+        )
+
       const { error: errorSalida } =
         await supabase.auth.signOut()
 
@@ -290,12 +719,44 @@ export default function ConfiguracionInicialTerminal({
 
       guardarConfiguracionTerminal(configuracion)
 
-      alConfigurar(configuracion)
+      setVinculacionExitosa({
+        configuracion,
+        nombreNegocio:
+          negocioVinculado?.nombre ??
+          'Negocio',
+        nombreSucursal:
+          sucursalVinculada?.nombre ??
+          'Sucursal',
+        nombreCaja:
+          cajaVinculada?.nombre ??
+          'Caja',
+      })
     } catch (errorCapturado) {
       setError(mensajeSupabase(errorCapturado))
     } finally {
       setProcesando(false)
     }
+  }
+
+  if (vinculacionExitosa) {
+    return (
+      <PantallaVinculacionExitosa
+        nombreNegocio={
+          vinculacionExitosa.nombreNegocio
+        }
+        nombreSucursal={
+          vinculacionExitosa.nombreSucursal
+        }
+        nombreCaja={
+          vinculacionExitosa.nombreCaja
+        }
+        alComenzar={() =>
+          alConfigurar(
+            vinculacionExitosa.configuracion,
+          )
+        }
+      />
+    )
   }
 
   if (cargandoSesion) {
@@ -310,166 +771,70 @@ export default function ConfiguracionInicialTerminal({
 
   if (!sesion) {
     return (
-      <main className="terminal-shell">
-        <section
-          className="terminal-card"
-          aria-labelledby="configuracion-terminal-title"
-        >
-          <span className="terminal-eyebrow">
-            Configuración inicial
-          </span>
-
-          <h1 id="configuracion-terminal-title">
-            Activar Terminal Regalones
-          </h1>
-
-          <p>
-            Este inicio de sesión se realiza una sola vez
-            para identificar el comercio y autorizar esta
-            caja.
-          </p>
-
-          <form
-            className="terminal-form"
-            onSubmit={iniciarSesion}
-          >
-            <label>
-              Correo del comercio
-              <input
-                required
-                type="email"
-                autoComplete="email"
-                value={correo}
-                onChange={(evento) =>
-                  setCorreo(evento.target.value)
-                }
-              />
-            </label>
-
-            <label>
-              Contraseña
-              <input
-                required
-                type="password"
-                autoComplete="current-password"
-                value={contrasena}
-                onChange={(evento) =>
-                  setContrasena(evento.target.value)
-                }
-              />
-            </label>
-
-            {error && (
-              <p className="terminal-alert terminal-alert--error">
-                {error}
-              </p>
-            )}
-
-            <button
-              type="submit"
-              disabled={procesando}
-            >
-              {procesando
-                ? 'Verificando…'
-                : 'Continuar configuración'}
-            </button>
-          </form>
-        </section>
-      </main>
+      <PantallaConfiguracionInicial
+        correo={correo}
+        contrasena={contrasena}
+        procesando={procesando}
+        error={error}
+        alCambiarCorreo={setCorreo}
+        alCambiarContrasena={setContrasena}
+        alEnviar={iniciarSesion}
+      />
     )
   }
 
+  if (pasoConfiguracion === 'negocio') {
+    return (
+      <PantallaSeleccionarNegocio
+        negocios={negocios}
+        sucursales={sucursales}
+        cajas={cajas}
+        negocioId={negocioId}
+        sucursalId={sucursalId}
+        cargando={cargandoOpciones}
+        error={error}
+        alCambiarNegocio={cambiarNegocio}
+        alCambiarSucursal={cambiarSucursal}
+        alVolver={volverAlInicio}
+        alContinuar={continuarACaja}
+      />
+    )
+  }
+
+  const negocioSeleccionado =
+    negocios.find(
+      (negocio) =>
+        negocio.id === negocioId,
+    )
+
+  const sucursalSeleccionada =
+    sucursales.find(
+      (sucursal) =>
+        sucursal.id === sucursalId,
+    )
+
   return (
-    <main className="terminal-shell">
-      <section
-        className="terminal-card"
-        aria-labelledby="seleccionar-terminal-title"
-      >
-        <span className="terminal-eyebrow">
-          Configuración inicial
-        </span>
-
-        <h1 id="seleccionar-terminal-title">
-          Vincular esta caja
-        </h1>
-
-        <p>
-          Supabase guardará esta relación para que todas
-          las compras, canjes y turnos queden asociados al
-          comercio correcto.
-        </p>
-
-        {error && (
-          <p className="terminal-alert terminal-alert--error">
-            {error}
-          </p>
-        )}
-
-        {cargandoOpciones ? (
-          <p className="terminal-empty">
-            Cargando negocios y cajas…
-          </p>
-        ) : (
-          <div className="terminal-form">
-            <label>
-              Nombre del negocio
-              <select
-                required
-                value={negocioId}
-                onChange={(evento) =>
-                  cambiarNegocio(evento.target.value)
-                }
-              >
-                {negocios.map((negocio) => (
-                  <option
-                    key={negocio.id}
-                    value={negocio.id}
-                  >
-                    {negocio.nombre}
-                  </option>
-                ))}
-              </select>
-            </label>
-
-            <label>
-              Seleccionar caja
-              <select
-                required
-                value={cajaId}
-                onChange={(evento) =>
-                  setCajaId(evento.target.value)
-                }
-              >
-                {cajasDelNegocio.map((caja) => (
-                  <option
-                    key={caja.id}
-                    value={caja.id}
-                  >
-                    {caja.nombre}
-                    {caja.codigo
-                      ? ` (${caja.codigo})`
-                      : ''}
-                  </option>
-                ))}
-              </select>
-            </label>
-
-            <button
-              type="button"
-              disabled={
-                procesando ||
-                !negocioId ||
-                !cajaId
-              }
-              onClick={() => void configurar()}
-            >
-              {procesando
-                ? 'Vinculando Terminal…'
-                : 'Activar esta Terminal'}
-            </button>
-          </div>
-        )}
-      </section>
-    </main>
+    <PantallaVincularCaja
+      nombreNegocio={
+        negocioSeleccionado?.nombre ??
+        'Negocio'
+      }
+      nombreSucursal={
+        sucursalSeleccionada?.nombre ??
+        'Sucursal'
+      }
+      cajas={cajasDeSucursal}
+      terminales={terminalesCaja}
+      cajaId={cajaId}
+      procesando={procesando}
+      gestionandoCaja={gestionandoCaja}
+      error={error}
+      alSeleccionarCaja={seleccionarCaja}
+      alRenombrarCaja={renombrarCaja}
+      alCrearCaja={crearNuevaCaja}
+      alEliminarCaja={eliminarCaja}
+      alVolver={volverANegocio}
+      alVincular={() => void configurar()}
+    />
   )
 }
