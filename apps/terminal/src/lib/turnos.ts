@@ -199,6 +199,9 @@ export type VecinoTelefonoTerminal =
 export type ResumenTurnoTerminal =
   Database['public']['Functions']['terminal_resumen_turno']['Returns'][number]
 
+export type CompraDetectadaTerminal =
+  Database['public']['Functions']['terminal_listar_compras_detectadas']['Returns'][number]
+
 export async function buscarVecinoPorTelefonoTerminal(
   telefono: string,
   turnoId: string,
@@ -231,6 +234,23 @@ export async function crearSolicitudCompraPorTelefonoTerminal(
       p_telefono: telefono,
       p_monto: monto,
       p_idempotency_key: idempotencyKey,
+      p_turno_id: turnoId,
+      p_terminal_id: credencial.terminalId,
+      p_token_terminal: credencial.tokenTerminal,
+    },
+  )
+
+  if (error) throw error
+  return data
+}
+
+export async function listarComprasDetectadasTerminal(
+  turnoId: string,
+  credencial: CredencialTerminalLocal,
+) {
+  const { data, error } = await supabase.rpc(
+    'terminal_listar_compras_detectadas',
+    {
       p_turno_id: turnoId,
       p_terminal_id: credencial.terminalId,
       p_token_terminal: credencial.tokenTerminal,

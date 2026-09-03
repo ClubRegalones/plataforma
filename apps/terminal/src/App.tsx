@@ -28,6 +28,7 @@ import type {
 } from './lib/regis'
 import { mensajeSupabase } from './lib/mensajesSupabase'
 import ConfiguracionInicialTerminal from './ConfiguracionInicialTerminal'
+import NotificacionCompraTerminal from './NotificacionCompraTerminal'
 import {
   guardarConfiguracionTerminal,
   leerConfiguracionTerminal,
@@ -56,11 +57,13 @@ import {
   crearSolicitudCompraPorTelefonoTerminal,
   informarMontoTerminal,
   listarSolicitudesTerminal,
+  listarComprasDetectadasTerminal,
   obtenerResumenTurnoTerminal,
   rechazarSolicitudCompraEnTurno,
   solicitarReingresoMontoTerminal,
 } from './lib/turnos'
 import type {
+  CompraDetectadaTerminal,
   ResumenTurnoTerminal,
   TurnoTerminal,
   VecinoTelefonoTerminal,
@@ -180,9 +183,28 @@ function PanelTerminal({
   const [idempotenciaVentaManual, setIdempotenciaVentaManual] =
     useState(() => crypto.randomUUID())
 
+  const [solicitudEnRevision, setSolicitudEnRevision] =
+    useState<Solicitud | null>(null)
+  const [montoRevision, setMontoRevision] = useState('')
+  const [motivoRevision, setMotivoRevision] = useState('')
+  const [resultadoCompra, setResultadoCompra] = useState<{
+    nombreVecino: string
+    montoFinal: number
+    regisGenerados: number
+  } | null>(null)
+
   const [resumenTurno, setResumenTurno] =
     useState<ResumenTurnoTerminal | null>(null)
   const [cargandoResumenTurno, setCargandoResumenTurno] =
+    useState(false)
+
+  const [comprasDetectadas, setComprasDetectadas] =
+    useState<CompraDetectadaTerminal[]>([])
+  const [compraDetectadaOcultaId, setCompraDetectadaOcultaId] =
+    useState<string | null>(null)
+  const [nombreVecinoRevision, setNombreVecinoRevision] =
+    useState<string | null>(null)
+  const [modoCompraAsistidaLlavero, setModoCompraAsistidaLlavero] =
     useState(false)
 
   const [seccionActiva, setSeccionActiva] = useState<
@@ -202,6 +224,20 @@ function PanelTerminal({
       window.clearTimeout(temporizador)
     }
   }, [mensaje])
+
+  useEffect(() => {
+    if (!error) return
+
+    const temporizadorError = window.setTimeout(() => {
+      setError((actual) =>
+        actual === error ? null : actual,
+      )
+    }, 5_000)
+
+    return () => {
+      window.clearTimeout(temporizadorError)
+    }
+  }, [error])
 
   const [enLinea, setEnLinea] = useState(
     navigator.onLine,
@@ -456,6 +492,38 @@ function PanelTerminal({
     return () => window.clearTimeout(temporizador)
   }, [cargarResumenTurno, enLinea, turno])
 
+  const cargarComprasDetectadas = useCallback(async () => {
+    if (!turno || !enLinea) {
+      setComprasDetectadas([])
+      return
+    }
+
+    try {
+      const data = await listarComprasDetectadasTerminal(
+        turno.turno_id,
+        credencialTerminal,
+      )
+
+      setComprasDetectadas(data)
+    } catch {
+      // El polling no debe interrumpir la operación del cajero.
+    }
+  }, [credencialTerminal, enLinea, turno])
+
+  useEffect(() => {
+    if (!turno || !enLinea) return
+
+    void cargarComprasDetectadas()
+
+    const intervalo = window.setInterval(() => {
+      void cargarComprasDetectadas()
+    }, 2_500)
+
+    return () => {
+      window.clearInterval(intervalo)
+    }
+  }, [cargarComprasDetectadas, enLinea, turno])
+
   const buscarVecinoManual = async (
     evento: FormEvent<HTMLFormElement>,
   ) => {
@@ -519,9 +587,7 @@ function PanelTerminal({
     const monto = Number(montoManual)
 
     if (!Number.isInteger(monto) || monto <= 0) {
-      setError(
-        'El monto debe ser un número entero mayor que cero.',
-      )
+      setError('El monto debe ser un número entero mayor que cero.')
       return
     }
 
@@ -544,13 +610,15 @@ function PanelTerminal({
         return
       }
 
-      setMensaje(
-        `Venta de ${vecinoManual.nombre_vecino} preparada para revisión.`,
+      setSolicitudEnRevision(solicitud)
+      setNombreVecinoRevision(
+        contextoLlavero?.nombre_vecino ??
+          vecinoManual?.nombre_vecino ??
+          'Vecino Regalón',
       )
-
-      setTelefonoManual('')
-      setVecinoManual(null)
-      setMontoManual('')
+      setMontoRevision(String(monto))
+      setMotivoRevision('')
+      setResultadoCompra(null)
       setIdempotenciaVentaManual(crypto.randomUUID())
 
       await cargarSolicitudes()
@@ -627,9 +695,7 @@ function PanelTerminal({
       !turno ||
       !credencialTerminal
     ) {
-      setError(
-        'Lee un llavero activo e inicia un turno antes de preparar la compra.',
-      )
+      setError('Lee un llavero activo antes de preparar la compra.')
       return
     }
 
@@ -645,12 +711,7 @@ function PanelTerminal({
     setMensaje(null)
 
     try {
-      if (lecturaLlavero && !credencialTerminal) {
-        setError('La credencial segura de esta Terminal PWA ya no está disponible.')
-        return
-      }
-
-      const solicitud = lecturaLlavero && credencialTerminal
+      const solicitud = lecturaLlavero
         ? await crearCompraAsistidaDesdeLectura(
             lecturaLlavero.lectura_id,
             turno.turno_id,
@@ -671,21 +732,255 @@ function PanelTerminal({
         return
       }
 
-      setMensaje(
-        'Compra asistida preparada. Revisa el monto y apruébala en la solicitud pendiente.',
+      setSolicitudEnRevision(solicitud)
+      setNombreVecinoRevision(
+        contextoLlavero?.nombre_vecino ??
+          vecinoManual?.nombre_vecino ??
+          'Vecino Regalón',
       )
-      setMontoCompraAsistida('')
+      setMontoRevision(String(monto))
+      setMotivoRevision('')
+      setResultadoCompra(null)
       setIdempotenciaCompraAsistida(crypto.randomUUID())
+
       if (lecturaLlavero) {
         setLecturaLlavero(null)
-        setContextoLlavero(null)
-        setSaldoRegisLlavero(null)
       }
+
       await cargarSolicitudes()
     } catch (errorCapturado) {
       setError(mensajeSupabase(errorCapturado))
     } finally {
       setProcesandoLlavero(false)
+    }
+  }
+
+  const limpiarCompraEnCurso = () => {
+    setSolicitudEnRevision(null)
+    setNombreVecinoRevision(null)
+    setMontoRevision('')
+    setMotivoRevision('')
+    setModoCompraAsistidaLlavero(false)
+
+    setTelefonoManual('')
+    setVecinoManual(null)
+    setMontoManual('')
+    setIdempotenciaVentaManual(crypto.randomUUID())
+
+    limpiarLecturaOperativa()
+  }
+
+  const abandonarVecinoActual = () => {
+    setError(null)
+    setMensaje(null)
+    setResultadoCompra(null)
+    limpiarCompraEnCurso()
+  }
+
+  const revisarCompraDetectada = async (
+    compra: CompraDetectadaTerminal,
+  ) => {
+    if (!turno) return
+
+    setError(null)
+    setMensaje(null)
+
+    try {
+      const solicitudesActuales =
+        await listarSolicitudesTerminal(
+          turno.turno_id,
+          credencialTerminal,
+        )
+
+      const solicitud = solicitudesActuales.find(
+        (actual) => actual.id === compra.solicitud_id,
+      )
+
+      if (!solicitud) {
+        setError(
+          'La compra ya no está disponible para revisión.',
+        )
+        await cargarComprasDetectadas()
+        return
+      }
+
+      setSolicitudes(solicitudesActuales)
+      setSolicitudEnRevision(solicitud)
+      setNombreVecinoRevision(compra.nombre_vecino)
+      setMontoRevision(String(compra.monto_vigente))
+      setMotivoRevision('')
+      setCompraDetectadaOcultaId(null)
+      setSeccionActiva('compras')
+    } catch (errorCapturado) {
+      setError(mensajeSupabase(errorCapturado))
+    }
+  }
+
+  const corregirCompraEnRevision = async () => {
+    if (!solicitudEnRevision || !turno || !credencialTerminal) return
+
+    const monto = Number(montoRevision)
+
+    if (!Number.isInteger(monto) || monto <= 0) {
+      setError('El monto debe ser un número entero mayor que cero.')
+      return
+    }
+
+    const montoActual = obtenerMontoVigente(solicitudEnRevision)
+
+    if (montoActual === monto) {
+      setMensaje('El monto ya coincide con el informado.')
+      return
+    }
+
+    const motivo =
+      motivoRevision.trim() ||
+      'Corrección antes de aprobación'
+
+    setProcesandoId(solicitudEnRevision.id)
+    setError(null)
+    setMensaje(null)
+
+    try {
+      await corregirMontoTerminal(
+        solicitudEnRevision.id,
+        monto,
+        motivo,
+        turno.turno_id,
+        credencialTerminal,
+      )
+
+      setSolicitudEnRevision((actual) =>
+        actual
+          ? {
+              ...actual,
+              monto_corregido: monto,
+              motivo_correccion: motivo,
+            }
+          : null,
+      )
+
+      if (contextoLlavero) {
+        setMontoCompraAsistida(String(monto))
+      } else {
+        setMontoManual(String(monto))
+      }
+
+      setMensaje('Monto corregido. Revisa nuevamente antes de aprobar.')
+      await cargarSolicitudes()
+    } catch (errorCapturado) {
+      setError(mensajeSupabase(errorCapturado))
+    } finally {
+      setProcesandoId(null)
+    }
+  }
+
+  const pedirNuevoMontoEnRevision = async () => {
+    if (!solicitudEnRevision || !turno || !credencialTerminal) return
+
+    const motivo =
+      motivoRevision.trim() ||
+      'El monto no coincide con la caja'
+
+    setProcesandoId(solicitudEnRevision.id)
+    setError(null)
+    setMensaje(null)
+
+    try {
+      await solicitarReingresoMontoTerminal(
+        solicitudEnRevision.id,
+        motivo,
+        turno.turno_id,
+        credencialTerminal,
+      )
+
+      limpiarCompraEnCurso()
+      setMensaje('Se solicitó ingresar nuevamente el monto.')
+      await cargarSolicitudes()
+    } catch (errorCapturado) {
+      setError(mensajeSupabase(errorCapturado))
+    } finally {
+      setProcesandoId(null)
+    }
+  }
+
+  const cancelarCompraEnRevision = async () => {
+    if (!solicitudEnRevision || !turno || !credencialTerminal) return
+
+    setProcesandoId(solicitudEnRevision.id)
+    setError(null)
+    setMensaje(null)
+
+    try {
+      await rechazarSolicitudCompraEnTurno(
+        solicitudEnRevision.id,
+        'Cancelada por cajero antes de aprobación',
+        turno.turno_id,
+        credencialTerminal,
+      )
+
+      limpiarCompraEnCurso()
+      setMensaje('Compra cancelada. No se acreditaron REGIS.')
+      await cargarSolicitudes()
+    } catch (errorCapturado) {
+      setError(mensajeSupabase(errorCapturado))
+    } finally {
+      setProcesandoId(null)
+    }
+  }
+
+  const aprobarCompraEnRevision = async () => {
+    if (!solicitudEnRevision || !turno || !credencialTerminal) return
+
+    const montoActual = obtenerMontoVigente(solicitudEnRevision)
+    const montoEscrito = Number(montoRevision)
+
+    if (montoActual !== montoEscrito) {
+      setError(
+        'Cambiaste el monto. Guarda la corrección antes de aprobar.',
+      )
+      return
+    }
+
+    const nombreVecino =
+      nombreVecinoRevision ??
+      contextoLlavero?.nombre_vecino ??
+      vecinoManual?.nombre_vecino ??
+      'Vecino Regalón'
+
+    setProcesandoId(solicitudEnRevision.id)
+    setError(null)
+    setMensaje(null)
+
+    try {
+      const compra = await aprobarCompraEnTurno(
+        solicitudEnRevision.id,
+        turno.turno_id,
+        credencialTerminal,
+      )
+
+      if (!compra) {
+        setError('Supabase no devolvió la compra aprobada.')
+        return
+      }
+
+      await Promise.all([
+        cargarSolicitudes(),
+        cargarResumenTurno(),
+      ])
+
+      const resultado = {
+        nombreVecino,
+        montoFinal: compra.monto_final,
+        regisGenerados: compra.regis_generados,
+      }
+
+      limpiarCompraEnCurso()
+      setResultadoCompra(resultado)
+    } catch (errorCapturado) {
+      setError(mensajeSupabase(errorCapturado))
+    } finally {
+      setProcesandoId(null)
     }
   }
 
@@ -1279,7 +1574,9 @@ function PanelTerminal({
         enLinea &&
         seccionActiva === 'compras' && (
         <section className="terminal-llavero" aria-labelledby="activar-llavero-title">
-          {!contextoLlavero && (
+          {!solicitudEnRevision &&
+            !resultadoCompra &&
+            (!contextoLlavero || contextoLlavero.estado === 'activo') && (
   <div className="terminal-pos-inicio">
 
     <section className="terminal-pos-espera">
@@ -1390,81 +1687,33 @@ function PanelTerminal({
         </div>
       </div>
 
-      {!vecinoManual ? (
-        <form onSubmit={buscarVecinoManual}>
-          <label>
-            Teléfono asociado a la cuenta
+      {
+  <form onSubmit={buscarVecinoManual}>
+    <label>
+      Teléfono asociado a la cuenta
 
-            <input
-              required
-              type="tel"
-              autoComplete="off"
-              value={telefonoManual}
-              onChange={(evento) =>
-                setTelefonoManual(evento.target.value)
-              }
-              placeholder="+56 9 1234 5678"
-            />
-          </label>
+      <input
+        required
+        type="tel"
+        autoComplete="off"
+        value={telefonoManual}
+        onChange={(evento) =>
+          setTelefonoManual(evento.target.value)
+        }
+        placeholder="+56 9 1234 5678"
+      />
+    </label>
 
-          <button
-            type="submit"
-            disabled={procesandoVentaManual}
-          >
-            {procesandoVentaManual
-              ? 'Buscando…'
-              : 'Continuar'}
-          </button>
-        </form>
-      ) : (
-        <div className="terminal-pos-manual__vecino">
-          <div className="terminal-pos-manual__identidad">
-            <div>
-              <small>Vecino Regalón encontrado</small>
-              <strong>{vecinoManual.nombre_vecino}</strong>
-            </div>
-
-            <button
-              type="button"
-              className="terminal-pos-manual__cambiar"
-              onClick={() => {
-                setVecinoManual(null)
-                setMontoManual('')
-              }}
-            >
-              Cambiar
-            </button>
-          </div>
-
-          <form onSubmit={registrarVentaManual}>
-            <label>
-              Monto pagado
-
-              <input
-                required
-                type="number"
-                inputMode="numeric"
-                min="1"
-                step="1"
-                value={montoManual}
-                onChange={(evento) =>
-                  setMontoManual(evento.target.value)
-                }
-                placeholder="Ej: 12500"
-              />
-            </label>
-
-            <button
-              type="submit"
-              disabled={procesandoVentaManual}
-            >
-              {procesandoVentaManual
-                ? 'Preparando…'
-                : 'Continuar a revisión'}
-            </button>
-          </form>
-        </div>
-      )}
+    <button
+      type="submit"
+      disabled={procesandoVentaManual}
+    >
+      {procesandoVentaManual
+        ? 'Buscando…'
+        : 'Identificar vecino'}
+    </button>
+  </form>
+}
     </section>
 
 
@@ -1484,115 +1733,387 @@ function PanelTerminal({
   </div>
 )}
 
-          {contextoLlavero && (
+          {!solicitudEnRevision &&
+            !resultadoCompra &&
+            comprasDetectadas.find(
+              (compra) =>
+                compra.solicitud_id !== compraDetectadaOcultaId,
+            ) && (() => {
+              const compra = comprasDetectadas.find(
+                (actual) =>
+                  actual.solicitud_id !== compraDetectadaOcultaId,
+              )!
+
+              return (
+                <NotificacionCompraTerminal
+                  tipo="compra"
+                  nombreVecino={compra.nombre_vecino}
+                  monto={compra.monto_vigente}
+                  alRevisar={() =>
+                    void revisarCompraDetectada(compra)
+                  }
+                  alCerrar={() =>
+                    setCompraDetectadaOcultaId(
+                      compra.solicitud_id,
+                    )
+                  }
+                />
+              )
+            })()}
+
+          {!solicitudEnRevision &&
+            !resultadoCompra &&
+            comprasDetectadas.length === 0 &&
+            contextoLlavero?.estado === 'activo' && (
+              <NotificacionCompraTerminal
+                tipo="llavero"
+                nombreVecino={contextoLlavero.nombre_vecino}
+                saldoRegis={saldoRegisLlavero?.disponibles ?? null}
+                modoAsistido={modoCompraAsistidaLlavero}
+                montoAsistido={montoCompraAsistida}
+                procesando={procesandoLlavero}
+                alIniciarAsistida={() =>
+                  setModoCompraAsistidaLlavero(true)
+                }
+                alCambiarMonto={setMontoCompraAsistida}
+                alContinuarAsistida={crearSolicitudAsistida}
+                alCerrar={abandonarVecinoActual}
+              />
+            )}
+
+          {!solicitudEnRevision &&
+            !resultadoCompra &&
+            comprasDetectadas.length === 0 &&
+            !contextoLlavero &&
+            vecinoManual && (
+              <NotificacionCompraTerminal
+                tipo="telefono"
+                nombreVecino={vecinoManual.nombre_vecino}
+                modoAsistido
+                montoAsistido={montoManual}
+                procesando={procesandoVentaManual}
+                alCambiarMonto={setMontoManual}
+                alContinuarAsistida={registrarVentaManual}
+                alCerrar={abandonarVecinoActual}
+              />
+            )}
+
+          {solicitudEnRevision && !resultadoCompra && (
+            <section className="terminal-revision-compra">
+
+              <div className="terminal-revision-compra__principal">
+                <div className="terminal-revision-compra__cabecera">
+                  <div>
+                    <span className="terminal-eyebrow">Compra</span>
+                    <h2>Revisión de compra</h2>
+                    <p>Confirma el monto antes de aprobar la compra.</p>
+                  </div>
+
+                  <div className="terminal-revision-compra__estado">
+                    <small>
+                      {new Date(solicitudEnRevision.creado_en).toLocaleString(
+                        'es-CL',
+                        {
+                          day: '2-digit',
+                          month: '2-digit',
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        },
+                      )}
+                    </small>
+                    <span>Pendiente de validación</span>
+                  </div>
+                </div>
+
+                <div className="terminal-revision-compra__datos">
+                  <article className="terminal-revision-compra__monto-informado">
+                    <span
+                      className="terminal-revision-compra__monto-icono"
+                      aria-hidden="true"
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M6 3.5h12v17l-3-2-3 2-3-2-3 2v-17Z" />
+                        <path d="M9 8h6M9 12h6M9 16h3" />
+                      </svg>
+                    </span>
+                    <div>
+                      <small>Monto informado</small>
+                      <strong>
+                        {formatearMonto(
+                          obtenerMontoVigente(solicitudEnRevision),
+                        )}
+                      </strong>
+                    </div>
+                  </article>
+
+                  <article className="terminal-revision-compra__vecino">
+                    <div
+                      className="terminal-revision-compra__avatar"
+                      aria-hidden="true"
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <circle cx="9" cy="8" r="3" />
+                        <path d="M3.5 19c.6-3.2 2.4-5 5.5-5 1.4 0 2.6.4 3.5 1.2" />
+                        <path d="m14.5 17 2 2 4-5" />
+                      </svg>
+                    </div>
+                    <div>
+                      <strong>
+                        {nombreVecinoRevision ??
+                          contextoLlavero?.nombre_vecino ??
+                          vecinoManual?.nombre_vecino ??
+                          'Vecino Regalón'}
+                      </strong>
+                      <span>
+                        {solicitudEnRevision.llavero_id !== null
+                          ? 'Identificado por NFC / llavero'
+                          : 'Identificado por teléfono'}
+                      </span>
+                    </div>
+                  </article>
+                </div>
+
+                <div className="terminal-revision-compra__formulario">
+                  <label>
+                    Monto correcto en CLP
+                    <div className="terminal-revision-compra__input-monto">
+                      <span>$</span>
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        autoComplete="off"
+                        value={montoRevision}
+                        onChange={(evento) =>
+                          setMontoRevision(
+                            evento.target.value.replace(/\D/g, ''),
+                          )
+                        }
+                      />
+                    </div>
+                  </label>
+
+                  <label>
+                    Motivo de la corrección
+                    <small>Opcional</small>
+                    <textarea
+                      value={motivoRevision}
+                      onChange={(evento) =>
+                        setMotivoRevision(evento.target.value)
+                      }
+                      placeholder="Describe el motivo de la corrección"
+                      maxLength={500}
+                    />
+                  </label>
+                </div>
+
+                <div className="terminal-revision-compra__comparacion">
+                  <div>
+                    <small>
+                      {solicitudEnRevision.informado_por === 'vecino'
+                        ? 'Monto informado por vecino'
+                        : 'Monto informado por cajero'}
+                    </small>
+                    <strong>
+                      {formatearMonto(
+                        obtenerMontoVigente(solicitudEnRevision),
+                      )}
+                    </strong>
+                  </div>
+
+                  <span className="terminal-revision-compra__igual">=</span>
+
+                  <div>
+                    <small>Monto a registrar</small>
+                    <strong>
+                      {montoRevision
+                        ? formatearMonto(Number(montoRevision))
+                        : '—'}
+                    </strong>
+                  </div>
+                </div>
+
+                <div className="terminal-revision-compra__acciones">
+                  <button
+                    type="button"
+                    className="terminal-revision-compra__aprobar"
+                    disabled={procesandoId === solicitudEnRevision.id}
+                    onClick={() => void aprobarCompraEnRevision()}
+                  >
+                    <span className="terminal-boton__contenido">
+                      <svg
+                        className="terminal-boton__icono"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.4"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="m5 12 4 4L19 6" />
+                      </svg>
+                      <span>Aprobar compra</span>
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    className="terminal-revision-compra__corregir"
+                    disabled={procesandoId === solicitudEnRevision.id}
+                    onClick={() => void corregirCompraEnRevision()}
+                  >
+                    <span className="terminal-boton__contenido">
+                      <svg
+                        className="terminal-boton__icono"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M12 20h9" />
+                        <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z" />
+                      </svg>
+                      <span>Guardar monto corregido</span>
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    className="terminal-revision-compra__reingreso"
+                    disabled={procesandoId === solicitudEnRevision.id}
+                    onClick={() => void pedirNuevoMontoEnRevision()}
+                  >
+                    <span className="terminal-boton__contenido">
+                      <svg
+                        className="terminal-boton__icono"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M20 7v5h-5" />
+                        <path d="M4 17v-5h5" />
+                        <path d="M6.1 8a7 7 0 0 1 11.4-2L20 8" />
+                        <path d="m4 16 2.5 2a7 7 0 0 0 11.4-2" />
+                      </svg>
+                      <span>Pedir nuevo monto al vecino</span>
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    className="terminal-revision-compra__cancelar"
+                    disabled={procesandoId === solicitudEnRevision.id}
+                    onClick={() => void cancelarCompraEnRevision()}
+                  >
+                    <span className="terminal-boton__contenido">
+                      <svg
+                        className="terminal-boton__icono"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.4"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M18 6 6 18M6 6l12 12" />
+                      </svg>
+                      <span>Cancelar compra</span>
+                    </span>
+                  </button>
+                </div>
+
+                <small className="terminal-revision-compra__seguridad">
+                  ✓ Al aprobar, se calcularán y acreditarán los REGIS correspondientes.
+                </small>
+              </div>
+
+              <aside className="terminal-revision-compra__lateral">
+                <div>
+                  <span className="terminal-eyebrow">Vecino actual</span>
+                  <h3>
+                    {nombreVecinoRevision ??
+                      contextoLlavero?.nombre_vecino ??
+                      vecinoManual?.nombre_vecino ??
+                      'Vecino Regalón'}
+                  </h3>
+                </div>
+
+                <div className="terminal-revision-compra__origen">
+                  <strong>
+                    {solicitudEnRevision.informado_por === 'vecino'
+                      ? 'Compra informada por el vecino'
+                      : contextoLlavero
+                        ? 'Compra asistida por NFC'
+                        : 'Compra asistida por teléfono'}
+                  </strong>
+                  <span>
+                    {solicitudEnRevision.informado_por === 'vecino'
+                      ? 'El vecino informó previamente el monto de la compra.'
+                      : contextoLlavero
+                        ? 'Identificación realizada con llavero.'
+                        : 'Identificación realizada por teléfono.'}
+                  </span>
+                </div>
+
+                <div className="terminal-revision-compra__regis">
+                  <span className="terminal-eyebrow">REGIS</span>
+                  <strong>Se calcularán al aprobar</strong>
+                  <small>La regla real se ejecutará en Supabase.</small>
+                </div>
+
+                <div className="terminal-revision-compra__mascota">
+                  <img
+                    src={regalonCorazon}
+                    alt=""
+                    aria-hidden="true"
+                  />
+                  <div>
+                    <strong>¡Vamos, Regalón!</strong>
+                    <span>Revisa todo antes de aprobar.</span>
+                  </div>
+                </div>
+              </aside>
+
+            </section>
+          )}
+
+          {contextoLlavero && contextoLlavero.estado !== 'activo' && (
             <div className="terminal-llavero__resultado">
               <div className="terminal-llavero__identidad">
                 <span
                   className={`terminal-llavero__estado terminal-llavero__estado--${contextoLlavero.estado}`}
                 >
-                  {contextoLlavero.estado === 'activo'
-                    ? 'Activo'
-                    : 'Pendiente de activación'}
+                  Pendiente de activación
                 </span>
                 <h3>{contextoLlavero.nombre_vecino}</h3>
                 <p>Código público: {contextoLlavero.codigo_publico}</p>
               </div>
 
-              {contextoLlavero.estado === 'activo' ? (
-                <div className="terminal-llavero__compra">
-                  {saldoRegisLlavero && (
-                    <aside className="terminal-llavero__saldo" aria-live="polite">
-                      <div>
-                        <span>Saldo en {saldoRegisLlavero.nombre_negocio}</span>
-                        <strong>{saldoRegisLlavero.disponibles} REGIS</strong>
-                      </div>
-                      <p>
-                        Disponibles solo en este comercio.
-                        {saldoRegisLlavero.pendientes > 0 && (
-                          <>
-                            {' '}
-                            Además tiene {saldoRegisLlavero.pendientes} REGIS
-                            pendientes de revisión.
-                          </>
-                        )}
-                      </p>
-                    </aside>
-                  )}
-                  <p className="terminal-llavero__confirmado">
-                    El llavero está activo. Ingresa el monto realmente pagado
-                    para preparar la compra asistida.
-                  </p>
-                  <form onSubmit={crearSolicitudAsistida}>
-                    <label>
-                      Monto pagado en CLP
-                      <input
-                        required
-                        type="number"
-                        inputMode="numeric"
-                        min="1"
-                        step="1"
-                        value={montoCompraAsistida}
-                        onChange={(evento) =>
-                          setMontoCompraAsistida(evento.target.value)
-                        }
-                        placeholder="Ejemplo: 12500"
-                      />
-                    </label>
-                    <button type="submit" disabled={procesandoLlavero}>
-                      {procesandoLlavero
-                        ? 'Preparando…'
-                        : 'Continuar a revisión'}
-                    </button>
-                  </form>
-                  {montoCompraAsistida &&
-                    reglaAcumulacion &&
-                    vistaPreviaRegis && (
-                    <aside
-                      className={`terminal-llavero__prevision${
-                        vistaPreviaRegis.cumpleMinimo
-                          ? ''
-                          : ' terminal-llavero__prevision--sin-acumulacion'
-                      }`}
-                      aria-live="polite"
-                    >
-                      {vistaPreviaRegis.cumpleMinimo ? (
-                        <>
-                          <span>Recompensa estimada</span>
-                          <strong>
-                            Ganará {vistaPreviaRegis.regis} REGIS
-                          </strong>
-                          <small>
-                            Equivale al{' '}
-                            {reglaAcumulacion.tasa_acumulacion_bp / 100}% de la
-                            compra. Se acreditará únicamente después de aprobar
-                            el monto final.
-                          </small>
-                        </>
-                      ) : vistaPreviaRegis.montoValido ? (
-                        <>
-                          <strong>Esta compra todavía no acumula REGIS</strong>
-                          <small>
-                            El monto mínimo es{' '}
-                            {formatearMonto(
-                              reglaAcumulacion.monto_minimo_compra_clp,
-                            )}.
-                          </small>
-                        </>
-                      ) : null}
-                    </aside>
-                  )}
-                  {errorReglaAcumulacion && (
-                    <small className="terminal-llavero__prevision-error">
-                      No pudimos calcular la recompensa estimada. La aprobación
-                      final seguirá aplicando la regla segura de Supabase.
-                    </small>
-                  )}
-                  <small>
-                    La compra todavía no queda aprobada. El monto aparecerá
-                    abajo para una confirmación final del cajero.
-                  </small>
-                </div>
-              ) : !contextoLlavero.entregado ? (
+              {!contextoLlavero.entregado ? (
                 <p className="terminal-llavero__aviso">
                   Este llavero todavía no figura como entregado. No puede
                   activarse.
@@ -1877,7 +2398,9 @@ function PanelTerminal({
         </section>
       )}
 
-      {seccionActiva === 'compras' && (
+      {seccionActiva === 'compras' &&
+        !solicitudEnRevision &&
+        !resultadoCompra && (
         cargandoTurno ? (
         <p className="terminal-empty">
           Comprobando turno…
@@ -1886,9 +2409,7 @@ function PanelTerminal({
         <p className="terminal-empty">
           Cargando solicitudes…
         </p>
-      ) : solicitudes.length === 0 ? (
-        <p className="terminal-empty">No hay solicitudes pendientes.</p>
-      ) : (
+      ) : solicitudes.length === 0 ? null : (
         <section className="terminal-list" aria-label="Solicitudes pendientes">
           {solicitudes.map((solicitud) => {
             const estaProcesando = procesandoId === solicitud.id
@@ -2043,7 +2564,7 @@ function PanelTerminal({
                         disabled={estaProcesando}
                         onClick={() => void corregirMonto(solicitud)}
                       >
-                        Guardar corrección directa
+                        Guardar monto corregido
                       </button>
                     </div>
 

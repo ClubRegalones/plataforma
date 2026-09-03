@@ -3677,6 +3677,24 @@ export type Database = {
           vigencia_hasta: string
         }[]
       }
+      terminal_listar_compras_detectadas: {
+        Args: {
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          creado_en: string
+          estado: Database["public"]["Enums"]["estado_solicitud_compra"]
+          informado_por: Database["public"]["Enums"]["informado_por"]
+          monto_corregido: number
+          monto_informado: number
+          monto_vigente: number
+          nombre_vecino: string
+          solicitud_id: string
+          vecino_id: string
+        }[]
+      }
       terminal_listar_historial_canjes: {
         Args: {
           p_limite?: number
