@@ -1,4 +1,6 @@
+import { useState } from 'react'
 import cajaIcono from '../recursos/iconos/caja.png'
+import './configuracionCajaUnica.css'
 
 type TerminalInstalada = {
   id: string
@@ -32,10 +34,22 @@ export default function PantallaVincularCaja({
   alConfigurar,
   alMover,
 }: Props) {
+  const [confirmandoTraslado, setConfirmandoTraslado] =
+    useState(false)
+
   const requiereTraslado = Boolean(terminalInstalada)
 
+  const ejecutarAccion = () => {
+    if (requiereTraslado) {
+      setConfirmandoTraslado(true)
+      return
+    }
+
+    alConfigurar()
+  }
+
   return (
-    <main className="configuracion-caja">
+    <main className="configuracion-caja configuracion-caja--unica">
       <section
         className="configuracion-caja__panel"
         aria-labelledby="configurar-caja-title"
@@ -197,13 +211,11 @@ export default function PantallaVincularCaja({
               type="button"
               className="configuracion-caja__vincular"
               disabled={procesando || preparandoCaja || !cajaLista}
-              onClick={requiereTraslado ? alMover : alConfigurar}
+              onClick={ejecutarAccion}
             >
               <span>
                 {procesando
-                  ? requiereTraslado
-                    ? 'Moviendo Terminal…'
-                    : 'Configurando…'
+                  ? 'Configurando…'
                   : requiereTraslado
                     ? 'Mover Terminal a este dispositivo'
                     : 'Configurar esta caja'}
@@ -213,6 +225,70 @@ export default function PantallaVincularCaja({
           </footer>
         </div>
       </section>
+
+      {confirmandoTraslado && terminalInstalada && (
+        <div
+          className="configuracion-caja-unica__modal-fondo"
+          role="presentation"
+          onMouseDown={() =>
+            !procesando && setConfirmandoTraslado(false)
+          }
+        >
+          <section
+            className="configuracion-caja-unica__modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="confirmar-traslado-terminal"
+            onMouseDown={(evento) => evento.stopPropagation()}
+          >
+            <span className="configuracion-caja-unica__modal-icono">
+              ↔
+            </span>
+
+            <div>
+              <span className="configuracion-caja-unica__modal-etiqueta">
+                Mover Caja Regalones
+              </span>
+              <h2 id="confirmar-traslado-terminal">
+                ¿Mover la Terminal a este dispositivo?
+              </h2>
+              <p>
+                La Terminal instalada en{' '}
+                <strong>
+                  {terminalInstalada.nombreDispositivo ||
+                    terminalInstalada.identificador}
+                </strong>{' '}
+                dejará de estar activa. Si tenía un turno o lector móvil
+                abiertos, Regalones los cerrará automáticamente.
+              </p>
+              <p>
+                Las compras, canjes y demás historial no se eliminan.
+              </p>
+            </div>
+
+            <div className="configuracion-caja-unica__modal-acciones">
+              <button
+                type="button"
+                disabled={procesando}
+                onClick={() => setConfirmandoTraslado(false)}
+              >
+                Cancelar
+              </button>
+
+              <button
+                type="button"
+                className="configuracion-caja-unica__confirmar"
+                disabled={procesando}
+                onClick={alMover}
+              >
+                {procesando
+                  ? 'Moviendo Terminal…'
+                  : 'Sí, mover Terminal'}
+              </button>
+            </div>
+          </section>
+        </div>
+      )}
     </main>
   )
 }
