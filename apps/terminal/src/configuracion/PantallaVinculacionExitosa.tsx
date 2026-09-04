@@ -85,19 +85,20 @@ export default function PantallaVinculacionExitosa({
 
             <img
               src={regalonCorazon}
-              alt="El Regalón celebrando la vinculación de la Terminal"
+              alt="El Regalón celebrando la configuración de la Terminal"
             />
           </div>
 
           <div className="vinculacion-exitosa__contenido">
             <span className="vinculacion-exitosa__pretitulo">
-              Vinculación exitosa
+              Configuración exitosa
             </span>
 
-            <h1>¡Terminal vinculada con éxito!</h1>
+            <h1>¡Caja Regalones lista!</h1>
 
             <p className="vinculacion-exitosa__subtitulo">
-              Esta Terminal ya quedó asociada a esta caja.
+              Esta Terminal quedó configurada como la Terminal activa de
+              la sucursal.
             </p>
 
             <div className="vinculacion-exitosa__resumen">
@@ -112,14 +113,14 @@ export default function PantallaVinculacionExitosa({
               </div>
 
               <div>
-                <span>Caja</span>
+                <span>Caja Regalones</span>
                 <strong>{nombreCaja}</strong>
               </div>
             </div>
 
             <p className="vinculacion-exitosa__explicacion">
-              Desde ahora, los cajeros podrán iniciar turno
-              sin necesidad de volver a configurar esta Terminal.
+              Desde ahora, los cajeros podrán iniciar turno sin volver a
+              configurar este dispositivo.
             </p>
 
             <button
