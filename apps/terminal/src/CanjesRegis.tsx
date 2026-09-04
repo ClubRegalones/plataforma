@@ -4,7 +4,10 @@ import {
   calcularCompraParaDescuentoCompleto,
   calcularDescuentoBeneficio,
 } from '@club-regalones/domain'
-import type { SaldoRegisLlavero } from './lib/regis'
+import {
+  consultarSaldoRegisLlavero,
+  type SaldoRegisLlavero,
+} from './lib/regis'
 import {
   cancelarCanjeRegis,
   consultarCanjeRegisQr,
@@ -22,6 +25,7 @@ import type {
   ReservaCanjeLlavero,
   ResultadoCanje,
 } from './lib/canjes'
+import regalonCorazon from './recursos/mascota/regalon-corazon.png'
 import { mensajeSupabase } from './lib/mensajesSupabase'
 import type { CredencialTerminalLocal } from './lib/terminalPwa'
 import './canjes.css'
@@ -50,6 +54,7 @@ type CanjeEnRevision = {
   topeDescuentoClp: number | null
   porcentajeMaximoCanjeBp: number
   tokenQr?: string
+  tokenLlavero?: string
 }
 
 type CanjesRegisProps = {
@@ -61,8 +66,10 @@ type CanjesRegisProps = {
   credencialTerminal: CredencialTerminalLocal | null
   llaveroActivo: boolean
   saldoLlavero: SaldoRegisLlavero | null
+  nombreVecinoLlavero: string | null
   alConsumirLectura: () => void
   alConfirmar: () => Promise<void> | void
+  alVolverACompras: () => void
 }
 
 function formatearPesos(monto: number) {
@@ -161,6 +168,7 @@ function revisionDesdeLlavero(
   reserva: ReservaCanjeLlavero,
   beneficio: BeneficioCanjeTerminal,
   cajaId: string,
+  tokenLlavero: string,
 ): CanjeEnRevision {
   return {
     origen: 'llavero',
@@ -177,6 +185,7 @@ function revisionDesdeLlavero(
     montoDescuentoFijoClp: beneficio.monto_descuento_fijo_clp,
     topeDescuentoClp: beneficio.tope_descuento_clp,
     porcentajeMaximoCanjeBp: beneficio.porcentaje_maximo_canje_bp,
+    tokenLlavero,
   }
 }
 
@@ -189,8 +198,10 @@ function CanjesRegis({
   credencialTerminal,
   llaveroActivo,
   saldoLlavero,
+  nombreVecinoLlavero,
   alConsumirLectura,
   alConfirmar,
+  alVolverACompras,
 }: CanjesRegisProps) {
   const [tokenQr, setTokenQr] = useState('')
   const [beneficios, setBeneficios] = useState<BeneficioCanjeTerminal[]>([])
@@ -201,6 +212,9 @@ function CanjesRegis({
   const [procesando, setProcesando] = useState(false)
   const [segundosRestantes, setSegundosRestantes] = useState(0)
   const [resultado, setResultado] = useState<ResultadoCanje | null>(null)
+  const [ultimoCanje, setUltimoCanje] = useState<CanjeEnRevision | null>(null)
+  const [saldoFinalCanje, setSaldoFinalCanje] =
+    useState<SaldoRegisLlavero | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [mensaje, setMensaje] = useState<string | null>(null)
   const [historial, setHistorial] = useState<HistorialCanjeNegocio[]>([])
@@ -240,7 +254,11 @@ function CanjesRegis({
 
   const vistaPreviaDescuento = useMemo(() => {
     const monto = Number(montoBruto)
-    if (!canje || !Number.isInteger(monto) || monto <= 0) return null
+    if (
+      !canje ||
+      !Number.isInteger(monto) ||
+      monto < canje.compraMinimaClp
+    ) return null
 
     const descuento = calcularDescuentoBeneficio(monto, {
       tipo: canje.tipo,
@@ -426,7 +444,7 @@ function CanjesRegis({
         return
       }
 
-      setCanje(revisionDesdeLlavero(reserva, beneficio, cajaId))
+      setCanje(revisionDesdeLlavero(reserva, beneficio, cajaId, tokenLlavero.trim()))
       setMontoBruto('')
       setFolioBoleta('')
       setMensaje('REGIS reservados. Revisa el monto antes de confirmar.')
@@ -568,17 +586,37 @@ function CanjesRegis({
   }
 
   return (
-    <section className="canjes" aria-labelledby="canjes-title">
+    <section className={`canjes canjes--${resultado ? 'resultado' : canje ? 'revision' : 'inicio'}`} aria-labelledby="canjes-title">
       <div className="canjes__encabezado">
         <div>
-          <span className="terminal-eyebrow">Canje de recompensas</span>
-          <h2 id="canjes-title">Usar REGIS en esta compra</h2>
+          <span className="terminal-eyebrow">
+            {resultado
+              ? 'Canje completado'
+              : canje
+                ? 'Confirmación de canje'
+                : 'Canje de recompensas'}
+          </span>
+          <h2 id="canjes-title">
+            {resultado
+              ? '¡Canje confirmado!'
+              : canje
+                ? 'Confirmar canje'
+                : 'Usar REGIS en esta compra'}
+          </h2>
         </div>
         <p>
-          El descuento y el débito de REGIS se confirman juntos. Si algo falla,
-          no se registra ninguna parte de la operación.
+          El descuento y los REGIS se confirman juntos.
         </p>
       </div>
+
+      {!resultado && !canje && (
+        <img
+          className="canjes__mascota-inicio"
+          src={regalonCorazon}
+          alt=""
+          aria-hidden="true"
+        />
+      )}
 
       {(error || mensaje) && (
         <p
@@ -652,14 +690,13 @@ function CanjesRegis({
             <div>
               <h3>Canje asistido con llavero</h3>
               <p>
-                Lee primero el llavero en la sección superior y luego elige un
-                beneficio disponible para este comercio.
+                Acerca el llavero al lector para ver los beneficios disponibles.
               </p>
             </div>
 
             {!llaveroActivo ? (
               <p className="canjes__estado-vacio">
-                Aún no hay un llavero activo leído en esta caja.
+                Acerca un llavero activo al lector.
               </p>
             ) : cargandoBeneficios ? (
               <p className="canjes__estado-vacio">Cargando beneficios…</p>
@@ -669,6 +706,20 @@ function CanjesRegis({
               </p>
             ) : (
               <div className="canjes__beneficios">
+                {saldoLlavero && (
+                  <div className="canjes__vecino-identificado">
+                    <div>
+                      <span>Vecino identificado</span>
+                      <strong>
+                        {nombreVecinoLlavero ?? 'Vecino Regalón'}
+                      </strong>
+                    </div>
+                    <div className="canjes__saldo-vecino">
+                      <span>REGIS disponibles</span>
+                      <strong>{saldoLlavero.disponibles} REGIS</strong>
+                    </div>
+                  </div>
+                )}
                 {beneficios.map((beneficio) => {
                   const saldoInsuficiente =
                     saldoLlavero !== null &&
@@ -726,20 +777,15 @@ function CanjesRegis({
       )}
 
       {!resultado && canje && (
-        <article className="canjes__revision">
-          <div className="canjes__revision-encabezado">
+        <article className="canje-confirmacion-v2">
+          <div className="canje-confirmacion-v2__cabecera">
             <div>
-              <span className="terminal-eyebrow">
-                {canje.origen === 'qr' ? 'Reserva QR' : 'Reserva con llavero'}
-              </span>
-              <h3>{canje.nombreBeneficio}</h3>
-              <p>{describirBeneficio(canje)}</p>
-              <p className="canjes__regla-beneficio">
-                <strong>Regla clara:</strong> {describirReglaBeneficio(canje)}
-              </p>
+              <h3>Confirmar canje</h3>
+              <p>Revisa el monto antes de confirmar.</p>
             </div>
-            <div className="canjes__temporizador">
-              <span>Tiempo restante</span>
+
+            <div className="canje-confirmacion-v2__tiempo">
+              <span>Reserva activa</span>
               <strong>
                 {Math.floor(segundosRestantes / 60)}:
                 {(segundosRestantes % 60).toString().padStart(2, '0')}
@@ -747,65 +793,146 @@ function CanjesRegis({
             </div>
           </div>
 
-          <dl className="canjes__detalle">
-            <div>
-              <dt>Código</dt>
-              <dd>{canje.codigoPublico}</dd>
-            </div>
-            <div>
-              <dt>Costo</dt>
-              <dd>{canje.costoRegis} REGIS</dd>
-            </div>
-            <div>
-              <dt>Compra mínima</dt>
-              <dd>{formatearPesos(canje.compraMinimaClp)}</dd>
-            </div>
-          </dl>
+          <div className="canje-confirmacion-v2__aviso">
+            <span className="canje-confirmacion-v2__check" aria-hidden="true">
+              ✓
+            </span>
 
-          <form className="canjes__confirmacion" onSubmit={confirmar}>
-            <label>
-              Monto bruto de la compra
-              <input
-                required
-                type="number"
-                inputMode="numeric"
-                min={canje.compraMinimaClp}
-                step="1"
-                value={montoBruto}
-                onChange={(evento) => setMontoBruto(evento.target.value)}
-                placeholder={`Mínimo ${canje.compraMinimaClp}`}
-              />
-              <small>Es el total antes de aplicar el beneficio.</small>
-            </label>
-            <label>
-              Folio de boleta (opcional)
-              <input
-                type="text"
-                maxLength={120}
-                value={folioBoleta}
-                onChange={(evento) => setFolioBoleta(evento.target.value)}
-                placeholder="Ejemplo: 0001842"
-              />
-            </label>
-            {vistaPreviaDescuento && (
-              <dl className="canjes__vista-previa">
-                <div>
-                  <dt>Descuento que se aplicará</dt>
-                  <dd>-{formatearPesos(vistaPreviaDescuento.descuento)}</dd>
+            <strong>REGIS reservados.</strong>
+            <span>Revisa el monto antes de confirmar.</span>
+          </div>
+
+          <div className="canje-confirmacion-v2__beneficio">
+            <div className="canje-confirmacion-v2__beneficio-principal">
+              <span className="canje-confirmacion-v2__icono" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M5 4h14v5a3 3 0 0 0 0 6v5H5v-5a3 3 0 0 0 0-6V4Z" />
+                  <path d="m9 15 6-6" />
+                  <circle cx="9" cy="9" r="1" />
+                  <circle cx="15" cy="15" r="1" />
+                </svg>
+              </span>
+
+              <strong>{canje.nombreBeneficio}</strong>
+            </div>
+
+            <div className="canje-confirmacion-v2__dato">
+              <span className="canje-confirmacion-v2__icono canje-confirmacion-v2__icono--regis">
+                R
+              </span>
+
+              <div>
+                <small>Costo</small>
+                <strong>{canje.costoRegis} REGIS</strong>
+              </div>
+            </div>
+
+            <div className="canje-confirmacion-v2__dato">
+              <span className="canje-confirmacion-v2__icono" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M5 8h14l1 13H4L5 8Z" />
+                  <path d="M9 9V6a3 3 0 0 1 6 0v3" />
+                </svg>
+              </span>
+
+              <div>
+                <small>Compra mínima</small>
+                <strong>{formatearPesos(canje.compraMinimaClp)}</strong>
+              </div>
+            </div>
+          </div>
+
+          <form
+            className="canje-confirmacion-v2__formulario"
+            onSubmit={confirmar}
+          >
+            <div className="canje-confirmacion-v2__campos">
+              <label>
+                <span>Monto bruto de la compra</span>
+
+                <div className="canje-confirmacion-v2__input-monto">
+                  <strong>$</strong>
+                  <input
+                    required
+                    type="number"
+                    inputMode="numeric"
+                    min={canje.compraMinimaClp}
+                    step="1"
+                    value={montoBruto}
+                    onChange={(evento) => setMontoBruto(evento.target.value)}
+                    placeholder={`Mínimo ${canje.compraMinimaClp}`}
+                  />
                 </div>
+              </label>
+
+              <label>
+                <span>
+                  Folio de boleta <small>(opcional)</small>
+                </span>
+
+                <input
+                  type="text"
+                  maxLength={120}
+                  value={folioBoleta}
+                  onChange={(evento) => setFolioBoleta(evento.target.value)}
+                  placeholder="Ejemplo: 0001842"
+                />
+              </label>
+            </div>
+
+            <div className="canje-confirmacion-v2__resumen">
+              <div>
+                <span className="canje-confirmacion-v2__icono" aria-hidden="true">
+                  %
+                </span>
+
                 <div>
-                  <dt>Total que pagará el vecino</dt>
-                  <dd>{formatearPesos(vistaPreviaDescuento.total)}</dd>
+                  <small>Descuento aplicado</small>
+                  <strong>
+                    {vistaPreviaDescuento
+                      ? `-${formatearPesos(vistaPreviaDescuento.descuento)}`
+                      : '—'}
+                  </strong>
                 </div>
-              </dl>
-            )}
-            <div className="canjes__acciones">
-              <button type="submit" disabled={procesando}>
-                {procesando ? 'Confirmando…' : 'Confirmar compra y canje'}
+              </div>
+
+              <div>
+                <span className="canje-confirmacion-v2__icono" aria-hidden="true">
+                  $
+                </span>
+
+                <div>
+                  <small>Total a pagar</small>
+                  <strong>
+                    {vistaPreviaDescuento
+                      ? formatearPesos(vistaPreviaDescuento.total)
+                      : '—'}
+                  </strong>
+                </div>
+              </div>
+            </div>
+
+            <div className="canje-confirmacion-v2__acciones">
+              <button
+                type="submit"
+                className="canje-confirmacion-v2__confirmar"
+                disabled={
+                procesando ||
+                !Number.isInteger(Number(montoBruto)) ||
+                Number(montoBruto) < canje.compraMinimaClp
+              }
+              >
+                <span>
+                  {procesando
+                    ? 'Confirmando…'
+                    : 'Confirmar compra y canje'}
+                </span>
+                <strong aria-hidden="true">›</strong>
               </button>
+
               <button
                 type="button"
-                className="secundario"
+                className="canje-confirmacion-v2__cancelar"
                 disabled={procesando}
                 onClick={() => void cancelarReserva()}
               >
@@ -815,6 +942,13 @@ function CanjesRegis({
               </button>
             </div>
           </form>
+
+          <img
+            className="canje-confirmacion-v2__mascota"
+            src={regalonCorazon}
+            alt=""
+            aria-hidden="true"
+          />
         </article>
       )}
 

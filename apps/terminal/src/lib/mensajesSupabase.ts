@@ -1,6 +1,8 @@
 const mensajesConocidos: Record<string, string> = {
   'Invalid login credentials': 'El correo o la contraseña no son correctos.',
   'Email not confirmed': 'Debes confirmar tu correo antes de iniciar sesión.',
+  'Alcanzaste el límite de canjes de este beneficio':
+    'Este vecino ya alcanzó el máximo de usos permitidos para este beneficio. Puedes elegir otro beneficio.',
 }
 
 export function mensajeSupabase(error: unknown) {

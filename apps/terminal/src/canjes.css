@@ -474,3 +474,970 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ==========================================================
+   CANJES POS V2 - INICIO
+   ========================================================== */
+
+.canjes--inicio {
+  position: relative;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 2rem 2.2rem;
+  gap: 1.5rem;
+  overflow: hidden;
+  border: 1px solid rgba(81, 222, 94, 0.22);
+  border-radius: 1.45rem;
+  color: #fff7e9;
+  background:
+    radial-gradient(circle at 86% 15%, rgba(61, 221, 79, 0.08), transparent 23%),
+    linear-gradient(145deg, #00281a, #001a11);
+  box-shadow: none;
+}
+
+.canjes--inicio .canjes__encabezado {
+  grid-template-columns: minmax(0, 1.15fr) minmax(17rem, 0.7fr);
+  padding-right: 8rem;
+  align-items: center;
+}
+
+.canjes--inicio .canjes__encabezado h2 {
+  margin-top: 0.4rem;
+  color: #fff7e9;
+  font-size: clamp(2.2rem, 3.6vw, 3.4rem);
+  line-height: 1;
+}
+
+.canjes--inicio .canjes__encabezado > p {
+  color: #91a99e;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.canjes__mascota-inicio {
+  position: absolute;
+  top: 1.45rem;
+  right: 2rem;
+  width: 6.8rem;
+  max-height: 7rem;
+  object-fit: contain;
+  filter: drop-shadow(0 0 1rem rgba(74, 234, 88, 0.14));
+  pointer-events: none;
+}
+
+.canjes--inicio .canjes__metodos {
+  gap: 1rem;
+}
+
+.canjes--inicio .canjes__metodo {
+  gap: 0.85rem;
+  padding: 1.25rem 1.35rem;
+  border: 1px solid rgba(78, 211, 92, 0.17);
+  border-radius: 1.15rem;
+  background: rgba(1, 37, 24, 0.72);
+}
+
+.canjes--inicio .canjes__metodo h3 {
+  color: #fff7e9;
+  font-size: 1.3rem;
+}
+
+.canjes--inicio .canjes__metodo > div > p {
+  color: #8fa79c;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.canjes--inicio .canjes__numero {
+  color: #ff8b42;
+  background: rgba(226, 100, 31, 0.13);
+}
+
+.canjes--inicio label {
+  color: #67e572;
+}
+
+.canjes--inicio input {
+  min-height: 3.6rem;
+  border: 1px solid rgba(78, 218, 91, 0.3);
+  color: #fff7e9;
+  background: #001c12;
+}
+
+.canjes--inicio input::placeholder {
+  color: #657e72;
+}
+
+.canjes--inicio form > button,
+.canjes--inicio .canjes__beneficio button {
+  min-height: 3.25rem;
+  border: 0;
+  border-radius: 0.8rem;
+  background: #57da64;
+  color: #041f13;
+  font-weight: 900;
+}
+
+.canjes--inicio .canjes__estado-vacio {
+  margin: 0;
+  padding: 1.15rem;
+  border: 1px dashed rgba(101, 226, 112, 0.2);
+  color: #82998e;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.canjes--inicio .canjes__beneficios {
+  gap: 0.55rem;
+}
+
+.canjes__vecino-identificado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.8rem 0.95rem;
+  border: 1px solid rgba(94, 224, 105, 0.22);
+  border-radius: 0.85rem;
+  background: rgba(69, 191, 78, 0.08);
+}
+
+.canjes__vecino-identificado > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.canjes__vecino-identificado span {
+  color: #80978c;
+  font-size: 0.66rem;
+  font-weight: 850;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.canjes__vecino-identificado strong {
+  color: #fff7e9;
+  font-size: 1rem;
+}
+
+.canjes__saldo-vecino {
+  text-align: right;
+}
+
+.canjes__saldo-vecino strong {
+  color: #63e66f;
+  font-size: 1.15rem;
+}
+
+.canjes--inicio .canjes__beneficio {
+  padding: 0.75rem 0.85rem;
+  border: 1px solid rgba(76, 206, 89, 0.14);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.canjes--inicio .canjes__beneficio > div {
+  gap: 0.1rem;
+}
+
+.canjes--inicio .canjes__beneficio > div > strong {
+  color: #fff7e9;
+}
+
+.canjes--inicio .canjes__beneficio > div > span,
+.canjes--inicio .canjes__regla-beneficio {
+  display: none;
+}
+
+.canjes--inicio .canjes__beneficio small {
+  color: #8ba095;
+}
+
+.canjes--inicio .canjes__beneficio button:disabled {
+  cursor: not-allowed;
+  background: rgba(255, 255, 255, 0.07);
+  color: #77887f;
+}
+
+@media (max-width: 900px) {
+  .canjes--inicio .canjes__encabezado {
+    grid-template-columns: 1fr;
+    padding-right: 0;
+  }
+
+  .canjes__mascota-inicio {
+    display: none;
+  }
+
+  .canjes--inicio .canjes__metodos {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================
+   CANJES V2 - PANTALLA 2 DEFINITIVA
+   ========================================================== */
+
+.canjes--revision {
+  position: relative;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 2rem 2.2rem;
+  border: 1px solid rgba(87, 222, 99, 0.2);
+  border-radius: 1.5rem;
+  background:
+    radial-gradient(circle at 86% 22%, rgba(74, 228, 87, 0.07), transparent 25%),
+    linear-gradient(145deg, #002719, #001a11);
+  color: #fff7e9;
+}
+
+/* En esta etapa no mostramos historial */
+.canjes--revision .canjes__historial {
+  display: none !important;
+}
+
+.canjes--revision .canjes__encabezado {
+  margin-bottom: 1rem;
+}
+
+.canjes--revision .canjes__encabezado h2 {
+  margin-top: 0.35rem;
+  color: #fff7e9;
+  font-size: clamp(2.4rem, 4vw, 3.5rem);
+  line-height: 1;
+}
+
+.canjes--revision .canjes__encabezado > p {
+  color: #91a79c;
+}
+
+/* Aviso de reserva */
+.canjes--revision .canjes__aviso {
+  margin: 0 0 1rem;
+  padding: 0.9rem 1.1rem;
+  border-radius: 0.85rem;
+  background: rgba(241, 247, 239, 0.96);
+  color: #175b45;
+}
+
+/* Tarjeta principal */
+.canjes--revision .canjes__revision {
+  position: relative !important;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 0 !important;
+  padding: 1.4rem 10rem 1.4rem 1.4rem !important;
+  overflow: hidden;
+  border: 1px solid rgba(85, 220, 97, 0.2);
+  border-radius: 1.1rem;
+  background: rgba(2, 39, 25, 0.72);
+}
+
+/* EL REGALÓN — pequeño y controlado */
+.canjes--revision .canjes__mascota-revision {
+  position: absolute !important;
+  top: 1.25rem !important;
+  right: 1.5rem !important;
+  bottom: auto !important;
+  left: auto !important;
+
+  width: 7rem !important;
+  height: 8.5rem !important;
+  max-width: 7rem !important;
+  max-height: 8.5rem !important;
+
+  object-fit: contain !important;
+  object-position: center !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  filter: drop-shadow(0 0 1rem rgba(78, 232, 91, 0.17));
+  pointer-events: none;
+}
+
+/* Información del beneficio */
+.canjes--revision .canjes__revision-encabezado {
+  padding-right: 0.5rem;
+}
+
+.canjes--revision .canjes__revision-encabezado h3 {
+  margin: 0.25rem 0;
+  color: #fff7e9;
+  font-size: 1.55rem;
+}
+
+.canjes--revision .canjes__revision-encabezado p {
+  color: #93a99e;
+}
+
+.canjes--revision .canjes__regla-beneficio {
+  display: none;
+}
+
+.canjes--revision .canjes__temporizador span {
+  color: #7e968a;
+}
+
+.canjes--revision .canjes__temporizador strong {
+  color: #fff7e9;
+  font-size: 1.35rem;
+}
+
+/* Código / costo / mínimo */
+.canjes--revision .canjes__detalle {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.canjes--revision .canjes__detalle > div {
+  padding: 0.9rem 1rem;
+  border: 1px solid rgba(80, 216, 93, 0.13);
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.canjes--revision .canjes__detalle dt {
+  color: #82998e;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.canjes--revision .canjes__detalle dd {
+  margin: 0.25rem 0 0;
+  color: #fff7e9;
+  font-weight: 850;
+}
+
+/* Formulario */
+.canjes--revision .canjes__confirmacion {
+  padding-top: 1rem;
+  border-top: 1px solid rgba(82, 215, 94, 0.12);
+}
+
+.canjes--revision .canjes__confirmacion label {
+  color: #67e572;
+  font-weight: 800;
+}
+
+.canjes--revision .canjes__confirmacion input {
+  min-height: 3.7rem;
+  border: 1px solid rgba(84, 220, 96, 0.3);
+  border-radius: 0.8rem;
+  background: #001c12;
+  color: #fff7e9;
+}
+
+.canjes--revision .canjes__confirmacion input::placeholder {
+  color: #617a6e;
+}
+
+.canjes--revision .canjes__confirmacion small {
+  color: #82988d;
+}
+
+/* Resumen descuento / total */
+.canjes--revision .canjes__vista-previa {
+  padding: 1rem;
+  border: 1px solid rgba(82, 222, 95, 0.18);
+  border-radius: 0.9rem;
+  background: rgba(69, 204, 81, 0.06);
+}
+
+.canjes--revision .canjes__vista-previa dt {
+  color: #839a8f;
+}
+
+.canjes--revision .canjes__vista-previa dd {
+  color: #62e66e;
+  font-size: 1.4rem;
+  font-weight: 900;
+}
+
+/* Botones */
+.canjes--revision .canjes__acciones {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.canjes--revision .canjes__acciones button:first-child {
+  min-height: 3.5rem;
+  padding: 0 1.25rem;
+  border: 0;
+  border-radius: 0.8rem;
+  background: #59dc65;
+  color: #032014;
+  font-weight: 900;
+}
+
+.canjes--revision .canjes__acciones .secundario {
+  min-height: 3.5rem;
+  padding: 0 1.25rem;
+  border: 1px solid rgba(88, 219, 99, 0.25);
+  border-radius: 0.8rem;
+  background: rgba(255, 255, 255, 0.035);
+  color: #fff7e9;
+}
+
+@media (max-width: 900px) {
+  .canjes--revision .canjes__revision {
+    padding-right: 1.4rem !important;
+  }
+
+  .canjes--revision .canjes__mascota-revision {
+    display: none !important;
+  }
+
+  .canjes--revision .canjes__detalle {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================
+   CANJES V2 - PANTALLA 2 SIN SCROLL
+   ========================================================== */
+
+.canjes--revision {
+  padding: 1.25rem 1.7rem !important;
+  gap: 0.8rem !important;
+}
+
+.canjes--revision .canjes__encabezado {
+  margin-bottom: 0.4rem !important;
+  align-items: center;
+}
+
+.canjes--revision .canjes__encabezado h2 {
+  margin-top: 0.2rem !important;
+  font-size: clamp(2.25rem, 3.3vw, 3rem) !important;
+  line-height: 0.98 !important;
+}
+
+.canjes--revision .canjes__encabezado > p {
+  margin: 0 !important;
+  font-size: 0.92rem !important;
+}
+
+.canjes--revision .canjes__aviso {
+  margin: 0 0 0.55rem !important;
+  padding: 0.7rem 1rem !important;
+  font-size: 0.9rem !important;
+}
+
+.canjes--revision .canjes__revision {
+  gap: 0.65rem !important;
+  padding: 1rem 8.5rem 1rem 1rem !important;
+}
+
+.canjes--revision .canjes__mascota-revision {
+  top: 0.9rem !important;
+  right: 1.15rem !important;
+  width: 6rem !important;
+  height: 6.8rem !important;
+  max-width: 6rem !important;
+  max-height: 6.8rem !important;
+}
+
+.canjes--revision .canjes__revision-encabezado h3 {
+  margin: 0.15rem 0 !important;
+  font-size: 1.35rem !important;
+}
+
+.canjes--revision .canjes__revision-encabezado > div:first-child > p {
+  margin: 0.15rem 0 !important;
+  font-size: 0.88rem !important;
+}
+
+.canjes--revision .canjes__temporizador strong {
+  font-size: 1.15rem !important;
+}
+
+.canjes--revision .canjes__detalle {
+  gap: 0.55rem !important;
+}
+
+.canjes--revision .canjes__detalle > div {
+  padding: 0.65rem 0.8rem !important;
+}
+
+.canjes--revision .canjes__detalle dt {
+  font-size: 0.64rem !important;
+}
+
+.canjes--revision .canjes__detalle dd {
+  margin-top: 0.15rem !important;
+  font-size: 0.92rem !important;
+}
+
+.canjes--revision .canjes__confirmacion {
+  gap: 0.55rem !important;
+  padding-top: 0.65rem !important;
+}
+
+.canjes--revision .canjes__confirmacion label {
+  font-size: 0.86rem !important;
+}
+
+.canjes--revision .canjes__confirmacion input {
+  min-height: 3.05rem !important;
+  padding-top: 0.55rem !important;
+  padding-bottom: 0.55rem !important;
+}
+
+.canjes--revision .canjes__confirmacion label small {
+  margin-top: 0.25rem !important;
+  font-size: 0.68rem !important;
+}
+
+.canjes--revision .canjes__vista-previa {
+  padding: 0.7rem 0.85rem !important;
+}
+
+.canjes--revision .canjes__vista-previa dt {
+  font-size: 0.7rem !important;
+}
+
+.canjes--revision .canjes__vista-previa dd {
+  margin-top: 0.15rem !important;
+  font-size: 1.2rem !important;
+}
+
+.canjes--revision .canjes__acciones {
+  gap: 0.6rem !important;
+}
+
+.canjes--revision .canjes__acciones button:first-child,
+.canjes--revision .canjes__acciones .secundario {
+  min-height: 3rem !important;
+  padding: 0 1rem !important;
+  font-size: 0.88rem !important;
+}
+
+/* ==========================================================
+   CANJE CONFIRMACION V2 EXACTA
+   ========================================================== */
+
+.canjes--revision {
+  padding: 1.25rem 1.6rem !important;
+  overflow: hidden;
+}
+
+.canjes--revision > .canjes__encabezado,
+.canjes--revision > .canjes__aviso,
+.canjes--revision .canjes__historial {
+  display: none !important;
+}
+
+.canje-confirmacion-v2 {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  width: 100%;
+  min-height: calc(100vh - 19rem);
+  padding: 0.35rem 16rem 0.4rem 0.35rem;
+  color: #fff7e9;
+}
+
+.canje-confirmacion-v2__cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 2rem;
+}
+
+.canje-confirmacion-v2__cabecera h3 {
+  margin: 0;
+  color: #fff7e9;
+  font-size: clamp(2.7rem, 4vw, 4rem);
+  line-height: 0.95;
+}
+
+.canje-confirmacion-v2__cabecera p {
+  margin: 0.55rem 0 0;
+  color: #9aa9a0;
+  font-size: 1.05rem;
+}
+
+.canje-confirmacion-v2__tiempo {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding-bottom: 0.15rem;
+}
+
+.canje-confirmacion-v2__tiempo span {
+  color: #71887c;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.canje-confirmacion-v2__tiempo strong {
+  color: #72e97b;
+  font-size: 1rem;
+}
+
+.canje-confirmacion-v2__aviso {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-height: 3.4rem;
+  padding: 0.65rem 0.9rem;
+  border: 1px solid rgba(92, 229, 104, 0.38);
+  border-radius: 0.8rem;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(68, 221, 82, 0.13),
+      rgba(25, 100, 54, 0.06)
+    );
+  color: #dff6e2;
+}
+
+.canje-confirmacion-v2__aviso > span:last-child {
+  color: #a9b8ae;
+}
+
+.canje-confirmacion-v2__check {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 2rem;
+  border-radius: 50%;
+  background: #62e66e;
+  color: #06321d;
+  font-size: 1.15rem;
+  font-weight: 950;
+  box-shadow: 0 0 1rem rgba(93, 229, 105, 0.25);
+}
+
+.canje-confirmacion-v2__beneficio {
+  display: grid;
+  grid-template-columns: 1.45fr 0.95fr 1.2fr;
+  align-items: center;
+  min-height: 6.3rem;
+  overflow: hidden;
+  border: 1px solid rgba(94, 225, 105, 0.24);
+  border-radius: 1rem;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(43, 131, 63, 0.11),
+      rgba(0, 26, 17, 0.6)
+    );
+}
+
+.canje-confirmacion-v2__beneficio > div {
+  min-height: 4.4rem;
+  padding: 0.7rem 1rem;
+}
+
+.canje-confirmacion-v2__beneficio > div + div {
+  border-left: 1px solid rgba(92, 218, 103, 0.14);
+}
+
+.canje-confirmacion-v2__beneficio-principal,
+.canje-confirmacion-v2__dato {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.canje-confirmacion-v2__beneficio-principal > strong {
+  color: #fff7e9;
+  font-size: 1.55rem;
+}
+
+.canje-confirmacion-v2__dato small {
+  display: block;
+  margin-bottom: 0.15rem;
+  color: #98a99f;
+  font-size: 0.78rem;
+}
+
+.canje-confirmacion-v2__dato strong {
+  color: #fff7e9;
+  font-size: 1rem;
+}
+
+.canje-confirmacion-v2__dato strong:last-child {
+  color: #65e671;
+}
+
+.canje-confirmacion-v2__icono {
+  display: grid;
+  place-items: center;
+  width: 3.15rem;
+  height: 3.15rem;
+  flex: 0 0 3.15rem;
+  border: 1px solid rgba(91, 232, 103, 0.62);
+  border-radius: 50%;
+  color: #60e66d;
+  background: rgba(70, 204, 81, 0.08);
+  font-size: 1.45rem;
+  font-weight: 900;
+  box-shadow:
+    inset 0 0 1rem rgba(59, 211, 75, 0.08),
+    0 0 1rem rgba(55, 221, 72, 0.08);
+}
+
+.canje-confirmacion-v2__icono svg {
+  width: 1.65rem;
+  height: 1.65rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.canje-confirmacion-v2__icono--regis {
+  font-family: inherit;
+}
+
+.canje-confirmacion-v2__formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.canje-confirmacion-v2__campos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.canje-confirmacion-v2__campos label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid rgba(91, 218, 102, 0.18);
+  border-radius: 0.85rem;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.canje-confirmacion-v2__campos label > span {
+  color: #fff7e9;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.canje-confirmacion-v2__campos label > span small {
+  color: #92a59a;
+  font-size: inherit;
+  font-weight: 500;
+}
+
+.canje-confirmacion-v2__campos input {
+  width: 100%;
+  min-height: 3rem !important;
+  padding: 0.55rem 0.7rem !important;
+  border: 1px solid rgba(85, 226, 97, 0.42) !important;
+  border-radius: 0.65rem !important;
+  outline: none;
+  background: #001c12 !important;
+  color: #fff7e9 !important;
+  font-size: 1.05rem;
+}
+
+.canje-confirmacion-v2__campos input:focus {
+  border-color: #63e66f !important;
+  box-shadow: 0 0 0 2px rgba(99, 230, 111, 0.1);
+}
+
+.canje-confirmacion-v2__input-monto {
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(85, 226, 97, 0.42);
+  border-radius: 0.65rem;
+  background: #001c12;
+}
+
+.canje-confirmacion-v2__input-monto > strong {
+  padding-left: 0.8rem;
+  color: #67e573;
+  font-size: 1.1rem;
+}
+
+.canje-confirmacion-v2__input-monto input {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.canje-confirmacion-v2__resumen {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+  border: 1px solid rgba(91, 221, 102, 0.2);
+  border-radius: 0.9rem;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(46, 136, 65, 0.1),
+      rgba(0, 28, 18, 0.66)
+    );
+}
+
+.canje-confirmacion-v2__resumen > div {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 5rem;
+  padding: 0.75rem 1.1rem;
+}
+
+.canje-confirmacion-v2__resumen > div + div {
+  border-left: 1px solid rgba(90, 218, 102, 0.15);
+}
+
+.canje-confirmacion-v2__resumen small {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: #9aaba1;
+  font-size: 0.85rem;
+}
+
+.canje-confirmacion-v2__resumen strong {
+  color: #61e66e;
+  font-size: 1.65rem;
+  line-height: 1;
+}
+
+.canje-confirmacion-v2__acciones {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 0.75rem;
+  width: calc(100% - 4rem);
+  max-width: 62rem;
+  margin: 0 auto;
+}
+
+.canje-confirmacion-v2__acciones button {
+  min-height: 3.8rem;
+  border-radius: 0.85rem;
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.canje-confirmacion-v2__confirmar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  border: 0;
+  background:
+    linear-gradient(100deg, #69e56e, #51d95e);
+  color: #032014;
+  box-shadow: 0 0 1.5rem rgba(80, 222, 93, 0.1);
+}
+
+.canje-confirmacion-v2__confirmar > strong {
+  font-size: 2rem;
+  line-height: 0;
+}
+
+.canje-confirmacion-v2__cancelar {
+  border: 1px solid rgba(91, 230, 103, 0.7);
+  background: transparent;
+  color: #61e66e;
+}
+
+.canje-confirmacion-v2__mascota {
+  position: absolute;
+  right: 1rem;
+  bottom: 0.5rem;
+  width: 13rem;
+  max-height: 16rem;
+  object-fit: contain;
+  filter: drop-shadow(0 0 1.4rem rgba(74, 229, 87, 0.16));
+  pointer-events: none;
+}
+
+@media (max-width: 1050px) {
+  .canje-confirmacion-v2 {
+    padding-right: 1rem;
+  }
+
+  .canje-confirmacion-v2__mascota {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .canje-confirmacion-v2__beneficio,
+  .canje-confirmacion-v2__campos,
+  .canje-confirmacion-v2__resumen,
+  .canje-confirmacion-v2__acciones {
+    grid-template-columns: 1fr;
+  }
+
+  .canje-confirmacion-v2__beneficio > div + div,
+  .canje-confirmacion-v2__resumen > div + div {
+    border-left: 0;
+    border-top: 1px solid rgba(92, 218, 103, 0.14);
+  }
+
+  .canje-confirmacion-v2__acciones {
+    width: 100%;
+  }
+}
+
+/* AJUSTE TITULO CONFIRMAR CANJE */
+
+.canje-confirmacion-v2__cabecera h3 {
+  font-size: clamp(2.2rem, 3vw, 3rem) !important;
+}
+
+.canje-confirmacion-v2__cabecera p {
+  margin-top: 0.35rem !important;
+}
+
+/* AJUSTE INPUT MONTO Y BOTONES CANJE */
+
+.canje-confirmacion-v2 input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.canje-confirmacion-v2 input[type="number"]::-webkit-outer-spin-button,
+.canje-confirmacion-v2 input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.canje-confirmacion-v2__acciones {
+  gap: 0.85rem;
+}
+
+.canje-confirmacion-v2__acciones button {
+  min-height: 56px;
+  padding: 0.9rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 18px;
+}
+
+/* AJUSTE FINAL SIN SCROLL CONFIRMAR CANJE */
+
+.canjes--revision {
+  overflow: hidden !important;
+  padding-bottom: 0.8rem !important;
+}
+
+.canje-confirmacion-v2 {
+  min-height: 0 !important;
+  height: auto !important;
+  padding-bottom: 0 !important;
+}
+
+.canje-confirmacion-v2__acciones {
+  margin-bottom: 0 !important;
+}
+

@@ -13152,3 +13152,13 @@ body,
     grid-template-columns: 1fr !important;
   }
 }
+
+/* ==========================================================
+   CANJE REVISION SIN SCROLL CONTENEDOR
+   ========================================================== */
+
+.terminal-panel--turno-activo
+  .terminal-seccion-contenido:not([hidden]):has(.canjes--revision) {
+  overflow-y: hidden !important;
+}
+

@@ -2512,8 +2512,10 @@ function PanelTerminal({
           credencialTerminal={credencialTerminal}
           llaveroActivo={contextoLlavero?.estado === 'activo'}
           saldoLlavero={saldoRegisLlavero}
+          nombreVecinoLlavero={contextoLlavero?.nombre_vecino ?? null}
           alConsumirLectura={limpiarLecturaOperativa}
           alConfirmar={actualizarDespuesDeCompra}
+          alVolverACompras={() => setSeccionActiva('compras')}
         />
         </div>
       )}
