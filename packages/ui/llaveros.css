@@ -1,0 +1,1386 @@
+.llaveros {
+  min-height: 100vh;
+  padding-bottom: 5rem;
+  color: var(--texto);
+  background:
+    radial-gradient(circle at 8% 0%, rgb(255 190 111 / 24%), transparent 26rem),
+    radial-gradient(circle at 92% 14%, rgb(79 153 105 / 15%), transparent 24rem),
+    var(--crema-50);
+}
+
+.llaveros__barra {
+  width: min(1180px, calc(100% - 2rem));
+  min-height: 78px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0 auto;
+}
+
+.llaveros__marca {
+  color: var(--verde-900);
+  font-family: var(--fuente-marca);
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+}
+
+.llaveros__barra nav {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.llaveros__barra nav a,
+.llaveros__barra nav button {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 1rem;
+  border-radius: 999px;
+  color: var(--verde-800);
+  background: rgb(255 255 255 / 72%);
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.enlace-soporte-admin {
+  gap: 0.45rem;
+}
+
+.enlace-soporte-admin__contador {
+  min-width: 1.45rem;
+  padding: 0.15rem 0.38rem;
+  border-radius: 999px;
+  color: #8b3109;
+  background: #fff0df;
+  font-size: 0.68rem;
+  line-height: 1.1;
+  text-align: center;
+}
+
+.llaveros__encabezado {
+  width: min(1180px, calc(100% - 2rem));
+  margin: 2.5rem auto 2rem;
+}
+
+.llaveros__encabezado > span,
+.llaveros__sobrelinea {
+  color: var(--naranjo-500);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.llaveros__encabezado h1 {
+  max-width: 800px;
+  margin: 0.35rem 0 0.65rem;
+  color: var(--verde-900);
+  font-family: var(--fuente-marca);
+  font-size: clamp(2.8rem, 7vw, 5rem);
+  line-height: 0.95;
+}
+
+.llaveros__encabezado p {
+  max-width: 700px;
+  margin: 0;
+  color: var(--texto-suave);
+  font-size: clamp(1rem, 2vw, 1.12rem);
+  line-height: 1.7;
+}
+
+.llaveros__contenido,
+.llaveros > .llaveros__aviso {
+  width: min(1180px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.llaveros__contenido {
+  display: grid;
+  gap: 1.3rem;
+}
+
+.llaveros__mensaje,
+.llaveros__aviso {
+  padding: 1rem 1.15rem;
+  border: 1px solid rgb(31 111 70 / 14%);
+  border-radius: 1rem;
+  color: var(--verde-800);
+  background: var(--verde-100);
+  line-height: 1.6;
+}
+
+.llaveros__mensaje--error {
+  border-color: rgb(164 48 31 / 16%);
+  color: #8b2419;
+  background: #fff0ed;
+}
+
+.llaveros__aviso--centrado {
+  max-width: 620px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.llaveros__aviso--centrado h2 {
+  margin: 0 0 0.5rem;
+  font-family: var(--fuente-marca);
+  font-size: 2rem;
+}
+
+.llaveros__aviso--centrado a {
+  display: inline-flex;
+  margin-top: 0.5rem;
+  padding: 0.8rem 1.2rem;
+  border-radius: 999px;
+  color: white;
+  background: var(--naranjo-500);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.llaveros__rejilla {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+  gap: 1.3rem;
+}
+
+.llaveros__tarjeta,
+.llaveros__historial,
+.llaveros__panel-admin,
+.llaveros__metricas article {
+  border: 1px solid var(--borde);
+  border-radius: 1.6rem;
+  background: rgb(255 255 255 / 90%);
+  box-shadow: 0 18px 48px rgb(70 53 24 / 8%);
+}
+
+.llaveros__tarjeta {
+  padding: clamp(1.35rem, 3vw, 2rem);
+}
+
+.llaveros__tarjeta h2,
+.llaveros__historial h2,
+.llaveros__detalle h2 {
+  margin: 0.35rem 0 0.65rem;
+  color: var(--verde-900);
+  font-family: var(--fuente-marca);
+  font-size: clamp(1.75rem, 3vw, 2.35rem);
+  line-height: 1.05;
+}
+
+.llaveros__tarjeta p {
+  color: var(--texto-suave);
+  line-height: 1.65;
+}
+
+.llaveros__selector {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+  margin-top: 1.4rem;
+}
+
+.llaveros__selector button {
+  display: grid;
+  gap: 0.25rem;
+  padding: 1.05rem;
+  border: 1.5px solid var(--borde);
+  border-radius: 1rem;
+  color: var(--texto);
+  background: white;
+  cursor: pointer;
+  text-align: left;
+  transition:
+    border-color 180ms ease,
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.llaveros__selector button:hover {
+  border-color: var(--naranjo-500);
+  transform: translateY(-2px);
+}
+
+.llaveros__selector button.activo {
+  border-color: var(--verde-700);
+  background: var(--verde-100);
+  box-shadow: 0 0 0 3px rgb(18 97 63 / 10%);
+}
+
+.llaveros__selector strong {
+  color: var(--verde-900);
+  font-size: 1rem;
+}
+
+.llaveros__selector small,
+.llaveros__tarjeta--llavero small {
+  color: var(--texto-suave);
+  line-height: 1.5;
+}
+
+.llaveros__tarjeta--llavero {
+  position: relative;
+  overflow: hidden;
+  color: white;
+  background: linear-gradient(145deg, var(--verde-900), var(--verde-700));
+}
+
+.llaveros__tarjeta--llavero::after {
+  position: absolute;
+  width: 190px;
+  height: 190px;
+  right: -65px;
+  bottom: -80px;
+  border: 35px solid rgb(255 255 255 / 7%);
+  border-radius: 50%;
+  content: '';
+}
+
+.llaveros__tarjeta--llavero .llaveros__sobrelinea {
+  color: #ffd4ad;
+}
+
+.llaveros__tarjeta--llavero h2,
+.llaveros__tarjeta--llavero p,
+.llaveros__tarjeta--llavero small {
+  position: relative;
+  z-index: 1;
+  color: white;
+}
+
+.llaveros__llavero-icono {
+  width: 62px;
+  height: 62px;
+  display: grid;
+  position: relative;
+  z-index: 1;
+  place-items: center;
+  margin: 1.1rem 0;
+  border: 5px solid rgb(255 255 255 / 20%);
+  border-radius: 50% 50% 46% 46%;
+  color: var(--verde-900);
+  background: #ffc985;
+  font-family: var(--fuente-marca);
+  font-size: 1.2rem;
+  box-shadow: 0 10px 24px rgb(0 0 0 / 18%);
+}
+
+.llaveros__estado {
+  width: fit-content;
+  display: inline-flex;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  color: var(--verde-800);
+  background: var(--verde-100);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.llaveros__tarjeta--llavero .llaveros__estado {
+  position: absolute;
+  z-index: 2;
+  top: 1.5rem;
+  right: 1.5rem;
+  color: white;
+  background: rgb(255 255 255 / 15%);
+}
+
+.llaveros__estado.estado--pendiente,
+.llaveros__estado.estado--programada_entrega {
+  color: #88410d;
+  background: #fff0df;
+}
+
+.llaveros__estado.estado--cancelada,
+.llaveros__estado.estado--bloqueado,
+.llaveros__estado.estado--perdido,
+.llaveros__estado.estado--revocado {
+  color: #8b2419;
+  background: #fff0ed;
+}
+
+.llaveros__solicitud {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.7fr) minmax(0, 1.3fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+.llaveros__seguimiento,
+.llaveros__formulario {
+  display: grid;
+  gap: 1rem;
+}
+
+.llaveros__seguimiento dl,
+.llaveros__datos {
+  display: grid;
+  gap: 0.7rem;
+  margin: 0;
+}
+
+.llaveros__seguimiento dl div,
+.llaveros__datos div {
+  display: grid;
+  grid-template-columns: 8rem minmax(0, 1fr);
+  gap: 0.75rem;
+}
+
+.llaveros__seguimiento dt,
+.llaveros__datos dt {
+  color: var(--texto-suave);
+  font-weight: 700;
+}
+
+.llaveros__seguimiento dd,
+.llaveros__datos dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.llaveros__formulario label,
+.llaveros__herramientas label {
+  display: grid;
+  gap: 0.42rem;
+  color: var(--verde-900);
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.llaveros__formulario label small {
+  color: var(--texto-suave);
+  font-weight: 500;
+}
+
+.llaveros__formulario input,
+.llaveros__formulario select,
+.llaveros__formulario textarea,
+.llaveros__herramientas input,
+.llaveros__herramientas select {
+  width: 100%;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid var(--borde);
+  border-radius: 0.85rem;
+  color: var(--texto);
+  background: white;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.llaveros__formulario textarea {
+  resize: vertical;
+}
+
+.llaveros__formulario input:focus,
+.llaveros__formulario select:focus,
+.llaveros__formulario textarea:focus,
+.llaveros__herramientas input:focus,
+.llaveros__herramientas select:focus {
+  border-color: var(--naranjo-500);
+  box-shadow: 0 0 0 3px rgb(255 100 16 / 12%);
+}
+
+.llaveros__formulario > button,
+.llaveros__acciones button,
+.llaveros__herramientas button,
+.llaveros__cancelar-admin {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.1rem;
+  border-radius: 999px;
+  color: white;
+  background: var(--naranjo-500);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.llaveros button:disabled {
+  cursor: wait;
+  opacity: 0.58;
+}
+
+.llaveros__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.llaveros__acciones button.secundario,
+.llaveros__herramientas button.secundario {
+  color: var(--verde-800);
+  background: var(--verde-100);
+}
+
+.llaveros__acciones button.peligro,
+.llaveros__cancelar-admin {
+  color: #8b2419;
+  background: #fff0ed;
+}
+
+.llaveros__historial {
+  padding: clamp(1.35rem, 3vw, 2rem);
+}
+
+.llaveros__regis {
+  display: grid;
+  gap: 1.2rem;
+  padding: clamp(1.35rem, 3vw, 2rem);
+  border: 1px solid var(--borde);
+  border-radius: 1.6rem;
+  background: linear-gradient(135deg, #fff 0%, #f4f8ef 100%);
+  box-shadow: 0 18px 48px rgb(70 53 24 / 8%);
+}
+
+.llaveros__regis-encabezado {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.65fr) minmax(0, 1.35fr);
+  gap: 1.5rem;
+  align-items: end;
+}
+
+.llaveros__regis-encabezado h2 {
+  margin: 0.35rem 0 0;
+  color: var(--verde-900);
+  font-family: var(--fuente-marca);
+  font-size: clamp(1.75rem, 3vw, 2.35rem);
+  line-height: 1.05;
+}
+
+.llaveros__regis-encabezado p {
+  margin: 0;
+  color: var(--texto-suave);
+  line-height: 1.6;
+}
+
+.llaveros__regis-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.9rem;
+}
+
+.llaveros__regis-tarjeta,
+.llaveros__regis-vacio {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1.15rem;
+  border: 1px solid rgb(18 97 63 / 14%);
+  border-radius: 1.1rem;
+  background: white;
+}
+
+.llaveros__regis-tarjeta > span {
+  color: var(--texto-suave);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.llaveros__regis-tarjeta > strong {
+  color: var(--verde-900);
+  font-family: var(--fuente-marca);
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+.llaveros__regis-tarjeta > small,
+.llaveros__regis-vacio span {
+  color: var(--texto-suave);
+  line-height: 1.45;
+}
+
+.llaveros__regis-tarjeta dl {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0.55rem 0 0;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--borde);
+}
+
+.llaveros__regis-tarjeta dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.llaveros__regis-tarjeta dt,
+.llaveros__regis-tarjeta dd {
+  margin: 0;
+  color: var(--texto-suave);
+  font-size: 0.78rem;
+}
+
+.llaveros__regis-tarjeta dd {
+  color: var(--verde-800);
+  font-weight: 800;
+}
+
+.llaveros__regis-vacio strong {
+  color: var(--verde-900);
+}
+
+.llaveros__beneficios {
+  display: grid;
+  gap: 1.2rem;
+  padding: clamp(1.35rem, 3vw, 2rem);
+  border: 1px solid var(--borde);
+  border-radius: 1.6rem;
+  background: rgb(255 255 255 / 90%);
+  box-shadow: 0 18px 48px rgb(70 53 24 / 8%);
+}
+
+.llaveros__beneficios-encabezado {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.65fr) minmax(0, 1.35fr);
+  gap: 1.5rem;
+  align-items: end;
+}
+
+.llaveros__beneficios-encabezado h2 {
+  margin: 0.35rem 0 0;
+  color: var(--verde-900);
+  font-family: var(--fuente-marca);
+  font-size: clamp(1.75rem, 3vw, 2.35rem);
+  line-height: 1.05;
+}
+
+.llaveros__beneficios-encabezado p {
+  margin: 0;
+  color: var(--texto-suave);
+  line-height: 1.6;
+}
+
+.llaveros__beneficios-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 0.9rem;
+}
+
+.llaveros__beneficio,
+.llaveros__beneficios-vacio {
+  display: grid;
+  gap: 0.7rem;
+  padding: 1.2rem;
+  border: 1px solid rgb(18 97 63 / 14%);
+  border-radius: 1.1rem;
+  background: linear-gradient(160deg, #fff 42%, #f5f8ef 100%);
+}
+
+.llaveros__beneficios-vacio span {
+  color: var(--texto-suave);
+  line-height: 1.5;
+}
+
+.llaveros__beneficio-comercio {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.llaveros__beneficio-comercio span {
+  color: var(--naranjo-500);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.llaveros__beneficio-comercio small {
+  padding: 0.3rem 0.55rem;
+  border-radius: 999px;
+  color: var(--verde-800);
+  background: var(--verde-100);
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.llaveros__beneficio h3 {
+  margin: 0;
+  color: var(--verde-900);
+  font-family: var(--fuente-marca);
+  font-size: 1.35rem;
+  line-height: 1.1;
+}
+
+.llaveros__beneficio-descuento {
+  color: var(--verde-700);
+  font-size: 1.05rem;
+}
+
+.llaveros__beneficio > p {
+  margin: 0;
+  color: var(--texto-suave);
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+.llaveros__beneficio-regla {
+  display: grid;
+  gap: 0.3rem;
+  padding: 0.85rem;
+  border: 1px solid rgb(225 108 38 / 24%);
+  border-radius: 0.85rem;
+  color: var(--verde-900);
+  background: #fff4e9;
+}
+
+.llaveros__beneficio-regla strong {
+  color: #a34813;
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.llaveros__beneficio-regla span {
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.llaveros__beneficio dl {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0.3rem 0 0;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--borde);
+}
+
+.llaveros__beneficio dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.llaveros__beneficio dt,
+.llaveros__beneficio dd {
+  margin: 0;
+  color: var(--texto-suave);
+  font-size: 0.78rem;
+}
+
+.llaveros__beneficio dd {
+  color: var(--verde-800);
+  font-weight: 800;
+  text-align: right;
+}
+
+.llaveros__beneficio > button {
+  min-height: 44px;
+  margin-top: auto;
+  padding: 0.75rem 1rem;
+  border-radius: 999px;
+  color: white;
+  background: var(--verde-800);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.llaveros__beneficio > button:disabled {
+  color: var(--texto-suave);
+  background: #eceee8;
+}
+
+.llaveros__historial-canjes {
+  display: grid;
+  gap: 1.2rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+}
+
+.llaveros__historial-encabezado {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.llaveros__historial-encabezado h2 {
+  margin: 0.25rem 0 0;
+  color: var(--verde-900);
+  font-family: var(--fuente-marca);
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+}
+
+.llaveros__historial-encabezado p {
+  max-width: 680px;
+  margin: 0.4rem 0 0;
+  color: var(--texto-suave);
+  line-height: 1.5;
+}
+
+.llaveros__historial-aviso {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.65rem;
+  border-radius: 1rem;
+  color: var(--verde-900);
+  background: var(--verde-100);
+}
+
+.llaveros__historial-aviso strong {
+  padding-left: 0.35rem;
+  font-size: 0.82rem;
+}
+
+.llaveros__historial-aviso button {
+  min-height: 38px;
+  padding: 0.55rem 0.8rem;
+  border-radius: 999px;
+  color: white;
+  background: var(--verde-800);
+  cursor: pointer;
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.llaveros__historial-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 0.85rem;
+}
+
+.llaveros__historial-item {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1rem;
+  border: 1px solid var(--borde);
+  border-radius: 1rem;
+  background: white;
+}
+
+.llaveros__historial-item--nuevo {
+  border-color: var(--naranjo-500);
+  box-shadow: 0 8px 24px rgb(225 108 38 / 10%);
+}
+
+.llaveros__historial-titulo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.llaveros__historial-titulo > div {
+  display: grid;
+  gap: 0.18rem;
+}
+
+.llaveros__historial-titulo span {
+  width: fit-content;
+  padding: 0.2rem 0.45rem;
+  border-radius: 999px;
+  color: #8b3d12;
+  background: #fff0e4;
+  font-size: 0.65rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.llaveros__historial-titulo h3,
+.llaveros__historial-titulo p {
+  margin: 0;
+}
+
+.llaveros__historial-titulo h3 {
+  color: var(--verde-900);
+  font-family: var(--fuente-marca);
+  font-size: 1.15rem;
+}
+
+.llaveros__historial-titulo p,
+.llaveros__historial-item > small {
+  color: var(--texto-suave);
+  font-size: 0.78rem;
+}
+
+.llaveros__historial-titulo > strong {
+  color: #8b2419;
+  white-space: nowrap;
+}
+
+.llaveros__historial-item dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.45rem;
+  margin: 0;
+}
+
+.llaveros__historial-item dl div {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.65rem;
+  border-radius: 0.7rem;
+  background: #f7f5ed;
+}
+
+.llaveros__historial-item dt,
+.llaveros__historial-item dd {
+  margin: 0;
+  font-size: 0.75rem;
+}
+
+.llaveros__historial-item dt {
+  color: var(--texto-suave);
+}
+
+.llaveros__historial-item dd {
+  color: var(--verde-900);
+  font-weight: 800;
+}
+
+.llaveros__historial-vacio {
+  padding: 1.1rem;
+  border: 1px dashed var(--borde);
+  border-radius: 1rem;
+  color: var(--texto-suave);
+  background: rgb(255 255 255 / 55%);
+}
+
+.llaveros__modal-fondo {
+  position: fixed;
+  z-index: 50;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow-y: auto;
+  padding: 1rem;
+  background: rgb(4 35 25 / 70%);
+  backdrop-filter: blur(7px);
+}
+
+.llaveros__modal-canje {
+  position: relative;
+  width: min(520px, 100%);
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1.4rem, 4vw, 2.2rem);
+  border: 1px solid rgb(255 255 255 / 35%);
+  border-radius: 1.7rem;
+  background: var(--crema-50);
+  box-shadow: 0 28px 80px rgb(0 0 0 / 30%);
+  text-align: center;
+}
+
+.llaveros__modal-minimizar {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  min-height: 36px;
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  color: var(--verde-800);
+  background: var(--verde-100);
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.llaveros__canje-minimizado {
+  position: fixed;
+  z-index: 45;
+  bottom: 1.25rem;
+  left: 1.25rem;
+  width: min(430px, calc(100vw - 2.5rem));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.85rem;
+  border: 1px solid rgb(255 255 255 / 24%);
+  border-radius: 1rem;
+  color: white;
+  background: var(--verde-900);
+  box-shadow: 0 18px 45px rgb(4 35 25 / 30%);
+}
+
+.llaveros__canje-minimizado > div {
+  display: grid;
+  gap: 0.12rem;
+  min-width: 0;
+}
+
+.llaveros__canje-minimizado > div span {
+  color: #ffd3a8;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.llaveros__canje-minimizado > div strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.llaveros__canje-minimizado-tiempo {
+  min-width: 3.8rem;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.llaveros__canje-minimizado button {
+  min-height: 40px;
+  padding: 0.55rem 0.8rem;
+  border-radius: 999px;
+  color: var(--verde-900);
+  background: white;
+  cursor: pointer;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.llaveros__modal-canje h2 {
+  margin: 0;
+  color: var(--verde-900);
+  font-family: var(--fuente-marca);
+  font-size: clamp(2rem, 6vw, 3rem);
+  line-height: 1;
+}
+
+.llaveros__modal-canje > p {
+  margin: 0;
+  color: var(--texto-suave);
+  line-height: 1.5;
+}
+
+.llaveros__qr {
+  width: fit-content;
+  display: grid;
+  place-items: center;
+  margin-inline: auto;
+  padding: 0.8rem;
+  border: 1px solid rgb(18 97 63 / 16%);
+  border-radius: 1rem;
+  background: white;
+  box-shadow: 0 10px 30px rgb(18 97 63 / 10%);
+}
+
+.llaveros__qr svg {
+  width: min(220px, 58vw);
+  height: auto;
+}
+
+.llaveros__copiar-qr {
+  min-height: 42px;
+  justify-self: center;
+  padding: 0.65rem 1rem;
+  border-radius: 999px;
+  color: var(--verde-800);
+  background: var(--verde-100);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.llaveros__canje-tiempo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  color: var(--texto-suave);
+}
+
+.llaveros__canje-tiempo strong {
+  min-width: 4.2rem;
+  padding: 0.38rem 0.65rem;
+  border-radius: 999px;
+  color: var(--verde-900);
+  background: var(--verde-100);
+  font-variant-numeric: tabular-nums;
+}
+
+.llaveros__canje-resumen {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0.85rem;
+  border-radius: 0.9rem;
+  background: white;
+}
+
+.llaveros__canje-resumen div {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.llaveros__canje-resumen dt,
+.llaveros__canje-resumen dd {
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.llaveros__canje-resumen dt {
+  color: var(--texto-suave);
+}
+
+.llaveros__canje-resumen dd {
+  color: var(--verde-900);
+  font-weight: 800;
+}
+
+.llaveros__modal-canje .llaveros__canje-seguridad {
+  color: var(--verde-800);
+  font-size: 0.82rem;
+}
+
+.llaveros__cancelar-canje {
+  min-height: 46px;
+  padding: 0.75rem 1rem;
+  border-radius: 999px;
+  color: #8b2419;
+  background: #fff0ed;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.llaveros__opcion-llavero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.2rem;
+  border: 1px solid rgb(18 97 63 / 12%);
+  border-radius: 1.2rem;
+  background: rgb(255 255 255 / 72%);
+}
+
+.llaveros__opcion-llavero div {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.llaveros__opcion-llavero strong {
+  color: var(--verde-900);
+}
+
+.llaveros__opcion-llavero span {
+  color: var(--texto-suave);
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+.llaveros__opcion-llavero button {
+  min-height: 42px;
+  flex: 0 0 auto;
+  padding: 0.7rem 1rem;
+  border-radius: 999px;
+  color: var(--verde-800);
+  background: var(--verde-100);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.llaveros__tabla-contenedor {
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
+.llaveros__historial table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.llaveros__historial th,
+.llaveros__historial td {
+  padding: 0.85rem;
+  border-bottom: 1px solid var(--borde);
+  text-align: left;
+}
+
+.llaveros__historial th {
+  color: var(--texto-suave);
+  font-size: 0.76rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.llaveros__metricas {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.llaveros__metricas article {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.2rem 1.4rem;
+}
+
+.llaveros__metricas span {
+  color: var(--texto-suave);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.llaveros__metricas strong {
+  color: var(--verde-900);
+  font-family: var(--fuente-marca);
+  font-size: 2.4rem;
+  line-height: 1;
+}
+
+.llaveros__panel-admin {
+  min-height: 600px;
+  display: grid;
+  grid-template-columns: minmax(360px, 0.95fr) minmax(400px, 1.05fr);
+  overflow: hidden;
+}
+
+.llaveros__listado {
+  padding: 1.25rem;
+  border-right: 1px solid var(--borde);
+  background: rgb(248 246 237 / 70%);
+}
+
+.llaveros__herramientas {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 145px auto;
+  gap: 0.65rem;
+  align-items: end;
+  margin-bottom: 1rem;
+}
+
+.llaveros__lista-solicitudes {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.llaveros__lista-solicitudes > button {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.55rem 0.75rem;
+  padding: 1rem;
+  border: 1px solid transparent;
+  border-radius: 1rem;
+  color: var(--texto);
+  background: white;
+  cursor: pointer;
+  text-align: left;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.llaveros__lista-solicitudes > button:hover,
+.llaveros__lista-solicitudes > button.seleccionada {
+  border-color: var(--naranjo-500);
+  box-shadow: 0 8px 20px rgb(70 53 24 / 8%);
+  transform: translateY(-1px);
+}
+
+.llaveros__lista-solicitudes button > span:first-child {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.llaveros__lista-solicitudes small,
+.llaveros__lista-solicitudes time {
+  color: var(--texto-suave);
+  font-size: 0.76rem;
+}
+
+.llaveros__lista-solicitudes time {
+  grid-column: 1 / -1;
+}
+
+.llaveros__detalle {
+  display: grid;
+  align-content: start;
+  gap: 1.3rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+}
+
+.llaveros__detalle-cabecera p {
+  margin: 0;
+  color: var(--texto-suave);
+}
+
+.llaveros__detalle .llaveros__formulario,
+.llaveros__bloque-estados,
+.llaveros__entrega-inactiva {
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--borde);
+}
+
+.llaveros__detalle h3 {
+  margin: 0;
+  color: var(--verde-900);
+  font-family: var(--fuente-marca);
+  font-size: 1.3rem;
+}
+
+.llaveros__nota-segura {
+  margin: 0;
+  padding: 0.75rem;
+  border-radius: 0.8rem;
+  color: var(--verde-800);
+  background: var(--verde-100);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.llaveros__bloque-estados {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.llaveros__entrega-inactiva {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.llaveros__entrega-inactiva p {
+  margin: 0;
+  color: var(--texto-suave);
+  line-height: 1.55;
+}
+
+.llaveros__entrega-inactiva button {
+  width: fit-content;
+  min-height: 44px;
+  padding: 0.75rem 1.1rem;
+  border-radius: 999px;
+  color: white;
+  background: var(--verde-800);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.llaveros__cancelar-admin {
+  width: fit-content;
+}
+
+.llaveros__vacio {
+  padding: 1.5rem;
+  color: var(--texto-suave);
+  text-align: center;
+}
+
+.llaveros__vacio strong {
+  color: var(--verde-900);
+  font-family: var(--fuente-marca);
+  font-size: 1.35rem;
+}
+
+@media (max-width: 900px) {
+  .llaveros__rejilla,
+  .llaveros__solicitud,
+  .llaveros__regis-encabezado,
+  .llaveros__beneficios-encabezado,
+  .llaveros__panel-admin {
+    grid-template-columns: 1fr;
+  }
+
+  .llaveros__panel-admin {
+    overflow: visible;
+  }
+
+  .llaveros__listado {
+    border-right: 0;
+    border-bottom: 1px solid var(--borde);
+  }
+
+  .llaveros__detalle {
+    min-height: 320px;
+  }
+}
+
+@media (max-width: 680px) {
+  .llaveros__barra {
+    min-height: 68px;
+    align-items: flex-start;
+    padding-block: 0.8rem;
+  }
+
+  .llaveros__barra nav {
+    align-items: flex-end;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .llaveros__barra nav a,
+  .llaveros__barra nav button {
+    min-height: 34px;
+    padding-inline: 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  .llaveros__encabezado {
+    margin-top: 1.5rem;
+  }
+
+  .llaveros__opcion-llavero {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .llaveros__opcion-llavero button {
+    width: 100%;
+  }
+
+  .llaveros__selector,
+  .llaveros__metricas,
+  .llaveros__herramientas {
+    grid-template-columns: 1fr;
+  }
+
+  .llaveros__historial-encabezado,
+  .llaveros__historial-titulo {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .llaveros__historial-aviso {
+    justify-content: space-between;
+  }
+
+  .llaveros__historial-item dl {
+    grid-template-columns: 1fr;
+  }
+
+  .llaveros__canje-minimizado {
+    right: 0.75rem;
+    bottom: 0.75rem;
+    left: 0.75rem;
+    width: auto;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .llaveros__canje-minimizado button {
+    grid-column: 1 / -1;
+  }
+
+  .llaveros__tarjeta--llavero .llaveros__estado {
+    position: relative;
+    top: auto;
+    right: auto;
+  }
+
+  .llaveros__seguimiento dl div,
+  .llaveros__datos div {
+    grid-template-columns: 1fr;
+    gap: 0.15rem;
+  }
+
+  .llaveros__historial th,
+  .llaveros__historial td {
+    min-width: 135px;
+  }
+}

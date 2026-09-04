@@ -1,0 +1,3 @@
+-- Este archivo se mantiene intencionalmente vacío.
+-- Los nombres, precios y límites reales de los planes todavía no están
+-- aprobados. No se inventan datos comerciales ni usuarios de producción.

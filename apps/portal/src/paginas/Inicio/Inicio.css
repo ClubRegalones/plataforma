@@ -1,0 +1,88 @@
+.pagina-inicio {
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.contenedor {
+  width: min(1320px, calc(100% - 48px));
+  margin-inline: auto;
+}
+
+.etiqueta-seccion {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  color: var(--naranjo-500);
+  font-size: 0.84rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.titulo-seccion {
+  margin: 0;
+  font-family: var(--fuente-marca);
+  font-weight: 800;
+  color: var(--verde-900);
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 1.06;
+  letter-spacing: -0.045em;
+}
+
+.texto-seccion {
+  max-width: 680px;
+  margin: 16px 0 0;
+  color: var(--texto-suave);
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+
+.boton {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 22px;
+  border-radius: 13px;
+  font-weight: 900;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    background 180ms ease;
+}
+
+.boton:hover {
+  transform: translateY(-2px);
+}
+
+.boton--principal {
+  color: white;
+  background: var(--verde-800);
+  box-shadow: 0 12px 24px rgba(10, 79, 51, 0.23);
+}
+
+.boton--principal:hover {
+  background: var(--verde-900);
+}
+
+.boton--secundario {
+  color: var(--verde-900);
+  border: 1.5px solid rgba(8, 63, 41, 0.65);
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.boton--naranjo {
+  color: white;
+  background: var(--naranjo-500);
+  box-shadow: 0 12px 25px rgba(255, 100, 16, 0.24);
+}
+
+@media (max-width: 600px) {
+  .contenedor {
+    width: min(100% - 28px, 1320px);
+  }
+}

@@ -1,0 +1,318 @@
+.asistencia-comercio {
+  min-height: 100vh;
+  padding: clamp(1rem, 4vw, 3rem);
+  background:
+    radial-gradient(circle at top right, rgb(225 108 38 / 12%), transparent 32%),
+    #f7f1e7;
+}
+
+.asistencia-comercio__header,
+.asistencia-comercio__intro,
+.asistencia-comercio__panel {
+  width: min(100%, 78rem);
+  margin-inline: auto;
+}
+
+.asistencia-comercio__header,
+.asistencia-comercio__header nav,
+.asistencia-comercio__intro,
+.asistencia-comercio__formulario > div,
+.asistencia-comercio__conversacion > form > div {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.asistencia-comercio__header {
+  margin-bottom: 2rem;
+}
+
+.asistencia-comercio__header h1 {
+  margin-bottom: 0.35rem;
+  font-size: clamp(2.3rem, 6vw, 4rem);
+}
+
+.asistencia-comercio__header p {
+  margin: 0;
+}
+
+.asistencia-comercio a,
+.asistencia-comercio button {
+  padding: 0.8rem 1rem;
+  border: 0;
+  border-radius: 0.8rem;
+  color: white;
+  background: #153f2e;
+  cursor: pointer;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.asistencia-comercio__header button,
+.asistencia-comercio button.secundario {
+  color: #153f2e;
+  background: #e3eadf;
+}
+
+.asistencia-comercio__intro {
+  align-items: end;
+  margin-bottom: 1.25rem;
+  padding: clamp(1.3rem, 4vw, 2rem);
+  border: 1px solid rgb(21 63 46 / 12%);
+  border-radius: 1.5rem;
+  background: white;
+}
+
+.asistencia-comercio__intro h2 {
+  margin: 0.4rem 0 0;
+  font-size: clamp(1.7rem, 4vw, 2.7rem);
+  line-height: 1.05;
+}
+
+.asistencia-comercio__intro p {
+  max-width: 34rem;
+  margin: 0;
+}
+
+.asistencia-comercio__intro button {
+  flex: 0 0 auto;
+  background: #e16c26;
+}
+
+.asistencia-comercio__panel {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.68fr) minmax(500px, 1.32fr);
+  min-height: 620px;
+  overflow: hidden;
+  border: 1px solid rgb(21 63 46 / 12%);
+  border-radius: 1.5rem;
+  background: white;
+  box-shadow: 0 1.5rem 4rem rgb(21 63 46 / 9%);
+}
+
+.asistencia-comercio__lista {
+  display: grid;
+  align-content: start;
+  gap: 0.7rem;
+  padding: 1.1rem;
+  border-right: 1px solid rgb(21 63 46 / 12%);
+  background: rgb(247 241 231 / 62%);
+}
+
+.asistencia-comercio__resumen-lista {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.25rem 0.2rem 0.55rem;
+  color: #153f2e;
+}
+
+.asistencia-comercio__resumen-lista span {
+  font-size: 0.72rem;
+}
+
+.asistencia-comercio__lista > button {
+  display: grid;
+  gap: 0.35rem;
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid transparent;
+  color: #153f2e;
+  background: white;
+  text-align: left;
+}
+
+.asistencia-comercio__lista > button.seleccionado {
+  border-color: #e16c26;
+}
+
+.asistencia-comercio__lista > button.tiene-nuevos {
+  box-shadow: inset 4px 0 #e16c26;
+}
+
+.asistencia-comercio__ticket-superior {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.asistencia-comercio__ticket-superior em {
+  padding: 0.18rem 0.45rem;
+  border-radius: 999px;
+  color: #8a3409;
+  background: #fff1e8;
+  font-size: 0.65rem;
+  font-style: normal;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.asistencia-comercio__lista small,
+.asistencia-comercio__lista span {
+  color: #60736a;
+}
+
+.asistencia-comercio__contenido {
+  min-width: 0;
+  padding: clamp(1.2rem, 4vw, 2rem);
+}
+
+.asistencia-comercio__formulario,
+.asistencia-comercio__conversacion,
+.asistencia-comercio__conversacion > form {
+  display: grid;
+  gap: 1rem;
+}
+
+.asistencia-comercio__formulario h2,
+.asistencia-comercio__conversacion h2,
+.asistencia-comercio__vacio h2 {
+  margin: 0;
+  color: #153f2e;
+  font-size: clamp(1.7rem, 4vw, 2.4rem);
+}
+
+.asistencia-comercio__formulario label,
+.asistencia-comercio__conversacion form label {
+  display: grid;
+  gap: 0.4rem;
+  color: #153f2e;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.asistencia-comercio input,
+.asistencia-comercio select,
+.asistencia-comercio textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 0.82rem 0.9rem;
+  border: 1px solid rgb(21 63 46 / 18%);
+  border-radius: 0.8rem;
+  color: #153f2e;
+  background: white;
+  font: inherit;
+  outline: none;
+}
+
+.asistencia-comercio textarea {
+  resize: vertical;
+}
+
+.asistencia-comercio input:focus,
+.asistencia-comercio select:focus,
+.asistencia-comercio textarea:focus {
+  border-color: #e16c26;
+  box-shadow: 0 0 0 3px rgb(225 108 38 / 14%);
+}
+
+.asistencia-comercio__conversacion > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgb(21 63 46 / 12%);
+}
+
+.asistencia-comercio__conversacion > header span {
+  color: #c95e1c;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.asistencia-comercio__conversacion > header p {
+  margin: 0.35rem 0 0;
+}
+
+.asistencia-comercio__conversacion > header em {
+  padding: 0.4rem 0.65rem;
+  border-radius: 999px;
+  color: #0b5c3a;
+  background: #e8f3e9;
+  font-size: 0.7rem;
+  font-style: normal;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.asistencia-comercio__conversacion > header em.estado--esperando_comercio {
+  color: #8b3d12;
+  background: #fff3e8;
+}
+
+.asistencia-comercio__conversacion > header em.estado--cerrado,
+.asistencia-comercio__conversacion > header em.estado--resuelto {
+  color: #60736a;
+  background: #eceee8;
+}
+
+.asistencia-comercio__conversacion ol {
+  display: grid;
+  gap: 0.8rem;
+  max-height: 440px;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.asistencia-comercio__conversacion li {
+  width: min(88%, 36rem);
+  padding: 0.9rem 1rem;
+  border-radius: 1rem 1rem 1rem 0.25rem;
+  background: #f7f1e7;
+}
+
+.asistencia-comercio__conversacion li.origen--regalones {
+  justify-self: end;
+  border-radius: 1rem 1rem 0.25rem;
+  background: #e8f3e9;
+}
+
+.asistencia-comercio__conversacion li strong,
+.asistencia-comercio__conversacion li time {
+  color: #60736a;
+  font-size: 0.75rem;
+}
+
+.asistencia-comercio__conversacion li p {
+  margin: 0.35rem 0;
+  color: #153f2e;
+  white-space: pre-wrap;
+}
+
+.asistencia-comercio__vacio {
+  display: grid;
+  min-height: 360px;
+  place-content: center;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .asistencia-comercio__panel {
+    grid-template-columns: 1fr;
+  }
+
+  .asistencia-comercio__lista {
+    border-right: 0;
+    border-bottom: 1px solid rgb(21 63 46 / 12%);
+  }
+}
+
+@media (max-width: 680px) {
+  .asistencia-comercio__header,
+  .asistencia-comercio__intro,
+  .asistencia-comercio__conversacion > header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .asistencia-comercio__intro button {
+    width: 100%;
+  }
+}

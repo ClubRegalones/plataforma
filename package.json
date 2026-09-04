@@ -1,30 +1,39 @@
 {
-  "name": "plataforma",
+  "name": "club-regalones",
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+  "packageManager": "pnpm@11.19.0",
+  "engines": {
+    "node": "24.18.0",
+    "pnpm": "11.19.0"
   },
-  "dependencies": {
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+  "scripts": {
+    "dev": "pnpm --filter @club-regalones/portal dev",
+    "dev:portal": "pnpm --filter @club-regalones/portal dev",
+    "dev:terminal": "pnpm --filter @club-regalones/terminal dev",
+    "dev:comercio": "pnpm --filter @club-regalones/comercio dev",
+    "dev:admin": "pnpm --filter @club-regalones/admin dev",
+    "typecheck": "pnpm --recursive --if-present run typecheck",
+    "lint": "eslint \"apps/**/*.{ts,tsx}\" \"packages/**/*.{ts,tsx}\" --no-error-on-unmatched-pattern",
+    "build": "pnpm --recursive --if-present run build",
+    "preview": "pnpm --filter @club-regalones/portal preview",
+    "preview:terminal": "pnpm --filter @club-regalones/terminal preview",
+    "preview:comercio": "pnpm --filter @club-regalones/comercio preview",
+    "preview:admin": "pnpm --filter @club-regalones/admin preview",
+    "db:start": "node ./node_modules/supabase/dist/supabase.js start",
+    "db:stop": "node ./node_modules/supabase/dist/supabase.js stop",
+    "db:reset": "node ./node_modules/supabase/dist/supabase.js db reset",
+    "db:test": "node ./node_modules/supabase/dist/supabase.js test db",
+    "db:lint": "node ./node_modules/supabase/dist/supabase.js db lint"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "@types/node": "^24.13.3",
-    "@types/react": "^19.2.17",
-    "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.4",
-    "eslint": "^10.8.0",
-    "eslint-plugin-react-hooks": "^7.1.1",
-    "eslint-plugin-react-refresh": "^0.5.3",
-    "globals": "^17.7.0",
-    "typescript": "~6.0.2",
-    "typescript-eslint": "^8.65.0",
-    "vite": "^8.2.0"
+    "@eslint/js": "10.0.1",
+    "eslint": "10.8.0",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "eslint-plugin-react-refresh": "0.5.3",
+    "globals": "17.7.0",
+    "supabase": "2.116.0",
+    "typescript-eslint": "8.65.0"
   }
 }

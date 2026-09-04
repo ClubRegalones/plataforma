@@ -1,75 +1,42 @@
-# React + TypeScript + Vite
+# Club Regalones
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Monorepo del MVP de Club Regalones, administrado con pnpm workspaces.
 
-Currently, two official plugins are available:
+## Estructura
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- `apps/portal`: landing pública y futuros portales de clientes y comercios.
+- `apps/terminal`: aplicación web para el tótem o terminal del comercio.
+- `packages/ui`: componentes visuales compartidos.
+- `packages/domain`: reglas y tipos del negocio compartidos.
+- `packages/config`: configuración común del monorepo.
+- `docs`: documentación y referencias visuales.
 
-## React Compiler
+## Comandos
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+pnpm install
+pnpm dev
+pnpm dev:terminal
+pnpm typecheck
+pnpm lint
+pnpm build
+pnpm db:start
+pnpm db:reset
+pnpm db:test
+pnpm db:lint
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+`pnpm dev` inicia el portal. Las variables `VITE_*` se mantienen en el
+archivo `.env.local` de la raíz y son compartidas por las aplicaciones Vite.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Supabase local
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+La configuración, las migraciones y las pruebas de base de datos viven en
+`supabase/`. Los comandos locales requieren Docker Desktop u otro motor
+compatible con Docker. Los cambios remotos deben aplicarse exclusivamente
+mediante migraciones revisadas; no se modifican tablas de producción
+manualmente desde el Dashboard.
 
-```
+El modelo actual usa nombres de dominio en español e implementa los Hitos A y
+B del diccionario de datos. El alcance y las decisiones aplazadas se describen
+en `docs/arquitectura-base-supabase.md`.

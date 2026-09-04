@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Poppins:wght@400;500;600;700&display=swap');
+
+:root {
+  font-family: "Poppins", sans-serif;
+  color: #103f2a;
+  background: #fffaf1;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --fuente-marca: "Baloo 2", sans-serif;
+  --fuente-texto: "Poppins", sans-serif;
+
+  --verde-900: #083f29;
+  --verde-800: #0b5034;
+  --verde-700: #12613f;
+  --verde-100: #e8f1e8;
+  --naranjo-500: #ff6410;
+  --naranjo-100: #fff0df;
+  --crema-50: #fffaf1;
+  --crema-100: #fff5e7;
+  --texto: #17231d;
+  --texto-suave: #53645b;
+  --borde: rgba(12, 79, 51, 0.15);
+  --sombra: 0 18px 45px rgba(69, 52, 24, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 96px;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  font-family: var(--fuente-texto);
+  background:
+    radial-gradient(circle at 12% 2%, rgba(255, 193, 117, 0.18), transparent 25rem),
+    var(--crema-50);
+}
+
+body,
+button,
+a,
+input,
+textarea,
+select {
+  font-family: var(--fuente-texto);
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  color: inherit;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  border: 0;
+}
+
+::selection {
+  color: white;
+  background: var(--naranjo-500);
+}

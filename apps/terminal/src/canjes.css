@@ -1,0 +1,476 @@
+.canjes {
+  display: grid;
+  width: min(100%, 74rem);
+  gap: 1.25rem;
+  margin: 0 auto 1.5rem;
+  padding: clamp(1.2rem, 4vw, 2rem);
+  border: 1px solid rgb(21 63 46 / 12%);
+  border-radius: 1.5rem;
+  background: linear-gradient(145deg, #fff 50%, #f3f7ef 100%);
+  box-shadow: 0 1rem 2.5rem rgb(21 63 46 / 8%);
+}
+
+.canjes__encabezado {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.75fr);
+  gap: 1rem;
+  align-items: end;
+}
+
+.canjes__encabezado h2 {
+  margin: 0.35rem 0 0;
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+}
+
+.canjes__encabezado p,
+.canjes__metodo p,
+.canjes__revision p {
+  margin: 0;
+}
+
+.canjes__aviso {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  border-radius: 0.85rem;
+  color: #0b5c3a;
+  background: #e8f3e9;
+}
+
+.canjes__aviso--error {
+  color: #8b2419;
+  background: #fff0ed;
+}
+
+.canjes__metodos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.canjes__metodo {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+  padding: 1.2rem;
+  border: 1px solid rgb(21 63 46 / 13%);
+  border-radius: 1.1rem;
+  background: white;
+}
+
+.canjes__numero {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border-radius: 999px;
+  color: #8b3d12;
+  background: #fff3e8;
+  font-weight: 900;
+}
+
+.canjes__metodo h3,
+.canjes__revision h3 {
+  margin: 0 2.5rem 0.35rem 0;
+  font-size: 1.35rem;
+}
+
+.canjes__metodo form,
+.canjes__confirmacion {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.canjes label {
+  display: grid;
+  gap: 0.45rem;
+  font-size: 0.88rem;
+  font-weight: 750;
+}
+
+.canjes input {
+  width: 100%;
+  min-width: 0;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgb(21 63 46 / 18%);
+  border-radius: 0.75rem;
+  color: #153f2e;
+  background: white;
+  font-size: 1rem;
+  outline: none;
+}
+
+.canjes input:focus {
+  border-color: #e16c26;
+  box-shadow: 0 0 0 3px rgb(225 108 38 / 14%);
+}
+
+.canjes__estado-vacio {
+  padding: 0.85rem;
+  border-radius: 0.8rem;
+  color: #60736a;
+  background: #f7f1e7;
+}
+
+.canjes__beneficios {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.canjes__beneficio {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.85rem;
+  border: 1px solid rgb(21 63 46 / 12%);
+  border-radius: 0.8rem;
+  background: #fbfcf8;
+}
+
+.canjes__beneficio > div {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.canjes__beneficio span,
+.canjes__beneficio small,
+.canjes label small {
+  color: #60736a;
+  line-height: 1.4;
+}
+
+.canjes__regla-beneficio {
+  padding: 0.65rem;
+  border: 1px solid rgb(225 108 38 / 24%);
+  border-radius: 0.7rem;
+  color: #153f2e;
+  background: #fff4e9;
+  font-size: 0.78rem;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.canjes__regla-beneficio strong {
+  color: #a34813;
+}
+
+.canjes__beneficio button {
+  white-space: nowrap;
+}
+
+.canjes__revision {
+  display: grid;
+  gap: 1rem;
+  padding: 1.2rem;
+  border: 1px solid #e16c26;
+  border-radius: 1.1rem;
+  background: white;
+}
+
+.canjes__revision-encabezado {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.canjes__temporizador {
+  display: grid;
+  flex: 0 0 auto;
+  gap: 0.25rem;
+  text-align: right;
+}
+
+.canjes__temporizador span {
+  color: #60736a;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.canjes__temporizador strong {
+  font-size: 1.4rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.canjes__detalle,
+.canjes__resultado dl {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin: 0;
+}
+
+.canjes__detalle div,
+.canjes__resultado dl div {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  background: #f7f1e7;
+}
+
+.canjes__detalle dt,
+.canjes__resultado dt {
+  color: #60736a;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.canjes__detalle dd,
+.canjes__resultado dd {
+  margin: 0;
+  font-weight: 850;
+  overflow-wrap: anywhere;
+}
+
+.canjes__confirmacion {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding-top: 1rem;
+  border-top: 1px solid rgb(21 63 46 / 12%);
+}
+
+.canjes__acciones {
+  display: flex;
+  grid-column: 1 / -1;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.canjes__vista-previa {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin: 0;
+  padding: 0.8rem;
+  border-radius: 0.85rem;
+  color: #0b5c3a;
+  background: #e8f3e9;
+}
+
+.canjes__vista-previa div {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.canjes__vista-previa dt,
+.canjes__vista-previa dd {
+  margin: 0;
+}
+
+.canjes__vista-previa dt {
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.canjes__vista-previa dd {
+  font-size: 1.15rem;
+  font-weight: 900;
+}
+
+.canjes__acciones .secundario {
+  color: #153f2e;
+  background: #e3eadf;
+}
+
+.canjes__resultado {
+  display: grid;
+  grid-template-columns: minmax(190px, 0.7fr) minmax(0, 1.3fr) auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1.2rem;
+  border-radius: 1.1rem;
+  color: #0b5c3a;
+  background: #e8f3e9;
+}
+
+.canjes__resultado > div:first-child {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.canjes__resultado > div > span,
+.canjes__resultado > div > small {
+  font-size: 0.78rem;
+}
+
+.canjes__resultado > div > strong {
+  font-size: 1.8rem;
+}
+
+.canjes__resultado dl div {
+  background: rgb(255 255 255 / 72%);
+}
+
+.canjes__historial {
+  display: grid;
+  gap: 1rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgb(21 63 46 / 12%);
+}
+
+.canjes__historial-encabezado {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.canjes__historial-encabezado h3 {
+  margin: 0.3rem 0;
+  font-size: 1.45rem;
+}
+
+.canjes__historial-encabezado p {
+  max-width: 620px;
+  margin: 0;
+  color: #60736a;
+  line-height: 1.5;
+}
+
+.canjes__historial-controles {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: end;
+  gap: 0.65rem;
+}
+
+.canjes__historial-controles select {
+  min-height: 43px;
+  padding: 0.6rem 2.2rem 0.6rem 0.8rem;
+  border: 1px solid rgb(21 63 46 / 18%);
+  border-radius: 0.75rem;
+  color: #153f2e;
+  background: white;
+}
+
+.canjes__historial-controles button {
+  min-height: 43px;
+  white-space: nowrap;
+}
+
+.canjes__historial-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 0.75rem;
+}
+
+.canjes__historial-item {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid rgb(21 63 46 / 13%);
+  border-radius: 1rem;
+  background: white;
+}
+
+.canjes__historial-item--nuevo {
+  border-color: #e16c26;
+  box-shadow: 0 8px 24px rgb(225 108 38 / 10%);
+}
+
+.canjes__historial-item header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.canjes__historial-item header > div {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.canjes__historial-item header span {
+  width: fit-content;
+  padding: 0.2rem 0.45rem;
+  border-radius: 999px;
+  color: #8b3d12;
+  background: #fff0e4;
+  font-size: 0.65rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.canjes__historial-item header time,
+.canjes__historial-item > small {
+  color: #60736a;
+  font-size: 0.76rem;
+}
+
+.canjes__historial-item header b {
+  color: #8b2419;
+  white-space: nowrap;
+}
+
+.canjes__historial-item dl {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem;
+  margin: 0;
+}
+
+.canjes__historial-item dl div {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.65rem;
+  border-radius: 0.7rem;
+  background: #f7f1e7;
+}
+
+.canjes__historial-item dt,
+.canjes__historial-item dd {
+  margin: 0;
+  font-size: 0.75rem;
+}
+
+.canjes__historial-item dt {
+  color: #60736a;
+}
+
+.canjes__historial-item dd {
+  color: #153f2e;
+  font-weight: 850;
+}
+
+@media (max-width: 760px) {
+  .canjes__encabezado,
+  .canjes__metodos,
+  .canjes__confirmacion,
+  .canjes__resultado {
+    grid-template-columns: 1fr;
+  }
+
+  .canjes__revision-encabezado {
+    display: grid;
+  }
+
+  .canjes__temporizador {
+    text-align: left;
+  }
+
+  .canjes__detalle,
+  .canjes__resultado dl,
+  .canjes__vista-previa {
+    grid-template-columns: 1fr;
+  }
+
+  .canjes__beneficio {
+    grid-template-columns: 1fr;
+  }
+
+  .canjes__historial-encabezado,
+  .canjes__historial-controles {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .canjes__historial-item dl {
+    grid-template-columns: 1fr;
+  }
+}

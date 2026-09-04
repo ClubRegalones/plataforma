@@ -1,0 +1,1107 @@
+.como-funciona {
+  position: relative;
+  overflow: hidden;
+  padding: 34px 0 24px;
+  outline: none;
+  background:
+    radial-gradient(circle at 50% 28%, rgba(255, 255, 255, 0.98), rgba(255, 250, 241, 0.9) 57%, rgba(255, 247, 232, 0.98) 100%);
+  isolation: isolate;
+}
+
+.como-funciona:focus-visible {
+  box-shadow: inset 0 0 0 3px rgba(255, 100, 16, 0.24);
+}
+
+.como-funciona__fondo {
+  position: absolute;
+  z-index: -4;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center bottom;
+  opacity: 0.82;
+  filter: saturate(0.98) contrast(0.98);
+}
+
+.como-funciona__brillo {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background:
+    linear-gradient(180deg,
+      rgba(255, 250, 241, 0.96) 0%,
+      rgba(255, 250, 241, 0.68) 20%,
+      rgba(255, 250, 241, 0.16) 48%,
+      rgba(255, 250, 241, 0.34) 78%,
+      rgba(255, 250, 241, 0.72) 100%);
+}
+
+.como-funciona__contenido {
+  width: min(1640px, calc(100% - 48px));
+}
+
+.como-funciona__encabezado {
+  max-width: 1080px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.como-funciona__etiqueta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--naranjo-500);
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.como-funciona__etiqueta b {
+  display: inline-block;
+  font-size: 0.84rem;
+  animation: corazon-latido 2.2s ease-in-out infinite;
+}
+
+.como-funciona__encabezado h2 {
+  margin: 20px 0 0;
+  color: var(--verde-900);
+  font-family: var(--fuente-marca);
+  font-size: clamp(2.55rem, 4.2vw, 4.25rem);
+  font-weight: 800;
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+}
+
+.como-funciona__encabezado h2 span {
+  color: var(--naranjo-500);
+}
+
+.como-funciona__encabezado p {
+  max-width: 900px;
+  margin: 8px auto 0;
+  color: #405149;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.como-funciona__selector {
+  width: min(550px, 100%);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 14px auto 20px;
+  padding: 5px;
+  border: 1px solid rgba(10, 79, 51, 0.14);
+  border-radius: 18px;
+  background: rgba(255, 253, 248, 0.9);
+  box-shadow: 0 14px 32px rgba(64, 48, 22, 0.09);
+  backdrop-filter: blur(12px);
+}
+
+.como-funciona__selector button {
+  min-height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 0;
+  border-radius: 14px;
+  color: #58645e;
+  background: transparent;
+  font-size: 0.98rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    color 220ms ease,
+    background 220ms ease,
+    box-shadow 220ms ease,
+    transform 220ms ease;
+}
+
+.como-funciona__selector button:hover {
+  color: var(--verde-900);
+  transform: translateY(-1px);
+}
+
+.como-funciona__selector button.activo {
+  color: white;
+  background: var(--naranjo-500);
+  box-shadow: 0 10px 22px rgba(255, 100, 16, 0.25);
+}
+
+.como-funciona--negocio .como-funciona__selector button.activo {
+  background: var(--verde-800);
+  box-shadow: 0 10px 22px rgba(8, 63, 41, 0.22);
+}
+
+.como-funciona__selector-icono {
+  width: 25px;
+  height: 25px;
+  display: grid;
+  place-items: center;
+  border: 1.5px solid currentColor;
+  border-radius: 8px;
+  line-height: 1;
+}
+
+.como-funciona__selector-icono svg {
+  width: 18px;
+  height: 18px;
+}
+
+.como-funciona__experiencia {
+  position: relative;
+  overflow: visible;
+}
+
+.como-funciona__estado {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.como-funciona__tarjetas {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 22px;
+  align-items: start;
+}
+
+.como-funciona__tarjeta {
+  --apertura-x: 0px;
+  --elevacion-y: 0px;
+  --hover-y: 0px;
+  position: relative;
+  min-width: 0;
+  width: 100%;
+  max-width: 167px;
+  min-height: 252px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-self: center;
+  padding: 14px 12px 10px;
+  overflow: hidden;
+  border: 1px solid rgba(84, 72, 42, 0.14);
+  border-radius: 26px;
+  color: var(--texto);
+  text-align: center;
+  background: rgba(255, 253, 248, 0.96);
+  box-shadow: 0 15px 32px rgba(69, 52, 24, 0.08);
+  cursor: pointer;
+  opacity: 0;
+  scale: 0.97;
+  translate: var(--apertura-x) calc(var(--elevacion-y) + var(--hover-y));
+  animation: tarjeta-aparece 650ms var(--demora) cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  transition:
+    translate 520ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 240ms ease,
+    box-shadow 240ms ease,
+    background 240ms ease,
+    scale 240ms ease;
+}
+
+.como-funciona__tarjeta::before {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at 50% 86%, rgba(255, 205, 111, 0.18), transparent 52%);
+  content: "";
+  opacity: 0;
+  transition: opacity 240ms ease;
+}
+
+.como-funciona__tarjeta:hover {
+  --hover-y: -7px;
+  border-color: rgba(255, 100, 16, 0.34);
+  box-shadow: 0 24px 44px rgba(69, 52, 24, 0.13);
+  scale: 1.015;
+}
+
+.como-funciona__tarjeta.activa {
+  z-index: 4;
+  border-color: rgba(255, 100, 16, 0.72);
+  background: rgba(255, 254, 250, 0.99);
+  box-shadow:
+    0 24px 46px rgba(69, 52, 24, 0.14),
+    0 0 0 4px rgba(255, 100, 16, 0.08);
+}
+
+.como-funciona--negocio .como-funciona__tarjeta.activa {
+  border-color: rgba(10, 97, 63, 0.7);
+  box-shadow:
+    0 24px 46px rgba(69, 52, 24, 0.14),
+    0 0 0 4px rgba(10, 97, 63, 0.08);
+}
+
+.como-funciona__tarjeta.activa::before {
+  opacity: 1;
+}
+
+.como-funciona__tarjeta.visitada {
+  border-color: rgba(10, 97, 63, 0.26);
+}
+
+.como-funciona__numero-movil {
+  display: none;
+}
+
+.como-funciona__tarjeta-titulo {
+  position: relative;
+  z-index: 1;
+  min-height: 0;
+  display: block;
+  color: var(--verde-900);
+  font-family: var(--fuente-marca);
+  font-size: 1.08rem;
+  font-weight: 800;
+  line-height: 1.05;
+}
+
+.como-funciona__tarjeta-texto {
+  position: relative;
+  z-index: 1;
+  min-height: 0;
+  margin-top: 6px;
+  color: #536159;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.como-funciona__ilustracion {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 125px;
+  min-height: 0;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+
+  flex: 0 0 125px;
+  margin-top: 3px;
+  padding: 0;
+  overflow: visible;
+}
+
+.como-funciona__ilustracion img {
+  /* Valores generales de todos los íconos */
+  --icono-ancho: 180px;
+  --icono-alto: 155px;
+  --icono-x: 0px;
+  --icono-y: 0px;
+
+  position: relative;
+  width: var(--icono-ancho);
+  height: var(--icono-alto);
+  max-width: none;
+
+  object-fit: contain;
+  object-position: center bottom;
+
+  /* Permite mover cada ícono sin interferir con sus animaciones */
+  translate: var(--icono-x) var(--icono-y);
+
+  filter:
+  drop-shadow(0 5px 4px rgba(20, 32, 25, 0.22))
+  drop-shadow(0 13px 11px rgba(8, 63, 41, 0.17));
+  transform-origin: center bottom;
+
+  transition:
+    translate 300ms ease,
+    transform 300ms ease,
+    filter 300ms ease;
+}
+
+/* ==========================================================
+   AJUSTE INDIVIDUAL DE LOS ÍCONOS — SOLO ESCRITORIO
+
+   Cambia únicamente los cuatro valores de cada ícono:
+
+   --icono-ancho: aumenta o reduce el ancho.
+   --icono-alto: aumenta o reduce la altura.
+   --icono-x: mueve horizontalmente.
+      valor positivo  = derecha
+      valor negativo  = izquierda
+   --icono-y: mueve verticalmente.
+      valor positivo  = abajo
+      valor negativo  = arriba
+
+   Ejemplo:
+   --icono-x: -8px;  mueve 8 px hacia la izquierda.
+   --icono-y: 10px;  mueve 10 px hacia abajo.
+
+   Se incluyen dos selectores para que funcione tanto con
+   data-icono como por la posición de la tarjeta.
+   ========================================================== */
+@media (min-width: 1261px) {
+  /* ÍCONO 1 — Regístrate gratis */
+  .como-funciona__ilustracion img[data-icono="1"],
+  .como-funciona__tarjeta:nth-child(1) .como-funciona__ilustracion img {
+    --icono-ancho: 190px;
+    --icono-alto: 165px;
+    --icono-x: 28px;
+    --icono-y: 60px;
+  }
+
+  /* ÍCONO 2 — Compra en un Comercio Regalón */
+  .como-funciona__ilustracion img[data-icono="2"],
+  .como-funciona__tarjeta:nth-child(2) .como-funciona__ilustracion img {
+    --icono-ancho: 225px;
+    --icono-alto: 180px;
+    --icono-x: -28px;
+    --icono-y: 65px;
+  }
+
+  /* ÍCONO 3 — Acerca tu celular / tótem NFC-QR */
+  .como-funciona__ilustracion img[data-icono="3"],
+  .como-funciona__tarjeta:nth-child(3) .como-funciona__ilustracion img {
+    --icono-ancho: 188px;
+    --icono-alto: 160px;
+    --icono-x: 5px;
+    --icono-y: 38px;
+  }
+
+  /* ÍCONO 4 — El comercio confirma */
+  .como-funciona__ilustracion img[data-icono="4"],
+  .como-funciona__tarjeta:nth-child(4) .como-funciona__ilustracion img {
+    --icono-ancho: 190px;
+    --icono-alto: 165px;
+    --icono-x: 0px;
+    --icono-y: 30px;
+  }
+
+  /* ÍCONO 5 — Recibe tus Regis */
+  .como-funciona__ilustracion img[data-icono="5"],
+  .como-funciona__tarjeta:nth-child(5) .como-funciona__ilustracion img {
+    --icono-ancho: 182px;
+    --icono-alto: 190px;
+    --icono-x: 0px;
+    --icono-y: 55px;
+  }
+
+  /* ÍCONO 6 — Canjea y disfruta */
+  .como-funciona__ilustracion img[data-icono="6"],
+  .como-funciona__tarjeta:nth-child(6) .como-funciona__ilustracion img {
+    --icono-ancho: 190px;
+    --icono-alto: 195px;
+    --icono-x: 0px;
+    --icono-y: 55px;
+  }
+}
+
+.como-funciona__tarjeta:hover .como-funciona__ilustracion img {
+  transform: translateY(-3px) scale(1.045);
+
+  filter:
+    drop-shadow(0 6px 5px rgba(20, 32, 25, 0.24))
+    drop-shadow(0 18px 15px rgba(8, 63, 41, 0.21));
+}
+
+.como-funciona__tarjeta.activa .como-funciona__ilustracion--pulso img {
+  animation: icono-pulso 1.2s ease-in-out infinite alternate;
+}
+
+.como-funciona__tarjeta.activa .como-funciona__ilustracion--sube img {
+  animation: icono-sube 1.45s ease-in-out infinite;
+}
+
+.como-funciona__tarjeta.activa .como-funciona__ilustracion--senal img {
+  animation: icono-senal 1.35s ease-in-out infinite;
+}
+
+.como-funciona__tarjeta.activa .como-funciona__ilustracion--confirma img {
+  animation: icono-confirma 1.25s ease-in-out infinite;
+}
+
+.como-funciona__tarjeta.activa .como-funciona__ilustracion--moneda img {
+  animation: icono-moneda 1.7s ease-in-out infinite;
+}
+
+.como-funciona__tarjeta.activa .como-funciona__ilustracion--regalo img {
+  animation: icono-regalo 1.3s ease-in-out infinite;
+}
+
+.como-funciona__tarjeta.activa .como-funciona__ilustracion--reporte img {
+  animation: icono-reporte 1.5s ease-in-out infinite;
+}
+
+.como-funciona__mascota {
+  position: absolute;
+  z-index: 7;
+
+  left: var(--posicion-mascota);
+  bottom: 44px;
+
+  /* Tamaño del espacio que ocupa la imagen */
+  width: 180px;
+  height: 180px;
+
+  object-fit: contain;
+  pointer-events: none;
+
+  /* Agranda visualmente al Regalón sin abrir más espacio */
+  scale: 1.20;
+
+  filter: drop-shadow(0 15px 13px rgba(8, 63, 41, 0.22));
+
+  translate: -50% 0;
+
+  transition:
+    left 850ms cubic-bezier(0.22, 1, 0.36, 1),
+    scale 300ms ease;
+
+  animation: regalon-camina 0.72s ease-in-out infinite alternate;
+}
+
+/* =========================================================
+   RUTA INTERACTIVA
+
+   El camino verde forma parte de la imagen de fondo.
+   React/CSS solo dibuja:
+   - línea luminosa animada
+   - progreso entre los pasos
+   - nodos 1–6
+   ========================================================= */
+
+.como-funciona__ruta {
+  position: relative;
+  z-index: 5;
+
+  height: 82px;
+
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  align-items: end;
+
+  /*
+    Negativo: sube toda la ruta.
+    Positivo: baja toda la ruta.
+  */
+  margin: -10px 2px 0;
+
+  /*
+    Aumentar: sube los nodos.
+    Disminuir: baja los nodos.
+  */
+  padding-bottom: 14px;
+
+  overflow: visible;
+}
+
+/* El camino verde ya está incluido en la imagen de fondo */
+.como-funciona__ruta-base {
+  display: none;
+}
+
+/* Línea luminosa que avanza según el paso activo */
+
+.como-funciona__ruta-progreso {
+  position: absolute;
+  z-index: 1;
+
+  /* sube o baja la línea */
+  bottom: 24px;
+
+  left: 1.6%;
+
+  /* largo normal */
+  width: calc(var(--progreso-ruta) + 1.2%);
+
+  /* tope para que no se alargue demasiado al final */
+  max-width: calc(100% - 4.8%);
+
+  height: 5px;
+  border-radius: 999px;
+
+  background: linear-gradient(
+    90deg,
+    #ff6a12 0%,
+    #ff9436 28%,
+    #ffe0a8 50%,
+    #ff7a17 72%,
+    #ff6a12 100%
+  );
+
+  background-size: 220% 100%;
+
+  box-shadow:
+    0 0 4px rgba(255, 106, 18, 0.75),
+    0 0 10px rgba(255, 106, 18, 0.45),
+    0 0 18px rgba(255, 106, 18, 0.18);
+
+  transition: width 780ms cubic-bezier(0.22, 1, 0.36, 1);
+  animation: ruta-brillo 1.35s linear infinite;
+}
+
+/*
+  Garantiza que no quede ninguna curva
+  ni flecha de la versión anterior.
+*/
+.como-funciona__ruta-progreso::before,
+.como-funciona__ruta-progreso::after {
+  display: none;
+  content: none;
+}
+
+/* Variante verde para el recorrido de comercios */
+.como-funciona--negocio .como-funciona__ruta-progreso {
+  background:
+    linear-gradient(
+      90deg,
+      #7ecb4c 0%,
+      #89dc58 30%,
+      #d9f5b8 48%,
+      #159153 65%,
+      #36b268 100%
+    );
+
+  background-size: 230% 100%;
+
+  box-shadow:
+    0 0 7px rgba(43, 171, 98, 0.9),
+    0 0 17px rgba(43, 171, 98, 0.58),
+    0 0 29px rgba(43, 171, 98, 0.3);
+}
+/* Nodos numerados 1–6 */
+.como-funciona__punto {
+  position: relative;
+  z-index: 4;
+
+  width: 54px;
+  height: 54px;
+
+  display: grid;
+  align-self: end;
+  justify-self: center;
+  place-items: center;
+
+  padding: 0;
+
+  /* Borde blanco fino */
+  border: 2px solid rgba(255, 255, 255, 0.96);
+  border-radius: 50%;
+
+  color: var(--verde-900);
+  background: #fffaf0;
+
+  /* Sombra suave, sin aro blanco grueso */
+  box-shadow:
+    0 5px 12px rgba(8, 63, 41, 0.16),
+    0 0 0 1px rgba(255, 100, 16, 0.2),
+    0 0 10px rgba(255, 100, 16, 0.12);
+
+  font-family: var(--fuente-marca);
+  font-size: 1.15rem;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    color 220ms ease,
+    background 220ms ease,
+    transform 220ms ease,
+    box-shadow 220ms ease,
+    border-color 220ms ease;
+}
+
+.como-funciona__punto.visitado,
+.como-funciona__punto.activo {
+  color: white;
+  background: var(--naranjo-500);
+  border-color: rgba(255, 244, 232, 0.96);
+
+  box-shadow:
+    0 5px 12px rgba(255, 100, 16, 0.25),
+    0 0 8px rgba(255, 100, 16, 0.5),
+    0 0 16px rgba(255, 100, 16, 0.2);
+}
+
+.como-funciona__punto.activo {
+  transform: translateY(-4px) scale(1.07);
+
+  box-shadow:
+    0 7px 16px rgba(255, 100, 16, 0.3),
+    0 0 10px rgba(255, 100, 16, 0.65),
+    0 0 20px rgba(255, 100, 16, 0.25);
+}
+
+
+
+
+.como-funciona__punto.visitado,
+.como-funciona__punto.activo {
+  color: white;
+  background: var(--naranjo-500);
+}
+
+.como-funciona--negocio .como-funciona__punto.visitado,
+.como-funciona--negocio .como-funciona__punto.activo {
+  background: var(--verde-700);
+}
+
+.como-funciona__punto.activo {
+  transform: translateY(-6px) scale(1.12);
+  box-shadow: 0 9px 19px rgba(255, 100, 16, 0.32);
+}
+
+.como-funciona__control {
+  position: absolute;
+  z-index: 6;
+  bottom: 13px;
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  color: white;
+  background: var(--naranjo-500);
+  box-shadow: 0 9px 18px rgba(255, 100, 16, 0.26);
+  font-size: 1.45rem;
+  font-weight: 900;
+  cursor: pointer;
+  transition: transform 190ms ease, opacity 190ms ease;
+}
+
+.como-funciona--negocio .como-funciona__control {
+  background: var(--verde-700);
+  box-shadow: 0 9px 18px rgba(8, 63, 41, 0.23);
+}
+
+.como-funciona__control:hover:not(:disabled) {
+  transform: scale(1.08);
+}
+
+.como-funciona__control:disabled {
+  opacity: 0.32;
+  cursor: not-allowed;
+}
+
+.como-funciona__control--anterior {
+    display: none;
+
+  left: -12px;
+}
+
+.como-funciona__control--siguiente {
+    display: none;
+
+  right: -12px;
+}
+
+.como-funciona__resumen {
+  width: min(830px, 100%);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 8px auto 0;
+  transform: translateY(15px);
+
+  padding: 10px 15px;
+  border: 1px solid rgba(105, 79, 39, 0.1);
+  border-radius: 18px;
+  background: rgba(255, 253, 248, 0.84);
+  box-shadow: 0 13px 28px rgba(69, 52, 24, 0.08);
+  backdrop-filter: blur(10px);
+}
+
+.como-funciona__resumen > div {
+  display: grid;
+  grid-template-columns: 42px 1fr;
+  align-items: center;
+  gap: 10px;
+  padding: 0 18px;
+  border-right: 1px solid rgba(8, 63, 41, 0.1);
+}
+
+.como-funciona__resumen > div:last-child {
+  border-right: 0;
+}
+
+.como-funciona__resumen span {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--verde-800);
+  background: #f0ecd1;
+  font-size: 1.2rem;
+  font-weight: 900;
+}
+
+.como-funciona__resumen p {
+  margin: 0;
+  color: #68736d;
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+
+.como-funciona__resumen strong {
+  display: block;
+  color: var(--verde-900);
+  font-size: 0.78rem;
+}
+
+.como-funciona__ayuda {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 8px 0 0;
+  transform: translateY(18px);
+  color: #66736b;
+  font-size: 0.76rem;
+}
+
+.como-funciona__ayuda kbd {
+  min-width: 30px;
+  height: 29px;
+  display: inline-grid;
+  place-items: center;
+  padding: 0 7px;
+  border: 1px solid rgba(8, 63, 41, 0.19);
+  border-bottom-width: 3px;
+  border-radius: 8px;
+  color: var(--verde-800);
+  background: white;
+  box-shadow: 0 5px 10px rgba(8, 63, 41, 0.08);
+  font-family: var(--fuente-texto);
+  font-weight: 800;
+}
+
+@keyframes ruta-brillo {
+  from { background-position: 100% 0; }
+  to { background-position: -120% 0; }
+}
+
+@keyframes punto-ruta-pulso {
+  0%, 100% { transform: scale(0.88); opacity: 0.8; }
+  50% { transform: scale(1.12); opacity: 1; }
+}
+
+@keyframes tarjeta-aparece {
+  to { opacity: 1; scale: 1; }
+}
+
+@keyframes corazon-latido {
+  0%, 100% { transform: scale(1); }
+  45% { transform: scale(1.22); }
+}
+
+@keyframes regalon-camina {
+  from { transform: translateY(0) rotate(-1.8deg); }
+  to { transform: translateY(-7px) rotate(1.8deg); }
+}
+
+@keyframes icono-pulso {
+  from { transform: scale(1) rotate(-1deg); }
+  to { transform: scale(1.06) rotate(1deg); }
+}
+
+@keyframes icono-sube {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+
+@keyframes icono-senal {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 14px 14px rgba(8, 63, 41, 0.13)); }
+  50% { transform: scale(1.045); filter: drop-shadow(0 14px 21px rgba(255, 100, 16, 0.29)); }
+}
+
+@keyframes icono-confirma {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  35% { transform: rotate(-2.5deg) scale(1.035); }
+  70% { transform: rotate(2.5deg) scale(1.035); }
+}
+
+@keyframes icono-moneda {
+  0%, 100% { transform: translateY(0) rotateY(0deg); }
+  50% { transform: translateY(-8px) rotateY(180deg); }
+}
+
+@keyframes icono-regalo {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  35% { transform: translateY(-6px) rotate(-3deg); }
+  70% { transform: translateY(-2px) rotate(3deg); }
+}
+
+@keyframes icono-reporte {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-5px) scale(1.04); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .como-funciona *,
+  .como-funciona *::before,
+  .como-funciona *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (max-width: 1260px) {
+  .como-funciona__contenido {
+    width: min(calc(100% - 36px), 1160px);
+  }
+
+  .como-funciona__tarjetas {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .como-funciona__tarjeta {
+    max-width: none;
+    min-height: 292px;
+    translate: 0 0;
+  }
+
+  .como-funciona__ilustracion {
+    min-height: 145px;
+  }
+
+  .como-funciona__ilustracion img {
+    width: min(100%, 155px);
+    height: 140px;
+  }
+
+  .como-funciona__ruta,
+  .como-funciona__mascota {
+    display: none;
+  }
+
+  .como-funciona__numero-movil {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    color: white;
+    background: var(--naranjo-500);
+    font-family: var(--fuente-marca);
+    font-weight: 800;
+    box-shadow: 0 6px 14px rgba(255, 100, 16, 0.22);
+  }
+
+  .como-funciona--negocio .como-funciona__numero-movil {
+    background: var(--verde-700);
+  }
+
+  .como-funciona__resumen {
+    margin-top: 18px;
+  }
+}
+
+@media (max-width: 760px) {
+  .como-funciona {
+    padding: 50px 0 42px;
+  }
+
+  .como-funciona__contenido {
+    width: min(calc(100% - 28px), 690px);
+  }
+
+  .como-funciona__encabezado h2 {
+    font-size: clamp(2.5rem, 12vw, 4rem);
+  }
+
+  .como-funciona__selector {
+    margin-bottom: 22px;
+  }
+
+  .como-funciona__tarjetas {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .como-funciona__resumen {
+    grid-template-columns: 1fr;
+  }
+
+  .como-funciona__resumen > div {
+    padding: 11px 7px;
+    border-right: 0;
+    border-bottom: 1px solid rgba(8, 63, 41, 0.1);
+  }
+
+  .como-funciona__resumen > div:last-child {
+    border-bottom: 0;
+  }
+}
+
+@media (max-width: 520px) {
+  .como-funciona__etiqueta {
+    font-size: 1rem;
+  }
+
+  .como-funciona__encabezado h2 span {
+    display: block;
+  }
+
+  .como-funciona__encabezado p {
+    font-size: 0.96rem;
+  }
+
+  .como-funciona__selector {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .como-funciona__tarjetas {
+    grid-template-columns: 1fr;
+  }
+
+  .como-funciona__tarjeta {
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 58px 1fr 118px;
+    grid-template-rows: auto auto;
+    gap: 4px 11px;
+    padding: 17px 13px;
+    text-align: left;
+  }
+
+  .como-funciona__numero-movil {
+    position: static;
+    grid-row: 1 / 3;
+    align-self: center;
+    justify-self: center;
+  }
+
+  .como-funciona__tarjeta-titulo {
+    min-height: 0;
+    display: block;
+    align-self: end;
+    font-size: 1.05rem;
+  }
+
+  .como-funciona__tarjeta-texto {
+    min-height: 0;
+    margin: 2px 0 0;
+    align-self: start;
+  }
+
+  .como-funciona__ilustracion {
+    min-height: 108px;
+    grid-column: 3;
+    grid-row: 1 / 3;
+    margin: 0;
+    place-items: center;
+    padding-top: 0;
+  }
+
+  .como-funciona__ilustracion img {
+    width: 116px;
+    height: 108px;
+  }
+
+  .como-funciona__ayuda {
+    font-size: 0.76rem;
+    text-align: center;
+  }
+}
+
+/* =========================================================
+   IMÁGENES — SOLO "TENGO UN NEGOCIO"
+   Cada imagen se puede mover de forma independiente.
+   ========================================================= */
+
+@media (min-width: 1261px) {
+
+  /* BASE SOLO PARA NEGOCIOS */
+  .como-funciona--negocio
+  .como-funciona__ilustracion img {
+    width: var(--icono-ancho);
+    height: var(--icono-alto);
+
+    /*
+      --icono-x:
+      positivo  = derecha
+      negativo  = izquierda
+
+      --icono-y:
+      positivo  = abajo
+      negativo  = arriba
+    */
+    translate: var(--icono-x) var(--icono-y);
+  }
+
+
+  /* 1 — SUMA TU NEGOCIO */
+  .como-funciona--negocio
+  .como-funciona__ilustracion img[data-icono="1"] {
+    --icono-ancho: 205px;
+    --icono-alto: 175px;
+
+    --icono-x: -5px;
+    --icono-y: 40px;
+  }
+
+
+  /* 2 — ELIGE TU PLAN */
+  .como-funciona--negocio
+  .como-funciona__ilustracion img[data-icono="2"] {
+    --icono-ancho: 165px;
+    --icono-alto: 220px;
+
+    --icono-x: 0px;
+    --icono-y: 40px;
+  }
+
+
+  /* 3 — RECIBE SOLICITUDES */
+  .como-funciona--negocio
+  .como-funciona__ilustracion img[data-icono="3"] {
+    --icono-ancho: 255px;
+    --icono-alto: 150px;
+
+    --icono-x: 0px;
+    --icono-y: 20px;
+  }
+
+
+  /* 4 — CONFIRMA LAS COMPRAS */
+  .como-funciona--negocio
+  .como-funciona__ilustracion img[data-icono="4"] {
+    --icono-ancho: 210px;
+    --icono-alto: 140px;
+
+    --icono-x: 0px;
+    --icono-y: 20px;
+  }
+
+
+  /* 5 — PREMIA A TUS CLIENTES */
+  .como-funciona--negocio
+  .como-funciona__ilustracion img[data-icono="5"] {
+    --icono-ancho: 185px;
+    --icono-alto: 185px;
+
+    --icono-x: 0px;
+    --icono-y: 15px;
+  }
+
+
+  /* 6 — REVISA TUS RESULTADOS */
+  .como-funciona--negocio
+  .como-funciona__ilustracion img[data-icono="6"] {
+    --icono-ancho: 180px;
+    --icono-alto: 175px;
+
+    --icono-x: -4px;
+    --icono-y: -4px;
+  }
+}

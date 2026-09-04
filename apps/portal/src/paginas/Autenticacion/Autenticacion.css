@@ -1,0 +1,139 @@
+.autenticacion {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: 2rem 1rem;
+  background:
+    radial-gradient(circle at 15% 10%, rgb(255 100 16 / 18%), transparent 28rem),
+    radial-gradient(circle at 85% 90%, rgb(18 97 63 / 16%), transparent 30rem),
+    var(--crema-50);
+}
+
+.autenticacion__tarjeta {
+  width: min(100%, 34rem);
+  padding: clamp(1.5rem, 5vw, 3rem);
+  border: 1px solid var(--borde);
+  border-radius: 2rem;
+  background: rgb(255 255 255 / 92%);
+  box-shadow: var(--sombra);
+}
+
+.autenticacion__volver {
+  display: inline-flex;
+  margin-bottom: 2rem;
+  color: var(--verde-700);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.autenticacion__etiqueta {
+  display: block;
+  color: var(--naranjo-500);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.autenticacion h1 {
+  margin: 0.5rem 0 1.5rem;
+  color: var(--verde-900);
+  font-family: var(--fuente-marca);
+  font-size: clamp(2.2rem, 8vw, 3.5rem);
+  line-height: 1;
+}
+
+.autenticacion__modos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem;
+  padding: 0.35rem;
+  border-radius: 1rem;
+  background: var(--verde-100);
+}
+
+.autenticacion__modos button {
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  color: var(--verde-800);
+  background: transparent;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.autenticacion__modos button.activo {
+  background: white;
+  box-shadow: 0 0.3rem 1rem rgb(8 63 41 / 10%);
+}
+
+.autenticacion__formulario,
+.autenticacion__sesion {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.autenticacion__formulario label {
+  display: grid;
+  gap: 0.45rem;
+  color: var(--texto);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.autenticacion__formulario input {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--borde);
+  border-radius: 0.85rem;
+  color: var(--texto);
+  background: white;
+  font-size: 1rem;
+  outline: none;
+}
+
+.autenticacion__formulario input:focus {
+  border-color: var(--naranjo-500);
+  box-shadow: 0 0 0 3px rgb(255 100 16 / 14%);
+}
+
+.autenticacion__boton {
+  display: inline-flex;
+  justify-content: center;
+  padding: 0.9rem 1.2rem;
+  border-radius: 999px;
+  color: white;
+  background: var(--naranjo-500);
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.autenticacion__boton:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.autenticacion__boton--secundario {
+  color: var(--verde-800);
+  background: var(--verde-100);
+}
+
+.autenticacion__mensaje,
+.autenticacion__estado {
+  margin: 0;
+  padding: 0.8rem 1rem;
+  border-radius: 0.8rem;
+  font-size: 0.9rem;
+}
+
+.autenticacion__mensaje.error {
+  color: #8b2419;
+  background: #fff0ed;
+}
+
+.autenticacion__mensaje.exito {
+  color: var(--verde-800);
+  background: var(--verde-100);
+}
