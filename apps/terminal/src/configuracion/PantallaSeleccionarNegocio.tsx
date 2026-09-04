@@ -14,15 +14,9 @@ type Sucursal = {
   comuna: string
 }
 
-type CajaResumen = {
-  id: string
-  sucursalId: string
-}
-
 type Props = {
   negocios: Negocio[]
   sucursales: Sucursal[]
-  cajas: CajaResumen[]
   negocioId: string
   sucursalId: string
   cargando: boolean
@@ -36,7 +30,6 @@ type Props = {
 export default function PantallaSeleccionarNegocio({
   negocios,
   sucursales,
-  cajas,
   negocioId,
   sucursalId,
   cargando,
@@ -49,11 +42,6 @@ export default function PantallaSeleccionarNegocio({
   const sucursalesDelNegocio = sucursales.filter(
     (sucursal) => sucursal.negocioId === negocioId,
   )
-
-  const cantidadCajas = (idSucursal: string) =>
-    cajas.filter(
-      (caja) => caja.sucursalId === idSucursal,
-    ).length
 
   return (
     <main className="configuracion-negocio">
@@ -88,9 +76,7 @@ export default function PantallaSeleccionarNegocio({
 
             <b />
 
-            <span className="configuracion-negocio__paso">
-              3
-            </span>
+            <span className="configuracion-negocio__paso">3</span>
           </div>
 
           <span className="configuracion-negocio__etiqueta">
@@ -107,19 +93,17 @@ export default function PantallaSeleccionarNegocio({
             </h1>
 
             <p>
-              Elige dónde se usará esta terminal.
+              Elige la sucursal donde se instalará esta Caja Regalones.
             </p>
           </header>
 
           {error && (
-            <p className="configuracion-negocio__error">
-              {error}
-            </p>
+            <p className="configuracion-negocio__error">{error}</p>
           )}
 
           {cargando ? (
             <div className="configuracion-negocio__cargando">
-              Cargando tus negocios y sucursales…
+              Preparando la configuración…
             </div>
           ) : (
             <>
@@ -128,14 +112,11 @@ export default function PantallaSeleccionarNegocio({
 
                 <div className="configuracion-negocio__negocios">
                   {negocios.map((negocio) => {
-                    const seleccionado =
-                      negocio.id === negocioId
-
-                    const totalSucursales =
-                      sucursales.filter(
-                        (sucursal) =>
-                          sucursal.negocioId === negocio.id,
-                      ).length
+                    const seleccionado = negocio.id === negocioId
+                    const totalSucursales = sucursales.filter(
+                      (sucursal) =>
+                        sucursal.negocioId === negocio.id,
+                    ).length
 
                     return (
                       <button
@@ -160,19 +141,13 @@ export default function PantallaSeleccionarNegocio({
                           aria-hidden="true"
                         />
 
-                        <img
-                          src={tienda}
-                          alt=""
-                          aria-hidden="true"
-                        />
+                        <img src={tienda} alt="" aria-hidden="true" />
 
                         <span className="configuracion-negocio__info-negocio">
                           <strong>{negocio.nombre}</strong>
 
                           {negocio.rut && (
-                            <small>
-                              RUT: {negocio.rut}
-                            </small>
+                            <small>RUT: {negocio.rut}</small>
                           )}
 
                           <small>
@@ -199,95 +174,81 @@ export default function PantallaSeleccionarNegocio({
                   </div>
                 ) : (
                   <div className="configuracion-negocio__sucursales">
-                    {sucursalesDelNegocio.map(
-                      (sucursal) => {
-                        const seleccionada =
-                          sucursal.id === sucursalId
+                    {sucursalesDelNegocio.map((sucursal) => {
+                      const seleccionada =
+                        sucursal.id === sucursalId
 
-                        const totalCajas =
-                          cantidadCajas(sucursal.id)
-
-                        return (
-                          <button
-                            key={sucursal.id}
-                            type="button"
+                      return (
+                        <button
+                          key={sucursal.id}
+                          type="button"
+                          className={
+                            seleccionada
+                              ? 'configuracion-negocio__sucursal configuracion-negocio__sucursal--activa'
+                              : 'configuracion-negocio__sucursal'
+                          }
+                          aria-pressed={seleccionada}
+                          onClick={() =>
+                            alCambiarSucursal(sucursal.id)
+                          }
+                        >
+                          <span
                             className={
                               seleccionada
-                                ? 'configuracion-negocio__sucursal configuracion-negocio__sucursal--activa'
-                                : 'configuracion-negocio__sucursal'
+                                ? 'configuracion-negocio__radio configuracion-negocio__radio--activo'
+                                : 'configuracion-negocio__radio'
                             }
-                            aria-pressed={seleccionada}
-                            onClick={() =>
-                              alCambiarSucursal(
-                                sucursal.id,
-                              )
-                            }
-                          >
-                            <span
-                              className={
-                                seleccionada
-                                  ? 'configuracion-negocio__radio configuracion-negocio__radio--activo'
-                                  : 'configuracion-negocio__radio'
-                              }
-                              aria-hidden="true"
-                            />
+                            aria-hidden="true"
+                          />
 
-                            <span className="configuracion-negocio__icono-sucursal">
-                              <svg
-                                viewBox="0 0 24 24"
-                                aria-hidden="true"
-                              >
-                                <path
-                                  d="M5 21V9h14v12M8 9V4h8v5M9 13h2v2H9zm4 0h2v2h-2zm-4 4h2v4H9zm4 0h2v4h-2z"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  strokeWidth="1.7"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                              </svg>
-                            </span>
-
-                            <span className="configuracion-negocio__info-sucursal">
-                              <strong>
-                                {sucursal.nombre}
-                              </strong>
-
-                              <small>
-                                {sucursal.direccion}
-                                {sucursal.comuna
-                                  ? `, ${sucursal.comuna}`
-                                  : ''}
-                              </small>
-                            </span>
-
-                            <span className="configuracion-negocio__cantidad-cajas">
-                              {totalCajas}{' '}
-                              {totalCajas === 1
-                                ? 'caja'
-                                : 'cajas'}
-                            </span>
-
-                            <span
-                              className="configuracion-negocio__flecha-sucursal"
+                          <span className="configuracion-negocio__icono-sucursal">
+                            <svg
+                              viewBox="0 0 24 24"
                               aria-hidden="true"
                             >
-                              ›
-                            </span>
-                          </button>
-                        )
-                      },
-                    )}
+                              <path
+                                d="M5 21V9h14v12M8 9V4h8v5M9 13h2v2H9zm4 0h2v2h-2zm-4 4h2v4H9zm4 0h2v4h-2z"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="1.7"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                            </svg>
+                          </span>
+
+                          <span className="configuracion-negocio__info-sucursal">
+                            <strong>{sucursal.nombre}</strong>
+                            <small>
+                              {sucursal.direccion}
+                              {sucursal.comuna
+                                ? `, ${sucursal.comuna}`
+                                : ''}
+                            </small>
+                          </span>
+
+                          <span className="configuracion-negocio__estado-sucursal">
+                            Caja Regalones
+                          </span>
+
+                          <span
+                            className="configuracion-negocio__flecha-sucursal"
+                            aria-hidden="true"
+                          >
+                            ›
+                          </span>
+                        </button>
+                      )
+                    })}
                   </div>
                 )}
               </section>
 
               <aside className="configuracion-negocio__aviso">
                 <span aria-hidden="true">i</span>
-
                 <p>
-                  Solo aparecen los negocios y sucursales
-                  activos que administras en Club Regalones.
+                  Cada sucursal tendrá una sola Caja Regalones,
+                  independiente de cuántas cajas POS tenga el comercio.
                 </p>
               </aside>
             </>
@@ -306,11 +267,7 @@ export default function PantallaSeleccionarNegocio({
             <button
               type="button"
               className="configuracion-negocio__continuar"
-              disabled={
-                cargando ||
-                !negocioId ||
-                !sucursalId
-              }
+              disabled={cargando || !negocioId || !sucursalId}
               onClick={alContinuar}
             >
               <span>Continuar</span>
