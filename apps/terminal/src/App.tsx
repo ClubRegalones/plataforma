@@ -1366,91 +1366,135 @@ function PanelTerminal({
       }
     >
       <header className="terminal-cabecera-ref">
-  <div className="terminal-cabecera-ref__marca">
-    <strong>
-      Club Regalones
-      <span aria-hidden="true">♥</span>
-    </strong>
-
-    <small>Más barrio, más beneficios</small>
-  </div>
-
-  <div className="terminal-cabecera-ref__centro">
-    <div className="terminal-cabecera-ref__negocio">
-      <div
-        className="terminal-cabecera-ref__tienda"
-        aria-hidden="true"
-      >
-        <img
-          src={tiendaIcono}
-          alt=""
-        />
-      </div>
-
-      <div className="terminal-cabecera-ref__datos">
-        <strong>
-          {configuracion.nombreNegocio}
-        </strong>
-
-        <span className="terminal-cabecera-ref__caja">
-          {configuracion.nombreCaja}
-        </span>
-      </div>
-    </div>
-
-    <div className="terminal-cabecera-ref__turno">
-      {turno && (
-        <div className="terminal-cabecera-ref__cajero-bloque">
-          <span className="terminal-cabecera-ref__cajero-label">
-            Cajero/a
-          </span>
-
-          <strong className="terminal-cabecera-ref__cajero-nombre">
-            {turno.nombre_cajero}
+        <div className="terminal-cabecera-ref__marca">
+          <strong>
+            Club Regalones
+            <span aria-hidden="true">♥</span>
           </strong>
+          <small>Más barrio, más beneficios</small>
         </div>
-      )}
 
-      <EstadoPwa
-        disponible={enLinea}
-        etiquetaEnLinea={
-          turno ? 'Turno activo' : 'Terminal lista'
-        }
-        mostrarInstalacion={false}
-      />
-    </div>
-  </div>
+        <div className="terminal-cabecera-ref__centro">
+          <div className="terminal-cabecera-ref__negocio">
+            <div
+              className="terminal-cabecera-ref__tienda"
+              aria-hidden="true"
+            >
+              <img src={tiendaIcono} alt="" />
+            </div>
 
-  <div className="terminal-cabecera-ref__lado-derecho">
-    <div className="terminal-cabecera-ref__reloj-turno">
-      <RelojTerminal />
-    </div>
+            <div className="terminal-cabecera-ref__datos">
+              <strong>{configuracion.nombreNegocio}</strong>
+              <span className="terminal-cabecera-ref__caja">
+                {configuracion.nombreCaja}
+              </span>
+            </div>
+          </div>
 
-    {turno && (
-      <div className="terminal-cabecera-ref__acciones terminal-cabecera-ref__acciones--vertical">
-        <button
-          type="button"
-          disabled={!enLinea}
-          onClick={() =>
-            void cargarSolicitudes()
-          }
-        >
-          Actualizar
-        </button>
+          <div className="terminal-cabecera-ref__turno">
+            {turno && (
+              <>
+                <span
+                  className="terminal-cabecera-ref__cajero-icono"
+                  aria-hidden="true"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="12" cy="8" r="3.25" />
+                    <path d="M5.5 20c.7-4 2.9-6 6.5-6s5.8 2 6.5 6" />
+                  </svg>
+                </span>
 
-        <button
-          type="button"
-          disabled={cerrandoTurno || !enLinea}
-          onClick={() => void finalizarTurno()}
-        >
-          {cerrandoTurno
-            ? 'Finalizando…'
-            : 'Finalizar turno'}
-        </button>
-      </div>
-    )}
-  </div>
-</header>
+                <div className="terminal-cabecera-ref__cajero-info">
+                  <div className="terminal-cabecera-ref__cajero-bloque">
+                    <span className="terminal-cabecera-ref__cajero-label">
+                      Cajero/a
+                    </span>
+                    <strong className="terminal-cabecera-ref__cajero-nombre">
+                      {turno.nombre_cajero}
+                    </strong>
+                  </div>
+
+                  <EstadoPwa
+                    disponible={enLinea}
+                    etiquetaEnLinea="Turno activo"
+                    mostrarInstalacion={false}
+                  />
+                </div>
+              </>
+            )}
+
+            {!turno && (
+              <EstadoPwa
+                disponible={enLinea}
+                etiquetaEnLinea="Terminal lista"
+                mostrarInstalacion={false}
+              />
+            )}
+          </div>
+        </div>
+
+        <div className="terminal-cabecera-ref__lado-derecho">
+          <div className="terminal-cabecera-ref__reloj-turno">
+            <RelojTerminal />
+          </div>
+
+          {turno && (
+            <div className="terminal-cabecera-ref__acciones terminal-cabecera-ref__acciones--vertical">
+              <button
+                type="button"
+                className="terminal-cabecera-ref__actualizar"
+                disabled={!enLinea}
+                onClick={() => void cargarSolicitudes()}
+              >
+                <svg
+                  className="terminal-cabecera-ref__accion-icono"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M20 6v5h-5M4 18v-5h5" />
+                  <path d="M6.1 9a7 7 0 0 1 11.8-2L20 9M4 15l2.1 2a7 7 0 0 0 11.8-2" />
+                </svg>
+                <span>Actualizar</span>
+              </button>
+
+              <button
+                type="button"
+                className="terminal-cabecera-ref__finalizar"
+                disabled={cerrandoTurno || !enLinea}
+                onClick={() => void finalizarTurno()}
+              >
+                <svg
+                  className="terminal-cabecera-ref__accion-icono"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  aria-hidden="true"
+                >
+                  <path d="M12 2v10" />
+                  <path d="M18.4 6.6a8 8 0 1 1-12.8 0" />
+                </svg>
+                <span>
+                  {cerrandoTurno ? 'Finalizando…' : 'Finalizar turno'}
+                </span>
+              </button>
+            </div>
+          )}
+        </div>
+      </header>
 
       {turno && (
         <nav className="terminal-navegacion" aria-label="Operaciones de caja">
@@ -1627,23 +1671,84 @@ function PanelTerminal({
 
       <div className="terminal-pos-resumen__metricas">
         <article>
-          <span>Ventas realizadas</span>
+          <span className="terminal-pos-resumen__icono" aria-hidden="true">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M12 2v20" />
+              <path d="M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H7" />
+            </svg>
+          </span>
+          <span className="terminal-pos-resumen__metrica-label">
+            Ventas realizadas
+          </span>
           <strong>{resumenTurno?.ventas_realizadas ?? 0}</strong>
         </article>
 
         <article>
-          <span>REGIS acumulados</span>
+          <span className="terminal-pos-resumen__icono" aria-hidden="true">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M7 19V5h6a4 4 0 0 1 0 8H7" />
+              <path d="m12 13 5 6" />
+            </svg>
+          </span>
+          <span className="terminal-pos-resumen__metrica-label">
+            REGIS acumulados
+          </span>
           <strong>{resumenTurno?.regis_acumulados ?? 0}</strong>
         </article>
 
         <article>
-          <span>Canjes realizados</span>
+          <span className="terminal-pos-resumen__icono" aria-hidden="true">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M4 10h16v10H4zM3 6h18v4H3zM12 6v14" />
+              <path d="M12 6H8.5a2 2 0 1 1 2-2L12 6Z" />
+              <path d="M12 6h3.5a2 2 0 1 0-2-2L12 6Z" />
+            </svg>
+          </span>
+          <span className="terminal-pos-resumen__metrica-label">
+            Canjes realizados
+          </span>
           <strong>{resumenTurno?.canjes_realizados ?? 0}</strong>
         </article>
       </div>
 
       <div className="terminal-pos-resumen__hora">
-        <span>Inicio del turno</span>
+        <span className="terminal-pos-resumen__icono" aria-hidden="true">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 7v5l3 2" />
+          </svg>
+        </span>
+        <span className="terminal-pos-resumen__hora-label">
+          Inicio del turno
+        </span>
 
         <strong>
           {resumenTurno?.iniciado_en
@@ -1673,47 +1778,53 @@ function PanelTerminal({
     </aside>
 
 
-    <section className="terminal-pos-manual">
+        <section className="terminal-pos-manual">
       <div className="terminal-pos-manual__intro">
         <div className="terminal-pos-manual__icono" aria-hidden="true">
-          +
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <rect x="7" y="2.5" width="10" height="19" rx="2.2" />
+            <path d="M10 5h4" />
+            <path d="M10.5 18.5h3" />
+          </svg>
         </div>
 
-        <div>
-          <strong>Registrar venta manual</strong>
+        <div className="terminal-pos-manual__copy">
+          <strong>Identificación por teléfono</strong>
           <p>
-            Si NFC no está disponible, identifica al vecino por teléfono.
+            Usa el teléfono asociado a la cuenta si el vecino no trae NFC.
           </p>
         </div>
       </div>
 
-      {
-  <form onSubmit={buscarVecinoManual}>
-    <label>
-      Teléfono asociado a la cuenta
+      <form onSubmit={buscarVecinoManual}>
+        <input
+          required
+          type="tel"
+          autoComplete="off"
+          aria-label="Teléfono asociado a la cuenta"
+          value={telefonoManual}
+          onChange={(evento) =>
+            setTelefonoManual(evento.target.value)
+          }
+          placeholder="+56 9 1234 5678"
+        />
 
-      <input
-        required
-        type="tel"
-        autoComplete="off"
-        value={telefonoManual}
-        onChange={(evento) =>
-          setTelefonoManual(evento.target.value)
-        }
-        placeholder="+56 9 1234 5678"
-      />
-    </label>
-
-    <button
-      type="submit"
-      disabled={procesandoVentaManual}
-    >
-      {procesandoVentaManual
-        ? 'Buscando…'
-        : 'Identificar vecino'}
-    </button>
-  </form>
-}
+        <button
+          type="submit"
+          disabled={procesandoVentaManual}
+        >
+          {procesandoVentaManual
+            ? 'Buscando…'
+            : 'Identificar vecino'}
+        </button>
+      </form>
     </section>
 
 

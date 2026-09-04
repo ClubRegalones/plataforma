@@ -8578,71 +8578,164 @@ body,
 }
 
 /* ==========================================================
-   HEADER POS V6 EQUILIBRADO
+   HEADER POS V7 PROFESIONAL
    ========================================================== */
 
 .terminal-panel--turno-activo .terminal-cabecera-ref {
   display: grid !important;
-  grid-template-columns: minmax(13rem, .8fr) minmax(32rem, 2.15fr) minmax(21rem, 1.15fr) !important;
-  align-items: center !important;
-  gap: 1.8rem !important;
+  grid-template-columns: minmax(13rem,.76fr) minmax(29rem,1.75fr) minmax(27rem,1.28fr) !important;
+  align-items: stretch !important;
+  gap: 0 !important;
   width: 100% !important;
+  min-height: 6.15rem !important;
 }
 
-/* NEGOCIO + CAJERO/TURNO */
+/* MARCA */
+.terminal-panel--turno-activo .terminal-cabecera-ref__marca {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  min-width: 0 !important;
+  padding-right: 1.35rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__marca strong {
+  color: #fff8eb !important;
+  font-family: var(--fuente-marca) !important;
+  font-size: clamp(1.45rem,1.75vw,1.75rem) !important;
+  line-height: 1 !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__marca strong span {
+  margin-left: .25rem !important;
+  color: #ff6428 !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__marca small {
+  margin-top: .45rem !important;
+  color: #ff6b2c !important;
+  font-size: .87rem !important;
+  font-weight: 850 !important;
+}
+
+/* CENTRO: NEGOCIO + CAJERO */
 .terminal-panel--turno-activo .terminal-cabecera-ref__centro {
   display: grid !important;
-  grid-template-columns: minmax(20rem, 1.55fr) minmax(12rem, .75fr) !important;
-  align-items: center !important;
-  gap: 2rem !important;
+  grid-template-columns: minmax(17rem,1.15fr) minmax(14rem,.85fr) !important;
+  align-items: stretch !important;
+  gap: 0 !important;
   min-width: 0 !important;
+  border-left: 1px solid rgba(100,210,112,.17) !important;
 }
 
 .terminal-panel--turno-activo .terminal-cabecera-ref__negocio {
+  display: flex !important;
+  align-items: center !important;
+  gap: .9rem !important;
+  min-width: 0 !important;
+  padding: .35rem 1.25rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__tienda {
+  display: grid !important;
+  place-items: center !important;
+  width: 3.65rem !important;
+  height: 3.65rem !important;
+  flex: 0 0 3.65rem !important;
+  border-radius: 50% !important;
+  background: rgba(48,150,69,.10) !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__tienda img {
+  width: 3.25rem !important;
+  height: 3.25rem !important;
+  object-fit: contain !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__datos {
   min-width: 0 !important;
 }
 
 .terminal-panel--turno-activo .terminal-cabecera-ref__datos > strong {
-  font-size: clamp(1.3rem, 1.8vw, 1.7rem) !important;
+  display: block !important;
+  color: #fff8eb !important;
+  font-family: var(--fuente-marca) !important;
+  font-size: clamp(1.35rem,1.65vw,1.65rem) !important;
+  line-height: 1.05 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
 }
 
 .terminal-panel--turno-activo .terminal-cabecera-ref__caja {
-  font-size: .95rem !important;
+  display: block !important;
+  margin-top: .38rem !important;
+  color: #65e96c !important;
+  font-size: .9rem !important;
+  font-weight: 850 !important;
 }
 
-/* CAJERO/A CON TURNO DEBAJO */
+/* CAJERO */
 .terminal-panel--turno-activo .terminal-cabecera-ref__turno {
   display: grid !important;
-  grid-template-columns: 1fr !important;
-  align-content: center !important;
-  justify-items: start !important;
-  gap: .5rem !important;
+  grid-template-columns: 3.25rem minmax(0,1fr) !important;
+  align-items: center !important;
+  gap: .8rem !important;
   min-width: 0 !important;
-  padding-left: 1.2rem !important;
-  border-left: 1px solid rgba(109,205,116,.12);
+  padding: .35rem 1.2rem !important;
+  border-left: 1px solid rgba(100,210,112,.17) !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__cajero-icono {
+  display: grid !important;
+  place-items: center !important;
+  width: 3rem !important;
+  height: 3rem !important;
+  border: 1px solid rgba(105,225,115,.48) !important;
+  border-radius: 50% !important;
+  color: #72e879 !important;
+  background: rgba(41,116,57,.12) !important;
+  box-shadow: 0 0 1rem rgba(70,200,80,.08) !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__cajero-icono svg {
+  width: 1.55rem !important;
+  height: 1.55rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__cajero-info {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: .42rem !important;
+  min-width: 0 !important;
 }
 
 .terminal-panel--turno-activo .terminal-cabecera-ref__cajero-bloque {
   display: flex !important;
-  align-items: baseline !important;
-  gap: .35rem !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: .08rem !important;
   min-width: 0 !important;
 }
 
 .terminal-panel--turno-activo .terminal-cabecera-ref__cajero-label {
-  color: #778d7f !important;
-  font-size: .56rem !important;
-  letter-spacing: .05em !important;
+  color: #87a390 !important;
+  font-size: .65rem !important;
+  font-weight: 800 !important;
+  letter-spacing: .075em !important;
+  text-transform: uppercase !important;
 }
 
 .terminal-panel--turno-activo .terminal-cabecera-ref__cajero-nombre {
-  color: #f5f8f6 !important;
-  font-size: .82rem !important;
-  font-weight: 800 !important;
-  max-width: 12rem !important;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  color: #fff8eb !important;
+  font-size: 1.05rem !important;
+  font-weight: 900 !important;
+  line-height: 1.05 !important;
+  max-width: 11rem !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
 }
 
 .terminal-panel--turno-activo .terminal-cabecera-ref__turno .estado-pwa {
@@ -8652,26 +8745,28 @@ body,
 
 .terminal-panel--turno-activo .terminal-cabecera-ref__turno .estado-pwa span {
   min-height: 2rem !important;
-  padding: .45rem .8rem !important;
-  font-size: .67rem !important;
+  padding: .42rem .8rem !important;
+  font-size: .72rem !important;
 }
 
-/* RELOJ + BOTONES */
+/* RELOJ + ACCIONES */
 .terminal-panel--turno-activo .terminal-cabecera-ref__lado-derecho {
   display: grid !important;
-  grid-template-columns: minmax(10.5rem, 1fr) 9.6rem !important;
+  grid-template-columns: minmax(13rem,1fr) 10.6rem !important;
   align-items: center !important;
-  gap: 1.25rem !important;
+  gap: 1rem !important;
   width: 100% !important;
   min-width: 0 !important;
+  padding-left: 1.25rem !important;
+  border-left: 1px solid rgba(100,210,112,.17) !important;
 }
 
 .terminal-panel--turno-activo .terminal-cabecera-ref__reloj-turno {
   width: 100% !important;
+  min-width: 0 !important;
   margin: 0 !important;
   padding: 0 !important;
   border: 0 !important;
-  min-width: 0 !important;
 }
 
 .terminal-panel--turno-activo .terminal-cabecera-ref__reloj-turno .terminal-reloj-ref {
@@ -8680,21 +8775,88 @@ body,
   transform: none !important;
 }
 
+.terminal-panel--turno-activo .terminal-cabecera-ref__reloj-turno .terminal-reloj-ref svg {
+  width: 3rem !important;
+  height: 3rem !important;
+  color: #70e878 !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__reloj-turno .terminal-reloj-ref strong {
+  font-size: clamp(1.65rem,2vw,2rem) !important;
+  color: #fff8eb !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__reloj-turno .terminal-reloj-ref small {
+  font-size: .72rem !important;
+  line-height: 1.25 !important;
+}
+
 .terminal-panel--turno-activo .terminal-cabecera-ref__acciones--vertical {
   display: grid !important;
-  gap: .45rem !important;
-  width: 9.6rem !important;
+  gap: .48rem !important;
+  width: 10.6rem !important;
 }
 
 .terminal-panel--turno-activo .terminal-cabecera-ref__acciones--vertical button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: .55rem !important;
   width: 100% !important;
-  min-height: 2.35rem !important;
-  padding: .4rem .65rem !important;
+  min-height: 2.75rem !important;
+  padding: .48rem .7rem !important;
   border-radius: .72rem !important;
-  font-size: .72rem !important;
+  font-size: .78rem !important;
+  font-weight: 850 !important;
 }
 
+.terminal-panel--turno-activo .terminal-cabecera-ref__accion-icono {
+  width: 1.15rem !important;
+  height: 1.15rem !important;
+  flex: 0 0 1.15rem !important;
+}
 
+.terminal-panel--turno-activo .terminal-cabecera-ref__actualizar {
+  border: 1px solid rgba(102,226,113,.55) !important;
+  color: #eaf7eb !important;
+  background: rgba(20,69,35,.28) !important;
+  box-shadow: inset 0 0 1rem rgba(83,215,95,.04) !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__actualizar:hover:not(:disabled) {
+  border-color: rgba(110,240,121,.78) !important;
+  background: rgba(32,100,49,.34) !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__finalizar {
+  border: 1px solid rgba(255,128,53,.55) !important;
+  color: #fff8eb !important;
+  background: #d65b20 !important;
+  box-shadow: 0 .35rem 1rem rgba(191,67,16,.10) !important;
+}
+
+.terminal-panel--turno-activo .terminal-cabecera-ref__acciones--vertical button:disabled {
+  opacity: .5 !important;
+  cursor: not-allowed !important;
+}
+
+@media (max-width: 1450px) {
+  .terminal-panel--turno-activo .terminal-cabecera-ref {
+    grid-template-columns: minmax(11rem,.68fr) minmax(26rem,1.7fr) minmax(24rem,1.2fr) !important;
+  }
+
+  .terminal-panel--turno-activo .terminal-cabecera-ref__centro {
+    grid-template-columns: minmax(15.5rem,1.1fr) minmax(12rem,.9fr) !important;
+  }
+
+  .terminal-panel--turno-activo .terminal-cabecera-ref__lado-derecho {
+    grid-template-columns: minmax(11rem,1fr) 9.8rem !important;
+  }
+
+  .terminal-panel--turno-activo .terminal-cabecera-ref__acciones--vertical {
+    width: 9.8rem !important;
+  }
+}
 /* ==========================================================
    MODULOS SUPERIORES POS - VERSION LIMPIA
    ========================================================== */
@@ -9565,6 +9727,250 @@ body,
 .terminal-pos-resumen__regalon img {
   width: 5.25rem !important;
   max-height: 5.25rem !important;
+}
+
+/* ==========================================================
+   PANEL COMPRAS RESUMEN TURNO V16
+   ========================================================== */
+
+@media (min-width: 1001px) {
+  .terminal-panel--turno-activo .terminal-pos-inicio {
+    grid-template-columns: minmax(0, 1.55fr) minmax(19rem, .74fr) !important;
+  }
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen {
+  gap: .95rem !important;
+  padding: 1.25rem !important;
+  border-color: rgba(91, 214, 111, .24) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(99, 225, 116, .035),
+    0 0 1.8rem rgba(47, 172, 65, .06) !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__cabecera .terminal-eyebrow {
+  font-size: .9rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__cabecera h3 {
+  margin-top: .32rem !important;
+  font-size: 1.65rem !important;
+  line-height: 1.05 !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__cabecera small {
+  font-size: .65rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__metricas {
+  gap: 0 !important;
+  border-top: 1px solid rgba(105, 209, 121, .1) !important;
+  border-bottom: 1px solid rgba(105, 209, 121, .1) !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__metricas article {
+  display: grid !important;
+  grid-template-columns: 2.35rem minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  gap: .75rem !important;
+  padding: .82rem .25rem !important;
+  border: 0 !important;
+  border-bottom: 1px solid rgba(105, 209, 121, .1) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__metricas article:last-child {
+  border-bottom: 0 !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__icono {
+  display: grid !important;
+  width: 2.35rem !important;
+  height: 2.35rem !important;
+  place-items: center !important;
+  border: 1px solid rgba(105, 225, 118, .26) !important;
+  border-radius: 50% !important;
+  color: #78e57e !important;
+  background: rgba(53, 157, 65, .14) !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__icono svg {
+  width: 1.15rem !important;
+  height: 1.15rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__metrica-label {
+  color: #a2b5aa !important;
+  font-size: .8rem !important;
+  line-height: 1.25 !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__metricas strong {
+  font-size: 1.65rem !important;
+  line-height: 1 !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__hora {
+  display: grid !important;
+  grid-template-columns: 2.35rem minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  gap: .75rem !important;
+  padding: .25rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__hora-label {
+  color: #a2b5aa !important;
+  font-size: .78rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__hora strong {
+  font-size: 1rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__regalon {
+  grid-template-columns: clamp(6.8rem, 13vh, 7.6rem) minmax(0, 1fr) !important;
+  gap: .9rem !important;
+  min-height: clamp(7.4rem, 15vh, 8.4rem) !important;
+  padding: .75rem !important;
+  border: 1px solid rgba(97, 214, 113, .18) !important;
+  background:
+    radial-gradient(circle at 18% 55%, rgba(58, 167, 69, .2), transparent 6rem),
+    rgba(255, 255, 255, .018) !important;
+  box-shadow: inset 0 0 1.5rem rgba(70, 190, 84, .035) !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__regalon img {
+  width: clamp(6.8rem, 13vh, 7.7rem) !important;
+  max-height: clamp(6.8rem, 13vh, 7.7rem) !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__regalon strong {
+  font-size: 1.05rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__regalon span {
+  margin-top: .28rem !important;
+  color: #91a79a !important;
+  font-size: .76rem !important;
+  line-height: 1.45 !important;
+}
+
+/* ==========================================================
+   PANEL COMPRAS ESPERA ESCALA V17
+   ========================================================== */
+
+.terminal-panel--turno-activo .terminal-pos-espera {
+  border-color: rgba(86, 210, 105, .24) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(87, 214, 105, .025),
+    0 0 1.8rem rgba(48, 173, 66, .045) !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-espera__copy {
+  padding: 1.75rem 1.25rem 1.5rem 2rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-espera__copy .terminal-eyebrow {
+  font-size: .9rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-espera__copy h2 {
+  max-width: 26rem !important;
+  margin: .45rem 0 .8rem !important;
+  color: #fffaf0 !important;
+  font-size: clamp(2.25rem, 3vw, 3.1rem) !important;
+  line-height: 1.02 !important;
+  text-wrap: balance !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-espera__copy > p {
+  color: #a4b7ac !important;
+  font-size: 1.02rem !important;
+  line-height: 1.55 !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-espera__estado {
+  gap: .55rem !important;
+  margin-top: 1rem !important;
+  padding: .55rem .9rem !important;
+  border: 1px solid rgba(103, 225, 116, .18) !important;
+  font-size: .82rem !important;
+  box-shadow: inset 0 0 1rem rgba(67, 201, 81, .04) !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-espera__estado i {
+  width: .58rem !important;
+  height: .58rem !important;
+  box-shadow: 0 0 .85rem rgba(101, 223, 107, .9) !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-espera__pasos {
+  gap: .65rem !important;
+  margin-top: 1.25rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-espera__pasos span {
+  gap: .68rem !important;
+  color: #a4b5ab !important;
+  font-size: .82rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-espera__pasos strong {
+  width: 1.8rem !important;
+  height: 1.8rem !important;
+  flex: 0 0 1.8rem !important;
+  border: 1px solid rgba(104, 224, 116, .16) !important;
+  font-size: .78rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-espera__visual {
+  transform: translateY(-.15rem) !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-espera__visual img {
+  width: min(91%, 22.75rem) !important;
+  max-width: 22.75rem !important;
+  max-height: 17.2rem !important;
+  filter:
+    drop-shadow(0 1rem 1.4rem rgba(0, 0, 0, .28))
+    drop-shadow(0 0 1.1rem rgba(78, 205, 91, .08)) !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-espera__halo {
+  width: 13.5rem !important;
+  background: rgba(55, 181, 68, .18) !important;
+  filter: blur(2.3rem) !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-manual {
+  min-height: 5.2rem !important;
+  padding: .8rem 1rem !important;
+  border-color: rgba(92, 200, 112, .2) !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-manual__intro strong {
+  font-size: .9rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-manual__intro p {
+  color: #8ea297 !important;
+  font-size: .7rem !important;
+  line-height: 1.42 !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-manual label {
+  font-size: .72rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-manual input {
+  min-height: 2.7rem !important;
+  font-size: .9rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-manual button {
+  min-height: 2.7rem !important;
+  font-size: .82rem !important;
 }
 
 .terminal-panel--turno-activo .terminal-lista-vacia,
@@ -11038,4 +11444,782 @@ body,
 .terminal-panel--turno-activo .terminal-revision-compra__mascota span {
   margin-top: .2rem !important;
   font-size: .66rem !important;
+}
+
+/* ==========================================================
+   PANTALLA 6 POS AMIGABLE V2
+   Referencia POS Club Regalones
+   ========================================================== */
+
+/* LAYOUT GENERAL */
+.terminal-panel--turno-activo .terminal-pos-inicio {
+  display: grid !important;
+  grid-template-columns: minmax(0, 2.05fr) minmax(25rem, .95fr) !important;
+  grid-template-rows: minmax(0, 1fr) auto !important;
+  grid-template-areas:
+    "espera resumen"
+    "manual resumen" !important;
+  gap: .8rem !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-espera {
+  grid-area: espera !important;
+  display: grid !important;
+  grid-template-columns: minmax(19rem, .92fr) minmax(20rem, 1.08fr) !important;
+  align-items: center !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  position: relative !important;
+  overflow: hidden !important;
+  padding: 1.55rem 1.8rem !important;
+  border: 1px solid rgba(111, 225, 94, .36) !important;
+  border-radius: 1.15rem !important;
+  background:
+    radial-gradient(circle at 70% 50%, rgba(58, 181, 63, .12), transparent 34%),
+    linear-gradient(145deg, #05271a 0%, #031b12 58%, #02170f 100%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.02),
+    0 0 1.5rem rgba(66,203,78,.025) !important;
+}
+
+/* TEXTO IZQUIERDO */
+.terminal-panel--turno-activo .terminal-pos-espera__copy {
+  position: relative !important;
+  z-index: 2 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  min-width: 0 !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-espera__copy .terminal-eyebrow {
+  color: #ff672b !important;
+  font-size: .94rem !important;
+  font-weight: 900 !important;
+  letter-spacing: .065em !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-espera__copy h2 {
+  max-width: 29rem !important;
+  margin: .65rem 0 .65rem !important;
+  color: #fff8eb !important;
+  font-family: var(--fuente-marca) !important;
+  font-size: clamp(2.5rem, 3.15vw, 3.55rem) !important;
+  line-height: .98 !important;
+  letter-spacing: -.025em !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-espera__copy > p {
+  max-width: 27rem !important;
+  margin: 0 0 .85rem !important;
+  color: #c1d0c6 !important;
+  font-size: 1.02rem !important;
+  line-height: 1.55 !important;
+}
+
+/* LECTOR LISTO */
+.terminal-panel--turno-activo .terminal-pos-espera__estado {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: .55rem !important;
+  min-height: 2.55rem !important;
+  padding: .5rem .95rem !important;
+  border: 1px solid rgba(106,231,100,.36) !important;
+  border-radius: 999px !important;
+  color: #9cf49c !important;
+  background: rgba(20,82,34,.35) !important;
+  box-shadow: 0 0 1.1rem rgba(81,226,90,.06) !important;
+  font-size: .91rem !important;
+  font-weight: 850 !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-espera__estado i {
+  width: .72rem !important;
+  height: .72rem !important;
+  flex: 0 0 .72rem !important;
+  border-radius: 50% !important;
+  background: #69e672 !important;
+  box-shadow: 0 0 .75rem rgba(103,236,110,.75) !important;
+}
+
+/* PASOS */
+.terminal-panel--turno-activo .terminal-pos-espera__pasos {
+  display: grid !important;
+  gap: .52rem !important;
+  margin-top: .85rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-espera__pasos span {
+  display: flex !important;
+  align-items: center !important;
+  gap: .7rem !important;
+  color: #b9c9bf !important;
+  font-size: .93rem !important;
+  line-height: 1.2 !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-espera__pasos strong {
+  display: grid !important;
+  place-items: center !important;
+  width: 2rem !important;
+  height: 2rem !important;
+  flex: 0 0 2rem !important;
+  border: 1px solid rgba(96,220,105,.32) !important;
+  border-radius: 50% !important;
+  color: #74ec7a !important;
+  background: rgba(20,84,36,.36) !important;
+  font-size: .82rem !important;
+}
+
+/* MASCOTA / TOTEM CENTRAL */
+.terminal-panel--turno-activo .terminal-pos-espera__visual {
+  position: relative !important;
+  display: grid !important;
+  place-items: center !important;
+  align-self: stretch !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-espera__visual img {
+  position: relative !important;
+  z-index: 2 !important;
+  width: min(92%, 27rem) !important;
+  max-height: 25rem !important;
+  object-fit: contain !important;
+  filter:
+    drop-shadow(0 1rem 1.5rem rgba(0,0,0,.3))
+    drop-shadow(0 0 1.15rem rgba(76,233,82,.12)) !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-espera__halo {
+  position: absolute !important;
+  z-index: 1 !important;
+  width: 70% !important;
+  aspect-ratio: 1 !important;
+  border-radius: 50% !important;
+  background: radial-gradient(circle, rgba(91,232,93,.15), rgba(46,179,58,.055) 44%, transparent 70%) !important;
+  filter: blur(.2rem) !important;
+}
+
+/* GLOBITO AMIGABLE */
+.terminal-panel--turno-activo .terminal-pos-espera__visual::after {
+  content: "¡Todo listo!" !important;
+  position: absolute !important;
+  z-index: 4 !important;
+  top: 8% !important;
+  right: 4% !important;
+  padding: .55rem .75rem !important;
+  border: 1px solid rgba(145,244,99,.55) !important;
+  border-radius: .85rem !important;
+  color: #b6ff8d !important;
+  background: rgba(3,30,17,.88) !important;
+  box-shadow: 0 0 1rem rgba(101,235,94,.12) !important;
+  font-family: var(--fuente-marca) !important;
+  font-size: 1rem !important;
+  line-height: 1 !important;
+  transform: rotate(2deg) !important;
+}
+
+/* RESUMEN DERECHO */
+.terminal-panel--turno-activo .terminal-pos-resumen {
+  grid-area: resumen !important;
+  display: flex !important;
+  flex-direction: column !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  padding: 1.35rem 1.35rem 1rem !important;
+  border: 1px solid rgba(130,226,89,.38) !important;
+  border-radius: 1.15rem !important;
+  background:
+    radial-gradient(circle at 50% 100%, rgba(64,175,65,.08), transparent 40%),
+    linear-gradient(160deg,#052519,#031a11) !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__cabecera {
+  padding-bottom: .85rem !important;
+  border-bottom: 1px solid rgba(104,202,103,.13) !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__cabecera .terminal-eyebrow {
+  font-size: .87rem !important;
+  color: #ff6b2b !important;
+  letter-spacing: .06em !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__cabecera h3 {
+  margin: .35rem 0 0 !important;
+  color: #fff8eb !important;
+  font-family: var(--fuente-marca) !important;
+  font-size: 1.65rem !important;
+  line-height: 1.05 !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__metricas {
+  display: grid !important;
+  gap: 0 !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__metricas article {
+  display: grid !important;
+  grid-template-columns: auto minmax(0,1fr) auto !important;
+  align-items: center !important;
+  gap: .75rem !important;
+  min-height: 4.1rem !important;
+  padding: .7rem .15rem !important;
+  border: 0 !important;
+  border-bottom: 1px solid rgba(106,198,106,.13) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__icono {
+  display: grid !important;
+  place-items: center !important;
+  width: 2.55rem !important;
+  height: 2.55rem !important;
+  border: 1px solid rgba(106,225,102,.3) !important;
+  border-radius: 50% !important;
+  color: #79ea76 !important;
+  background: rgba(22,82,34,.28) !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__icono svg {
+  width: 1.15rem !important;
+  height: 1.15rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__metrica-label,
+.terminal-panel--turno-activo .terminal-pos-resumen__metricas article > span:not(.terminal-pos-resumen__icono) {
+  color: #c1cec5 !important;
+  font-size: .93rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__metricas strong {
+  color: #72e66f !important;
+  font-size: 1.35rem !important;
+  font-weight: 900 !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__hora {
+  display: grid !important;
+  grid-template-columns: auto minmax(0,1fr) auto !important;
+  align-items: center !important;
+  gap: .75rem !important;
+  min-height: 4rem !important;
+  padding: .7rem .15rem !important;
+  border-bottom: 1px solid rgba(106,198,106,.13) !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__hora-label,
+.terminal-panel--turno-activo .terminal-pos-resumen__hora > span {
+  color: #c1cec5 !important;
+  font-size: .91rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__hora strong {
+  color: #fff8eb !important;
+  font-size: 1rem !important;
+  font-weight: 900 !important;
+}
+
+/* TARJETA REGALON DERECHA */
+.terminal-panel--turno-activo .terminal-pos-resumen__regalon {
+  display: grid !important;
+  grid-template-columns: 6.5rem minmax(0,1fr) !important;
+  align-items: center !important;
+  gap: .9rem !important;
+  margin-top: auto !important;
+  padding: .75rem 1rem !important;
+  border: 1px solid rgba(116,223,94,.30) !important;
+  border-radius: 1rem !important;
+  background:
+    radial-gradient(circle at 20% 50%, rgba(78,197,74,.10), transparent 40%),
+    rgba(6,37,24,.58) !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__regalon img {
+  width: 6.5rem !important;
+  max-height: 6.5rem !important;
+  object-fit: contain !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__regalon strong {
+  display: block !important;
+  color: #b5f48b !important;
+  font-family: var(--fuente-marca) !important;
+  font-size: 1.22rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__regalon span {
+  display: block !important;
+  margin-top: .22rem !important;
+  color: #c6d1c8 !important;
+  font-size: .83rem !important;
+  line-height: 1.35 !important;
+}
+
+/* IDENTIFICACION POR TELEFONO */
+.terminal-panel--turno-activo .terminal-pos-manual {
+  grid-area: manual !important;
+  display: grid !important;
+  grid-template-columns: minmax(18rem,.75fr) minmax(25rem,1.25fr) !important;
+  align-items: center !important;
+  gap: 1.2rem !important;
+  min-height: 5.25rem !important;
+  padding: .7rem 1rem !important;
+  border: 1px solid rgba(109,215,97,.26) !important;
+  border-radius: 1rem !important;
+  background: linear-gradient(145deg,rgba(5,34,22,.92),rgba(3,26,17,.92)) !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-manual__intro {
+  display: grid !important;
+  grid-template-columns: 3rem minmax(0,1fr) !important;
+  align-items: center !important;
+  gap: .75rem !important;
+  min-width: 0 !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-manual__icono {
+  display: grid !important;
+  place-items: center !important;
+  width: 2.8rem !important;
+  height: 2.8rem !important;
+  border-radius: 50% !important;
+  color: #7bef7d !important;
+  background: rgba(33,109,47,.28) !important;
+  font-size: 1.6rem !important;
+  font-weight: 900 !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-manual__intro strong {
+  color: #fff8eb !important;
+  font-size: .98rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-manual__intro p {
+  margin: .18rem 0 0 !important;
+  color: #90a89a !important;
+  font-size: .72rem !important;
+  line-height: 1.3 !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-manual form {
+  display: grid !important;
+  grid-template-columns: minmax(0,1fr) 10.3rem !important;
+  align-items: end !important;
+  gap: .75rem !important;
+  min-width: 0 !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-manual label {
+  display: grid !important;
+  gap: .32rem !important;
+  color: #7de97b !important;
+  font-size: .71rem !important;
+  font-weight: 850 !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-manual input {
+  width: 100% !important;
+  min-height: 3rem !important;
+  padding: .55rem .85rem !important;
+  border: 1px solid rgba(97,218,100,.32) !important;
+  border-radius: .72rem !important;
+  outline: 0 !important;
+  color: #eef6ef !important;
+  background: #02180f !important;
+  font-size: .95rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-manual input:focus {
+  border-color: rgba(106,235,110,.68) !important;
+  box-shadow: 0 0 0 .16rem rgba(89,216,95,.08) !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-manual button {
+  min-height: 3rem !important;
+  padding: .6rem .9rem !important;
+  border: 0 !important;
+  border-radius: .72rem !important;
+  color: #08210e !important;
+  background: #61d767 !important;
+  font-size: .81rem !important;
+  font-weight: 900 !important;
+}
+
+/* RESPALDO TECNICO OCULTO */
+.terminal-panel--turno-activo .terminal-pos-token-respaldo {
+  display: none !important;
+}
+
+/* NAVEGACION UN POCO MAS POS */
+.terminal-panel--turno-activo .terminal-navegacion button {
+  min-height: 2.8rem !important;
+  height: 2.8rem !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  font-size: .78rem !important;
+}
+
+@media (max-height: 820px) {
+  .terminal-panel--turno-activo .terminal-pos-espera {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+
+  .terminal-panel--turno-activo .terminal-pos-espera__copy h2 {
+    font-size: clamp(2.15rem,2.7vw,2.85rem) !important;
+  }
+
+  .terminal-panel--turno-activo .terminal-pos-espera__visual img {
+    max-height: 20rem !important;
+  }
+
+  .terminal-panel--turno-activo .terminal-pos-resumen__regalon img {
+    width: 5.4rem !important;
+    max-height: 5.4rem !important;
+  }
+}
+
+/* ==========================================================
+   PANTALLA 6 AJUSTE ENCAJE V3
+   ========================================================== */
+
+/* Más espacio real para el panel principal */
+.terminal-panel--turno-activo .terminal-pos-inicio {
+  grid-template-rows: minmax(0, 1fr) 4.7rem !important;
+  gap: .65rem !important;
+}
+
+/* Panel de espera: un poco más compacto verticalmente */
+.terminal-panel--turno-activo .terminal-pos-espera {
+  padding-top: 1.15rem !important;
+  padding-bottom: 1.05rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-espera__copy h2 {
+  margin-top: .45rem !important;
+  margin-bottom: .45rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-espera__copy > p {
+  margin-bottom: .6rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-espera__pasos {
+  gap: .38rem !important;
+  margin-top: .55rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-espera__pasos span {
+  min-height: 1.8rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-espera__pasos strong {
+  width: 1.85rem !important;
+  height: 1.85rem !important;
+  flex-basis: 1.85rem !important;
+}
+
+/* Totem ligeramente mejor centrado */
+.terminal-panel--turno-activo .terminal-pos-espera__visual img {
+  max-height: 22.5rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-espera__visual::after {
+  top: 5% !important;
+  right: 3% !important;
+}
+
+/* Franja teléfono: más baja y ordenada */
+.terminal-panel--turno-activo .terminal-pos-manual {
+  min-height: 4.7rem !important;
+  height: 4.7rem !important;
+  padding: .45rem .85rem !important;
+  gap: 1rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-manual__icono {
+  width: 2.55rem !important;
+  height: 2.55rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-manual__intro {
+  grid-template-columns: 2.7rem minmax(0,1fr) !important;
+  gap: .65rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-manual input,
+.terminal-panel--turno-activo .terminal-pos-manual button {
+  min-height: 2.7rem !important;
+}
+
+/* Resumen derecho apenas más compacto */
+.terminal-panel--turno-activo .terminal-pos-resumen {
+  padding-top: 1.05rem !important;
+  padding-bottom: .8rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__cabecera {
+  padding-bottom: .6rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__metricas article {
+  min-height: 3.65rem !important;
+  padding-top: .5rem !important;
+  padding-bottom: .5rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__hora {
+  min-height: 3.55rem !important;
+  padding-top: .5rem !important;
+  padding-bottom: .5rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-resumen__regalon {
+  padding-top: .6rem !important;
+  padding-bottom: .6rem !important;
+}
+
+@media (max-height: 800px) {
+  .terminal-panel--turno-activo .terminal-pos-espera__copy h2 {
+    font-size: 2.55rem !important;
+  }
+
+  .terminal-panel--turno-activo .terminal-pos-espera__visual img {
+    max-height: 19.5rem !important;
+  }
+}
+
+
+/* ==========================================================
+   PANTALLA 6 AJUSTE FINAL REGALON TELEFONO
+   ========================================================== */
+
+/* 1) Regalón principal un poco más grande */
+.terminal-panel--turno-activo .terminal-pos-espera__visual {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-espera__visual img {
+  max-height: 25.2rem !important;
+  width: auto !important;
+  object-fit: contain !important;
+}
+
+/* 2) Barra inferior con más aire para que no choque con el borde */
+.terminal-panel--turno-activo .terminal-pos-manual {
+  padding: .7rem 1.1rem .9rem 1.1rem !important;
+  box-sizing: border-box !important;
+  gap: 1rem !important;
+  align-items: end !important;
+}
+
+/* Asegura que los hijos puedan encoger sin romper el borde */
+.terminal-panel--turno-activo .terminal-pos-manual > * {
+  min-width: 0 !important;
+}
+
+/* Texto izquierdo bien contenido */
+.terminal-panel--turno-activo .terminal-pos-manual__intro,
+.terminal-panel--turno-activo .terminal-pos-manual__texto {
+  min-width: 0 !important;
+}
+
+/* Bloque del teléfono con mejor encaje */
+.terminal-panel--turno-activo .terminal-pos-manual__campo,
+.terminal-panel--turno-activo .terminal-pos-manual__telefono,
+.terminal-panel--turno-activo .terminal-pos-manual__form {
+  min-width: 0 !important;
+  width: 100% !important;
+}
+
+/* Input sin tocar la línea del panel */
+.terminal-panel--turno-activo .terminal-pos-manual input {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: 3.2rem !important;
+  box-sizing: border-box !important;
+}
+
+/* Botón ligeramente más compacto para darle aire al input */
+.terminal-panel--turno-activo .terminal-pos-manual button {
+  min-height: 3.2rem !important;
+  padding-inline: 1.35rem !important;
+  white-space: nowrap !important;
+}
+
+/* Si la fila usa grid/flex, evita que el input empuje contra el borde */
+.terminal-panel--turno-activo .terminal-pos-manual__accion,
+.terminal-panel--turno-activo .terminal-pos-manual__boton {
+  flex: 0 0 auto !important;
+}
+
+/* En pantallas algo más justas, que el campo respire mejor */
+@media (max-width: 1500px) {
+  .terminal-panel--turno-activo .terminal-pos-manual {
+    gap: .8rem !important;
+  }
+
+  .terminal-panel--turno-activo .terminal-pos-manual button {
+    padding-inline: 1.1rem !important;
+  }
+}
+
+
+/* ==========================================================
+   PANTALLA 6 TELEFONO COMPACTO V4
+   ========================================================== */
+
+.terminal-panel--turno-activo .terminal-pos-inicio {
+  grid-template-rows: minmax(0, 1fr) 5rem !important;
+}
+
+/* Barra inferior */
+.terminal-panel--turno-activo .terminal-pos-manual {
+  display: grid !important;
+  grid-template-columns: minmax(20rem, .86fr) minmax(28rem, 1.14fr) !important;
+  align-items: center !important;
+  gap: 1.2rem !important;
+
+  height: 5rem !important;
+  min-height: 5rem !important;
+
+  padding: .55rem 1rem !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+/* Parte izquierda */
+.terminal-panel--turno-activo .terminal-pos-manual__intro {
+  display: grid !important;
+  grid-template-columns: 2.8rem minmax(0, 1fr) !important;
+  align-items: center !important;
+  gap: .75rem !important;
+  min-width: 0 !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-manual__icono {
+  width: 2.7rem !important;
+  height: 2.7rem !important;
+  flex: 0 0 2.7rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-manual__copy {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  min-width: 0 !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-manual__copy strong {
+  color: #fff8eb !important;
+  font-size: 1rem !important;
+  line-height: 1.05 !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-manual__subtitulo {
+  display: block !important;
+  margin-top: .18rem !important;
+  color: #73e978 !important;
+  font-size: .72rem !important;
+  font-weight: 850 !important;
+  line-height: 1.05 !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-manual__copy p {
+  margin: .18rem 0 0 !important;
+  color: #8fa69a !important;
+  font-size: .68rem !important;
+  line-height: 1.15 !important;
+  white-space: nowrap !important;
+}
+
+/* Campo + botón */
+.terminal-panel--turno-activo .terminal-pos-manual form {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 10.7rem !important;
+  align-items: center !important;
+  gap: .75rem !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-manual input {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  min-height: 3rem !important;
+  height: 3rem !important;
+
+  box-sizing: border-box !important;
+  padding: .55rem .9rem !important;
+
+  border: 1px solid rgba(97,218,100,.38) !important;
+  border-radius: .72rem !important;
+
+  color: #eef6ef !important;
+  background: #02180f !important;
+
+  font-size: 1rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-manual button {
+  width: 100% !important;
+  min-height: 3rem !important;
+  height: 3rem !important;
+
+  padding: .55rem .9rem !important;
+  white-space: nowrap !important;
+
+  font-size: .82rem !important;
+  font-weight: 900 !important;
+}
+
+/* Un poco más compacto si el ancho se reduce */
+@media (max-width: 1450px) {
+  .terminal-panel--turno-activo .terminal-pos-manual {
+    grid-template-columns: minmax(17rem, .8fr) minmax(25rem, 1.2fr) !important;
+    gap: .8rem !important;
+  }
+
+  .terminal-panel--turno-activo .terminal-pos-manual form {
+    grid-template-columns: minmax(0,1fr) 9.8rem !important;
+  }
+}
+
+
+/* ==========================================================
+   TELEFONO MICROAJUSTE ICONO ESPACIADO
+   ========================================================== */
+
+.terminal-panel--turno-activo .terminal-pos-manual__icono svg {
+  width: 1.35rem !important;
+  height: 1.35rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-manual__copy {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  gap: .27rem !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-manual__copy strong {
+  margin: 0 !important;
+  line-height: 1.05 !important;
+}
+
+.terminal-panel--turno-activo .terminal-pos-manual__copy p {
+  margin: 0 !important;
+  line-height: 1.25 !important;
 }
