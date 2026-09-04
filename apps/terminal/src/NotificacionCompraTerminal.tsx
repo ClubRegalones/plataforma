@@ -1,5 +1,5 @@
 import type { FormEvent } from 'react'
-import lectorNfcIcono from './recursos/iconos/lector-nfc.png'
+import regalonCompra from './recursos/mascota/regalon-compra.png'
 import regalonCorazon from './recursos/mascota/regalon-corazon.png'
 
 type TipoNotificacion = 'compra' | 'llavero' | 'telefono'
@@ -198,7 +198,7 @@ export default function NotificacionCompraTerminal({
         <div className="terminal-compra-detectada__visual">
           <div className="terminal-compra-detectada__halo" />
           <img
-            src={lectorNfcIcono}
+            src={regalonCompra}
             alt=""
             aria-hidden="true"
           />

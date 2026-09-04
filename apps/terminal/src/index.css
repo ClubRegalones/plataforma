@@ -12223,3 +12223,177 @@ body,
   margin: 0 !important;
   line-height: 1.25 !important;
 }
+
+
+/* ==========================================================
+   POPUP COMPRA CERRAR V2
+   ========================================================== */
+
+.terminal-compra-detectada__cerrar {
+  position: absolute !important;
+  top: .8rem !important;
+  right: .8rem !important;
+
+  width: 2.25rem !important;
+  height: 2.25rem !important;
+  min-width: 2.25rem !important;
+  min-height: 2.25rem !important;
+
+  display: grid !important;
+  place-items: center !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  border: 1px solid rgba(103, 232, 112, .22) !important;
+  border-radius: 999px !important;
+
+  background: rgba(20, 78, 58, .72) !important;
+  color: #f5fff6 !important;
+
+  font-size: 1.3rem !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+
+  cursor: pointer !important;
+  z-index: 20 !important;
+
+  transition:
+    transform .18s ease,
+    background .18s ease,
+    border-color .18s ease !important;
+}
+
+.terminal-compra-detectada__cerrar:hover {
+  transform: scale(1.08) !important;
+  background: rgba(40, 120, 72, .9) !important;
+  border-color: rgba(103, 232, 112, .5) !important;
+}
+
+.terminal-compra-detectada__cerrar:active {
+  transform: scale(.96) !important;
+}
+
+
+/* ==========================================================
+   POPUP COMPRA ASISTIDA MONTO V3
+   ========================================================== */
+
+/* Label del monto */
+.terminal-compra-detectada__asistida label {
+  display: grid !important;
+  gap: .55rem !important;
+  width: 100% !important;
+  min-width: 0 !important;
+
+  color: #73e978 !important;
+  font-weight: 850 !important;
+}
+
+/* Contenedor: deja de comportarse como dos cajas */
+.terminal-compra-detectada__input {
+  position: relative !important;
+  display: block !important;
+
+  width: 100% !important;
+  min-width: 0 !important;
+  height: auto !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+
+  overflow: visible !important;
+}
+
+/* Signo $ dentro del mismo campo */
+.terminal-compra-detectada__input > span {
+  position: absolute !important;
+  left: 1rem !important;
+  top: 50% !important;
+
+  transform: translateY(-50%) !important;
+
+  display: block !important;
+  width: auto !important;
+  min-width: 0 !important;
+  height: auto !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  border: 0 !important;
+  background: transparent !important;
+
+  color: #f5fff6 !important;
+  font-size: 1.25rem !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+
+  z-index: 2 !important;
+  pointer-events: none !important;
+}
+
+/* Input real */
+.terminal-compra-detectada__input > input {
+  display: block !important;
+
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+
+  height: 3.7rem !important;
+  box-sizing: border-box !important;
+
+  margin: 0 !important;
+  padding: 0 1rem 0 2.65rem !important;
+
+  border: 1px solid rgba(88, 231, 102, .42) !important;
+  border-radius: .85rem !important;
+
+  background: rgba(1, 21, 13, .96) !important;
+  color: #fff8eb !important;
+
+  font-size: 1.55rem !important;
+  font-weight: 850 !important;
+  line-height: 1 !important;
+
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Placeholder */
+.terminal-compra-detectada__input > input::placeholder {
+  color: rgba(238, 246, 239, .35) !important;
+}
+
+/* Focus */
+.terminal-compra-detectada__input > input:focus {
+  border-color: #66e870 !important;
+  box-shadow: 0 0 0 3px rgba(102, 232, 112, .12) !important;
+}
+
+/* Formulario completo */
+.terminal-compra-detectada__asistida {
+  width: 100% !important;
+  min-width: 0 !important;
+  gap: .7rem !important;
+}
+
+
+/* ==========================================================
+   POPUP COMPRA ASISTIDA ESPACIADO BOTON
+   ========================================================== */
+
+.terminal-compra-detectada__asistida {
+  gap: 1rem !important;
+}
+
+.terminal-compra-detectada__asistida
+  .terminal-compra-detectada__principal {
+  margin-top: .35rem !important;
+}
