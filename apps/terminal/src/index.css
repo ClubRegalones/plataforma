@@ -12397,3 +12397,758 @@ body,
   .terminal-compra-detectada__principal {
   margin-top: .35rem !important;
 }
+
+/* ==========================================================
+   PRIMER USO LLAVERO POS V1
+   ========================================================== */
+
+.terminal-activacion-primer-uso__fondo {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 150 !important;
+  display: grid !important;
+  place-items: center !important;
+  padding: 1.5rem !important;
+  background: rgba(0, 13, 8, .72) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+.terminal-activacion-primer-uso {
+  position: relative !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.18fr) minmax(17rem, .82fr) !important;
+  width: min(64rem, calc(100vw - 3rem)) !important;
+  max-height: calc(100vh - 3rem) !important;
+  overflow: auto !important;
+  border: 1px solid rgba(75, 225, 91, .72) !important;
+  border-radius: 1.4rem !important;
+  background:
+    linear-gradient(135deg, rgba(2, 42, 27, .99), rgba(0, 24, 15, .99)) !important;
+  box-shadow:
+    0 2rem 5rem rgba(0, 0, 0, .46),
+    0 0 2.4rem rgba(62, 221, 82, .08) !important;
+}
+
+.terminal-activacion-primer-uso__cerrar {
+  position: absolute !important;
+  top: .9rem !important;
+  right: .9rem !important;
+  z-index: 5 !important;
+  display: grid !important;
+  place-items: center !important;
+  width: 2.45rem !important;
+  height: 2.45rem !important;
+  min-width: 2.45rem !important;
+  padding: 0 !important;
+  border: 1px solid rgba(97, 231, 109, .24) !important;
+  border-radius: 999px !important;
+  background: rgba(19, 77, 56, .88) !important;
+  color: #fff8eb !important;
+  font-size: 1.25rem !important;
+  line-height: 1 !important;
+}
+
+.terminal-activacion-primer-uso__contenido {
+  display: flex !important;
+  flex-direction: column !important;
+  min-width: 0 !important;
+  padding: 2rem 2.1rem !important;
+}
+
+.terminal-activacion-primer-uso__contenido h2 {
+  margin: .28rem 0 .4rem !important;
+  color: #fff8eb !important;
+  font-size: clamp(2rem, 3vw, 2.65rem) !important;
+  line-height: 1.02 !important;
+}
+
+.terminal-activacion-primer-uso__descripcion {
+  max-width: 38rem !important;
+  margin: 0 0 1.15rem !important;
+  color: #a8bbb0 !important;
+  font-size: .95rem !important;
+  line-height: 1.45 !important;
+}
+
+.terminal-activacion-primer-uso__vecino {
+  display: grid !important;
+  grid-template-columns: 3.4rem minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  gap: .85rem !important;
+  padding: .8rem .95rem !important;
+  margin-bottom: 1rem !important;
+  border: 1px solid rgba(83, 226, 96, .18) !important;
+  border-radius: 1rem !important;
+  background: rgba(4, 48, 31, .62) !important;
+}
+
+.terminal-activacion-primer-uso__vecino img {
+  width: 3.2rem !important;
+  height: 3.2rem !important;
+  object-fit: contain !important;
+}
+
+.terminal-activacion-primer-uso__vecino > div {
+  display: flex !important;
+  flex-direction: column !important;
+  min-width: 0 !important;
+}
+
+.terminal-activacion-primer-uso__vecino small {
+  color: #78998a !important;
+  font-size: .65rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: .06em !important;
+}
+
+.terminal-activacion-primer-uso__vecino strong {
+  color: #fff8eb !important;
+  font-size: 1.15rem !important;
+}
+
+.terminal-activacion-primer-uso__vecino span {
+  color: #71df78 !important;
+  font-size: .76rem !important;
+}
+
+.terminal-activacion-primer-uso__entregado {
+  padding: .42rem .7rem !important;
+  border-radius: 999px !important;
+  background: rgba(57, 197, 79, .12) !important;
+  color: #70ef78 !important;
+  font-size: .72rem !important;
+  font-weight: 850 !important;
+  white-space: nowrap !important;
+}
+
+.terminal-activacion-primer-uso__formulario {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: .85rem !important;
+}
+
+.terminal-activacion-primer-uso__formulario fieldset {
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+}
+
+.terminal-activacion-primer-uso__formulario legend {
+  margin-bottom: .65rem !important;
+  color: #fff8eb !important;
+  font-size: .9rem !important;
+  font-weight: 900 !important;
+}
+
+.terminal-activacion-primer-uso__opciones {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: .7rem !important;
+}
+
+.terminal-activacion-primer-uso__opcion {
+  display: grid !important;
+  grid-template-columns: 1.3rem minmax(0, 1fr) !important;
+  align-items: center !important;
+  gap: .65rem !important;
+  padding: .8rem .85rem !important;
+  border: 1px solid rgba(103, 231, 113, .16) !important;
+  border-radius: .9rem !important;
+  background: rgba(1, 27, 17, .72) !important;
+  cursor: pointer !important;
+}
+
+.terminal-activacion-primer-uso__opcion--activa {
+  border-color: rgba(93, 235, 105, .66) !important;
+  background: rgba(23, 91, 51, .4) !important;
+}
+
+.terminal-activacion-primer-uso__opcion--deshabilitada {
+  opacity: .42 !important;
+  cursor: not-allowed !important;
+}
+
+.terminal-activacion-primer-uso__opcion input,
+.terminal-activacion-primer-uso__confirmacion input {
+  width: 1.15rem !important;
+  height: 1.15rem !important;
+  margin: 0 !important;
+  accent-color: #5ee76a !important;
+}
+
+.terminal-activacion-primer-uso__opcion span {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.terminal-activacion-primer-uso__opcion strong {
+  color: #f6fff6 !important;
+  font-size: .88rem !important;
+}
+
+.terminal-activacion-primer-uso__opcion small {
+  margin-top: .12rem !important;
+  color: #829b8e !important;
+  font-size: .66rem !important;
+}
+
+.terminal-activacion-primer-uso__confirmacion {
+  display: grid !important;
+  grid-template-columns: 1.4rem minmax(0, 1fr) !important;
+  align-items: center !important;
+  gap: .7rem !important;
+  padding: .85rem .95rem !important;
+  border: 1px solid rgba(98, 229, 109, .25) !important;
+  border-radius: .9rem !important;
+  background: rgba(4, 48, 31, .58) !important;
+  cursor: pointer !important;
+}
+
+.terminal-activacion-primer-uso__confirmacion span {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.terminal-activacion-primer-uso__confirmacion strong {
+  color: #effff0 !important;
+  font-size: .86rem !important;
+}
+
+.terminal-activacion-primer-uso__confirmacion small {
+  margin-top: .12rem !important;
+  color: #91a99c !important;
+  font-size: .7rem !important;
+}
+
+.terminal-activacion-primer-uso__pin {
+  display: grid !important;
+  gap: .4rem !important;
+  color: #72e678 !important;
+  font-size: .78rem !important;
+  font-weight: 850 !important;
+}
+
+.terminal-activacion-primer-uso__pin input {
+  width: 100% !important;
+  height: 3.2rem !important;
+  box-sizing: border-box !important;
+  padding: 0 .9rem !important;
+  border: 1px solid rgba(91, 232, 104, .4) !important;
+  border-radius: .8rem !important;
+  background: #011b11 !important;
+  color: #fff8eb !important;
+}
+
+.terminal-activacion-primer-uso__principal {
+  width: 100% !important;
+  min-height: 3.3rem !important;
+  border: 0 !important;
+  border-radius: .85rem !important;
+  background: #59da65 !important;
+  color: #032012 !important;
+  font-weight: 950 !important;
+}
+
+.terminal-activacion-primer-uso__principal:disabled {
+  opacity: .42 !important;
+  cursor: not-allowed !important;
+}
+
+.terminal-activacion-primer-uso__seguridad {
+  display: block !important;
+  color: #82998d !important;
+  font-size: .68rem !important;
+  line-height: 1.35 !important;
+  text-align: center !important;
+}
+
+.terminal-activacion-primer-uso__aviso {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: .25rem !important;
+  padding: 1rem !important;
+  border: 1px solid rgba(241, 139, 53, .3) !important;
+  border-radius: .9rem !important;
+  background: rgba(89, 45, 10, .22) !important;
+}
+
+.terminal-activacion-primer-uso__aviso strong {
+  color: #ffb16a !important;
+}
+
+.terminal-activacion-primer-uso__aviso span {
+  color: #b8a291 !important;
+  font-size: .8rem !important;
+}
+
+.terminal-activacion-primer-uso__visual {
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 0 !important;
+  padding: 2rem 2rem 1.6rem !important;
+  overflow: hidden !important;
+}
+
+.terminal-activacion-primer-uso__halo {
+  position: absolute !important;
+  width: 22rem !important;
+  height: 22rem !important;
+  border-radius: 999px !important;
+  background: radial-gradient(circle, rgba(65, 240, 78, .18), transparent 68%) !important;
+}
+
+.terminal-activacion-primer-uso__visual img {
+  position: relative !important;
+  z-index: 1 !important;
+  width: min(100%, 21rem) !important;
+  max-height: 22rem !important;
+  object-fit: contain !important;
+  filter: drop-shadow(0 0 1.2rem rgba(75, 238, 86, .22)) !important;
+}
+
+.terminal-activacion-primer-uso__visual > span {
+  position: relative !important;
+  z-index: 2 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  margin-top: .4rem !important;
+  color: #70eb78 !important;
+}
+
+.terminal-activacion-primer-uso__visual > span strong {
+  font-size: .9rem !important;
+}
+
+.terminal-activacion-primer-uso__visual > span small {
+  margin-top: .1rem !important;
+  color: #839b8e !important;
+  font-size: .68rem !important;
+}
+
+@media (max-width: 850px) {
+  .terminal-activacion-primer-uso {
+    grid-template-columns: 1fr !important;
+  }
+
+  .terminal-activacion-primer-uso__visual {
+    display: none !important;
+  }
+
+  .terminal-activacion-primer-uso__opciones {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ==========================================================
+   COMPRA APROBADA POS V1
+   ========================================================== */
+
+.terminal-compra-exitosa {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.15fr) minmax(18rem, .85fr) !important;
+  width: 100% !important;
+  min-height: 31rem !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(78, 225, 91, .32) !important;
+  border-radius: 1.35rem !important;
+  background:
+    linear-gradient(135deg, rgba(3, 48, 31, .98), rgba(0, 27, 17, .99)) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.015),
+    0 1.4rem 3.5rem rgba(0,0,0,.18) !important;
+}
+
+.terminal-compra-exitosa__contenido {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: flex-start !important;
+  padding: 3rem 3.2rem !important;
+}
+
+.terminal-compra-exitosa__check {
+  display: grid !important;
+  place-items: center !important;
+  width: 4.8rem !important;
+  height: 4.8rem !important;
+  margin: .75rem 0 1rem !important;
+  border: 1px solid rgba(92, 232, 104, .54) !important;
+  border-radius: 999px !important;
+  background: rgba(83, 218, 101, .14) !important;
+  color: #63eb72 !important;
+  box-shadow: 0 0 2rem rgba(79, 228, 93, .14) !important;
+}
+
+.terminal-compra-exitosa__check svg {
+  width: 2.35rem !important;
+  height: 2.35rem !important;
+}
+
+.terminal-compra-exitosa h2 {
+  margin: 0 !important;
+  color: #fff7e9 !important;
+  font-size: clamp(2.45rem, 4vw, 3.8rem) !important;
+  line-height: 1 !important;
+}
+
+.terminal-compra-exitosa__descripcion {
+  max-width: 38rem !important;
+  margin: .75rem 0 1.5rem !important;
+  color: #a8baaf !important;
+  font-size: 1rem !important;
+  line-height: 1.5 !important;
+}
+
+.terminal-compra-exitosa__descripcion strong {
+  color: #f4fff5 !important;
+}
+
+.terminal-compra-exitosa__metricas {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: .8rem !important;
+  width: 100% !important;
+  max-width: 37rem !important;
+  margin-bottom: 1rem !important;
+}
+
+.terminal-compra-exitosa__metricas article {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: .25rem !important;
+  padding: 1rem 1.1rem !important;
+  border: 1px solid rgba(91, 229, 104, .16) !important;
+  border-radius: .95rem !important;
+  background: rgba(2, 31, 20, .72) !important;
+}
+
+.terminal-compra-exitosa__metricas span {
+  color: #819d8d !important;
+  font-size: .7rem !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: .05em !important;
+}
+
+.terminal-compra-exitosa__metricas strong {
+  color: #61e96c !important;
+  font-size: 1.4rem !important;
+}
+
+.terminal-compra-exitosa__nueva {
+  width: 100% !important;
+  max-width: 37rem !important;
+  min-height: 3.5rem !important;
+  margin-top: .25rem !important;
+  border: 0 !important;
+  border-radius: .9rem !important;
+  background: #59dc66 !important;
+  color: #032014 !important;
+  font-weight: 950 !important;
+  font-size: .95rem !important;
+}
+
+.terminal-compra-exitosa__nueva:hover {
+  filter: brightness(1.06) !important;
+  transform: translateY(-1px) !important;
+}
+
+.terminal-compra-exitosa__seguridad {
+  width: 100% !important;
+  max-width: 37rem !important;
+  margin-top: .7rem !important;
+  color: #718b7c !important;
+  font-size: .68rem !important;
+  text-align: center !important;
+}
+
+.terminal-compra-exitosa__visual {
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+  padding: 2rem !important;
+}
+
+.terminal-compra-exitosa__halo {
+  position: absolute !important;
+  width: 23rem !important;
+  height: 23rem !important;
+  border-radius: 999px !important;
+  background: radial-gradient(circle, rgba(67, 229, 82, .17), transparent 68%) !important;
+}
+
+.terminal-compra-exitosa__visual img {
+  position: relative !important;
+  z-index: 1 !important;
+  width: min(75%, 18rem) !important;
+  max-height: 20rem !important;
+  object-fit: contain !important;
+  filter: drop-shadow(0 0 1.4rem rgba(75, 235, 87, .17)) !important;
+}
+
+.terminal-compra-exitosa__visual > div:last-child {
+  position: relative !important;
+  z-index: 2 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  margin-top: .5rem !important;
+}
+
+.terminal-compra-exitosa__visual strong {
+  color: #6bea74 !important;
+  font-size: 1.05rem !important;
+}
+
+.terminal-compra-exitosa__visual span {
+  margin-top: .15rem !important;
+  color: #82998d !important;
+  font-size: .74rem !important;
+}
+
+@media (max-width: 850px) {
+  .terminal-compra-exitosa {
+    grid-template-columns: 1fr !important;
+  }
+
+  .terminal-compra-exitosa__visual {
+    display: none !important;
+  }
+
+  .terminal-compra-exitosa__metricas {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ==========================================================
+   RECUPERAR TURNO POS V1
+   ========================================================== */
+
+.recuperar-turno-pos {
+  min-height: 100vh !important;
+  display: grid !important;
+  place-items: center !important;
+  padding: 2rem !important;
+  background:
+    radial-gradient(circle at 78% 45%, rgba(54, 210, 75, .1), transparent 30%),
+    #00180f !important;
+}
+
+.recuperar-turno-pos__tarjeta {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.15fr) minmax(18rem, .85fr) !important;
+  width: min(68rem, 100%) !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(80, 229, 94, .45) !important;
+  border-radius: 1.5rem !important;
+  background:
+    linear-gradient(135deg, rgba(3, 48, 31, .99), rgba(0, 27, 17, .99)) !important;
+  box-shadow:
+    0 2rem 5rem rgba(0, 0, 0, .38),
+    0 0 2rem rgba(64, 221, 82, .07) !important;
+}
+
+.recuperar-turno-pos__contenido {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: flex-start !important;
+  padding: 3rem 3.2rem !important;
+}
+
+.recuperar-turno-pos__icono {
+  display: grid !important;
+  place-items: center !important;
+  width: 4rem !important;
+  height: 4rem !important;
+  margin: .8rem 0 1rem !important;
+  border: 1px solid rgba(89, 230, 102, .45) !important;
+  border-radius: 999px !important;
+  background: rgba(74, 215, 88, .1) !important;
+  color: #5fe56c !important;
+}
+
+.recuperar-turno-pos__icono svg {
+  width: 2rem !important;
+  height: 2rem !important;
+}
+
+.recuperar-turno-pos h1 {
+  max-width: 35rem !important;
+  margin: 0 !important;
+  color: #fff7e9 !important;
+  font-size: clamp(2.6rem, 4vw, 4rem) !important;
+  line-height: .98 !important;
+}
+
+.recuperar-turno-pos__descripcion {
+  max-width: 37rem !important;
+  margin: 1rem 0 1.4rem !important;
+  color: #a5b8ac !important;
+  font-size: .98rem !important;
+  line-height: 1.55 !important;
+}
+
+.recuperar-turno-pos__datos {
+  position: relative !important;
+  display: grid !important;
+  grid-template-columns: 1fr 1.3fr !important;
+  gap: .65rem 1.4rem !important;
+  width: 100% !important;
+  max-width: 38rem !important;
+  padding: 1rem 1.15rem !important;
+  margin-bottom: 1rem !important;
+  border: 1px solid rgba(89, 228, 102, .18) !important;
+  border-radius: 1rem !important;
+  background: rgba(1, 29, 18, .7) !important;
+}
+
+.recuperar-turno-pos__datos > div {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: .15rem !important;
+}
+
+.recuperar-turno-pos__datos small {
+  color: #759084 !important;
+  font-size: .66rem !important;
+  font-weight: 850 !important;
+  text-transform: uppercase !important;
+  letter-spacing: .06em !important;
+}
+
+.recuperar-turno-pos__datos strong {
+  color: #fff8eb !important;
+  font-size: .95rem !important;
+}
+
+.recuperar-turno-pos__estado {
+  grid-column: 1 / -1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: .45rem !important;
+  width: fit-content !important;
+  margin-top: .15rem !important;
+  padding: .4rem .7rem !important;
+  border-radius: 999px !important;
+  background: rgba(65, 203, 79, .12) !important;
+  color: #69e876 !important;
+  font-size: .72rem !important;
+  font-weight: 900 !important;
+}
+
+.recuperar-turno-pos__estado i {
+  width: .5rem !important;
+  height: .5rem !important;
+  border-radius: 999px !important;
+  background: #66eb72 !important;
+  box-shadow: 0 0 .65rem rgba(99, 237, 112, .7) !important;
+}
+
+.recuperar-turno-pos__acciones {
+  display: grid !important;
+  grid-template-columns: 1.35fr .85fr !important;
+  gap: .7rem !important;
+  width: 100% !important;
+  max-width: 38rem !important;
+}
+
+.recuperar-turno-pos__acciones button {
+  min-height: 3.45rem !important;
+  border-radius: .9rem !important;
+  font-weight: 950 !important;
+}
+
+.recuperar-turno-pos__continuar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: .6rem !important;
+  border: 0 !important;
+  background: #59dc66 !important;
+  color: #032014 !important;
+}
+
+.recuperar-turno-pos__cambiar {
+  border: 1px solid rgba(238, 111, 38, .62) !important;
+  background: rgba(104, 47, 15, .17) !important;
+  color: #f19251 !important;
+}
+
+.recuperar-turno-pos__nota {
+  max-width: 38rem !important;
+  margin: .8rem 0 0 !important;
+  color: #72897d !important;
+  font-size: .68rem !important;
+  line-height: 1.4 !important;
+}
+
+.recuperar-turno-pos__visual {
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+  padding: 2rem !important;
+}
+
+.recuperar-turno-pos__halo {
+  position: absolute !important;
+  width: 24rem !important;
+  height: 24rem !important;
+  border-radius: 999px !important;
+  background: radial-gradient(circle, rgba(65, 231, 80, .18), transparent 68%) !important;
+}
+
+.recuperar-turno-pos__visual img {
+  position: relative !important;
+  z-index: 1 !important;
+  width: min(76%, 19rem) !important;
+  max-height: 21rem !important;
+  object-fit: contain !important;
+  filter: drop-shadow(0 0 1.4rem rgba(78, 235, 89, .18)) !important;
+}
+
+.recuperar-turno-pos__visual > div:last-child {
+  position: relative !important;
+  z-index: 2 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  margin-top: .4rem !important;
+}
+
+.recuperar-turno-pos__visual strong {
+  color: #69e975 !important;
+  font-size: 1rem !important;
+}
+
+.recuperar-turno-pos__visual span {
+  margin-top: .15rem !important;
+  color: #82998d !important;
+  font-size: .72rem !important;
+}
+
+@media (max-width: 850px) {
+  .recuperar-turno-pos__tarjeta {
+    grid-template-columns: 1fr !important;
+  }
+
+  .recuperar-turno-pos__visual {
+    display: none !important;
+  }
+
+  .recuperar-turno-pos__acciones,
+  .recuperar-turno-pos__datos {
+    grid-template-columns: 1fr !important;
+  }
+}

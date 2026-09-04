@@ -1,9 +1,8 @@
 import { useState } from 'react'
+import regalonCorazon from './recursos/mascota/regalon-corazon.png'
 import { mensajeSupabase } from './lib/mensajesSupabase'
 import type { CredencialTerminalLocal } from './lib/terminalPwa'
-import {
-  cerrarTurnoTerminal,
-} from './lib/turnos'
+import { cerrarTurnoTerminal } from './lib/turnos'
 import type { TurnoTerminal } from './lib/turnos'
 
 type Props = {
@@ -26,11 +25,8 @@ export default function RecuperarTurno({
   alContinuar,
   alCerrarTurno,
 }: Props) {
-  const [procesando, setProcesando] =
-    useState(false)
-
-  const [error, setError] =
-    useState<string | null>(null)
+  const [procesando, setProcesando] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const cambiarCajero = async () => {
     setProcesando(true)
@@ -44,45 +40,67 @@ export default function RecuperarTurno({
 
       alCerrarTurno()
     } catch (errorCapturado) {
-      setError(
-        mensajeSupabase(errorCapturado),
-      )
+      setError(mensajeSupabase(errorCapturado))
     } finally {
       setProcesando(false)
     }
   }
 
   return (
-    <section
-      className="inicio-turno inicio-turno--recuperar"
-      aria-labelledby="recuperar-turno-title"
-    >
-      <div className="inicio-turno__contenido">
-        <div className="inicio-turno__panel">
-          <span className="inicio-turno__etiqueta">
+    <main className="recuperar-turno-pos">
+      <section
+        className="recuperar-turno-pos__tarjeta"
+        aria-labelledby="recuperar-turno-title"
+      >
+        <div className="recuperar-turno-pos__contenido">
+          <span className="terminal-eyebrow">
             Turno activo encontrado
           </span>
 
+          <div
+            className="recuperar-turno-pos__icono"
+            aria-hidden="true"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M20 7v5h-5" />
+              <path d="M4 17v-5h5" />
+              <path d="M6.1 8a7 7 0 0 1 11.4-2L20 8" />
+              <path d="m4 16 2.5 2a7 7 0 0 0 11.4-2" />
+            </svg>
+          </div>
+
           <h1 id="recuperar-turno-title">
-            ¿Deseas continuar este turno?
+            Tu turno sigue abierto
           </h1>
 
-          <p className="inicio-turno__descripcion">
-            La Terminal encontró un turno que no fue
-            finalizado antes de cerrarse o reiniciarse.
+          <p className="recuperar-turno-pos__descripcion">
+            Encontramos un turno que quedó activo al cerrar o
+            reiniciar la Terminal. Puedes retomarlo exactamente
+            donde lo dejaste.
           </p>
 
-          <div className="terminal-card recuperar-turno__tarjeta">
-            <strong>
-              {turno.nombre_cajero}
-            </strong>
+          <div className="recuperar-turno-pos__datos">
+            <div>
+              <small>Cajero/a</small>
+              <strong>{turno.nombre_cajero}</strong>
+            </div>
 
-            <p>
-              Inicio:{' '}
-              {formatearInicio(
-                turno.iniciado_en,
-              )}
-            </p>
+            <div>
+              <small>Inicio del turno</small>
+              <strong>{formatearInicio(turno.iniciado_en)}</strong>
+            </div>
+
+            <span className="recuperar-turno-pos__estado">
+              <i />
+              Turno protegido
+            </span>
           </div>
 
           {error && (
@@ -91,35 +109,50 @@ export default function RecuperarTurno({
             </p>
           )}
 
-          <div className="terminal-form recuperar-turno__acciones">
+          <div className="recuperar-turno-pos__acciones">
             <button
               type="button"
+              className="recuperar-turno-pos__continuar"
               disabled={procesando}
               onClick={alContinuar}
             >
-              Sí, continuar turno
+              <span>Continuar turno</span>
+              <span aria-hidden="true">→</span>
             </button>
 
             <button
               type="button"
+              className="recuperar-turno-pos__cambiar"
               disabled={procesando}
-              onClick={() =>
-                void cambiarCajero()
-              }
+              onClick={() => void cambiarCajero()}
             >
               {procesando
                 ? 'Finalizando turno…'
-                : 'No, cambiar cajero'}
+                : 'Cambiar cajero'}
             </button>
           </div>
 
-          <p className="inicio-turno__nota">
-            Cambiar cajero finalizará primero el turno
-            anterior para mantener correctamente la
-            trazabilidad de ventas y canjes.
+          <p className="recuperar-turno-pos__nota">
+            Cambiar cajero finalizará este turno antes de iniciar
+            uno nuevo, manteniendo correctamente la trazabilidad.
           </p>
         </div>
-      </div>
-    </section>
+
+        <aside className="recuperar-turno-pos__visual">
+          <div className="recuperar-turno-pos__halo" />
+
+          <img
+            src={regalonCorazon}
+            alt=""
+            aria-hidden="true"
+          />
+
+          <div>
+            <strong>¡Tu turno está a salvo!</strong>
+            <span>No se perdió ninguna operación.</span>
+          </div>
+        </aside>
+      </section>
+    </main>
   )
 }

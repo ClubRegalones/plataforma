@@ -1,6 +1,7 @@
 import tiendaIcono from './recursos/iconos/tienda.png'
 import lectorNfcIcono from './recursos/iconos/lector-nfc.png'
 import regalonCorazon from './recursos/mascota/regalon-corazon.png'
+import regalonPrimerUso from './recursos/mascota/regalon-primer-uso.png'
 import type { Tables } from '@club-regalones/domain'
 import type { FormEvent } from 'react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -2212,90 +2213,286 @@ function PanelTerminal({
             </section>
           )}
 
-          {contextoLlavero && contextoLlavero.estado !== 'activo' && (
-            <div className="terminal-llavero__resultado">
-              <div className="terminal-llavero__identidad">
-                <span
-                  className={`terminal-llavero__estado terminal-llavero__estado--${contextoLlavero.estado}`}
-                >
-                  Pendiente de activación
+          {resultadoCompra && (
+            <section
+              className="terminal-compra-exitosa"
+              aria-labelledby="compra-exitosa-title"
+            >
+              <div className="terminal-compra-exitosa__contenido">
+                <span className="terminal-eyebrow">
+                  Compra aprobada
                 </span>
-                <h3>{contextoLlavero.nombre_vecino}</h3>
-                <p>Código público: {contextoLlavero.codigo_publico}</p>
+
+                <div
+                  className="terminal-compra-exitosa__check"
+                  aria-hidden="true"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="m5 12 4 4L19 6" />
+                  </svg>
+                </div>
+
+                <h2 id="compra-exitosa-title">
+                  ¡Compra aprobada!
+                </h2>
+
+                <p className="terminal-compra-exitosa__descripcion">
+                  La compra de <strong>{resultadoCompra.nombreVecino}</strong>{' '}
+                  fue registrada correctamente.
+                </p>
+
+                <div className="terminal-compra-exitosa__metricas">
+                  <article>
+                    <span>Monto final</span>
+                    <strong>
+                      {formatearMonto(resultadoCompra.montoFinal)}
+                    </strong>
+                  </article>
+
+                  <article>
+                    <span>REGIS generados</span>
+                    <strong>
+                      +{resultadoCompra.regisGenerados} REGIS
+                    </strong>
+                  </article>
+                </div>
+
+                <button
+                  type="button"
+                  className="terminal-compra-exitosa__nueva"
+                  onClick={() => {
+                    setResultadoCompra(null)
+                    setMensaje(null)
+                    setCompraDetectadaOcultaId(null)
+                    void cargarSolicitudes()
+                    void cargarResumenTurno()
+                  }}
+                >
+                  Volver a compras →
+                </button>
+
+                <small className="terminal-compra-exitosa__seguridad">
+                  Compra registrada y REGIS acreditados en Club Regalones.
+                </small>
               </div>
 
-              {!contextoLlavero.entregado ? (
-                <p className="terminal-llavero__aviso">
-                  Este llavero todavía no figura como entregado. No puede
-                  activarse.
-                </p>
-              ) : contextoLlavero.puede_activar ? (
-                <form
-                  className="terminal-llavero__activacion"
-                  onSubmit={activarLlavero}
+              <aside className="terminal-compra-exitosa__visual">
+                <div className="terminal-compra-exitosa__halo" />
+
+                <img
+                  src={regalonCorazon}
+                  alt=""
+                  aria-hidden="true"
+                />
+
+                <div>
+                  <strong>¡Todo listo!</strong>
+                  <span>Cada compra impulsa lo local.</span>
+                </div>
+              </aside>
+            </section>
+          )}
+
+          {contextoLlavero && contextoLlavero.estado !== 'activo' && (
+            <div className="terminal-activacion-primer-uso__fondo">
+              <section
+                className="terminal-activacion-primer-uso"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="activacion-primer-uso-title"
+              >
+                <button
+                  type="button"
+                  className="terminal-activacion-primer-uso__cerrar"
+                  onClick={abandonarVecinoActual}
+                  aria-label="Cerrar activación"
                 >
-                  <fieldset>
-                    <legend>Método de verificación</legend>
-                    <label>
-                      <input
-                        type="radio"
-                        name="metodo-activacion"
-                        value="cedula"
-                        checked={metodoActivacion === 'cedula'}
-                        onChange={() => setMetodoActivacion('cedula')}
-                      />
-                      Revisar cédula
-                    </label>
-                    <label className={!contextoLlavero.tiene_pin ? 'deshabilitado' : ''}>
-                      <input
-                        type="radio"
-                        name="metodo-activacion"
-                        value="pin"
-                        disabled={!contextoLlavero.tiene_pin}
-                        checked={metodoActivacion === 'pin'}
-                        onChange={() => setMetodoActivacion('pin')}
-                      />
-                      Ingresar PIN
-                    </label>
-                  </fieldset>
+                  ×
+                </button>
 
-                  {metodoActivacion === 'cedula' ? (
-                    <label className="terminal-llavero__confirmacion">
-                      <input
-                        type="checkbox"
-                        checked={cedulaVerificada}
-                        onChange={(evento) =>
-                          setCedulaVerificada(evento.target.checked)
+                <div className="terminal-activacion-primer-uso__contenido">
+                  <span className="terminal-eyebrow">
+                    Primer uso
+                  </span>
+
+                  <h2 id="activacion-primer-uso-title">
+                    Activemos el llavero
+                  </h2>
+
+                  <p className="terminal-activacion-primer-uso__descripcion">
+                    Verifica la identidad del vecino antes de habilitar su llavero Regalones.
+                  </p>
+
+                  <div className="terminal-activacion-primer-uso__vecino">
+                    <img
+                      src={regalonCorazon}
+                      alt=""
+                      aria-hidden="true"
+                    />
+
+                    <div>
+                      <small>Vecino identificado</small>
+                      <strong>{contextoLlavero.nombre_vecino}</strong>
+                      <span>{contextoLlavero.codigo_publico}</span>
+                    </div>
+
+                    {contextoLlavero.entregado && (
+                      <span className="terminal-activacion-primer-uso__entregado">
+                        ✓ Llavero entregado
+                      </span>
+                    )}
+                  </div>
+
+                  {!contextoLlavero.entregado ? (
+                    <div className="terminal-activacion-primer-uso__aviso">
+                      <strong>Llavero aún no entregado</strong>
+                      <span>
+                        Primero debe registrarse su entrega antes de poder activarlo.
+                      </span>
+                    </div>
+                  ) : contextoLlavero.puede_activar ? (
+                    <form
+                      className="terminal-activacion-primer-uso__formulario"
+                      onSubmit={activarLlavero}
+                    >
+                      <fieldset>
+                        <legend>Verifica la identidad</legend>
+
+                        <div className="terminal-activacion-primer-uso__opciones">
+                          <label
+                            className={metodoActivacion === 'cedula' ? 'terminal-activacion-primer-uso__opcion terminal-activacion-primer-uso__opcion--activa' : 'terminal-activacion-primer-uso__opcion'}
+                          >
+                            <input
+                              type="radio"
+                              name="metodo-activacion"
+                              value="cedula"
+                              checked={metodoActivacion === 'cedula'}
+                              onChange={() => setMetodoActivacion('cedula')}
+                            />
+
+                            <span>
+                              <strong>Revisar cédula</strong>
+                              <small>Recomendado para atención presencial</small>
+                            </span>
+                          </label>
+
+                          <label
+                            className={`${
+                              'terminal-activacion-primer-uso__opcion'
+                            }${
+                              !contextoLlavero.tiene_pin
+                                ? ' terminal-activacion-primer-uso__opcion--deshabilitada'
+                                : metodoActivacion === 'pin'
+                                  ? ' terminal-activacion-primer-uso__opcion--activa'
+                                  : ''
+                            }`}
+                          >
+                            <input
+                              type="radio"
+                              name="metodo-activacion"
+                              value="pin"
+                              disabled={!contextoLlavero.tiene_pin}
+                              checked={metodoActivacion === 'pin'}
+                              onChange={() => setMetodoActivacion('pin')}
+                            />
+
+                            <span>
+                              <strong>Ingresar PIN</strong>
+                              <small>
+                                {contextoLlavero.tiene_pin
+                                  ? 'Usar PIN configurado por el vecino'
+                                  : 'PIN no configurado'}
+                              </small>
+                            </span>
+                          </label>
+                        </div>
+                      </fieldset>
+
+                      {metodoActivacion === 'cedula' ? (
+                        <label className="terminal-activacion-primer-uso__confirmacion">
+                          <input
+                            type="checkbox"
+                            checked={cedulaVerificada}
+                            onChange={(evento) =>
+                              setCedulaVerificada(evento.target.checked)
+                            }
+                          />
+
+                          <span>
+                            <strong>Identidad verificada</strong>
+                            <small>
+                              Revisé presencialmente la cédula y el nombre corresponde al titular.
+                            </small>
+                          </span>
+                        </label>
+                      ) : (
+                        <label className="terminal-activacion-primer-uso__pin">
+                          <span>PIN del vecino</span>
+
+                          <input
+                            required
+                            type="password"
+                            inputMode="numeric"
+                            pattern="[0-9]{4,6}"
+                            minLength={4}
+                            maxLength={6}
+                            autoComplete="off"
+                            value={pinActivacion}
+                            onChange={(evento) =>
+                              setPinActivacion(evento.target.value)
+                            }
+                            placeholder="4 a 6 dígitos"
+                          />
+                        </label>
+                      )}
+
+                      <button
+                        type="submit"
+                        className="terminal-activacion-primer-uso__principal"
+                        disabled={
+                          procesandoLlavero ||
+                          (metodoActivacion === 'cedula' && !cedulaVerificada)
                         }
-                      />
-                      Revisé presencialmente la cédula y el nombre corresponde
-                      al titular.
-                    </label>
-                  ) : (
-                    <label>
-                      PIN del vecino
-                      <input
-                        required
-                        type="password"
-                        inputMode="numeric"
-                        pattern="[0-9]{4,6}"
-                        minLength={4}
-                        maxLength={6}
-                        autoComplete="off"
-                        value={pinActivacion}
-                        onChange={(evento) => setPinActivacion(evento.target.value)}
-                        placeholder="4 a 6 dígitos"
-                      />
-                    </label>
-                  )}
+                      >
+                        {procesandoLlavero
+                          ? 'Activando…'
+                          : 'Activar llavero →'}
+                      </button>
 
-                  <button type="submit" disabled={procesandoLlavero}>
-                    {procesandoLlavero
-                      ? 'Activando…'
-                      : 'Activar y continuar compra'}
-                  </button>
-                </form>
-              ) : null}
+                      <small className="terminal-activacion-primer-uso__seguridad">
+                        Esta verificación se realiza solo la primera vez. Después de activarlo, acerca nuevamente el llavero para comenzar la compra.
+                      </small>
+                    </form>
+                  ) : (
+                    <div className="terminal-activacion-primer-uso__aviso">
+                      <strong>No es posible activar este llavero</strong>
+                      <span>Revisa su estado antes de continuar.</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="terminal-activacion-primer-uso__visual">
+                  <div className="terminal-activacion-primer-uso__halo" />
+
+                  <img
+                    src={regalonPrimerUso}
+                    alt=""
+                    aria-hidden="true"
+                  />
+
+                  <span>
+                    <strong>Primer uso seguro</strong>
+                    <small>Actívalo una sola vez</small>
+                  </span>
+                </div>
+              </section>
             </div>
           )}
         </section>
