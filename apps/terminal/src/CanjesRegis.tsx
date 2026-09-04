@@ -215,6 +215,8 @@ function CanjesRegis({
   const [ultimoCanje, setUltimoCanje] = useState<CanjeEnRevision | null>(null)
   const [saldoFinalCanje, setSaldoFinalCanje] =
     useState<SaldoRegisLlavero | null>(null)
+  const [saldoAntesCanjeLlavero, setSaldoAntesCanjeLlavero] =
+    useState<SaldoRegisLlavero | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [mensaje, setMensaje] = useState<string | null>(null)
   const [historial, setHistorial] = useState<HistorialCanjeNegocio[]>([])
@@ -443,6 +445,7 @@ function CanjesRegis({
         setError('Supabase no devolvió la reserva del beneficio.')
         return
       }
+      setSaldoAntesCanjeLlavero(saldoLlavero)
 
       setCanje(revisionDesdeLlavero(reserva, beneficio, cajaId, tokenLlavero.trim()))
       setMontoBruto('')
@@ -494,6 +497,40 @@ function CanjesRegis({
       if (!confirmado) {
         setError('Supabase no devolvió el resultado del canje.')
         return
+      }
+
+      setUltimoCanje(canje)
+
+      if (canje.origen === 'llavero') {
+        let saldoActualizado: SaldoRegisLlavero | null = null
+
+        if (canje.tokenLlavero) {
+          try {
+            saldoActualizado = await consultarSaldoRegisLlavero(
+              canje.tokenLlavero,
+              turnoId,
+              credencialTerminal,
+            )
+          } catch {
+            saldoActualizado = null
+          }
+        }
+
+        if (saldoActualizado) {
+          setSaldoFinalCanje(saldoActualizado)
+        } else if (saldoAntesCanjeLlavero) {
+          setSaldoFinalCanje({
+            ...saldoAntesCanjeLlavero,
+            disponibles: Math.max(
+              0,
+              saldoAntesCanjeLlavero.disponibles - confirmado.regis_utilizados,
+            ),
+          })
+        } else {
+          setSaldoFinalCanje(null)
+        }
+      } else {
+        setSaldoFinalCanje(null)
       }
 
       setResultado(confirmado)
@@ -628,29 +665,154 @@ function CanjesRegis({
       )}
 
       {resultado && (
-        <article className="canjes__resultado">
-          <div>
-            <span>Canje confirmado</span>
-            <strong>{formatearPesos(resultado.monto_final_pagado_clp)}</strong>
-            <small>Total pagado después del descuento</small>
+        <article className="canje-resultado-v2">
+          <div className="canje-resultado-v2__cabecera">
+            <div className="canje-resultado-v2__titulo">
+              <h3>¡Canje confirmado!</h3>
+
+              <span
+                className="canje-resultado-v2__check"
+                aria-hidden="true"
+              >
+                ✓
+              </span>
+            </div>
+
+            <p>El canje se realizó correctamente.</p>
           </div>
-          <dl>
-            <div>
-              <dt>Compra original</dt>
-              <dd>{formatearPesos(resultado.monto_compra_bruto_clp)}</dd>
+
+          {ultimoCanje && (
+            <div className="canje-resultado-v2__beneficio">
+              <div className="canje-resultado-v2__beneficio-principal">
+                <span
+                  className="canje-resultado-v2__icono"
+                  aria-hidden="true"
+                >
+                  %
+                </span>
+
+                <strong>{ultimoCanje.nombreBeneficio}</strong>
+              </div>
+
+              <div className="canje-resultado-v2__dato">
+                <span
+                  className="canje-resultado-v2__icono"
+                  aria-hidden="true"
+                >
+                  R
+                </span>
+
+                <div>
+                  <small>Costo</small>
+                  <strong>{resultado.regis_utilizados} REGIS</strong>
+                </div>
+              </div>
+
+              <div className="canje-resultado-v2__dato">
+                <span
+                  className="canje-resultado-v2__icono"
+                  aria-hidden="true"
+                >
+                  $
+                </span>
+
+                <div>
+                  <small>Compra mínima</small>
+                  <strong>
+                    {formatearPesos(ultimoCanje.compraMinimaClp)}
+                  </strong>
+                </div>
+              </div>
             </div>
+          )}
+
+          <div className="canje-resultado-v2__resumen">
             <div>
-              <dt>Descuento</dt>
-              <dd>-{formatearPesos(resultado.descuento_total_clp)}</dd>
+              <span
+                className="canje-resultado-v2__icono"
+                aria-hidden="true"
+              >
+                %
+              </span>
+
+              <div>
+                <small>Descuento aplicado</small>
+                <strong>
+                  -{formatearPesos(resultado.descuento_total_clp)}
+                </strong>
+              </div>
             </div>
+
             <div>
-              <dt>REGIS utilizados</dt>
-              <dd>{resultado.regis_utilizados}</dd>
+              <span
+                className="canje-resultado-v2__icono"
+                aria-hidden="true"
+              >
+                $
+              </span>
+
+              <div>
+                <small>Total a pagar</small>
+                <strong>
+                  {formatearPesos(resultado.monto_final_pagado_clp)}
+                </strong>
+              </div>
             </div>
-          </dl>
-          <button type="button" onClick={limpiarResultado}>
-            Preparar otro canje
-          </button>
+
+            <div className="canje-resultado-v2__restantes">
+              <span
+                className="canje-resultado-v2__icono"
+                aria-hidden="true"
+              >
+                R
+              </span>
+
+              <div>
+                <small>REGIS restantes</small>
+                <strong>
+                  {saldoFinalCanje
+                    ? `${saldoFinalCanje.disponibles} REGIS`
+                    : 'Saldo actualizado'}
+                </strong>
+              </div>
+            </div>
+          </div>
+
+          <div className="canje-resultado-v2__monto">
+            <small>Monto bruto de la compra</small>
+            <strong>
+              {formatearPesos(resultado.monto_compra_bruto_clp)}
+            </strong>
+          </div>
+
+          <div className="canje-resultado-v2__acciones">
+            <button
+              type="button"
+              className="canje-resultado-v2__principal"
+              onClick={() => {
+                limpiarResultado()
+                alVolverACompras()
+              }}
+            >
+              <span>Finalizar y volver a ventas</span>
+              <strong aria-hidden="true">›</strong>
+            </button>
+
+            <button
+              type="button"
+              className="canje-resultado-v2__secundario"
+              onClick={limpiarResultado}
+            >
+              Nuevo canje
+            </button>
+          </div>
+
+          <img
+            className="canje-resultado-v2__mascota"
+            src={regalonCorazon}
+            alt=""
+            aria-hidden="true"
+          />
         </article>
       )}
 
