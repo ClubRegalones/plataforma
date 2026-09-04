@@ -4,6 +4,9 @@ import type { CredencialTerminalLocal } from './terminalPwa'
 
 export type BeneficioCanjeTerminal =
   Database['public']['Functions']['terminal_listar_beneficios_canje']['Returns'][number]
+
+export type BeneficioCanjeLlaveroTerminal =
+  Database['public']['Functions']['terminal_listar_beneficios_canje_desde_lectura']['Returns'][number]
 export type CanjeQrConsultado =
   Database['public']['Functions']['terminal_consultar_canje_qr']['Returns'][number]
 export type ReservaCanjeLlavero =
@@ -34,6 +37,24 @@ export async function listarBeneficiosCanjeTerminal({
   return data
 }
 
+
+export async function listarBeneficiosCanjeDesdeLectura(
+  lecturaId: string,
+  { turnoId, credencial }: ContextoTurnoTerminal,
+) {
+  const { data, error } = await supabase.rpc(
+    'terminal_listar_beneficios_canje_desde_lectura',
+    {
+      p_lectura_id: lecturaId,
+      p_turno_id: turnoId,
+      p_terminal_id: credencial.terminalId,
+      p_token_terminal: credencial.tokenTerminal,
+    },
+  )
+
+  if (error) throw error
+  return data
+}
 export async function consultarCanjeRegisQr(
   tokenQr: string,
   { turnoId, credencial }: ContextoTurnoTerminal,

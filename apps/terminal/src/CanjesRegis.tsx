@@ -12,6 +12,7 @@ import {
   cancelarCanjeRegis,
   consultarCanjeRegisQr,
   listarBeneficiosCanjeTerminal,
+  listarBeneficiosCanjeDesdeLectura,
   listarHistorialCanjesNegocio,
   marcarCanjeNegocioLeido,
   reservarCanjeRegisDesdeLectura,
@@ -20,6 +21,7 @@ import {
 } from './lib/canjes'
 import type {
   BeneficioCanjeTerminal,
+  BeneficioCanjeLlaveroTerminal,
   CanjeQrConsultado,
   HistorialCanjeNegocio,
   ReservaCanjeLlavero,
@@ -205,6 +207,10 @@ function CanjesRegis({
 }: CanjesRegisProps) {
   const [tokenQr, setTokenQr] = useState('')
   const [beneficios, setBeneficios] = useState<BeneficioCanjeTerminal[]>([])
+  const [beneficiosLlavero, setBeneficiosLlavero] =
+    useState<BeneficioCanjeLlaveroTerminal[]>([])
+  const [cargandoBeneficiosLlavero, setCargandoBeneficiosLlavero] =
+    useState(false)
   const [cargandoBeneficios, setCargandoBeneficios] = useState(false)
   const [canje, setCanje] = useState<CanjeEnRevision | null>(null)
   const [montoBruto, setMontoBruto] = useState('')
@@ -253,6 +259,27 @@ function CanjesRegis({
   )
 
   const canjesNoLeidos = historial.filter(({ leido }) => !leido).length
+
+  const ultimosCanjes = useMemo(
+    () => historial.slice(0, 2),
+    [historial],
+  )
+
+  const beneficiosDisponiblesLlavero = useMemo(
+    () =>
+      beneficiosLlavero.filter(
+        ({ estado_disponibilidad }) => estado_disponibilidad === 'disponible',
+      ),
+    [beneficiosLlavero],
+  )
+
+  const beneficiosNoDisponiblesLlavero = useMemo(
+    () =>
+      beneficiosLlavero.filter(
+        ({ estado_disponibilidad }) => estado_disponibilidad !== 'disponible',
+      ),
+    [beneficiosLlavero],
+  )
 
   const vistaPreviaDescuento = useMemo(() => {
     const monto = Number(montoBruto)
@@ -329,6 +356,46 @@ function CanjesRegis({
   }, [cajaActual, credencialTerminal, turnoId])
 
   useEffect(() => {
+    if (!lecturaLlaveroId || !credencialTerminal || !llaveroActivo) {
+      setBeneficiosLlavero([])
+      setCargandoBeneficiosLlavero(false)
+      return
+    }
+
+    let vigente = true
+
+    setCargandoBeneficiosLlavero(true)
+
+    void listarBeneficiosCanjeDesdeLectura(
+      lecturaLlaveroId,
+      {
+        turnoId,
+        credencial: credencialTerminal,
+      },
+    )
+      .then((beneficiosVecino) => {
+        if (!vigente) return
+        setBeneficiosLlavero(beneficiosVecino)
+      })
+      .catch((errorCapturado) => {
+        if (!vigente) return
+        setBeneficiosLlavero([])
+        setError(mensajeSupabase(errorCapturado))
+      })
+      .finally(() => {
+        if (vigente) setCargandoBeneficiosLlavero(false)
+      })
+
+    return () => {
+      vigente = false
+    }
+  }, [
+    lecturaLlaveroId,
+    credencialTerminal,
+    llaveroActivo,
+    turnoId,
+  ])
+  useEffect(() => {
     if (!canje) return
 
     const actualizar = () => {
@@ -350,6 +417,18 @@ function CanjesRegis({
     return () => window.clearInterval(intervalo)
   }, [canje])
 
+
+  // AUTO OCULTAR AVISOS CANJES
+  useEffect(() => {
+    if (!error && !mensaje) return
+
+    const temporizador = window.setTimeout(() => {
+      setError(null)
+      setMensaje(null)
+    }, 10_000)
+
+    return () => window.clearTimeout(temporizador)
+  }, [error, mensaje])
   const limpiarResultado = () => {
     setResultado(null)
     setMensaje(null)
@@ -847,7 +926,7 @@ function CanjesRegis({
             </form>
           </article>
 
-          <article className="canjes__metodo">
+          <article className="canjes__metodo canjes__metodo--llavero">
             <span className="canjes__numero">2</span>
             <div>
               <h3>Canje asistido con llavero</h3>
@@ -860,8 +939,122 @@ function CanjesRegis({
               <p className="canjes__estado-vacio">
                 Acerca un llavero activo al lector.
               </p>
+            ) : lecturaLlaveroId ? (
+              cargandoBeneficiosLlavero ? (
+                <p className="canjes__estado-vacio">
+                  Revisando beneficios del vecino…
+                </p>
+              ) : beneficiosLlavero.length === 0 ? (
+                <p className="canjes__estado-vacio">
+                  No encontramos beneficios vigentes para este comercio.
+                </p>
+              ) : (
+                <div className="canjes__beneficios">
+                  <div className="canjes__vecino-identificado">
+                    <div>
+                      <span>Vecino identificado</span>
+                      <strong>
+                        {nombreVecinoLlavero ?? 'Vecino Regalón'}
+                      </strong>
+                    </div>
+
+                    <div className="canjes__saldo-vecino">
+                      <span>REGIS disponibles</span>
+                      <strong>
+                        {beneficiosLlavero[0]?.saldo_disponible ??
+                          saldoLlavero?.disponibles ??
+                          0}{' '}
+                        REGIS
+                      </strong>
+                    </div>
+                  </div>
+
+                  {beneficiosDisponiblesLlavero.length > 0 && (
+                    <div className="canjes__beneficios-seccion">
+                      <span className="canjes__beneficios-titulo">
+                        Beneficios disponibles
+                      </span>
+
+                      {beneficiosDisponiblesLlavero.map((beneficio) => (
+                        <div
+                          key={beneficio.id}
+                          className="canjes__beneficio canjes__beneficio--disponible"
+                        >
+                          <div>
+                            <strong>{beneficio.nombre}</strong>
+
+                            <small>
+                              {beneficio.costo_regis} REGIS · Compra mínima{' '}
+                              {formatearPesos(beneficio.compra_minima_clp)}
+                            </small>
+                          </div>
+
+                          <button
+                            type="button"
+                            disabled={procesando}
+                            onClick={() =>
+                              void reservarConLlavero(beneficio)
+                            }
+                          >
+                            Elegir beneficio
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {beneficiosNoDisponiblesLlavero.length > 0 && (
+                    <div className="canjes__beneficios-seccion canjes__beneficios-seccion--bloqueada">
+                      <span className="canjes__beneficios-titulo">
+                        No disponibles
+                      </span>
+
+                      {beneficiosNoDisponiblesLlavero.map((beneficio) => {
+                        const mensajeEstado =
+                          beneficio.estado_disponibilidad ===
+                          'limite_alcanzado'
+                            ? beneficio.limite_por_vecino === 1 &&
+                              beneficio.canjes_confirmados_vecino > 0
+                              ? 'Canje ya utilizado'
+                              : 'Límite de canjes alcanzado'
+                            : beneficio.estado_disponibilidad ===
+                                'saldo_insuficiente'
+                              ? 'REGIS insuficientes'
+                              : beneficio.estado_disponibilidad ===
+                                  'agotado'
+                                ? 'Beneficio agotado'
+                                : 'No disponible'
+
+                        return (
+                          <div
+                            key={beneficio.id}
+                            className="canjes__beneficio canjes__beneficio--bloqueado"
+                          >
+                            <div>
+                              <strong>{beneficio.nombre}</strong>
+
+                              <small>
+                                {beneficio.costo_regis} REGIS · Compra mínima{' '}
+                                {formatearPesos(
+                                  beneficio.compra_minima_clp,
+                                )}
+                              </small>
+                            </div>
+
+                            <span className="canjes__beneficio-estado">
+                              ✓ {mensajeEstado}
+                            </span>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
+                </div>
+              )
             ) : cargandoBeneficios ? (
-              <p className="canjes__estado-vacio">Cargando beneficios…</p>
+              <p className="canjes__estado-vacio">
+                Cargando beneficios…
+              </p>
             ) : beneficios.length === 0 ? (
               <p className="canjes__estado-vacio">
                 Este comercio no tiene beneficios publicados y vigentes.
@@ -876,57 +1069,42 @@ function CanjesRegis({
                         {nombreVecinoLlavero ?? 'Vecino Regalón'}
                       </strong>
                     </div>
+
                     <div className="canjes__saldo-vecino">
                       <span>REGIS disponibles</span>
                       <strong>{saldoLlavero.disponibles} REGIS</strong>
                     </div>
                   </div>
                 )}
+
                 {beneficios.map((beneficio) => {
                   const saldoInsuficiente =
                     saldoLlavero !== null &&
                     saldoLlavero.disponibles < beneficio.costo_regis
 
                   return (
-                    <div key={beneficio.id} className="canjes__beneficio">
+                    <div
+                      key={beneficio.id}
+                      className="canjes__beneficio"
+                    >
                       <div>
                         <strong>{beneficio.nombre}</strong>
-                        <span>
-                          {describirBeneficio({
-                            tipo: beneficio.tipo,
-                            porcentajeDescuentoBp:
-                              beneficio.porcentaje_descuento_bp,
-                            montoDescuentoFijoClp:
-                              beneficio.monto_descuento_fijo_clp,
-                            topeDescuentoClp: beneficio.tope_descuento_clp,
-                          })}
-                        </span>
-                        <p className="canjes__regla-beneficio">
-                          <strong>Regla clara:</strong>{' '}
-                          {describirReglaBeneficio({
-                            tipo: beneficio.tipo,
-                            porcentajeDescuentoBp:
-                              beneficio.porcentaje_descuento_bp,
-                            montoDescuentoFijoClp:
-                              beneficio.monto_descuento_fijo_clp,
-                            topeDescuentoClp: beneficio.tope_descuento_clp,
-                            porcentajeMaximoCanjeBp:
-                              beneficio.porcentaje_maximo_canje_bp,
-                            compraMinimaClp: beneficio.compra_minima_clp,
-                          })}
-                        </p>
+
                         <small>
                           {beneficio.costo_regis} REGIS · Compra mínima{' '}
                           {formatearPesos(beneficio.compra_minima_clp)}
                         </small>
                       </div>
+
                       <button
                         type="button"
                         disabled={procesando || saldoInsuficiente}
-                        onClick={() => void reservarConLlavero(beneficio)}
+                        onClick={() =>
+                          void reservarConLlavero(beneficio)
+                        }
                       >
                         {saldoInsuficiente
-                          ? 'Saldo insuficiente'
+                          ? 'REGIS insuficientes'
                           : 'Elegir beneficio'}
                       </button>
                     </div>
@@ -1114,89 +1292,80 @@ function CanjesRegis({
         </article>
       )}
 
-      <section className="canjes__historial" aria-labelledby="canjes-historial-title">
-        <div className="canjes__historial-encabezado">
-          <div>
-            <span className="terminal-eyebrow">Actividad del comercio</span>
-            <h3 id="canjes-historial-title">Canjes recientes</h3>
-            <p>
-              Aquí queda el comprobante de cada beneficio utilizado, con su
-              hora, descuento y total pagado.
-            </p>
-          </div>
-          <div className="canjes__historial-controles">
-            <label>
-              Beneficio
-              <select
-                value={filtroBeneficioId}
-                onChange={(evento) => setFiltroBeneficioId(evento.target.value)}
-              >
-                <option value="todos">Todos los beneficios</option>
-                {beneficiosHistorial.map((beneficio) => (
-                  <option key={beneficio.id} value={beneficio.id}>
-                    {beneficio.nombre}
-                  </option>
-                ))}
-              </select>
-            </label>
-            {canjesNoLeidos > 0 && (
-              <button
-                type="button"
-                disabled={marcandoLeidos}
-                onClick={() => void marcarHistorialComoLeido()}
-              >
-                {marcandoLeidos
-                  ? 'Marcando…'
-                  : `${canjesNoLeidos} ${canjesNoLeidos === 1 ? 'nuevo' : 'nuevos'} · Marcar revisados`}
-              </button>
-            )}
-          </div>
-        </div>
+      {!resultado && !canje && (
+        <section
+          className="canjes-recientes-v2"
+          aria-labelledby="canjes-historial-title"
+        >
+          <div className="canjes-recientes-v2__titulo">
+            <span
+              className="canjes-recientes-v2__icono"
+              aria-hidden="true"
+            >
+              ↻
+            </span>
 
-        {historialFiltrado.length === 0 ? (
-          <p className="canjes__estado-vacio">
-            Aún no hay canjes confirmados para esta selección.
-          </p>
-        ) : (
-          <div className="canjes__historial-lista">
-            {historialFiltrado.map((registro) => (
-              <article
-                key={registro.canje_id}
-                className={`canjes__historial-item ${
-                  registro.leido ? '' : 'canjes__historial-item--nuevo'
-                }`}
-              >
-                <header>
-                  <div>
-                    {!registro.leido && <span>Nuevo</span>}
-                    <strong>{registro.nombre_beneficio}</strong>
-                    <time>{formatearFecha(registro.confirmado_en)}</time>
-                  </div>
-                  <b>-{registro.costo_regis} REGIS</b>
-                </header>
-                <dl>
-                  <div>
-                    <dt>Compra original</dt>
-                    <dd>{formatearPesos(registro.monto_compra_bruto_clp)}</dd>
-                  </div>
-                  <div>
-                    <dt>Descuento</dt>
-                    <dd>-{formatearPesos(registro.descuento_total_clp)}</dd>
-                  </div>
-                  <div>
-                    <dt>Total pagado</dt>
-                    <dd>{formatearPesos(registro.monto_final_pagado_clp)}</dd>
-                  </div>
-                </dl>
-                <small>
-                  {registro.origen === 'qr' ? 'Canje digital' : 'Canje asistido'}
-                  {' · '}{registro.codigo_publico}
-                </small>
-              </article>
-            ))}
+            <div>
+              <h3 id="canjes-historial-title">Canjes recientes</h3>
+              <p>Últimos canjes realizados</p>
+            </div>
           </div>
-        )}
-      </section>
+
+          {ultimosCanjes.length === 0 ? (
+            <p className="canjes-recientes-v2__vacio">
+              Aún no hay canjes realizados.
+            </p>
+          ) : (
+            <div className="canjes-recientes-v2__lista">
+              {ultimosCanjes.map((registro) => (
+                <article
+                  key={registro.canje_id}
+                  className="canjes-recientes-v2__item"
+                >
+                  <div className="canjes-recientes-v2__avatar">
+                    R
+                  </div>
+
+                  <div className="canjes-recientes-v2__info">
+                    <strong>{registro.nombre_beneficio}</strong>
+
+                    <span>
+                      <b>
+                        {registro.origen === 'llavero'
+                          ? 'Llavero'
+                          : 'QR'}
+                      </b>
+
+                      {' · '}
+
+                      {new Intl.DateTimeFormat('es-CL', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      }).format(new Date(registro.confirmado_en))}
+                    </span>
+                  </div>
+
+                  <div className="canjes-recientes-v2__monto">
+                    <strong>-{registro.costo_regis} REGIS</strong>
+                    <span>
+                      {formatearPesos(registro.descuento_total_clp)} desc.
+                    </span>
+                  </div>
+
+                  <span
+                    className="canjes-recientes-v2__flecha"
+                    aria-hidden="true"
+                  >
+                    ›
+                  </span>
+                </article>
+              ))}
+            </div>
+          )}
+        </section>
+      )}
     </section>
   )
 }

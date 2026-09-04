@@ -1651,3 +1651,373 @@
   }
 }
 
+/* ==========================================================
+   DISPONIBILIDAD BENEFICIOS PANTALLA 1
+   ========================================================== */
+
+.canjes--inicio .canjes__beneficios {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.canjes--inicio .canjes__beneficios-seccion {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.canjes--inicio .canjes__beneficios-titulo {
+  color: #74e77d;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.canjes--inicio .canjes__beneficio {
+  min-height: 4.6rem;
+}
+
+.canjes--inicio .canjes__beneficio--disponible {
+  border-color: rgba(93, 230, 106, 0.3);
+}
+
+.canjes--inicio .canjes__beneficios-seccion--bloqueada {
+  margin-top: 0.15rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.canjes--inicio
+  .canjes__beneficios-seccion--bloqueada
+  .canjes__beneficios-titulo {
+  color: #7c9085;
+}
+
+.canjes--inicio .canjes__beneficio--bloqueado {
+  border-color: rgba(139, 158, 148, 0.14);
+  background: rgba(255, 255, 255, 0.018);
+  opacity: 0.68;
+}
+
+.canjes--inicio .canjes__beneficio--bloqueado > div > strong {
+  color: #b5c1ba;
+}
+
+.canjes--inicio .canjes__beneficio-estado {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: #81988b;
+  font-size: 0.78rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+/* ==========================================================
+   CANJES RECIENTES V2 COMPACTO
+   ========================================================== */
+
+.canjes-recientes-v2 {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  border: 1px solid rgba(87, 222, 100, 0.17);
+  border-radius: 1rem;
+  background: rgba(5, 39, 27, 0.58);
+}
+
+.canjes-recientes-v2__titulo {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  min-width: 17rem;
+}
+
+.canjes-recientes-v2__titulo h3 {
+  margin: 0;
+  color: #fff7e9;
+  font-size: 1.15rem;
+}
+
+.canjes-recientes-v2__titulo p {
+  margin: 0.15rem 0 0;
+  color: #8ea197;
+  font-size: 0.8rem;
+}
+
+.canjes-recientes-v2__icono {
+  display: grid;
+  place-items: center;
+  width: 2.8rem;
+  height: 2.8rem;
+  border: 1px solid rgba(91, 230, 103, 0.7);
+  border-radius: 50%;
+  color: #61e66e;
+  font-size: 1.5rem;
+  font-weight: 900;
+}
+
+.canjes-recientes-v2__lista {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.canjes-recientes-v2__item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  gap: 0.75rem;
+  align-items: center;
+  min-height: 4.4rem;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid rgba(92, 224, 104, 0.18);
+  border-radius: 0.85rem;
+  background: rgba(4, 31, 22, 0.72);
+}
+
+.canjes-recientes-v2__avatar {
+  display: grid;
+  place-items: center;
+  width: 2.65rem;
+  height: 2.65rem;
+  border: 1px solid rgba(225, 108, 38, 0.7);
+  border-radius: 50%;
+  color: #ff7b32;
+  background: rgba(225, 108, 38, 0.08);
+  font-weight: 900;
+}
+
+.canjes-recientes-v2__info {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.canjes-recientes-v2__info > strong {
+  overflow: hidden;
+  color: #fff7e9;
+  font-size: 0.9rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.canjes-recientes-v2__info > span {
+  color: #82988c;
+  font-size: 0.72rem;
+}
+
+.canjes-recientes-v2__info b {
+  color: #65e671;
+}
+
+.canjes-recientes-v2__monto {
+  display: grid;
+  gap: 0.1rem;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.canjes-recientes-v2__monto strong {
+  color: #ff6a35;
+  font-size: 0.85rem;
+}
+
+.canjes-recientes-v2__monto span {
+  color: #94a59b;
+  font-size: 0.7rem;
+}
+
+.canjes-recientes-v2__flecha {
+  color: #fff7e9;
+  font-size: 1.65rem;
+  line-height: 1;
+}
+
+.canjes-recientes-v2__vacio {
+  margin: 0;
+  color: #82988c;
+}
+
+@media (max-width: 1100px) {
+  .canjes-recientes-v2 {
+    grid-template-columns: 1fr;
+  }
+
+  .canjes-recientes-v2__lista {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================
+   SCROLL INTERNO BENEFICIOS LLAVERO
+   ========================================================== */
+
+.canjes--inicio .canjes__metodo--llavero {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.canjes--inicio .canjes__metodo--llavero .canjes__beneficios {
+  max-height: 20rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  padding-right: 0.4rem;
+}
+
+.canjes--inicio
+  .canjes__metodo--llavero
+  .canjes__beneficios::-webkit-scrollbar {
+  width: 7px;
+}
+
+.canjes--inicio
+  .canjes__metodo--llavero
+  .canjes__beneficios::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.canjes--inicio
+  .canjes__metodo--llavero
+  .canjes__beneficios::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(91, 230, 103, 0.3);
+}
+
+.canjes--inicio
+  .canjes__metodo--llavero
+  .canjes__beneficios::-webkit-scrollbar-thumb:hover {
+  background: rgba(91, 230, 103, 0.5);
+}
+
+/* ==========================================================
+   PANTALLA 1 SIN SCROLL GLOBAL - SCROLL SOLO BENEFICIOS
+   ========================================================== */
+
+.canjes--inicio {
+  gap: 0.85rem !important;
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
+  overflow: hidden !important;
+}
+
+.canjes--inicio .canjes__metodos {
+  align-items: stretch;
+  gap: 1rem;
+}
+
+.canjes--inicio .canjes__metodo {
+  min-height: 0 !important;
+  height: 22.5rem;
+  overflow: hidden;
+}
+
+.canjes--inicio .canjes__metodo--llavero {
+  display: flex;
+  flex-direction: column;
+}
+
+.canjes--inicio .canjes__metodo--llavero .canjes__beneficios {
+  flex: 1;
+  min-height: 0;
+
+  /* Ventana: se ve aprox. un beneficio a la vez */
+  max-height: 12.5rem;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  padding-right: 0.4rem;
+}
+
+.canjes--inicio .canjes__vecino-identificado {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: #06291d;
+}
+
+.canjes--inicio .canjes__beneficios-seccion {
+  gap: 0.45rem;
+}
+
+.canjes--inicio .canjes__beneficio {
+  min-height: 4.6rem !important;
+  flex-shrink: 0;
+}
+
+.canjes--inicio .canjes__beneficios-seccion--bloqueada {
+  margin-top: 0.6rem;
+  padding-top: 0.6rem;
+}
+
+/* Canjes recientes: solo franja compacta inferior */
+.canjes--inicio .canjes-recientes-v2 {
+  min-height: 5.2rem;
+  padding: 0.7rem 1rem;
+  gap: 1rem;
+}
+
+.canjes--inicio .canjes-recientes-v2__item {
+  min-height: 3.8rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+/* Scroll discreto exclusivamente dentro del panel */
+.canjes--inicio
+  .canjes__metodo--llavero
+  .canjes__beneficios::-webkit-scrollbar {
+  width: 7px;
+}
+
+.canjes--inicio
+  .canjes__metodo--llavero
+  .canjes__beneficios::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.canjes--inicio
+  .canjes__metodo--llavero
+  .canjes__beneficios::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(91, 230, 103, 0.32);
+}
+
+/* ==========================================================
+   AJUSTE FINAL SIN SCROLL GLOBAL CANJES
+   ========================================================== */
+
+.canjes--inicio {
+  margin-bottom: 0 !important;
+  gap: 0.65rem !important;
+  padding-top: 0.75rem !important;
+  padding-bottom: 0.55rem !important;
+}
+
+.canjes--inicio .canjes__metodos {
+  gap: 0.85rem;
+}
+
+.canjes--inicio .canjes__metodo {
+  height: 21.5rem !important;
+}
+
+.canjes--inicio .canjes__metodo--llavero .canjes__beneficios {
+  max-height: 11.6rem;
+}
+
+.canjes--inicio .canjes-recientes-v2 {
+  min-height: 4.6rem !important;
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+}
+
+.canjes--inicio .canjes-recientes-v2__item {
+  min-height: 3.45rem !important;
+}
+
