@@ -71,8 +71,8 @@ values
   (
     '53000000-0000-0000-0000-00000000e228',
     '52000000-0000-0000-0000-00000000e227',
-    'Caja con terminal',
-    'activa'
+    'Caja histórica con terminal',
+    'inactiva'
   );
 
 insert into public.miembros_negocio (
