@@ -253,7 +253,7 @@ export default function ConfiguracionInicialTerminal({
     setError(null)
 
     try {
-      const rpc = supabase.rpc as unknown as (
+      const rpc = supabase.rpc.bind(supabase) as unknown as (
         funcion: string,
         parametros: Record<string, unknown>,
       ) => Promise<{
