@@ -87,7 +87,7 @@ export async function moverTerminalPwa(
   cajaId: string,
   nombreDispositivo: string,
 ) {
-  const rpc = supabase.rpc as unknown as (
+  const rpc = supabase.rpc.bind(supabase) as unknown as (
     funcion: string,
     parametros: Record<string, unknown>,
   ) => Promise<{
