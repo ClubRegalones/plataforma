@@ -153,11 +153,11 @@ begin
     limit 1;
 
     if v_caja_nombre <> 'Caja Regalones' then
-      update public.cajas
+      update public.cajas as caja
       set
         nombre = 'Caja Regalones',
         actualizado_en = clock_timestamp()
-      where id = v_caja_id;
+      where caja.id = v_caja_id;
 
       v_caja_nombre := 'Caja Regalones';
     end if;
@@ -274,33 +274,33 @@ begin
   for update;
 
   if v_terminal_anterior_id is not null then
-    update public.lecturas_llavero_terminal
+    update public.lecturas_llavero_terminal as lectura
     set estado = 'rechazada'
-    where terminal_id = v_terminal_anterior_id
-      and estado = 'pendiente';
+    where lectura.terminal_id = v_terminal_anterior_id
+      and lectura.estado = 'pendiente';
 
-    update public.sesiones_lector_movil
+    update public.sesiones_lector_movil as sesion
     set
       estado = 'reemplazada',
       token_vinculacion_hash = null,
       token_lector_hash = null,
       cerrada_en = v_ahora
-    where terminal_id = v_terminal_anterior_id
-      and estado in ('pendiente_vinculacion', 'vinculada');
+    where sesion.terminal_id = v_terminal_anterior_id
+      and sesion.estado in ('pendiente_vinculacion', 'vinculada');
 
-    update public.turnos_caja
+    update public.turnos_caja as turno
     set
       estado = 'cerrado_automaticamente',
       cerrado_en = v_ahora,
       ultima_actividad_en = v_ahora
-    where terminal_id = v_terminal_anterior_id
-      and estado = 'abierto';
+    where turno.terminal_id = v_terminal_anterior_id
+      and turno.estado = 'abierto';
 
-    update public.terminales
+    update public.terminales as terminal
     set
       estado = 'revocada',
       actualizado_en = v_ahora
-    where id = v_terminal_anterior_id;
+    where terminal.id = v_terminal_anterior_id;
   end if;
 
   return query
