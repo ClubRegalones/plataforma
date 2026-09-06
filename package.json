@@ -11,6 +11,8 @@
   "scripts": {
     "dev": "pnpm --filter @club-regalones/portal dev",
     "dev:portal": "pnpm --filter @club-regalones/portal dev",
+    "dev:vecino": "pnpm --filter @club-regalones/vecino dev",
+    "dev:negocio": "pnpm --filter @club-regalones/negocio dev",
     "dev:terminal": "pnpm --filter @club-regalones/terminal dev",
     "dev:comercio": "pnpm --filter @club-regalones/comercio dev",
     "dev:admin": "pnpm --filter @club-regalones/admin dev",
@@ -18,6 +20,9 @@
     "lint": "eslint \"apps/**/*.{ts,tsx}\" \"packages/**/*.{ts,tsx}\" --no-error-on-unmatched-pattern",
     "build": "pnpm --recursive --if-present run build",
     "preview": "pnpm --filter @club-regalones/portal preview",
+    "preview:portal": "pnpm --filter @club-regalones/portal preview",
+    "preview:vecino": "pnpm --filter @club-regalones/vecino preview",
+    "preview:negocio": "pnpm --filter @club-regalones/negocio preview",
     "preview:terminal": "pnpm --filter @club-regalones/terminal preview",
     "preview:comercio": "pnpm --filter @club-regalones/comercio preview",
     "preview:admin": "pnpm --filter @club-regalones/admin preview",
