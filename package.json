@@ -16,6 +16,7 @@
     "dev:terminal": "pnpm --filter @club-regalones/terminal dev",
     "dev:comercio": "pnpm --filter @club-regalones/comercio dev",
     "dev:admin": "pnpm --filter @club-regalones/admin dev",
+    "dev:escenario-negocio": "node ./scripts/escenario-app-negocio.mjs",
     "typecheck": "pnpm --recursive --if-present run typecheck",
     "lint": "eslint \"apps/**/*.{ts,tsx}\" \"packages/**/*.{ts,tsx}\" --no-error-on-unmatched-pattern",
     "build": "pnpm --recursive --if-present run build",
