@@ -9,27 +9,106 @@
 }
 
 * { box-sizing: border-box; }
-body { margin: 0; min-width: 320px; min-height: 100vh; }
-button, input { font: inherit; }
+body { margin: 0; min-width: 320px; min-height: 100vh; background: #f4f8f5; }
+button, input, select { font: inherit; }
+button { border: 0; cursor: pointer; }
+button:disabled { cursor: wait; opacity: .65; }
 
-.app-base {
+.negocio-shell {
   min-height: 100vh;
-  display: grid;
-  place-items: center;
   padding: 24px;
   background: radial-gradient(circle at top, #fff1e6 0, #f4f8f5 46%, #fff 100%);
 }
 
-.app-base__tarjeta {
-  width: min(100%, 560px);
-  padding: 32px;
+.negocio-shell--centrado { display: grid; place-items: center; }
+
+.negocio-card {
+  width: min(100%, 520px);
+  padding: 30px;
   border-radius: 28px;
-  background: white;
-  box-shadow: 0 18px 60px rgba(15, 93, 63, 0.12);
+  background: #fff;
+  box-shadow: 0 18px 60px rgba(15, 93, 63, .12);
 }
 
-.app-base__etiqueta { color: #ef7d32; font-weight: 700; }
-h1 { margin: 8px 0 12px; font-family: 'Baloo 2', sans-serif; font-size: clamp(2.4rem, 8vw, 4rem); line-height: .95; color: #0f5d3f; }
-p { margin: 0; line-height: 1.7; color: #53685e; }
-.app-base__acciones { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 24px; }
-.app-base__acciones span { padding: 12px 14px; border-radius: 16px; background: #fff5ec; font-weight: 600; text-align: center; }
+.negocio-card--ancha { width: min(100%, 720px); }
+.negocio-card--turno { width: min(100%, 680px); }
+.negocio-eyebrow { color: #ef7d32; font-size: .82rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.negocio-card h1 { margin: 8px 0 12px; font-family: 'Baloo 2', sans-serif; font-size: clamp(2.2rem, 8vw, 3.5rem); line-height: 1; color: #0f5d3f; }
+.negocio-card p { line-height: 1.65; color: #53685e; }
+
+.negocio-form { display: grid; gap: 16px; margin-top: 24px; }
+.negocio-form label { display: grid; gap: 7px; font-weight: 700; }
+.negocio-form input, .negocio-form select {
+  min-height: 52px;
+  width: 100%;
+  padding: 0 14px;
+  border: 1px solid #cbd9d1;
+  border-radius: 14px;
+  background: #fff;
+  color: #143428;
+}
+.negocio-form button, .negocio-vacio button, .negocio-acciones-verticales button {
+  min-height: 52px;
+  padding: 0 18px;
+  border-radius: 14px;
+  color: #fff;
+  background: #0f5d3f;
+  font-weight: 800;
+}
+
+.negocio-alert { display: grid; gap: 6px; padding: 14px 16px; border-radius: 14px; line-height: 1.5; }
+.negocio-alert--error { color: #8d271e; background: #fff0ed; }
+.negocio-alert--warning { color: #74401d; background: #fff4e6; }
+.negocio-alert--warning button { margin-top: 8px; }
+.negocio-alert--flotante { width: min(100% - 48px, 680px); margin: 18px auto 0; }
+
+.negocio-cajeros { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 24px; }
+.negocio-cajeros button {
+  display: grid;
+  justify-items: start;
+  gap: 5px;
+  padding: 18px;
+  border: 1px solid #dce6df;
+  border-radius: 18px;
+  background: #f8fbf9;
+  color: #143428;
+  text-align: left;
+}
+.negocio-cajeros button > span { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; color: #fff; background: #0f5d3f; font-family: 'Baloo 2', sans-serif; font-size: 1.35rem; }
+.negocio-cajeros small { color: #6d7e75; }
+
+.negocio-vacio { margin-top: 24px; padding: 20px; border-radius: 18px; background: #f5f7f1; }
+.negocio-vacio p { margin: 6px 0 14px; }
+.negocio-volver { margin-bottom: 16px; padding: 0; color: #0f5d3f; background: transparent; font-weight: 800; }
+
+.negocio-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  width: min(100%, 960px);
+  margin: 0 auto;
+  padding: 16px 18px;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 10px 35px rgba(15, 93, 63, .1);
+}
+.negocio-topbar div { display: grid; gap: 2px; }
+.negocio-topbar strong { font-family: 'Baloo 2', sans-serif; font-size: 1.45rem; color: #0f5d3f; }
+.negocio-topbar small { color: #66786e; }
+.negocio-topbar button { padding: 11px 14px; border-radius: 12px; color: #8d271e; background: #fff0ed; font-weight: 800; }
+.negocio-home { display: grid; place-items: center; padding: 56px 0; }
+.negocio-datos-turno { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 24px 0 0; }
+.negocio-datos-turno div { padding: 14px; border-radius: 14px; background: #f5f7f1; }
+.negocio-datos-turno dt { color: #718078; font-size: .8rem; }
+.negocio-datos-turno dd { margin: 4px 0 0; font-weight: 800; }
+.negocio-acciones-verticales { display: grid; gap: 10px; margin-top: 22px; }
+.negocio-acciones-verticales .secundario { color: #0f5d3f; background: #e8f1e8; }
+
+@media (max-width: 620px) {
+  .negocio-shell { padding: 14px; }
+  .negocio-card { padding: 22px; border-radius: 22px; }
+  .negocio-cajeros { grid-template-columns: 1fr; }
+  .negocio-topbar { align-items: flex-start; }
+  .negocio-datos-turno { grid-template-columns: 1fr; }
+}
