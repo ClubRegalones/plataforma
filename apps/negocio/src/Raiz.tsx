@@ -150,13 +150,13 @@ export default function Raiz() {
 
       {configuracion && (
         <button
-          className="negocio-acceso-administracion"
+          className={`negocio-acceso-administracion${turno ? ' negocio-acceso-administracion--nav' : ''}`}
           type="button"
           onClick={abrirAdministracion}
           aria-label="Abrir administración del negocio"
         >
           <span aria-hidden="true">⚙</span>
-          Administración
+          {turno ? <small>Admin</small> : 'Administración'}
         </button>
       )}
     </>
