@@ -1,40 +1,23 @@
 .negocio-acceso-administracion {
   position: fixed;
   left: 50%;
-  bottom: calc(env(safe-area-inset-bottom, 0px) + 78px);
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
   z-index: 30;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  min-height: 38px;
-  padding: 0 12px;
+  gap: 8px;
+  min-height: 46px;
+  padding: 0 15px;
   border-radius: 999px;
   background: #143428;
   color: #fff;
-  box-shadow: 0 10px 24px rgba(20, 52, 40, .2);
-  font-size: .72rem;
+  box-shadow: 0 12px 30px rgba(20, 52, 40, .22);
   font-weight: 800;
   transform: translateX(calc(215px - 100%));
 }
 
 .negocio-acceso-administracion span {
-  font-size: .9rem;
-}
-
-.negocio-error-turno-raiz {
-  position: fixed;
-  left: 50%;
-  bottom: calc(env(safe-area-inset-bottom, 0px) + 126px);
-  z-index: 40;
-  width: min(calc(100% - 28px), 402px);
-  padding: 11px 13px;
-  transform: translateX(-50%);
-  border-radius: 14px;
-  color: #8d271e;
-  background: #fff0ed;
-  box-shadow: 0 12px 26px rgba(20, 52, 40, .16);
-  font-size: .74rem;
-  font-weight: 700;
+  font-size: 1.05rem;
 }
 
 .negocio-admin-layout {
@@ -221,50 +204,60 @@
   font-weight: 800;
 }
 
+/* En turno activo, Administración deja de ser flotante y ocupa el quinto espacio
+   de la navegación inferior de la app. */
+.negocio-nav-inferior {
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+}
+
+.negocio-acceso-administracion--nav {
+  left: auto;
+  right: max(8px, calc((100vw - 430px) / 2 + 8px));
+  bottom: env(safe-area-inset-bottom, 0px);
+  z-index: 31;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 2px;
+  width: calc(min(100vw, 430px) / 5 - 10px);
+  min-height: 70px;
+  padding: 7px 2px;
+  border-radius: 14px;
+  color: #718078;
+  background: transparent;
+  box-shadow: none;
+  transform: none;
+}
+
+.negocio-acceso-administracion--nav span {
+  min-height: 22px;
+  font-size: 1.08rem;
+  line-height: 1;
+}
+
+.negocio-acceso-administracion--nav small {
+  font-size: .58rem;
+  font-weight: 700;
+}
+
+.negocio-acceso-administracion--nav:active {
+  background: #edf6ef;
+  color: #0f5d3f;
+}
+
 @media (prefers-color-scheme: dark) {
-  .negocio-acceso-administracion {
-    color: #f5f2e9;
-    background: #214333;
-    box-shadow: 0 10px 24px rgba(0, 0, 0, .25);
+  .negocio-acceso-administracion--nav {
+    color: #93a59b;
   }
 
-  .negocio-form--admin,
-  .negocio-equipo-item,
-  .negocio-modal {
-    border-color: rgba(255, 255, 255, .08);
-    background: #153226;
-  }
-
-  .negocio-equipo-seccion h2,
-  .negocio-equipo-item strong,
-  .negocio-modal h2 {
-    color: #f5f2e9;
-  }
-
-  .negocio-equipo-item span,
-  .negocio-equipo-item small,
-  .negocio-texto-suave,
-  .negocio-modal p {
-    color: #afbeb6;
-  }
-
-  .negocio-equipo-seccion h2 span {
+  .negocio-acceso-administracion--nav:active {
     color: #9ed7ad;
     background: #204432;
-  }
-
-  .negocio-equipo-seccion--inactivos {
-    border-top-color: rgba(255, 255, 255, .08);
-  }
-
-  .negocio-modal .negocio-modal-nota {
-    color: #afbeb6;
-    background: #1b3a2c;
   }
 }
 
 @media (max-width: 430px) {
-  .negocio-acceso-administracion {
+  .negocio-acceso-administracion:not(.negocio-acceso-administracion--nav) {
     left: auto;
     right: 12px;
     transform: none;
