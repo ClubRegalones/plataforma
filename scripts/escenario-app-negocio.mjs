@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from 'node:fs'
+import { readFileSync } from 'node:fs'
 import { spawnSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 import { dirname, resolve } from 'node:path'
@@ -34,28 +34,7 @@ function parsearEnv(contenido) {
   )
 }
 
-function leerConfiguracionLocal() {
-  const variables = { ...process.env }
-
-  // Vite admite .env y .env.local. Leemos ambos para que este script siga
-  // exactamente la misma convención que las apps del monorepo.
-  for (const nombre of ['.env', '.env.local']) {
-    const ruta = resolve(raiz, nombre)
-    if (existsSync(ruta)) {
-      Object.assign(variables, parsearEnv(readFileSync(ruta, 'utf8')))
-    }
-  }
-
-  let url = variables.VITE_SUPABASE_URL
-  let publishableKey = variables.VITE_SUPABASE_PUBLISHABLE_KEY
-
-  if (url && publishableKey) {
-    return { url, publishableKey }
-  }
-
-  // Si el proyecto no usa archivo .env, obtenemos las credenciales del
-  // Supabase local que ya está levantado. Así el escenario no depende de un
-  // archivo local específico de cada computador.
+function leerSupabaseLocal() {
   const estado = spawnSync(
     process.execPath,
     [cliSupabase, 'status', '-o', 'env'],
@@ -64,19 +43,19 @@ function leerConfiguracionLocal() {
 
   if (estado.error || estado.status !== 0) {
     throw new Error(
-      'No pudimos leer la configuración de Supabase local. Ejecuta primero pnpm db:start.',
+      'No pudimos leer Supabase local. Ejecuta primero pnpm db:start.',
     )
   }
 
-  const variablesSupabase = parsearEnv(estado.stdout)
-  url =
-    variablesSupabase.API_URL ||
-    variablesSupabase.PROJECT_URL ||
-    variablesSupabase.SUPABASE_URL
-  publishableKey =
-    variablesSupabase.PUBLISHABLE_KEY ||
-    variablesSupabase.ANON_KEY ||
-    variablesSupabase.SUPABASE_ANON_KEY
+  const variables = parsearEnv(estado.stdout)
+  const url =
+    variables.API_URL ||
+    variables.PROJECT_URL ||
+    variables.SUPABASE_URL
+  const publishableKey =
+    variables.PUBLISHABLE_KEY ||
+    variables.ANON_KEY ||
+    variables.SUPABASE_ANON_KEY
 
   if (!url || !publishableKey) {
     throw new Error(
@@ -84,7 +63,14 @@ function leerConfiguracionLocal() {
     )
   }
 
-  return { url, publishableKey }
+  const host = new URL(url).hostname
+  if (host !== '127.0.0.1' && host !== 'localhost') {
+    throw new Error(
+      'Supabase CLI devolvió un destino no local. Se canceló por seguridad.',
+    )
+  }
+
+  return { url: url.replace(/\/$/, ''), publishableKey }
 }
 
 function buscarContenedorDb() {
@@ -144,16 +130,9 @@ async function asegurarUsuario(url, publishableKey) {
 }
 
 async function main() {
-  const { url, publishableKey } = leerConfiguracionLocal()
+  const { url, publishableKey } = leerSupabaseLocal()
 
-  const host = new URL(url).hostname
-  if (host !== '127.0.0.1' && host !== 'localhost') {
-    throw new Error(
-      'Este comando solo puede ejecutarse contra Supabase local. Se canceló por seguridad.',
-    )
-  }
-
-  await asegurarUsuario(url.replace(/\/$/, ''), publishableKey)
+  await asegurarUsuario(url, publishableKey)
 
   const sql = readFileSync(
     resolve(raiz, 'supabase', 'dev', 'escenario_app_negocio.sql'),
