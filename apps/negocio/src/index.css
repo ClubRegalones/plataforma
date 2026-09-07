@@ -131,6 +131,185 @@ button:disabled { cursor: wait; opacity: .65; }
 .negocio-acciones-verticales { display: grid; gap: 10px; margin-top: 22px; }
 .negocio-acciones-verticales .secundario { color: #0f5d3f; background: #e8f1e8; }
 
+/* --------------------------------------------------------------------------
+ * BLOQUE 2 · identidad visual de la pantalla operativa
+ * Reutiliza los recursos oficiales que ya usa Terminal Regalones.
+ * ------------------------------------------------------------------------ */
+.negocio-topbar {
+  position: relative;
+  min-height: 104px;
+  padding-left: 244px;
+  overflow: hidden;
+  border: 1px solid rgba(15, 93, 63, .08);
+}
+
+.negocio-topbar::before {
+  content: '';
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  width: 202px;
+  height: 66px;
+  transform: translateY(-50%);
+  background: url('../../terminal/src/recursos/logo/logo-horizontal-con-slogan.png') center / contain no-repeat;
+}
+
+.negocio-card--turno {
+  position: relative;
+  min-height: 360px;
+  padding: 38px 228px 34px 38px;
+  overflow: hidden;
+  border: 1px solid rgba(15, 93, 63, .08);
+  background:
+    radial-gradient(circle at 88% 25%, rgba(255, 193, 7, .18), transparent 30%),
+    linear-gradient(145deg, #ffffff 0%, #fffaf1 100%);
+}
+
+.negocio-card--turno::after {
+  content: '';
+  position: absolute;
+  right: 20px;
+  bottom: 18px;
+  width: 188px;
+  height: 238px;
+  pointer-events: none;
+  background: url('../../terminal/src/recursos/mascota/regalon-saludando.png') center bottom / contain no-repeat;
+  filter: drop-shadow(0 16px 20px rgba(15, 93, 63, .14));
+}
+
+.negocio-card--turno h1 {
+  max-width: 360px;
+  font-size: clamp(2.7rem, 8vw, 4.1rem);
+}
+
+.negocio-card--turno p {
+  max-width: 430px;
+  margin-bottom: 0;
+}
+
+.negocio-datos-turno div {
+  border: 1px solid rgba(15, 93, 63, .07);
+  background: rgba(244, 248, 245, .9);
+}
+
+.negocio-topbar button,
+.negocio-form button,
+.negocio-acciones-verticales button {
+  transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+}
+
+.negocio-topbar button:hover:not(:disabled),
+.negocio-form button:hover:not(:disabled),
+.negocio-acciones-verticales button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: #f5f2e9;
+    background: #10251c;
+  }
+
+  body {
+    background: #10251c;
+  }
+
+  .negocio-shell {
+    color: #f5f2e9;
+    background:
+      radial-gradient(circle at top, rgba(239, 125, 50, .09) 0, transparent 34%),
+      #10251c;
+  }
+
+  .negocio-card,
+  .negocio-topbar {
+    border-color: rgba(255, 255, 255, .08);
+    background: #173226;
+    box-shadow: 0 18px 55px rgba(0, 0, 0, .28);
+  }
+
+  .negocio-card--turno {
+    background:
+      radial-gradient(circle at 88% 25%, rgba(255, 193, 7, .12), transparent 30%),
+      linear-gradient(145deg, #173226 0%, #12291f 100%);
+  }
+
+  .negocio-card h1,
+  .negocio-topbar strong,
+  .negocio-volver {
+    color: #8fd2a3;
+  }
+
+  .negocio-card p,
+  .negocio-topbar small,
+  .negocio-modos span,
+  .negocio-cajeros small,
+  .negocio-datos-turno dt {
+    color: #afbeb6;
+  }
+
+  .negocio-datos-turno div,
+  .negocio-vacio,
+  .negocio-cajeros button,
+  .negocio-modos button,
+  .negocio-cajero-configuracion {
+    border-color: rgba(255, 255, 255, .08);
+    background: #1c392c;
+    color: #f5f2e9;
+  }
+
+  .negocio-modos button.activo {
+    border-color: #6fbd83;
+    background: #204432;
+    box-shadow: inset 0 0 0 1px #6fbd83;
+  }
+
+  .negocio-form input,
+  .negocio-form select {
+    border-color: rgba(255, 255, 255, .12);
+    background: #10251c;
+    color: #f5f2e9;
+  }
+
+  .negocio-form button.secundario,
+  .negocio-acciones-verticales .secundario {
+    color: #9ed7ad;
+    background: #204432;
+  }
+
+  .negocio-topbar button {
+    color: #ffb083;
+    background: rgba(239, 125, 50, .12);
+  }
+}
+
+@media (max-width: 760px) {
+  .negocio-topbar {
+    min-height: 154px;
+    padding: 78px 16px 16px;
+  }
+
+  .negocio-topbar::before {
+    top: 12px;
+    left: 16px;
+    width: 172px;
+    height: 52px;
+    transform: none;
+  }
+
+  .negocio-card--turno {
+    min-height: 430px;
+    padding: 28px 24px 180px;
+  }
+
+  .negocio-card--turno::after {
+    right: 16px;
+    bottom: 8px;
+    width: 132px;
+    height: 168px;
+  }
+}
+
 @media (max-width: 620px) {
   .negocio-shell { padding: 14px; }
   .negocio-card { padding: 22px; border-radius: 22px; }
