@@ -3,250 +3,360 @@
 :root {
   font-family: 'Poppins', sans-serif;
   color: #143428;
-  background: #f4f8f5;
+  background: #dfe8e2;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
 
 * { box-sizing: border-box; }
-body { margin: 0; min-width: 320px; min-height: 100vh; background: #f4f8f5; }
+html { min-width: 320px; min-height: 100%; }
+body { margin: 0; min-width: 320px; min-height: 100vh; background: #dfe8e2; }
+#root { min-height: 100dvh; }
 button, input, select { font: inherit; }
 button { border: 0; cursor: pointer; }
 button:disabled { cursor: wait; opacity: .65; }
 
+/* La app siempre se diseña como móvil. En escritorio se muestra centrada como un teléfono. */
 .negocio-shell {
-  min-height: 100vh;
-  padding: 24px;
-  background: radial-gradient(circle at top, #fff1e6 0, #f4f8f5 46%, #fff 100%);
+  position: relative;
+  width: min(100%, 430px);
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding:
+    calc(env(safe-area-inset-top, 0px) + 16px)
+    16px
+    calc(env(safe-area-inset-bottom, 0px) + 88px);
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 86% 8%, rgba(239, 125, 50, .12), transparent 28%),
+    linear-gradient(180deg, #f7faf7 0%, #eef5f0 52%, #f9fbf9 100%);
+  box-shadow: 0 0 48px rgba(20, 52, 40, .16);
 }
 
-.negocio-shell--centrado { display: grid; place-items: center; }
+.negocio-shell--centrado {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 .negocio-card {
-  width: min(100%, 520px);
-  padding: 30px;
-  border-radius: 28px;
+  width: 100%;
+  padding: 22px;
+  border: 1px solid rgba(15, 93, 63, .08);
+  border-radius: 24px;
   background: #fff;
-  box-shadow: 0 18px 60px rgba(15, 93, 63, .12);
+  box-shadow: 0 14px 38px rgba(15, 93, 63, .10);
 }
 
-.negocio-card--ancha { width: min(100%, 760px); }
-.negocio-card--turno { width: min(100%, 680px); }
-.negocio-eyebrow { color: #ef7d32; font-size: .82rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
-.negocio-card h1 { margin: 8px 0 12px; font-family: 'Baloo 2', sans-serif; font-size: clamp(2.2rem, 8vw, 3.5rem); line-height: 1; color: #0f5d3f; }
-.negocio-card p { line-height: 1.65; color: #53685e; }
+.negocio-card--ancha,
+.negocio-card--turno { width: 100%; }
 
-.negocio-form { display: grid; gap: 16px; margin-top: 24px; }
-.negocio-form label { display: grid; gap: 7px; font-weight: 700; }
-.negocio-form input, .negocio-form select {
-  min-height: 52px;
+.negocio-eyebrow {
+  color: #ef7d32;
+  font-size: .75rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.negocio-card h1 {
+  margin: 7px 0 10px;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: clamp(2.15rem, 10vw, 3rem);
+  line-height: .98;
+  color: #0f5d3f;
+}
+
+.negocio-card p {
+  margin: 0;
+  color: #53685e;
+  font-size: .94rem;
+  line-height: 1.58;
+}
+
+.negocio-form { display: grid; gap: 14px; margin-top: 20px; }
+.negocio-form label { display: grid; gap: 6px; font-size: .9rem; font-weight: 700; }
+.negocio-form input,
+.negocio-form select {
   width: 100%;
+  min-height: 50px;
   padding: 0 14px;
   border: 1px solid #cbd9d1;
   border-radius: 14px;
+  outline: none;
   background: #fff;
   color: #143428;
 }
-.negocio-form button, .negocio-vacio button, .negocio-acciones-verticales button {
-  min-height: 52px;
-  padding: 0 18px;
+
+.negocio-form input:focus,
+.negocio-form select:focus {
+  border-color: #0f5d3f;
+  box-shadow: 0 0 0 3px rgba(15, 93, 63, .1);
+}
+
+.negocio-form button,
+.negocio-vacio button,
+.negocio-acciones-verticales button {
+  min-height: 50px;
+  padding: 0 16px;
   border-radius: 14px;
   color: #fff;
   background: #0f5d3f;
   font-weight: 800;
 }
-.negocio-form button.secundario { color: #0f5d3f; background: #e8f1e8; }
 
-.negocio-alert { display: grid; gap: 6px; padding: 14px 16px; border-radius: 14px; line-height: 1.5; }
+.negocio-form button.secundario,
+.negocio-acciones-verticales .secundario {
+  color: #0f5d3f;
+  background: #e8f1e8;
+}
+
+.negocio-alert {
+  display: grid;
+  gap: 6px;
+  padding: 13px 14px;
+  border-radius: 14px;
+  font-size: .88rem;
+  line-height: 1.5;
+}
 .negocio-alert--error { color: #8d271e; background: #fff0ed; }
 .negocio-alert--warning { color: #74401d; background: #fff4e6; }
 .negocio-alert--warning button { margin-top: 8px; }
-.negocio-alert--flotante { width: min(100% - 48px, 680px); margin: 18px auto 0; }
+.negocio-alert--flotante { width: 100%; margin: 14px auto 0; }
 
-.negocio-modos {
+.negocio-modos,
+.negocio-cajeros,
+.negocio-grid-cajero {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  margin-top: 24px;
+  grid-template-columns: 1fr;
+  gap: 10px;
 }
-.negocio-modos button {
-  display: grid;
-  gap: 6px;
-  padding: 18px;
-  border: 2px solid #dce6df;
-  border-radius: 18px;
-  background: #f8fbf9;
-  color: #143428;
-  text-align: left;
-}
-.negocio-modos button.activo { border-color: #0f5d3f; background: #edf6ef; box-shadow: inset 0 0 0 1px #0f5d3f; }
-.negocio-modos span { color: #6d7e75; font-size: .88rem; line-height: 1.45; }
+.negocio-modos { margin-top: 20px; }
+.negocio-cajeros { margin-top: 20px; }
 
-.negocio-lista-configuracion { display: grid; gap: 14px; }
-.negocio-cajero-configuracion { padding: 18px; border: 1px solid #dce6df; border-radius: 18px; background: #f8fbf9; }
-.negocio-cajero-configuracion__titulo { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
-.negocio-cajero-configuracion__titulo button { min-height: auto; padding: 7px 10px; color: #8d271e; background: #fff0ed; font-size: .82rem; }
-.negocio-grid-cajero { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-
-.negocio-cajeros { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 24px; }
+.negocio-modos button,
 .negocio-cajeros button {
   display: grid;
-  justify-items: start;
   gap: 5px;
-  padding: 18px;
+  width: 100%;
+  padding: 16px;
   border: 1px solid #dce6df;
-  border-radius: 18px;
+  border-radius: 17px;
   background: #f8fbf9;
   color: #143428;
   text-align: left;
 }
-.negocio-cajeros button > span { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; color: #fff; background: #0f5d3f; font-family: 'Baloo 2', sans-serif; font-size: 1.35rem; }
-.negocio-cajeros small { color: #6d7e75; }
 
-.negocio-vacio { margin-top: 24px; padding: 20px; border-radius: 18px; background: #f5f7f1; }
-.negocio-vacio p { margin: 6px 0 14px; }
-.negocio-volver { margin-bottom: 16px; padding: 0; color: #0f5d3f; background: transparent; font-weight: 800; }
-
-.negocio-topbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  width: min(100%, 960px);
-  margin: 0 auto;
-  padding: 16px 18px;
-  border-radius: 20px;
-  background: #fff;
-  box-shadow: 0 10px 35px rgba(15, 93, 63, .1);
+.negocio-modos button { border-width: 2px; }
+.negocio-modos button.activo {
+  border-color: #0f5d3f;
+  background: #edf6ef;
+  box-shadow: inset 0 0 0 1px #0f5d3f;
 }
-.negocio-topbar div { display: grid; gap: 2px; }
-.negocio-topbar strong { font-family: 'Baloo 2', sans-serif; font-size: 1.45rem; color: #0f5d3f; }
-.negocio-topbar small { color: #66786e; }
-.negocio-topbar button { padding: 11px 14px; border-radius: 12px; color: #8d271e; background: #fff0ed; font-weight: 800; }
-.negocio-home { display: grid; place-items: center; padding: 56px 0; }
-.negocio-datos-turno { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 24px 0 0; }
-.negocio-datos-turno div { padding: 14px; border-radius: 14px; background: #f5f7f1; }
-.negocio-datos-turno dt { color: #718078; font-size: .8rem; }
-.negocio-datos-turno dd { margin: 4px 0 0; font-weight: 800; }
-.negocio-acciones-verticales { display: grid; gap: 10px; margin-top: 22px; }
-.negocio-acciones-verticales .secundario { color: #0f5d3f; background: #e8f1e8; }
+.negocio-modos span,
+.negocio-cajeros small { color: #6d7e75; font-size: .84rem; line-height: 1.4; }
 
-/* --------------------------------------------------------------------------
- * BLOQUE 2 · identidad visual de la pantalla operativa
- * Reutiliza los recursos oficiales que ya usa Terminal Regalones.
- * ------------------------------------------------------------------------ */
+.negocio-cajeros button > span {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  color: #fff;
+  background: #0f5d3f;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.35rem;
+}
+
+.negocio-lista-configuracion { display: grid; gap: 12px; }
+.negocio-cajero-configuracion {
+  padding: 16px;
+  border: 1px solid #dce6df;
+  border-radius: 17px;
+  background: #f8fbf9;
+}
+.negocio-cajero-configuracion__titulo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.negocio-cajero-configuracion__titulo button {
+  min-height: auto;
+  padding: 7px 10px;
+  color: #8d271e;
+  background: #fff0ed;
+  font-size: .8rem;
+}
+
+.negocio-vacio { margin-top: 20px; padding: 18px; border-radius: 17px; background: #f5f7f1; }
+.negocio-vacio p { margin: 6px 0 14px; }
+.negocio-volver { margin-bottom: 14px; padding: 0; color: #0f5d3f; background: transparent; font-weight: 800; }
+.negocio-acciones-verticales { display: grid; gap: 10px; margin-top: 20px; }
+
+/* Header de app, compacto y táctil. */
 .negocio-topbar {
   position: relative;
-  min-height: 104px;
-  padding-left: 244px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 12px;
+  width: 100%;
+  min-height: 142px;
+  margin: 0;
+  padding: 72px 16px 16px;
   overflow: hidden;
   border: 1px solid rgba(15, 93, 63, .08);
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 10px 30px rgba(15, 93, 63, .09);
 }
 
 .negocio-topbar::before {
   content: '';
   position: absolute;
-  left: 18px;
-  top: 50%;
-  width: 202px;
-  height: 66px;
-  transform: translateY(-50%);
-  background: url('../../terminal/src/recursos/logo/logo-horizontal-con-slogan.png') center / contain no-repeat;
+  top: 12px;
+  left: 16px;
+  width: 166px;
+  height: 48px;
+  background: url('../../terminal/src/recursos/logo/logo-horizontal-con-slogan.png') left center / contain no-repeat;
+}
+
+.negocio-topbar div { display: grid; min-width: 0; gap: 1px; }
+.negocio-topbar strong {
+  overflow: hidden;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.28rem;
+  line-height: 1.1;
+  color: #0f5d3f;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.negocio-topbar small {
+  overflow: hidden;
+  color: #66786e;
+  font-size: .76rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.negocio-topbar button {
+  min-height: 42px;
+  padding: 0 12px;
+  border-radius: 12px;
+  color: #8d271e;
+  background: #fff0ed;
+  font-size: .78rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.negocio-home {
+  display: block;
+  width: 100%;
+  padding: 16px 0 0;
 }
 
 .negocio-card--turno {
   position: relative;
-  min-height: 360px;
-  padding: 38px 228px 34px 38px;
+  min-height: 430px;
+  padding: 24px 20px 170px;
   overflow: hidden;
-  border: 1px solid rgba(15, 93, 63, .08);
   background:
-    radial-gradient(circle at 88% 25%, rgba(255, 193, 7, .18), transparent 30%),
-    linear-gradient(145deg, #ffffff 0%, #fffaf1 100%);
+    radial-gradient(circle at 92% 20%, rgba(255, 193, 7, .16), transparent 28%),
+    linear-gradient(145deg, #fff 0%, #fffaf1 100%);
 }
 
 .negocio-card--turno::after {
   content: '';
   position: absolute;
-  right: 20px;
-  bottom: 18px;
-  width: 188px;
-  height: 238px;
+  right: 18px;
+  bottom: 10px;
+  width: 138px;
+  height: 166px;
   pointer-events: none;
   background: url('../../terminal/src/recursos/mascota/regalon-saludando.png') center bottom / contain no-repeat;
-  filter: drop-shadow(0 16px 20px rgba(15, 93, 63, .14));
+  filter: drop-shadow(0 12px 16px rgba(15, 93, 63, .13));
 }
 
-.negocio-card--turno h1 {
-  max-width: 360px;
-  font-size: clamp(2.7rem, 8vw, 4.1rem);
-}
+.negocio-card--turno h1 { max-width: 250px; font-size: clamp(2.6rem, 14vw, 3.35rem); }
+.negocio-card--turno p { max-width: 320px; }
 
-.negocio-card--turno p {
-  max-width: 430px;
-  margin-bottom: 0;
+.negocio-datos-turno {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+  margin: 20px 0 0;
 }
-
 .negocio-datos-turno div {
+  min-width: 0;
+  padding: 11px 9px;
   border: 1px solid rgba(15, 93, 63, .07);
-  background: rgba(244, 248, 245, .9);
+  border-radius: 13px;
+  background: rgba(244, 248, 245, .94);
+}
+.negocio-datos-turno dt { color: #718078; font-size: .67rem; }
+.negocio-datos-turno dd {
+  margin: 3px 0 0;
+  overflow-wrap: anywhere;
+  font-size: .78rem;
+  font-weight: 800;
+  line-height: 1.25;
 }
 
 .negocio-topbar button,
 .negocio-form button,
-.negocio-acciones-verticales button {
-  transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+.negocio-acciones-verticales button,
+.negocio-cajeros button,
+.negocio-modos button {
+  -webkit-tap-highlight-color: transparent;
+  transition: transform .15s ease, background .15s ease;
 }
 
-.negocio-topbar button:hover:not(:disabled),
-.negocio-form button:hover:not(:disabled),
-.negocio-acciones-verticales button:hover:not(:disabled) {
-  transform: translateY(-1px);
+.negocio-topbar button:active:not(:disabled),
+.negocio-form button:active:not(:disabled),
+.negocio-acciones-verticales button:active:not(:disabled),
+.negocio-cajeros button:active:not(:disabled),
+.negocio-modos button:active:not(:disabled) {
+  transform: scale(.985);
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    color: #f5f2e9;
-    background: #10251c;
-  }
-
-  body {
-    background: #10251c;
-  }
+  :root { color: #f5f2e9; background: #071c14; }
+  body { background: #071c14; }
 
   .negocio-shell {
     color: #f5f2e9;
     background:
-      radial-gradient(circle at top, rgba(239, 125, 50, .09) 0, transparent 34%),
-      #10251c;
+      radial-gradient(circle at 86% 8%, rgba(239, 125, 50, .10), transparent 28%),
+      linear-gradient(180deg, #0d291e 0%, #0a2319 100%);
+    box-shadow: 0 0 48px rgba(0, 0, 0, .32);
   }
 
   .negocio-card,
   .negocio-topbar {
     border-color: rgba(255, 255, 255, .08);
-    background: #173226;
-    box-shadow: 0 18px 55px rgba(0, 0, 0, .28);
+    background: #153226;
+    box-shadow: 0 16px 42px rgba(0, 0, 0, .24);
   }
 
   .negocio-card--turno {
     background:
-      radial-gradient(circle at 88% 25%, rgba(255, 193, 7, .12), transparent 30%),
-      linear-gradient(145deg, #173226 0%, #12291f 100%);
+      radial-gradient(circle at 92% 20%, rgba(255, 193, 7, .10), transparent 28%),
+      linear-gradient(145deg, #163327 0%, #10291f 100%);
   }
 
   .negocio-card h1,
   .negocio-topbar strong,
-  .negocio-volver {
-    color: #8fd2a3;
-  }
+  .negocio-volver { color: #8fd2a3; }
 
   .negocio-card p,
   .negocio-topbar small,
   .negocio-modos span,
   .negocio-cajeros small,
-  .negocio-datos-turno dt {
-    color: #afbeb6;
-  }
+  .negocio-datos-turno dt { color: #afbeb6; }
 
   .negocio-datos-turno div,
   .negocio-vacio,
@@ -254,7 +364,7 @@ button:disabled { cursor: wait; opacity: .65; }
   .negocio-modos button,
   .negocio-cajero-configuracion {
     border-color: rgba(255, 255, 255, .08);
-    background: #1c392c;
+    background: #1b3a2c;
     color: #f5f2e9;
   }
 
@@ -267,7 +377,7 @@ button:disabled { cursor: wait; opacity: .65; }
   .negocio-form input,
   .negocio-form select {
     border-color: rgba(255, 255, 255, .12);
-    background: #10251c;
+    background: #0c251b;
     color: #f5f2e9;
   }
 
@@ -283,37 +393,8 @@ button:disabled { cursor: wait; opacity: .65; }
   }
 }
 
-@media (max-width: 760px) {
-  .negocio-topbar {
-    min-height: 154px;
-    padding: 78px 16px 16px;
-  }
-
-  .negocio-topbar::before {
-    top: 12px;
-    left: 16px;
-    width: 172px;
-    height: 52px;
-    transform: none;
-  }
-
-  .negocio-card--turno {
-    min-height: 430px;
-    padding: 28px 24px 180px;
-  }
-
-  .negocio-card--turno::after {
-    right: 16px;
-    bottom: 8px;
-    width: 132px;
-    height: 168px;
-  }
-}
-
-@media (max-width: 620px) {
-  .negocio-shell { padding: 14px; }
-  .negocio-card { padding: 22px; border-radius: 22px; }
-  .negocio-cajeros, .negocio-modos, .negocio-grid-cajero { grid-template-columns: 1fr; }
-  .negocio-topbar { align-items: flex-start; }
-  .negocio-datos-turno { grid-template-columns: 1fr; }
+/* En un teléfono real ocupa toda la pantalla; el marco exterior solo existe en escritorio. */
+@media (max-width: 430px) {
+  body { background: transparent; }
+  .negocio-shell { box-shadow: none; }
 }
