@@ -64,7 +64,8 @@
 }
 
 .negocio-admin-form-acciones .secundario,
-.negocio-equipo-acciones .secundario {
+.negocio-equipo-acciones .secundario,
+.negocio-modal-acciones .secundario {
   color: #0f5d3f;
   background: #e8f1e8;
 }
@@ -138,9 +139,67 @@
   gap: 8px;
 }
 
-.negocio-equipo-acciones .peligro {
+.negocio-equipo-acciones .peligro,
+.negocio-modal-acciones .peligro {
   color: #8d271e;
   background: #fff0ed;
+}
+
+.negocio-modal-fondo {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(20, 52, 40, .35);
+  backdrop-filter: blur(2px);
+}
+
+.negocio-modal {
+  width: min(100%, 470px);
+  padding: 26px;
+  border: 1px solid #e1e8e3;
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 24px 70px rgba(20, 52, 40, .24);
+}
+
+.negocio-modal h2 {
+  margin: 8px 0 12px;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: clamp(1.8rem, 5vw, 2.35rem);
+  line-height: 1.05;
+  color: #143428;
+}
+
+.negocio-modal p {
+  margin: 0;
+  color: #53685e;
+  line-height: 1.6;
+}
+
+.negocio-modal .negocio-modal-nota {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #f5f7f1;
+  color: #6b7c73;
+  font-size: .9rem;
+}
+
+.negocio-modal-acciones {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.negocio-modal-acciones button {
+  min-height: 48px;
+  padding: 0 14px;
+  border-radius: 12px;
+  font-weight: 800;
 }
 
 @media (max-width: 620px) {
@@ -162,5 +221,13 @@
 
   .negocio-equipo-acciones button {
     flex: 1 1 140px;
+  }
+
+  .negocio-modal {
+    padding: 22px;
+  }
+
+  .negocio-modal-acciones {
+    grid-template-columns: 1fr;
   }
 }
