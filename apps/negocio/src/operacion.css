@@ -1,0 +1,756 @@
+.negocio-operacion-shell {
+  padding-top: calc(env(safe-area-inset-top, 0px) + 12px);
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 92px);
+}
+
+.negocio-operacion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 58px;
+}
+
+.negocio-operacion-logo {
+  width: 158px;
+  height: 44px;
+  background: url('../../terminal/src/recursos/logo/logo-horizontal-con-slogan.png') left center / contain no-repeat;
+}
+
+.negocio-estado {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  font-size: .72rem;
+  font-weight: 800;
+}
+
+.negocio-estado i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.negocio-estado--online {
+  color: #0f6a43;
+  background: #e6f5eb;
+}
+
+.negocio-estado--offline {
+  color: #9b3a29;
+  background: #fff0ed;
+}
+
+.negocio-operacion-contexto {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 8px 0 14px;
+  padding: 11px 13px;
+  border: 1px solid rgba(15, 93, 63, .08);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .72);
+  backdrop-filter: blur(8px);
+}
+
+.negocio-operacion-contexto > div {
+  display: grid;
+  min-width: 0;
+  gap: 1px;
+}
+
+.negocio-operacion-contexto span {
+  overflow: hidden;
+  color: #143428;
+  font-size: .86rem;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.negocio-operacion-contexto small {
+  overflow: hidden;
+  color: #718078;
+  font-size: .7rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.negocio-operacion-contexto button {
+  padding: 8px 10px;
+  border-radius: 11px;
+  color: #0f5d3f;
+  background: #e9f4ec;
+  font-size: .72rem;
+  font-weight: 800;
+}
+
+.negocio-toast {
+  margin-bottom: 12px;
+  padding: 11px 13px;
+  border-radius: 14px;
+  font-size: .78rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+.negocio-toast--exito { color: #0e6642; background: #e8f6ed; }
+.negocio-toast--error { color: #8d271e; background: #fff0ed; }
+
+.negocio-bienvenida {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 102px;
+  min-height: 152px;
+  padding: 20px;
+  overflow: hidden;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 88% 20%, rgba(255, 193, 7, .26), transparent 32%),
+    linear-gradient(135deg, #0f5d3f 0%, #174b37 100%);
+  box-shadow: 0 16px 34px rgba(15, 93, 63, .19);
+}
+
+.negocio-bienvenida h1 {
+  margin: 4px 0 2px;
+  font-family: 'Baloo 2', sans-serif;
+  color: #fff;
+  font-size: clamp(2rem, 10vw, 2.65rem);
+  line-height: 1;
+}
+
+.negocio-bienvenida p {
+  margin: 0;
+  color: rgba(255, 255, 255, .78);
+  font-size: .78rem;
+}
+
+.negocio-bienvenida .negocio-eyebrow {
+  color: #ffad6d;
+}
+
+.negocio-bienvenida__regalon {
+  align-self: end;
+  width: 112px;
+  height: 126px;
+  margin: 0 -12px -18px -2px;
+  background: url('../../terminal/src/recursos/mascota/regalon-saludando.png') center bottom / contain no-repeat;
+  filter: drop-shadow(0 10px 12px rgba(0, 0, 0, .18));
+}
+
+.negocio-seccion {
+  margin-top: 20px;
+}
+
+.negocio-seccion__titulo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.negocio-seccion__titulo h2 {
+  margin: 0;
+  font-family: 'Baloo 2', sans-serif;
+  color: #143428;
+  font-size: 1.28rem;
+  line-height: 1.1;
+}
+
+.negocio-seccion__titulo p {
+  margin: 2px 0 0;
+  color: #718078;
+  font-size: .72rem;
+}
+
+.negocio-badge {
+  display: grid;
+  place-items: center;
+  min-width: 30px;
+  height: 30px;
+  padding: 0 8px;
+  border-radius: 999px;
+  color: #fff;
+  background: #ef7d32;
+  font-size: .75rem;
+  font-weight: 800;
+}
+
+.negocio-vacio-app {
+  display: grid;
+  gap: 4px;
+  padding: 18px;
+  border: 1px dashed #cbd9d1;
+  border-radius: 18px;
+  color: #718078;
+  background: rgba(255, 255, 255, .58);
+  font-size: .78rem;
+  text-align: center;
+}
+
+.negocio-vacio-app strong {
+  color: #143428;
+  font-size: .9rem;
+}
+
+.negocio-vacio-app--regalon {
+  min-height: 86px;
+  align-content: center;
+  padding-right: 90px;
+  background:
+    url('../../terminal/src/recursos/mascota/regalon-corazon.png') right 12px center / 64px auto no-repeat,
+    rgba(255, 255, 255, .68);
+  text-align: left;
+}
+
+.negocio-vacio-app--grande {
+  min-height: 180px;
+  align-content: center;
+}
+
+.negocio-solicitudes-home,
+.negocio-lista-solicitudes {
+  display: grid;
+  gap: 9px;
+}
+
+.negocio-solicitudes-home > button:not(.negocio-ver-todas) {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid rgba(15, 93, 63, .08);
+  border-radius: 17px;
+  color: #143428;
+  background: #fff;
+  box-shadow: 0 7px 22px rgba(20, 52, 40, .06);
+  text-align: left;
+}
+
+.negocio-solicitud-icono {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  color: #fff;
+  background: #ef7d32;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.negocio-solicitudes-home button > div {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+.negocio-solicitudes-home button strong {
+  font-size: .9rem;
+}
+
+.negocio-solicitudes-home button small {
+  overflow: hidden;
+  color: #718078;
+  font-size: .67rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.negocio-solicitud-flecha {
+  color: #0f5d3f;
+  font-size: 1.55rem;
+  line-height: 1;
+}
+
+.negocio-ver-todas,
+.negocio-link {
+  padding: 6px 0;
+  color: #0f5d3f;
+  background: transparent;
+  font-size: .72rem;
+  font-weight: 800;
+}
+
+.negocio-acciones-rapidas {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.negocio-acciones-rapidas button {
+  display: grid;
+  min-height: 112px;
+  align-content: start;
+  gap: 3px;
+  padding: 15px;
+  border: 1px solid rgba(15, 93, 63, .08);
+  border-radius: 18px;
+  color: #143428;
+  background: #fff;
+  box-shadow: 0 7px 20px rgba(20, 52, 40, .05);
+  text-align: left;
+}
+
+.negocio-acciones-rapidas button > span {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  margin-bottom: 7px;
+  border-radius: 11px;
+  color: #fff;
+  background: #0f5d3f;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1rem;
+}
+
+.negocio-acciones-rapidas strong {
+  font-size: .78rem;
+}
+
+.negocio-acciones-rapidas small {
+  color: #718078;
+  font-size: .65rem;
+}
+
+.negocio-acciones-rapidas button.proximamente {
+  opacity: .62;
+}
+
+.negocio-acciones-rapidas button.proximamente > span {
+  background: #82978b;
+}
+
+.negocio-resumen-hoy {
+  padding-bottom: 8px;
+}
+
+.negocio-metricas-app {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.negocio-metricas-app article {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  padding: 13px 10px;
+  border: 1px solid rgba(15, 93, 63, .08);
+  border-radius: 15px;
+  background: #fff;
+  text-align: center;
+}
+
+.negocio-metricas-app span {
+  color: #718078;
+  font-size: .63rem;
+}
+
+.negocio-metricas-app strong {
+  overflow-wrap: anywhere;
+  color: #0f5d3f;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.negocio-pantalla-app {
+  animation: negocio-entrada .18s ease;
+}
+
+@keyframes negocio-entrada {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.negocio-pantalla-app__cabecera {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin: 6px 0 16px;
+}
+
+.negocio-pantalla-app__cabecera > button {
+  display: grid;
+  place-items: center;
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  border-radius: 13px;
+  color: #0f5d3f;
+  background: #e8f1e8;
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.negocio-pantalla-app__cabecera > div {
+  min-width: 0;
+  flex: 1;
+}
+
+.negocio-pantalla-app__cabecera h1 {
+  margin: 1px 0 0;
+  font-family: 'Baloo 2', sans-serif;
+  color: #143428;
+  font-size: 1.65rem;
+  line-height: 1;
+}
+
+.negocio-lista-solicitudes > button {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+  padding: 15px;
+  border: 1px solid rgba(15, 93, 63, .08);
+  border-radius: 18px;
+  color: #143428;
+  background: #fff;
+  box-shadow: 0 8px 22px rgba(20, 52, 40, .05);
+  text-align: left;
+}
+
+.negocio-lista-solicitudes__arriba,
+.negocio-lista-solicitudes__abajo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.negocio-lista-solicitudes__arriba span,
+.negocio-lista-solicitudes__arriba small,
+.negocio-lista-solicitudes__abajo span {
+  color: #718078;
+  font-size: .68rem;
+}
+
+.negocio-lista-solicitudes > button > strong {
+  font-family: 'Baloo 2', sans-serif;
+  color: #0f5d3f;
+  font-size: 1.55rem;
+}
+
+.negocio-lista-solicitudes__abajo b {
+  color: #ef7d32;
+  font-size: .7rem;
+}
+
+.negocio-revision-monto {
+  display: grid;
+  gap: 4px;
+  padding: 18px;
+  border-radius: 20px;
+  color: #fff;
+  background: linear-gradient(135deg, #0f5d3f, #174b37);
+}
+
+.negocio-revision-monto > span,
+.negocio-revision-monto small {
+  color: rgba(255, 255, 255, .72);
+  font-size: .68rem;
+}
+
+.negocio-revision-monto strong {
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.negocio-form--revision {
+  margin-top: 14px;
+}
+
+.negocio-form--revision textarea {
+  width: 100%;
+  min-height: 92px;
+  padding: 12px 13px;
+  resize: vertical;
+  border: 1px solid #cbd9d1;
+  border-radius: 14px;
+  outline: none;
+  color: #143428;
+  background: #fff;
+  font: inherit;
+  font-size: .82rem;
+}
+
+.negocio-form--revision label > small {
+  color: #829086;
+  font-size: .65rem;
+  font-weight: 500;
+}
+
+.negocio-input-pesos {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  min-height: 50px;
+  padding-left: 14px;
+  border: 1px solid #cbd9d1;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.negocio-input-pesos > span {
+  color: #0f5d3f;
+  font-weight: 800;
+}
+
+.negocio-input-pesos input {
+  min-height: 48px;
+  border: 0;
+  box-shadow: none !important;
+  background: transparent;
+}
+
+.negocio-revision-acciones {
+  display: grid;
+  gap: 9px;
+  margin-top: 16px;
+}
+
+.negocio-revision-acciones button {
+  min-height: 48px;
+  padding: 0 14px;
+  border-radius: 14px;
+  color: #0f5d3f;
+  background: #e8f1e8;
+  font-size: .78rem;
+  font-weight: 800;
+}
+
+.negocio-revision-acciones .principal {
+  color: #fff;
+  background: #0f5d3f;
+}
+
+.negocio-revision-acciones .peligro {
+  color: #8d271e;
+  background: #fff0ed;
+}
+
+.negocio-nota-seguridad {
+  display: block;
+  margin: 12px 4px 0;
+  color: #718078;
+  font-size: .65rem;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.negocio-actividad-hero {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 12px;
+  padding: 18px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #fff0df, #fff9ef);
+}
+
+.negocio-actividad-hero span {
+  color: #9a653d;
+  font-size: .7rem;
+}
+
+.negocio-actividad-hero strong {
+  color: #143428;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.3rem;
+}
+
+.negocio-metricas-app--vertical {
+  grid-template-columns: 1fr;
+}
+
+.negocio-metricas-app--vertical article {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  text-align: left;
+}
+
+.negocio-metricas-app--vertical strong {
+  font-size: 1.45rem;
+}
+
+.negocio-turno-ficha {
+  display: grid;
+  gap: 9px;
+}
+
+.negocio-turno-ficha > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 13px 14px;
+  border: 1px solid rgba(15, 93, 63, .08);
+  border-radius: 15px;
+  background: #fff;
+}
+
+.negocio-turno-ficha span {
+  color: #718078;
+  font-size: .7rem;
+}
+
+.negocio-turno-ficha strong {
+  color: #143428;
+  font-size: .78rem;
+  text-align: right;
+}
+
+.negocio-cerrar-turno-app {
+  width: 100%;
+  min-height: 50px;
+  margin-top: 16px;
+  border-radius: 14px;
+  color: #8d271e;
+  background: #fff0ed;
+  font-weight: 800;
+}
+
+.negocio-nav-inferior {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  z-index: 25;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  width: min(100%, 430px);
+  min-height: calc(70px + env(safe-area-inset-bottom, 0px));
+  padding: 7px 8px env(safe-area-inset-bottom, 0px);
+  transform: translateX(-50%);
+  border-top: 1px solid rgba(15, 93, 63, .09);
+  background: rgba(255, 255, 255, .96);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 -12px 32px rgba(20, 52, 40, .08);
+}
+
+.negocio-nav-inferior button {
+  position: relative;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 2px;
+  min-width: 0;
+  border-radius: 14px;
+  color: #718078;
+  background: transparent;
+}
+
+.negocio-nav-inferior button > span {
+  position: relative;
+  min-height: 22px;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.negocio-nav-inferior button small {
+  font-size: .58rem;
+  font-weight: 700;
+}
+
+.negocio-nav-inferior button.activo {
+  color: #0f5d3f;
+  background: #edf6ef;
+}
+
+.negocio-nav-icono-badge b {
+  position: absolute;
+  top: -7px;
+  right: -13px;
+  display: grid;
+  place-items: center;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 999px;
+  color: #fff;
+  background: #ef7d32;
+  font-family: 'Poppins', sans-serif;
+  font-size: .52rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .negocio-operacion-contexto,
+  .negocio-solicitudes-home > button:not(.negocio-ver-todas),
+  .negocio-acciones-rapidas button,
+  .negocio-metricas-app article,
+  .negocio-lista-solicitudes > button,
+  .negocio-turno-ficha > div,
+  .negocio-vacio-app {
+    border-color: rgba(255, 255, 255, .08);
+    background: #153226;
+  }
+
+  .negocio-operacion-contexto span,
+  .negocio-seccion__titulo h2,
+  .negocio-solicitudes-home > button,
+  .negocio-acciones-rapidas button,
+  .negocio-vacio-app strong,
+  .negocio-pantalla-app__cabecera h1,
+  .negocio-lista-solicitudes > button,
+  .negocio-turno-ficha strong,
+  .negocio-actividad-hero strong {
+    color: #f5f2e9;
+  }
+
+  .negocio-operacion-contexto small,
+  .negocio-seccion__titulo p,
+  .negocio-solicitudes-home button small,
+  .negocio-acciones-rapidas small,
+  .negocio-metricas-app span,
+  .negocio-lista-solicitudes__arriba span,
+  .negocio-lista-solicitudes__arriba small,
+  .negocio-lista-solicitudes__abajo span,
+  .negocio-turno-ficha span {
+    color: #afbeb6;
+  }
+
+  .negocio-estado--online { color: #8fd2a3; background: #204432; }
+  .negocio-estado--offline { color: #ffad91; background: #49251f; }
+  .negocio-operacion-contexto button,
+  .negocio-pantalla-app__cabecera > button { color: #9ed7ad; background: #204432; }
+
+  .negocio-vacio-app--regalon {
+    background:
+      url('../../terminal/src/recursos/mascota/regalon-corazon.png') right 12px center / 64px auto no-repeat,
+      #153226;
+  }
+
+  .negocio-form--revision textarea,
+  .negocio-input-pesos {
+    border-color: rgba(255, 255, 255, .12);
+    color: #f5f2e9;
+    background: #0c251b;
+  }
+
+  .negocio-input-pesos input {
+    color: #f5f2e9;
+  }
+
+  .negocio-actividad-hero {
+    background: linear-gradient(135deg, #3a2e22, #2b2a20);
+  }
+
+  .negocio-actividad-hero span { color: #e5b07f; }
+
+  .negocio-nav-inferior {
+    border-top-color: rgba(255, 255, 255, .08);
+    background: rgba(12, 37, 27, .97);
+    box-shadow: 0 -12px 32px rgba(0, 0, 0, .2);
+  }
+
+  .negocio-nav-inferior button { color: #93a59b; }
+  .negocio-nav-inferior button.activo { color: #9ed7ad; background: #204432; }
+}
