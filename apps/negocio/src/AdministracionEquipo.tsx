@@ -43,6 +43,8 @@ export default function AdministracionEquipo({
   const [rol, setRol] = useState<'cajero' | 'supervisor'>('cajero')
   const [pin, setPin] = useState('')
   const [modo, setModo] = useState<ModoIdentificacionCajero>('solo_nombre')
+  const [cajeroPendienteDeshabilitar, setCajeroPendienteDeshabilitar] =
+    useState<CajeroAdministracion | null>(null)
 
   const cargar = useCallback(async () => {
     setCargando(true)
@@ -70,6 +72,19 @@ export default function AdministracionEquipo({
     if (!autorizado) return
     void cargar()
   }, [autorizado, cargar])
+
+  useEffect(() => {
+    if (!cajeroPendienteDeshabilitar) return
+
+    const cerrarConEscape = (evento: KeyboardEvent) => {
+      if (evento.key === 'Escape' && !procesando) {
+        setCajeroPendienteDeshabilitar(null)
+      }
+    }
+
+    window.addEventListener('keydown', cerrarConEscape)
+    return () => window.removeEventListener('keydown', cerrarConEscape)
+  }, [cajeroPendienteDeshabilitar, procesando])
 
   const activos = useMemo(
     () => cajeros.filter((cajero) => cajero.estado === 'activo'),
@@ -164,15 +179,28 @@ export default function AdministracionEquipo({
     }
   }
 
-  const cambiarEstado = async (cajero: CajeroAdministracion) => {
+  const confirmarDeshabilitacion = async () => {
+    if (!cajeroPendienteDeshabilitar) return
+
     setProcesando(true)
     setError(null)
     try {
-      if (cajero.estado === 'activo') {
-        await deshabilitarCajero(cajero.cajero_id)
-      } else {
-        await reactivarCajero(cajero.cajero_id)
-      }
+      await deshabilitarCajero(cajeroPendienteDeshabilitar.cajero_id)
+      setCajeroPendienteDeshabilitar(null)
+      await cargar()
+      await alCambiarEquipo()
+    } catch (capturado) {
+      setError(mensajeError(capturado))
+    } finally {
+      setProcesando(false)
+    }
+  }
+
+  const reactivar = async (cajero: CajeroAdministracion) => {
+    setProcesando(true)
+    setError(null)
+    try {
+      await reactivarCajero(cajero.cajero_id)
       await cargar()
       await alCambiarEquipo()
     } catch (capturado) {
@@ -263,7 +291,13 @@ export default function AdministracionEquipo({
           className={cajero.estado === 'activo' ? 'peligro' : 'secundario'}
           type="button"
           disabled={procesando}
-          onClick={() => void cambiarEstado(cajero)}
+          onClick={() => {
+            if (cajero.estado === 'activo') {
+              setCajeroPendienteDeshabilitar(cajero)
+              return
+            }
+            void reactivar(cajero)
+          }}
         >
           {cajero.estado === 'activo' ? 'Deshabilitar' : 'Reactivar'}
         </button>
@@ -359,6 +393,56 @@ export default function AdministracionEquipo({
           )}
         </div>
       </section>
+
+      {cajeroPendienteDeshabilitar && (
+        <div
+          className="negocio-modal-fondo"
+          role="presentation"
+          onMouseDown={(evento) => {
+            if (evento.target === evento.currentTarget && !procesando) {
+              setCajeroPendienteDeshabilitar(null)
+            }
+          }}
+        >
+          <section
+            className="negocio-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="titulo-confirmar-deshabilitacion"
+          >
+            <span className="negocio-eyebrow">Confirmación</span>
+            <h2 id="titulo-confirmar-deshabilitacion">
+              ¿Deshabilitar a {cajeroPendienteDeshabilitar.nombre}?
+            </h2>
+            <p>
+              Dejará de aparecer en la App Negocio para iniciar nuevos turnos.
+              Su historial y reportes seguirán guardados en Regalones.
+            </p>
+            <p className="negocio-modal-nota">
+              No se eliminará su información y podrás reactivarlo después.
+            </p>
+
+            <div className="negocio-modal-acciones">
+              <button
+                className="secundario"
+                type="button"
+                disabled={procesando}
+                onClick={() => setCajeroPendienteDeshabilitar(null)}
+              >
+                Cancelar
+              </button>
+              <button
+                className="peligro"
+                type="button"
+                disabled={procesando}
+                onClick={() => void confirmarDeshabilitacion()}
+              >
+                {procesando ? 'Deshabilitando…' : 'Sí, deshabilitar'}
+              </button>
+            </div>
+          </section>
+        </div>
+      )}
     </main>
   )
 }
