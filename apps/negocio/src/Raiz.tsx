@@ -12,6 +12,7 @@ import {
 } from './lib/cajeros'
 import type { TurnoAppNegocio } from './lib/cajeros'
 import './administracion.css'
+import './seleccion-v2.css'
 
 function esRutaAdministracion() {
   return window.location.hash === '#administracion'
