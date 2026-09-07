@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import App from './App'
 import AdministracionEquipo from './AdministracionEquipo'
-import InicioOperativo from './InicioOperativo'
+import InicioOperativoV2 from './InicioOperativoV2'
 import {
   leerConfiguracionDispositivo,
 } from './lib/dispositivo'
@@ -134,7 +134,7 @@ export default function Raiz() {
   return (
     <>
       {configuracion && turno ? (
-        <InicioOperativo
+        <InicioOperativoV2
           configuracion={configuracion}
           turno={turno}
           cerrandoTurno={cerrandoTurno}
@@ -148,15 +148,19 @@ export default function Raiz() {
         <div className="negocio-error-turno-raiz" role="alert">{errorTurno}</div>
       )}
 
-      {configuracion && (
+      {configuracion && !turno && (
         <button
-          className={`negocio-acceso-administracion${turno ? ' negocio-acceso-administracion--nav' : ''}`}
+          className="negocio-acceso-administracion negocio-acceso-administracion--inicio"
           type="button"
           onClick={abrirAdministracion}
-          aria-label="Abrir administración del negocio"
+          aria-label="Abrir configuración del negocio"
         >
           <span aria-hidden="true">⚙</span>
-          {turno ? <small>Admin</small> : 'Administración'}
+          <span>
+            <strong>Configuración</strong>
+            <small>Solo personal autorizado</small>
+          </span>
+          <b aria-hidden="true">›</b>
         </button>
       )}
     </>
