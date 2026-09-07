@@ -1,0 +1,166 @@
+.negocio-acceso-administracion {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 30;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 46px;
+  padding: 0 15px;
+  border-radius: 999px;
+  background: #143428;
+  color: #fff;
+  box-shadow: 0 12px 30px rgba(20, 52, 40, .22);
+  font-weight: 800;
+}
+
+.negocio-acceso-administracion span {
+  font-size: 1.05rem;
+}
+
+.negocio-admin-layout {
+  width: min(100%, 960px);
+  margin: 34px auto 0;
+}
+
+.negocio-admin-encabezado {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.negocio-admin-encabezado h1 {
+  margin-bottom: 0;
+}
+
+.negocio-admin-encabezado > button,
+.negocio-admin-form-acciones button,
+.negocio-equipo-acciones button {
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 12px;
+  font-weight: 800;
+}
+
+.negocio-admin-encabezado > button {
+  color: #fff;
+  background: #0f5d3f;
+}
+
+.negocio-form--admin {
+  margin-top: 20px;
+  padding: 18px;
+  border: 1px solid #dce6df;
+  border-radius: 18px;
+  background: #f8fbf9;
+}
+
+.negocio-admin-form-acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.negocio-admin-form-acciones .secundario,
+.negocio-equipo-acciones .secundario {
+  color: #0f5d3f;
+  background: #e8f1e8;
+}
+
+.negocio-equipo-seccion {
+  margin-top: 28px;
+}
+
+.negocio-equipo-seccion h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  font-family: 'Baloo 2', sans-serif;
+  color: #143428;
+}
+
+.negocio-equipo-seccion h2 span {
+  display: inline-grid;
+  place-items: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: #edf6ef;
+  color: #0f5d3f;
+  font-family: 'Poppins', sans-serif;
+  font-size: .82rem;
+}
+
+.negocio-equipo-seccion--inactivos {
+  padding-top: 22px;
+  border-top: 1px solid #e3ebe5;
+}
+
+.negocio-equipo-lista {
+  display: grid;
+  gap: 10px;
+}
+
+.negocio-equipo-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid #dce6df;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.negocio-equipo-item > div:first-child {
+  display: grid;
+  gap: 3px;
+}
+
+.negocio-equipo-item strong {
+  color: #143428;
+}
+
+.negocio-equipo-item span,
+.negocio-equipo-item small,
+.negocio-texto-suave {
+  color: #708078;
+}
+
+.negocio-equipo-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.negocio-equipo-acciones .peligro {
+  color: #8d271e;
+  background: #fff0ed;
+}
+
+@media (max-width: 620px) {
+  .negocio-acceso-administracion {
+    right: 12px;
+    bottom: 12px;
+  }
+
+  .negocio-admin-encabezado,
+  .negocio-equipo-item,
+  .negocio-admin-form-acciones {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .negocio-equipo-acciones {
+    justify-content: stretch;
+  }
+
+  .negocio-equipo-acciones button {
+    flex: 1 1 140px;
+  }
+}
