@@ -33,7 +33,8 @@
     "db:stop": "node ./node_modules/supabase/dist/supabase.js stop",
     "db:reset": "node ./node_modules/supabase/dist/supabase.js db reset",
     "db:test": "node ./node_modules/supabase/dist/supabase.js test db",
-    "db:lint": "node ./node_modules/supabase/dist/supabase.js db lint"
+    "db:lint": "node ./node_modules/supabase/dist/supabase.js db lint",
+    "db:types": "node ./scripts/generar-tipos-supabase.mjs"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
