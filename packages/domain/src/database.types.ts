@@ -7,11 +7,6 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
-  __InternalSupabase: {
-    PostgrestVersion: "14.5"
-  }
   graphql_public: {
     Tables: {
       [_ in never]: never
@@ -169,6 +164,101 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "cajas_sucursal_id_fkey"
+            columns: ["sucursal_id"]
+            isOneToOne: false
+            referencedRelation: "sucursales"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cajeros_negocio: {
+        Row: {
+          actualizado_en: string
+          apellido: string | null
+          creado_en: string
+          creado_por: string | null
+          deshabilitado_en: string | null
+          deshabilitado_por: string | null
+          estado: Database["public"]["Enums"]["estado_cajero_negocio"]
+          id: string
+          intentos_pin_fallidos: number
+          negocio_id: string
+          nombre: string
+          origen_creacion: Database["public"]["Enums"]["origen_creacion_cajero"]
+          pin_bloqueado_hasta: string | null
+          pin_hash: string | null
+          rol: Database["public"]["Enums"]["rol_cajero_negocio"]
+        }
+        Insert: {
+          actualizado_en?: string
+          apellido?: string | null
+          creado_en?: string
+          creado_por?: string | null
+          deshabilitado_en?: string | null
+          deshabilitado_por?: string | null
+          estado?: Database["public"]["Enums"]["estado_cajero_negocio"]
+          id?: string
+          intentos_pin_fallidos?: number
+          negocio_id: string
+          nombre: string
+          origen_creacion?: Database["public"]["Enums"]["origen_creacion_cajero"]
+          pin_bloqueado_hasta?: string | null
+          pin_hash?: string | null
+          rol?: Database["public"]["Enums"]["rol_cajero_negocio"]
+        }
+        Update: {
+          actualizado_en?: string
+          apellido?: string | null
+          creado_en?: string
+          creado_por?: string | null
+          deshabilitado_en?: string | null
+          deshabilitado_por?: string | null
+          estado?: Database["public"]["Enums"]["estado_cajero_negocio"]
+          id?: string
+          intentos_pin_fallidos?: number
+          negocio_id?: string
+          nombre?: string
+          origen_creacion?: Database["public"]["Enums"]["origen_creacion_cajero"]
+          pin_bloqueado_hasta?: string | null
+          pin_hash?: string | null
+          rol?: Database["public"]["Enums"]["rol_cajero_negocio"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cajeros_negocio_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cajeros_sucursales: {
+        Row: {
+          asignado_en: string
+          cajero_id: string
+          sucursal_id: string
+        }
+        Insert: {
+          asignado_en?: string
+          cajero_id: string
+          sucursal_id: string
+        }
+        Update: {
+          asignado_en?: string
+          cajero_id?: string
+          sucursal_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cajeros_sucursales_cajero_id_fkey"
+            columns: ["cajero_id"]
+            isOneToOne: false
+            referencedRelation: "cajeros_negocio"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cajeros_sucursales_sucursal_id_fkey"
             columns: ["sucursal_id"]
             isOneToOne: false
             referencedRelation: "sucursales"
@@ -1461,6 +1551,7 @@ export type Database = {
           direccion: string
           estado: Database["public"]["Enums"]["estado_sucursal"]
           id: string
+          modo_identificacion_cajero: Database["public"]["Enums"]["modo_identificacion_cajero"]
           negocio_id: string
           nombre: string
         }
@@ -1471,6 +1562,7 @@ export type Database = {
           direccion: string
           estado?: Database["public"]["Enums"]["estado_sucursal"]
           id?: string
+          modo_identificacion_cajero?: Database["public"]["Enums"]["modo_identificacion_cajero"]
           negocio_id: string
           nombre: string
         }
@@ -1481,6 +1573,7 @@ export type Database = {
           direccion?: string
           estado?: Database["public"]["Enums"]["estado_sucursal"]
           id?: string
+          modo_identificacion_cajero?: Database["public"]["Enums"]["modo_identificacion_cajero"]
           negocio_id?: string
           nombre?: string
         }
@@ -1658,6 +1751,7 @@ export type Database = {
       turnos_caja: {
         Row: {
           caja_id: string
+          cajero_negocio_id: string | null
           cerrado_en: string | null
           creado_en: string
           estado: Database["public"]["Enums"]["estado_turno_caja"]
@@ -1670,6 +1764,7 @@ export type Database = {
         }
         Insert: {
           caja_id: string
+          cajero_negocio_id?: string | null
           cerrado_en?: string | null
           creado_en?: string
           estado?: Database["public"]["Enums"]["estado_turno_caja"]
@@ -1682,6 +1777,7 @@ export type Database = {
         }
         Update: {
           caja_id?: string
+          cajero_negocio_id?: string | null
           cerrado_en?: string | null
           creado_en?: string
           estado?: Database["public"]["Enums"]["estado_turno_caja"]
@@ -1698,6 +1794,13 @@ export type Database = {
             columns: ["caja_id"]
             isOneToOne: false
             referencedRelation: "cajas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "turnos_caja_cajero_negocio_id_fkey"
+            columns: ["cajero_negocio_id"]
+            isOneToOne: false
+            referencedRelation: "cajeros_negocio"
             referencedColumns: ["id"]
           },
           {
@@ -1915,6 +2018,39 @@ export type Database = {
           mensaje: string
         }[]
       }
+      actualizar_cajero_negocio: {
+        Args: {
+          p_apellido: string
+          p_cajero_id: string
+          p_estado: Database["public"]["Enums"]["estado_cajero_negocio"]
+          p_nombre: string
+          p_rol: Database["public"]["Enums"]["rol_cajero_negocio"]
+          p_sucursal_ids: string[]
+        }
+        Returns: {
+          actualizado_en: string
+          apellido: string | null
+          creado_en: string
+          creado_por: string | null
+          deshabilitado_en: string | null
+          deshabilitado_por: string | null
+          estado: Database["public"]["Enums"]["estado_cajero_negocio"]
+          id: string
+          intentos_pin_fallidos: number
+          negocio_id: string
+          nombre: string
+          origen_creacion: Database["public"]["Enums"]["origen_creacion_cajero"]
+          pin_bloqueado_hasta: string | null
+          pin_hash: string | null
+          rol: Database["public"]["Enums"]["rol_cajero_negocio"]
+        }
+        SetofOptions: {
+          from: "*"
+          to: "cajeros_negocio"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       aprobar_compra: {
         Args: {
           p_folio_boleta?: string
@@ -2077,6 +2213,10 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      cambiar_pin_cajero_negocio: {
+        Args: { p_cajero_id: string; p_pin: string }
+        Returns: boolean
+      }
       cancelar_reserva_canje_regis: {
         Args: { p_canje_id: string }
         Returns: {
@@ -2118,6 +2258,7 @@ export type Database = {
         }
         Returns: {
           caja_id: string
+          cajero_negocio_id: string | null
           cerrado_en: string | null
           creado_en: string
           estado: Database["public"]["Enums"]["estado_turno_caja"]
@@ -2134,6 +2275,13 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      configurar_modo_identificacion_cajeros: {
+        Args: {
+          p_modo: Database["public"]["Enums"]["modo_identificacion_cajero"]
+          p_sucursal_id: string
+        }
+        Returns: Database["public"]["Enums"]["modo_identificacion_cajero"]
       }
       confirmar_compra_con_canje: {
         Args: {
@@ -2356,6 +2504,72 @@ export type Database = {
         SetofOptions: {
           from: "*"
           to: "versiones_beneficio_regis"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      crear_cajero_negocio: {
+        Args: {
+          p_apellido: string
+          p_negocio_id: string
+          p_nombre: string
+          p_pin: string
+          p_rol?: Database["public"]["Enums"]["rol_cajero_negocio"]
+          p_sucursal_ids: string[]
+        }
+        Returns: {
+          actualizado_en: string
+          apellido: string | null
+          creado_en: string
+          creado_por: string | null
+          deshabilitado_en: string | null
+          deshabilitado_por: string | null
+          estado: Database["public"]["Enums"]["estado_cajero_negocio"]
+          id: string
+          intentos_pin_fallidos: number
+          negocio_id: string
+          nombre: string
+          origen_creacion: Database["public"]["Enums"]["origen_creacion_cajero"]
+          pin_bloqueado_hasta: string | null
+          pin_hash: string | null
+          rol: Database["public"]["Enums"]["rol_cajero_negocio"]
+        }
+        SetofOptions: {
+          from: "*"
+          to: "cajeros_negocio"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      crear_cajero_negocio_app: {
+        Args: {
+          p_apellido: string
+          p_negocio_id: string
+          p_nombre: string
+          p_pin: string
+          p_rol?: Database["public"]["Enums"]["rol_cajero_negocio"]
+          p_sucursal_ids: string[]
+        }
+        Returns: {
+          actualizado_en: string
+          apellido: string | null
+          creado_en: string
+          creado_por: string | null
+          deshabilitado_en: string | null
+          deshabilitado_por: string | null
+          estado: Database["public"]["Enums"]["estado_cajero_negocio"]
+          id: string
+          intentos_pin_fallidos: number
+          negocio_id: string
+          nombre: string
+          origen_creacion: Database["public"]["Enums"]["origen_creacion_cajero"]
+          pin_bloqueado_hasta: string | null
+          pin_hash: string | null
+          rol: Database["public"]["Enums"]["rol_cajero_negocio"]
+        }
+        SetofOptions: {
+          from: "*"
+          to: "cajeros_negocio"
           isOneToOne: true
           isSetofReturn: false
         }
@@ -2592,6 +2806,32 @@ export type Database = {
           token_vinculacion: string
         }[]
       }
+      deshabilitar_cajero_negocio: {
+        Args: { p_cajero_id: string }
+        Returns: {
+          actualizado_en: string
+          apellido: string | null
+          creado_en: string
+          creado_por: string | null
+          deshabilitado_en: string | null
+          deshabilitado_por: string | null
+          estado: Database["public"]["Enums"]["estado_cajero_negocio"]
+          id: string
+          intentos_pin_fallidos: number
+          negocio_id: string
+          nombre: string
+          origen_creacion: Database["public"]["Enums"]["origen_creacion_cajero"]
+          pin_bloqueado_hasta: string | null
+          pin_hash: string | null
+          rol: Database["public"]["Enums"]["rol_cajero_negocio"]
+        }
+        SetofOptions: {
+          from: "*"
+          to: "cajeros_negocio"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       eliminar_caja_sin_uso: { Args: { p_caja_id: string }; Returns: boolean }
       entregar_llavero: {
         Args: {
@@ -2712,6 +2952,33 @@ export type Database = {
           tipo: Database["public"]["Enums"]["tipo_beneficio_regis"]
           tope_descuento_clp: number
           vigencia_hasta: string
+        }[]
+      }
+      listar_cajeros_negocio_administracion: {
+        Args: { p_negocio_id: string }
+        Returns: {
+          apellido: string
+          cajero_id: string
+          creado_en: string
+          deshabilitado_en: string
+          estado: Database["public"]["Enums"]["estado_cajero_negocio"]
+          nombre: string
+          origen_creacion: Database["public"]["Enums"]["origen_creacion_cajero"]
+          rol: Database["public"]["Enums"]["rol_cajero_negocio"]
+          sucursal_ids: string[]
+          tiene_pin: boolean
+        }[]
+      }
+      listar_cajeros_negocio_gestion: {
+        Args: { p_negocio_id: string }
+        Returns: {
+          apellido: string
+          cajero_id: string
+          creado_en: string
+          estado: Database["public"]["Enums"]["estado_cajero_negocio"]
+          nombre: string
+          rol: Database["public"]["Enums"]["rol_cajero_negocio"]
+          sucursal_ids: string[]
         }[]
       }
       listar_gestion_llaveros: {
@@ -2884,6 +3151,76 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      mover_terminal_pwa: {
+        Args: {
+          p_caja_id: string
+          p_nombre_dispositivo: string
+          p_version_app?: string
+        }
+        Returns: {
+          caja_id: string
+          estado: Database["public"]["Enums"]["estado_terminal"]
+          identificador_publico: string
+          nombre_dispositivo: string
+          terminal_id: string
+          token_terminal: string
+        }[]
+      }
+      negocio_configurar_equipo_inicial: {
+        Args: {
+          p_cajeros: Json
+          p_modo: Database["public"]["Enums"]["modo_identificacion_cajero"]
+          p_terminal_id: string
+          p_token_terminal: string
+        }
+        Returns: {
+          cajeros_creados: number
+          modo: Database["public"]["Enums"]["modo_identificacion_cajero"]
+        }[]
+      }
+      negocio_consultar_turno: {
+        Args: { p_terminal_id: string; p_token_terminal: string }
+        Returns: {
+          caja_id: string
+          cajero_negocio_id: string
+          estado: Database["public"]["Enums"]["estado_turno_caja"]
+          iniciado_en: string
+          negocio_id: string
+          nombre_cajero: string
+          terminal_id: string
+          turno_id: string
+        }[]
+      }
+      negocio_iniciar_turno: {
+        Args: {
+          p_cajero_id: string
+          p_pin: string
+          p_terminal_id: string
+          p_token_terminal: string
+        }
+        Returns: {
+          autenticado: boolean
+          caja_id: string
+          cajero_negocio_id: string
+          estado: Database["public"]["Enums"]["estado_turno_caja"]
+          iniciado_en: string
+          mensaje: string
+          negocio_id: string
+          nombre_cajero: string
+          terminal_id: string
+          turno_id: string
+        }[]
+      }
+      negocio_listar_cajeros_dispositivo: {
+        Args: { p_terminal_id: string; p_token_terminal: string }
+        Returns: {
+          apellido: string
+          cajero_id: string
+          nombre: string
+          requiere_pin: boolean
+          rol: Database["public"]["Enums"]["rol_cajero_negocio"]
+        }[]
+      }
       obtener_lectura_operacion_interna: {
         Args: {
           p_lectura_id: string
@@ -2944,6 +3281,18 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      preparar_caja_regalones: {
+        Args: { p_sucursal_id: string }
+        Returns: {
+          caja_creada: boolean
+          caja_id: string
+          caja_nombre: string
+          terminal_estado: Database["public"]["Enums"]["estado_terminal"]
+          terminal_id: string
+          terminal_identificador: string
+          terminal_nombre_dispositivo: string
+        }[]
+      }
       preparar_llavero: {
         Args: {
           p_codigo_publico: string
@@ -2989,6 +3338,32 @@ export type Database = {
       puede_acceder_ticket_soporte: {
         Args: { p_ticket_id: string }
         Returns: boolean
+      }
+      reactivar_cajero_negocio: {
+        Args: { p_cajero_id: string }
+        Returns: {
+          actualizado_en: string
+          apellido: string | null
+          creado_en: string
+          creado_por: string | null
+          deshabilitado_en: string | null
+          deshabilitado_por: string | null
+          estado: Database["public"]["Enums"]["estado_cajero_negocio"]
+          id: string
+          intentos_pin_fallidos: number
+          negocio_id: string
+          nombre: string
+          origen_creacion: Database["public"]["Enums"]["origen_creacion_cajero"]
+          pin_bloqueado_hasta: string | null
+          pin_hash: string | null
+          rol: Database["public"]["Enums"]["rol_cajero_negocio"]
+        }
+        SetofOptions: {
+          from: "*"
+          to: "cajeros_negocio"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       rechazar_solicitud_compra: {
         Args: { p_motivo: string; p_solicitud_id: string }
@@ -3347,6 +3722,7 @@ export type Database = {
         }
         Returns: {
           caja_id: string
+          cajero_negocio_id: string | null
           cerrado_en: string | null
           creado_en: string
           estado: Database["public"]["Enums"]["estado_turno_caja"]
@@ -4105,6 +4481,7 @@ export type Database = {
         }
         Returns: {
           caja_id: string
+          cajero_negocio_id: string | null
           cerrado_en: string | null
           creado_en: string
           estado: Database["public"]["Enums"]["estado_turno_caja"]
@@ -4204,6 +4581,7 @@ export type Database = {
         | "descartada"
       estado_beneficio_regis: "borrador" | "activo" | "pausado" | "finalizado"
       estado_caja: "activa" | "inactiva" | "bloqueada"
+      estado_cajero_negocio: "activo" | "inactivo"
       estado_canje_regis: "reservado" | "confirmado" | "expirado" | "cancelado"
       estado_compra: "confirmada" | "observada" | "revertida"
       estado_etiqueta_nfc:
@@ -4274,9 +4652,15 @@ export type Database = {
       informado_por: "vecino" | "cajero"
       metodo_verificacion_llavero: "cedula" | "pin" | "sms"
       modalidad_atencion: "digital" | "asistida"
+      modo_identificacion_cajero: "solo_nombre" | "nombre_pin"
       origen_canje_regis: "qr" | "llavero"
       origen_compra: "autoservicio" | "asistido" | "integracion_pos"
+      origen_creacion_cajero:
+        | "activacion_app"
+        | "app_negocio"
+        | "portal_comercio"
       origen_mensaje_soporte: "comercio" | "regalones"
+      rol_cajero_negocio: "cajero" | "supervisor"
       rol_miembro_negocio: "propietario" | "administrador" | "cajero"
       rol_plataforma: "usuario" | "admin_regalones"
       severidad_riesgo: "baja" | "media" | "alta" | "critica"
@@ -4303,12 +4687,12 @@ export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends (DefaultSchemaTableNameOrOptions extends {
+  TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never) = never,
+    : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -4332,11 +4716,11 @@ export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends (DefaultSchemaTableNameOrOptions extends {
+  TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never) = never,
+    : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -4357,11 +4741,11 @@ export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends (DefaultSchemaTableNameOrOptions extends {
+  TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never) = never,
+    : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -4382,11 +4766,11 @@ export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never) = never,
+    : never = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -4399,11 +4783,11 @@ export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never) = never,
+    : never = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -4445,6 +4829,7 @@ export const Constants = {
       ],
       estado_beneficio_regis: ["borrador", "activo", "pausado", "finalizado"],
       estado_caja: ["activa", "inactiva", "bloqueada"],
+      estado_cajero_negocio: ["activo", "inactivo"],
       estado_canje_regis: ["reservado", "confirmado", "expirado", "cancelado"],
       estado_compra: ["confirmada", "observada", "revertida"],
       estado_etiqueta_nfc: [
@@ -4525,9 +4910,16 @@ export const Constants = {
       informado_por: ["vecino", "cajero"],
       metodo_verificacion_llavero: ["cedula", "pin", "sms"],
       modalidad_atencion: ["digital", "asistida"],
+      modo_identificacion_cajero: ["solo_nombre", "nombre_pin"],
       origen_canje_regis: ["qr", "llavero"],
       origen_compra: ["autoservicio", "asistido", "integracion_pos"],
+      origen_creacion_cajero: [
+        "activacion_app",
+        "app_negocio",
+        "portal_comercio",
+      ],
       origen_mensaje_soporte: ["comercio", "regalones"],
+      rol_cajero_negocio: ["cajero", "supervisor"],
       rol_miembro_negocio: ["propietario", "administrador", "cajero"],
       rol_plataforma: ["usuario", "admin_regalones"],
       severidad_riesgo: ["baja", "media", "alta", "critica"],
@@ -4543,3 +4935,4 @@ export const Constants = {
     },
   },
 } as const
+
