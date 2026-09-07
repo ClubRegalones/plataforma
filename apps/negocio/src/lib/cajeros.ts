@@ -6,7 +6,18 @@ export type CajeroDisponible = {
   nombre: string
   apellido: string | null
   rol: 'cajero' | 'supervisor'
+  requiere_pin: boolean
 }
+
+export type CajeroOnboarding = {
+  id: string
+  nombre: string
+  apellido: string
+  rol: 'cajero' | 'supervisor'
+  pin?: string
+}
+
+export type ModoIdentificacionCajero = 'solo_nombre' | 'nombre_pin'
 
 export type TurnoAppNegocio = {
   turno_id: string
@@ -38,6 +49,30 @@ function credencial(configuracion: ConfiguracionDispositivoNegocio) {
   }
 }
 
+export async function configurarEquipoInicial(
+  configuracion: ConfiguracionDispositivoNegocio,
+  modo: ModoIdentificacionCajero,
+  cajeros: CajeroOnboarding[],
+) {
+  const { data, error } = await rpc<{ cajeros_creados: number; modo: ModoIdentificacionCajero }>(
+    'negocio_configurar_equipo_inicial',
+    {
+      ...credencial(configuracion),
+      p_modo: modo,
+      p_cajeros: cajeros.map((cajero) => ({
+        id: cajero.id,
+        nombre: cajero.nombre.trim(),
+        apellido: cajero.apellido.trim(),
+        rol: cajero.rol,
+        pin: cajero.pin?.trim() ?? '',
+      })),
+    },
+  )
+
+  if (error) throw error
+  return data?.[0] ?? null
+}
+
 export async function listarCajerosDispositivo(
   configuracion: ConfiguracionDispositivoNegocio,
 ) {
@@ -65,7 +100,7 @@ export async function consultarTurnoNegocio(
 export async function iniciarTurnoNegocio(
   configuracion: ConfiguracionDispositivoNegocio,
   cajeroId: string,
-  pin: string,
+  pin = '',
 ) {
   const { data, error } = await rpc<ResultadoInicioTurno>(
     'negocio_iniciar_turno',

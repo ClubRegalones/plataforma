@@ -30,7 +30,7 @@ button:disabled { cursor: wait; opacity: .65; }
   box-shadow: 0 18px 60px rgba(15, 93, 63, .12);
 }
 
-.negocio-card--ancha { width: min(100%, 720px); }
+.negocio-card--ancha { width: min(100%, 760px); }
 .negocio-card--turno { width: min(100%, 680px); }
 .negocio-eyebrow { color: #ef7d32; font-size: .82rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
 .negocio-card h1 { margin: 8px 0 12px; font-family: 'Baloo 2', sans-serif; font-size: clamp(2.2rem, 8vw, 3.5rem); line-height: 1; color: #0f5d3f; }
@@ -55,12 +55,38 @@ button:disabled { cursor: wait; opacity: .65; }
   background: #0f5d3f;
   font-weight: 800;
 }
+.negocio-form button.secundario { color: #0f5d3f; background: #e8f1e8; }
 
 .negocio-alert { display: grid; gap: 6px; padding: 14px 16px; border-radius: 14px; line-height: 1.5; }
 .negocio-alert--error { color: #8d271e; background: #fff0ed; }
 .negocio-alert--warning { color: #74401d; background: #fff4e6; }
 .negocio-alert--warning button { margin-top: 8px; }
 .negocio-alert--flotante { width: min(100% - 48px, 680px); margin: 18px auto 0; }
+
+.negocio-modos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 24px;
+}
+.negocio-modos button {
+  display: grid;
+  gap: 6px;
+  padding: 18px;
+  border: 2px solid #dce6df;
+  border-radius: 18px;
+  background: #f8fbf9;
+  color: #143428;
+  text-align: left;
+}
+.negocio-modos button.activo { border-color: #0f5d3f; background: #edf6ef; box-shadow: inset 0 0 0 1px #0f5d3f; }
+.negocio-modos span { color: #6d7e75; font-size: .88rem; line-height: 1.45; }
+
+.negocio-lista-configuracion { display: grid; gap: 14px; }
+.negocio-cajero-configuracion { padding: 18px; border: 1px solid #dce6df; border-radius: 18px; background: #f8fbf9; }
+.negocio-cajero-configuracion__titulo { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.negocio-cajero-configuracion__titulo button { min-height: auto; padding: 7px 10px; color: #8d271e; background: #fff0ed; font-size: .82rem; }
+.negocio-grid-cajero { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 
 .negocio-cajeros { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 24px; }
 .negocio-cajeros button {
@@ -108,7 +134,7 @@ button:disabled { cursor: wait; opacity: .65; }
 @media (max-width: 620px) {
   .negocio-shell { padding: 14px; }
   .negocio-card { padding: 22px; border-radius: 22px; }
-  .negocio-cajeros { grid-template-columns: 1fr; }
+  .negocio-cajeros, .negocio-modos, .negocio-grid-cajero { grid-template-columns: 1fr; }
   .negocio-topbar { align-items: flex-start; }
   .negocio-datos-turno { grid-template-columns: 1fr; }
 }

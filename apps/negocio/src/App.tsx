@@ -15,12 +15,15 @@ import type {
 } from './lib/dispositivo'
 import {
   cerrarTurnoNegocio,
+  configurarEquipoInicial,
   consultarTurnoNegocio,
   iniciarTurnoNegocio,
   listarCajerosDispositivo,
 } from './lib/cajeros'
 import type {
   CajeroDisponible,
+  CajeroOnboarding,
+  ModoIdentificacionCajero,
   TurnoAppNegocio,
 } from './lib/cajeros'
 
@@ -365,6 +368,184 @@ function ConfiguracionInicial({
   )
 }
 
+function ConfigurarCajerosIniciales({
+  configuracion,
+  alFinalizar,
+}: {
+  configuracion: ConfiguracionDispositivoNegocio
+  alFinalizar: () => Promise<void>
+}) {
+  const [modo, setModo] = useState<ModoIdentificacionCajero>('solo_nombre')
+  const [cajeros, setCajeros] = useState<CajeroOnboarding[]>([
+    {
+      id: crypto.randomUUID(),
+      nombre: '',
+      apellido: '',
+      rol: 'cajero',
+      pin: '',
+    },
+  ])
+  const [procesando, setProcesando] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const actualizar = (id: string, cambios: Partial<CajeroOnboarding>) => {
+    setCajeros((actuales) =>
+      actuales.map((cajero) => cajero.id === id ? { ...cajero, ...cambios } : cajero),
+    )
+  }
+
+  const agregar = () => {
+    setCajeros((actuales) => [
+      ...actuales,
+      {
+        id: crypto.randomUUID(),
+        nombre: '',
+        apellido: '',
+        rol: 'cajero',
+        pin: '',
+      },
+    ])
+  }
+
+  const quitar = (id: string) => {
+    setCajeros((actuales) => actuales.filter((cajero) => cajero.id !== id))
+  }
+
+  const guardar = async (evento: FormEvent<HTMLFormElement>) => {
+    evento.preventDefault()
+    setError(null)
+
+    if (cajeros.length === 0) {
+      setError('Agrega al menos un cajero para continuar.')
+      return
+    }
+
+    for (const cajero of cajeros) {
+      if (cajero.nombre.trim().length < 2) {
+        setError('Cada cajero necesita un nombre de al menos 2 caracteres.')
+        return
+      }
+      if (modo === 'nombre_pin' && !/^[0-9]{4,6}$/.test(cajero.pin ?? '')) {
+        setError('Cada cajero necesita un PIN de 4 a 6 dígitos.')
+        return
+      }
+    }
+
+    setProcesando(true)
+    try {
+      await configurarEquipoInicial(configuracion, modo, cajeros)
+      await alFinalizar()
+    } catch (capturado) {
+      setError(mensajeError(capturado))
+    } finally {
+      setProcesando(false)
+    }
+  }
+
+  return (
+    <main className="negocio-shell negocio-shell--centrado">
+      <section className="negocio-card negocio-card--ancha">
+        <span className="negocio-eyebrow">Último paso de configuración</span>
+        <h1>¿Quiénes usarán Regalones aquí?</h1>
+        <p>
+          Agrega a las personas que atenderán en {configuracion.nombreSucursal}.
+          Después podrán iniciar su turno tocando su nombre.
+        </p>
+
+        <div className="negocio-modos">
+          <button
+            type="button"
+            className={modo === 'solo_nombre' ? 'activo' : ''}
+            onClick={() => setModo('solo_nombre')}
+          >
+            <strong>Solo seleccionar nombre</strong>
+            <span>Más rápido · recomendado para negocios pequeños</span>
+          </button>
+          <button
+            type="button"
+            className={modo === 'nombre_pin' ? 'activo' : ''}
+            onClick={() => setModo('nombre_pin')}
+          >
+            <strong>Nombre + PIN</strong>
+            <span>Mayor control para equipos con más personas</span>
+          </button>
+        </div>
+
+        <form className="negocio-form" onSubmit={guardar}>
+          <div className="negocio-lista-configuracion">
+            {cajeros.map((cajero, indice) => (
+              <article key={cajero.id} className="negocio-cajero-configuracion">
+                <div className="negocio-cajero-configuracion__titulo">
+                  <strong>Cajero {indice + 1}</strong>
+                  {cajeros.length > 1 && (
+                    <button type="button" onClick={() => quitar(cajero.id)}>Quitar</button>
+                  )}
+                </div>
+                <div className="negocio-grid-cajero">
+                  <label>
+                    Nombre
+                    <input
+                      required
+                      value={cajero.nombre}
+                      onChange={(evento) => actualizar(cajero.id, { nombre: evento.target.value })}
+                    />
+                  </label>
+                  <label>
+                    Apellido opcional
+                    <input
+                      value={cajero.apellido}
+                      onChange={(evento) => actualizar(cajero.id, { apellido: evento.target.value })}
+                    />
+                  </label>
+                  <label>
+                    Rol
+                    <select
+                      value={cajero.rol}
+                      onChange={(evento) => actualizar(cajero.id, {
+                        rol: evento.target.value as CajeroOnboarding['rol'],
+                      })}
+                    >
+                      <option value="cajero">Cajero/a</option>
+                      <option value="supervisor">Supervisor/a</option>
+                    </select>
+                  </label>
+                  {modo === 'nombre_pin' && (
+                    <label>
+                      PIN
+                      <input
+                        required
+                        type="password"
+                        inputMode="numeric"
+                        minLength={4}
+                        maxLength={6}
+                        value={cajero.pin ?? ''}
+                        onChange={(evento) => actualizar(cajero.id, {
+                          pin: evento.target.value.replace(/\D/g, ''),
+                        })}
+                        placeholder="4 a 6 dígitos"
+                      />
+                    </label>
+                  )}
+                </div>
+              </article>
+            ))}
+          </div>
+
+          <button className="secundario" type="button" onClick={agregar}>
+            + Agregar otro cajero
+          </button>
+
+          {error && <p className="negocio-alert negocio-alert--error">{error}</p>}
+
+          <button disabled={procesando} type="submit">
+            {procesando ? 'Guardando equipo…' : 'Finalizar configuración'}
+          </button>
+        </form>
+      </section>
+    </main>
+  )
+}
+
 function OperacionCajero({
   configuracion,
 }: {
@@ -405,7 +586,55 @@ function OperacionCajero({
     return () => window.clearTimeout(temporizador)
   }, [cargar])
 
-  const iniciar = async (evento: FormEvent<HTMLFormElement>) => {
+  const aceptarResultadoTurno = (resultado: Awaited<ReturnType<typeof iniciarTurnoNegocio>>) => {
+    if (!resultado) {
+      throw new Error('Club Regalones no devolvió el resultado del inicio de turno.')
+    }
+
+    if (!resultado.autenticado) {
+      setError(resultado.mensaje)
+      setPin('')
+      return false
+    }
+
+    setTurno({
+      turno_id: resultado.turno_id,
+      terminal_id: resultado.terminal_id,
+      caja_id: resultado.caja_id,
+      negocio_id: resultado.negocio_id,
+      cajero_negocio_id: resultado.cajero_negocio_id,
+      nombre_cajero: resultado.nombre_cajero,
+      estado: resultado.estado,
+      iniciado_en: resultado.iniciado_en,
+    })
+    setCajeroSeleccionado(null)
+    setPin('')
+    return true
+  }
+
+  const iniciarSinPin = async (cajero: CajeroDisponible) => {
+    setProcesando(true)
+    setError(null)
+    try {
+      const resultado = await iniciarTurnoNegocio(configuracion, cajero.cajero_id)
+      aceptarResultadoTurno(resultado)
+    } catch (capturado) {
+      setError(mensajeError(capturado))
+    } finally {
+      setProcesando(false)
+    }
+  }
+
+  const seleccionarCajero = (cajero: CajeroDisponible) => {
+    setError(null)
+    if (cajero.requiere_pin) {
+      setCajeroSeleccionado(cajero)
+      return
+    }
+    void iniciarSinPin(cajero)
+  }
+
+  const iniciarConPin = async (evento: FormEvent<HTMLFormElement>) => {
     evento.preventDefault()
     if (!cajeroSeleccionado) return
 
@@ -423,29 +652,7 @@ function OperacionCajero({
         cajeroSeleccionado.cajero_id,
         pin,
       )
-
-      if (!resultado) {
-        throw new Error('Club Regalones no devolvió el resultado del inicio de turno.')
-      }
-
-      if (!resultado.autenticado) {
-        setError(resultado.mensaje)
-        setPin('')
-        return
-      }
-
-      setTurno({
-        turno_id: resultado.turno_id,
-        terminal_id: resultado.terminal_id,
-        caja_id: resultado.caja_id,
-        negocio_id: resultado.negocio_id,
-        cajero_negocio_id: resultado.cajero_negocio_id,
-        nombre_cajero: resultado.nombre_cajero,
-        estado: resultado.estado,
-        iniciado_en: resultado.iniciado_en,
-      })
-      setCajeroSeleccionado(null)
-      setPin('')
+      aceptarResultadoTurno(resultado)
     } catch (capturado) {
       setError(mensajeError(capturado))
     } finally {
@@ -529,7 +736,7 @@ function OperacionCajero({
           <h1>Hola, {cajeroSeleccionado.nombre}</h1>
           <p>Ingresa tu PIN para confirmar que eres tú.</p>
 
-          <form className="negocio-form" onSubmit={iniciar}>
+          <form className="negocio-form" onSubmit={iniciarConPin}>
             <label>
               PIN
               <input
@@ -556,39 +763,39 @@ function OperacionCajero({
     )
   }
 
+  if (cajeros.length === 0) {
+    return <ConfigurarCajerosIniciales configuracion={configuracion} alFinalizar={cargar} />
+  }
+
+  const requierePin = cajeros.some((cajero) => cajero.requiere_pin)
+
   return (
     <main className="negocio-shell negocio-shell--centrado">
       <section className="negocio-card negocio-card--ancha">
         <span className="negocio-eyebrow">{configuracion.nombreSucursal}</span>
         <h1>¿Quién está usando Regalones?</h1>
-        <p>Selecciona tu nombre. Después te pediremos únicamente tu PIN.</p>
+        <p>
+          {requierePin
+            ? 'Selecciona tu nombre y luego ingresa tu PIN.'
+            : 'Selecciona tu nombre para comenzar el turno.'}
+        </p>
 
         {error && <p className="negocio-alert negocio-alert--error">{error}</p>}
 
-        {cajeros.length === 0 ? (
-          <div className="negocio-vacio">
-            <strong>No hay cajeros habilitados todavía.</strong>
-            <p>El propietario puede crearlos desde Portal Comercio → Administración comercial.</p>
-            <button type="button" onClick={() => void cargar()}>Actualizar</button>
-          </div>
-        ) : (
-          <div className="negocio-cajeros">
-            {cajeros.map((cajero) => (
-              <button
-                key={cajero.cajero_id}
-                type="button"
-                onClick={() => {
-                  setCajeroSeleccionado(cajero)
-                  setError(null)
-                }}
-              >
-                <span>{cajero.nombre.slice(0, 1).toUpperCase()}</span>
-                <strong>{cajero.nombre} {cajero.apellido ?? ''}</strong>
-                <small>{cajero.rol === 'supervisor' ? 'Supervisor' : 'Cajero/a'}</small>
-              </button>
-            ))}
-          </div>
-        )}
+        <div className="negocio-cajeros">
+          {cajeros.map((cajero) => (
+            <button
+              key={cajero.cajero_id}
+              type="button"
+              disabled={procesando}
+              onClick={() => seleccionarCajero(cajero)}
+            >
+              <span>{cajero.nombre.slice(0, 1).toUpperCase()}</span>
+              <strong>{cajero.nombre} {cajero.apellido ?? ''}</strong>
+              <small>{cajero.rol === 'supervisor' ? 'Supervisor' : 'Cajero/a'}</small>
+            </button>
+          ))}
+        </div>
       </section>
     </main>
   )
@@ -607,8 +814,9 @@ export default function App() {
     let activo = true
     const temporizador = window.setTimeout(() => {
       void validarConfiguracionDispositivo(configuracion)
-        .then(() => {
+        .then((actualizada) => {
           if (!activo) return
+          setConfiguracion(actualizada)
           setErrorConfiguracion(null)
           setValidando(false)
         })
@@ -623,7 +831,7 @@ export default function App() {
       activo = false
       window.clearTimeout(temporizador)
     }
-  }, [configuracion, intentoValidacion])
+  }, [configuracion?.terminalId, intentoValidacion])
 
   if (!configuracion) {
     return <ConfiguracionInicial alConfigurar={setConfiguracion} />
