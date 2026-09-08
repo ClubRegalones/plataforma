@@ -56,7 +56,7 @@
   }
 }
 
-/* Logo específico para modo oscuro */
+/* Logo especÃ­fico para modo oscuro */
 @media (prefers-color-scheme: dark) {
   .negocio-shell.negocio-v2 .negocio-v2__logo {
     background-image: url('./recursos/marca/logo-club-regalones-claro.png') !important;
