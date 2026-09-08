@@ -1,0 +1,283 @@
+/* Selector manual de tema. Se carga después de los estilos base para que la elección
+   del usuario tenga prioridad sobre prefers-color-scheme. */
+
+.negocio-tema-control {
+  position: fixed;
+  top: calc(env(safe-area-inset-top, 0px) + 24px);
+  right: max(96px, calc((100vw - 430px) / 2 + 96px));
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 1px solid rgba(111, 220, 143, .22);
+  border-radius: 50%;
+  color: #0f5d3f;
+  background: rgba(255,255,255,.84);
+  box-shadow: 0 8px 20px rgba(15, 70, 47, .12);
+  backdrop-filter: blur(10px);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.negocio-tema-control svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.negocio-tema-control:active { transform: scale(.95); }
+
+/* --------------------------------------------------------------------------
+ * Tema claro explícito
+ * ------------------------------------------------------------------------ */
+html[data-tema='claro'],
+html[data-tema='claro'] body {
+  color: #143428 !important;
+  background: #dfe8e2 !important;
+}
+
+html[data-tema='claro'] .negocio-shell {
+  color: #143428 !important;
+  background:
+    radial-gradient(circle at 86% 8%, rgba(239, 125, 50, .12), transparent 28%),
+    linear-gradient(180deg, #f7faf7 0%, #eef5f0 52%, #f9fbf9 100%) !important;
+  box-shadow: 0 0 48px rgba(20, 52, 40, .16) !important;
+}
+
+html[data-tema='claro'] .negocio-card,
+html[data-tema='claro'] .negocio-topbar {
+  border-color: rgba(15, 93, 63, .08) !important;
+  background: #fff !important;
+  box-shadow: 0 14px 38px rgba(15, 93, 63, .10) !important;
+}
+
+html[data-tema='claro'] .negocio-card h1,
+html[data-tema='claro'] .negocio-topbar strong,
+html[data-tema='claro'] .negocio-volver { color: #0f5d3f !important; }
+
+html[data-tema='claro'] .negocio-card p,
+html[data-tema='claro'] .negocio-topbar small,
+html[data-tema='claro'] .negocio-modos span,
+html[data-tema='claro'] .negocio-cajeros small,
+html[data-tema='claro'] .negocio-datos-turno dt { color: #53685e !important; }
+
+html[data-tema='claro'] .negocio-v2 {
+  --fondo: #f3f7f3;
+  --panel: #fffdf8;
+  --panel-2: #eef8f0;
+  --texto: #0d3b2b;
+  --texto-suave: #6d7c74;
+  --verde: #0f5d3f;
+  --verde-2: #176a48;
+  --verde-3: #0a4b35;
+  --verde-claro: #8fd2a3;
+  --naranjo: #ff6a12;
+  --naranjo-suave: #fff0e5;
+  --borde: rgba(15, 93, 63, .12);
+  --sombra: 0 16px 36px rgba(15, 70, 47, .10);
+  color: var(--texto) !important;
+  background:
+    radial-gradient(circle at 8% 3%, rgba(58, 163, 100, .10), transparent 25%),
+    linear-gradient(180deg, #f9fbf8 0%, #f2f7f3 100%) !important;
+}
+
+html[data-tema='claro'] .negocio-v2__comercio,
+html[data-tema='claro'] .negocio-v2__pendientes,
+html[data-tema='claro'] .negocio-v2__acciones button,
+html[data-tema='claro'] .negocio-v2__lista > button,
+html[data-tema='claro'] .negocio-v2__vacio,
+html[data-tema='claro'] .negocio-v2__metodos button,
+html[data-tema='claro'] .negocio-v2__metricas article,
+html[data-tema='claro'] .negocio-v2__sincronizado,
+html[data-tema='claro'] .negocio-v2__turno,
+html[data-tema='claro'] .negocio-v2__formulario input,
+html[data-tema='claro'] .negocio-v2__formulario textarea {
+  background: var(--panel) !important;
+  box-shadow: var(--sombra) !important;
+}
+
+html[data-tema='claro'] .negocio-v2__estado.online {
+  color: #0e6c42 !important;
+  border-color: #bce6c8 !important;
+  background: #def5e5 !important;
+}
+
+html[data-tema='claro'] .negocio-v2__estado.offline {
+  color: #9a3d2d !important;
+  border-color: #ffd5c9 !important;
+  background: #fff0eb !important;
+}
+
+html[data-tema='claro'] .negocio-v2__hero {
+  border-color: rgba(255,255,255,.11) !important;
+  background:
+    radial-gradient(circle at 86% 14%, rgba(185, 238, 113, .34), transparent 32%),
+    radial-gradient(circle at 88% 88%, rgba(19, 113, 73, .34), transparent 34%),
+    linear-gradient(135deg, #108153 0%, #0f6544 44%, #174b37 100%) !important;
+}
+
+html[data-tema='claro'] .negocio-v2__todo-dia,
+html[data-tema='claro'] .negocio-v2__ayuda { background: rgba(238, 248, 240, .86) !important; }
+
+html[data-tema='claro'] .negocio-v2__icono-suave,
+html[data-tema='claro'] .negocio-v2__metricas article > span,
+html[data-tema='claro'] .negocio-v2__metodos button > span {
+  color: #0f5d3f !important;
+  background: #e0f2e6 !important;
+}
+
+html[data-tema='claro'] .negocio-v2__acciones button > span {
+  color: #0f5d3f !important;
+  background: #e5f2e8 !important;
+}
+
+html[data-tema='claro'] .negocio-v2__acciones button:nth-child(1) > span,
+html[data-tema='claro'] .negocio-v2__acciones button:nth-child(4) > span,
+html[data-tema='claro'] .negocio-v2__metodos button > span.naranja {
+  color: var(--naranjo) !important;
+  background: var(--naranjo-suave) !important;
+}
+
+html[data-tema='claro'] .negocio-v2__nav {
+  border-top-color: rgba(15,93,63,.09) !important;
+  background: rgba(249, 251, 249, .96) !important;
+  box-shadow: 0 -12px 30px rgba(10,40,28,.08) !important;
+}
+
+html[data-tema='claro'] .negocio-v2__nav button { color: #85928b !important; }
+html[data-tema='claro'] .negocio-v2__nav button.activo {
+  color: var(--naranjo) !important;
+  background: rgba(255,106,18,.10) !important;
+}
+
+html[data-tema='claro'] .negocio-v2__logo {
+  background-image: url('./recursos/marca/logo-club-regalones.png') !important;
+}
+
+html[data-tema='claro'] .negocio-tema-control {
+  color: #0f5d3f;
+  background: rgba(255,255,255,.90);
+  border-color: rgba(15,93,63,.14);
+}
+
+/* --------------------------------------------------------------------------
+ * Tema oscuro explícito
+ * ------------------------------------------------------------------------ */
+html[data-tema='oscuro'],
+html[data-tema='oscuro'] body {
+  color: #f5f2e9 !important;
+  background: #071c14 !important;
+}
+
+html[data-tema='oscuro'] .negocio-shell {
+  color: #f5f2e9 !important;
+  background:
+    radial-gradient(circle at 86% 8%, rgba(239, 125, 50, .10), transparent 28%),
+    linear-gradient(180deg, #0d291e 0%, #0a2319 100%) !important;
+  box-shadow: 0 0 48px rgba(0, 0, 0, .32) !important;
+}
+
+html[data-tema='oscuro'] .negocio-v2 {
+  --fondo: #061d14;
+  --panel: #0a3425;
+  --panel-2: #0d3e2c;
+  --texto: #fffdf5;
+  --texto-suave: #b8c8bf;
+  --verde: #64e18e;
+  --verde-2: #1da866;
+  --verde-3: #063224;
+  --verde-claro: #91e5aa;
+  --borde: rgba(83, 214, 130, .23);
+  --sombra: 0 18px 38px rgba(0,0,0,.26);
+  color: var(--texto) !important;
+  background:
+    radial-gradient(circle at 8% 3%, rgba(43, 176, 100, .18), transparent 26%),
+    radial-gradient(circle at 92% 0%, rgba(0, 97, 58, .18), transparent 30%),
+    linear-gradient(180deg, #042319 0%, #061d14 52%, #041a12 100%) !important;
+}
+
+html[data-tema='oscuro'] .negocio-v2__comercio,
+html[data-tema='oscuro'] .negocio-v2__pendientes,
+html[data-tema='oscuro'] .negocio-v2__acciones button,
+html[data-tema='oscuro'] .negocio-v2__lista > button,
+html[data-tema='oscuro'] .negocio-v2__vacio,
+html[data-tema='oscuro'] .negocio-v2__metodos button,
+html[data-tema='oscuro'] .negocio-v2__metricas article,
+html[data-tema='oscuro'] .negocio-v2__sincronizado,
+html[data-tema='oscuro'] .negocio-v2__turno,
+html[data-tema='oscuro'] .negocio-v2__formulario input,
+html[data-tema='oscuro'] .negocio-v2__formulario textarea {
+  background: linear-gradient(145deg, rgba(9, 58, 40, .96), rgba(7, 47, 33, .96)) !important;
+  box-shadow: var(--sombra) !important;
+}
+
+html[data-tema='oscuro'] .negocio-v2__estado.online {
+  color: #77ed9d !important;
+  border-color: rgba(85,229,135,.38) !important;
+  background: rgba(17, 114, 68, .30) !important;
+}
+
+html[data-tema='oscuro'] .negocio-v2__estado.offline {
+  color: #ffb29c !important;
+  border-color: rgba(255,138,106,.25) !important;
+  background: rgba(157,64,43,.18) !important;
+}
+
+html[data-tema='oscuro'] .negocio-v2__comercio { border-color: rgba(83,214,130,.28) !important; }
+html[data-tema='oscuro'] .negocio-v2__hero {
+  border-color: rgba(136, 239, 164, .22) !important;
+  background:
+    radial-gradient(circle at 86% 14%, rgba(185, 238, 113, .26), transparent 31%),
+    radial-gradient(circle at 92% 82%, rgba(37, 138, 81, .22), transparent 34%),
+    linear-gradient(135deg, #0d8b59 0%, #0d6f49 42%, #174936 100%) !important;
+}
+
+html[data-tema='oscuro'] .negocio-v2__todo-dia,
+html[data-tema='oscuro'] .negocio-v2__ayuda { background: rgba(15, 72, 51, .64) !important; }
+
+html[data-tema='oscuro'] .negocio-v2__icono-suave,
+html[data-tema='oscuro'] .negocio-v2__metricas article > span,
+html[data-tema='oscuro'] .negocio-v2__metodos button > span {
+  color: #6fe495 !important;
+  background: rgba(43, 157, 89, .22) !important;
+}
+
+html[data-tema='oscuro'] .negocio-v2__acciones button > span {
+  color: #62e390 !important;
+  background: rgba(37, 141, 81, .24) !important;
+}
+
+html[data-tema='oscuro'] .negocio-v2__acciones button:nth-child(1) > span,
+html[data-tema='oscuro'] .negocio-v2__acciones button:nth-child(4) > span,
+html[data-tema='oscuro'] .negocio-v2__metodos button > span.naranja {
+  color: #ff7d2a !important;
+  background: rgba(255,106,18,.15) !important;
+}
+
+html[data-tema='oscuro'] .negocio-v2__nav {
+  border-top-color: rgba(83,214,130,.16) !important;
+  background: rgba(4, 39, 27, .97) !important;
+  box-shadow: 0 -12px 30px rgba(0,0,0,.22) !important;
+}
+
+html[data-tema='oscuro'] .negocio-v2__nav button { color: #9dada4 !important; }
+html[data-tema='oscuro'] .negocio-v2__nav button.activo {
+  color: #ff7219 !important;
+  background: rgba(255,106,18,.12) !important;
+}
+
+html[data-tema='oscuro'] .negocio-v2__logo {
+  background-image: url('./recursos/marca/logo-club-regalones-claro.png') !important;
+}
+
+html[data-tema='oscuro'] .negocio-tema-control {
+  color: #fff8e9;
+  background: rgba(8, 52, 36, .86);
+  border-color: rgba(101, 226, 145, .28);
+  box-shadow: 0 8px 20px rgba(0,0,0,.22);
+}
