@@ -6,6 +6,7 @@ import './index.css'
 import './marca-png.css'
 import './tema.css'
 import './tema-posicion.css'
+import './ajustes-visuales-v2.css'
 
 inicializarTema()
 
