@@ -15,8 +15,10 @@ import type {
   SolicitudCompraNegocio,
 } from './lib/operaciones-caja'
 import './operacion-v2.css'
+import './solicitudes-v3.css'
 
 type VistaOperacion = 'inicio' | 'solicitudes' | 'escanear' | 'actividad' | 'turno'
+type FiltroSolicitudes = 'todas' | 'compras' | 'canjes'
 type IconoTipo =
   | 'inicio'
   | 'solicitudes'
@@ -96,9 +98,26 @@ function formatearHora(fecha: string) {
   return new Date(fecha).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' })
 }
 
+function tiempoRelativo(fecha: string) {
+  const diferencia = Math.max(0, Date.now() - new Date(fecha).getTime())
+  const minutos = Math.floor(diferencia / 60_000)
+  if (minutos < 1) return 'Ahora'
+  if (minutos < 60) return `Hace ${minutos} min`
+  const horas = Math.floor(minutos / 60)
+  if (horas < 24) return `Hace ${horas} h`
+  const dias = Math.floor(horas / 24)
+  return dias === 1 ? 'Ayer' : `Hace ${dias} días`
+}
+
 function origenSolicitud(solicitud: SolicitudCompraNegocio) {
   if (solicitud.informado_por === 'vecino') return 'Compra enviada por vecino'
   if (solicitud.llavero_id) return 'Compra asistida con llavero'
+  return 'Compra asistida'
+}
+
+function tituloSolicitud(solicitud: SolicitudCompraNegocio) {
+  if (solicitud.informado_por === 'vecino') return 'Compra en local'
+  if (solicitud.llavero_id) return 'Compra con llavero'
   return 'Compra asistida'
 }
 
@@ -114,6 +133,7 @@ export default function InicioOperativoV2({
   alCerrarTurno: () => Promise<void>
 }) {
   const [vista, setVista] = useState<VistaOperacion>('inicio')
+  const [filtroSolicitudes, setFiltroSolicitudes] = useState<FiltroSolicitudes>('todas')
   const [solicitudes, setSolicitudes] = useState<SolicitudCompraNegocio[]>([])
   const [resumen, setResumen] = useState<ResumenTurnoNegocio | null>(null)
   const [cargando, setCargando] = useState(true)
@@ -250,6 +270,27 @@ export default function InicioOperativoV2({
     }
   }
 
+  const aprobarRapido = async (solicitud: SolicitudCompraNegocio) => {
+    if (!enLinea) return
+    if (montoVigente(solicitud) === null) {
+      abrirSolicitud(solicitud)
+      setError('Primero revisa e informa el monto de la compra.')
+      return
+    }
+
+    setProcesandoId(solicitud.id)
+    setError(null)
+    try {
+      await aprobarCompraNegocio(configuracion, turno.turno_id, solicitud.id)
+      setMensaje('Compra aprobada. Club Regalones procesó los REGIS.')
+      await cargarDatos(true)
+    } catch (capturado) {
+      setError(mensajeError(capturado))
+    } finally {
+      setProcesandoId(null)
+    }
+  }
+
   const pedirNuevoMonto = async () => {
     if (!seleccionada) return
     if (motivo.trim().length < 3) {
@@ -293,6 +334,10 @@ export default function InicioOperativoV2({
   }
 
   const solicitudesVisibles = useMemo(() => solicitudes.slice(0, 2), [solicitudes])
+  const solicitudesFiltradas = useMemo(
+    () => filtroSolicitudes === 'canjes' ? [] : solicitudes,
+    [filtroSolicitudes, solicitudes],
+  )
   const procesandoSolicitud = seleccionada ? procesandoId === seleccionada.id : false
 
   return (
@@ -304,14 +349,16 @@ export default function InicioOperativoV2({
         </span>
       </header>
 
-      <button className="negocio-v2__comercio" type="button" onClick={() => abrirVista('turno')}>
-        <span className="negocio-v2__tienda" aria-hidden="true">R</span>
-        <div>
-          <strong>{configuracion.nombreNegocio}</strong>
-          <small>{configuracion.nombreSucursal} · {configuracion.nombreCaja}</small>
-        </div>
-        <Icono tipo="flecha" />
-      </button>
+      {vista === 'inicio' && (
+        <button className="negocio-v2__comercio" type="button" onClick={() => abrirVista('turno')}>
+          <span className="negocio-v2__tienda" aria-hidden="true">R</span>
+          <div>
+            <strong>{configuracion.nombreNegocio}</strong>
+            <small>{configuracion.nombreSucursal} · {configuracion.nombreCaja}</small>
+          </div>
+          <Icono tipo="flecha" />
+        </button>
+      )}
 
       {mensaje && <div className="negocio-v2__toast exito">{mensaje}</div>}
       {error && <div className="negocio-v2__toast error">{error}</div>}
@@ -362,23 +409,64 @@ export default function InicioOperativoV2({
       )}
 
       {vista === 'solicitudes' && !seleccionada && (
-        <section className="negocio-v2__pantalla">
-          <div className="negocio-v2__titulo-pantalla">
+        <section className="negocio-v2__pantalla negocio-v2__solicitudes-v3">
+          <div className="negocio-v2__solicitudes-hero">
             <h1>Solicitudes</h1>
-            <p>Tus vecinos han realizado solicitudes pendientes de revisión.</p>
+            <p>Tus vecinos han realizado solicitudes que están pendientes de revisión.</p>
           </div>
-          <div className="negocio-v2__filtros"><button className="activo" type="button">Todas ({solicitudes.length})</button><button type="button">Compras</button></div>
-          {solicitudes.length === 0 ? (
-            <div className="negocio-v2__vacio"><span><Icono tipo="check" /></span><strong>Todo al día</strong><p>Las nuevas solicitudes aparecerán aquí automáticamente.</p></div>
+
+          <div className="negocio-v2__solicitudes-tabs" role="tablist" aria-label="Filtrar solicitudes">
+            <button className={filtroSolicitudes === 'todas' ? 'activo' : ''} type="button" onClick={() => setFiltroSolicitudes('todas')}>
+              Todas <b>{solicitudes.length}</b>
+            </button>
+            <button className={filtroSolicitudes === 'compras' ? 'activo' : ''} type="button" onClick={() => setFiltroSolicitudes('compras')}>
+              Compras <b>{solicitudes.length}</b>
+            </button>
+            <button className={filtroSolicitudes === 'canjes' ? 'activo' : ''} type="button" onClick={() => setFiltroSolicitudes('canjes')}>
+              Canjes <b>0</b>
+            </button>
+          </div>
+
+          {cargando ? (
+            <div className="negocio-v2__solicitudes-vacio"><span><Icono tipo="solicitudes" /></span><strong>Buscando solicitudes…</strong><p>Estamos actualizando las solicitudes pendientes.</p></div>
+          ) : solicitudesFiltradas.length === 0 ? (
+            <div className="negocio-v2__solicitudes-vacio">
+              <span><Icono tipo="check" /></span>
+              <strong>¡Todo al día!</strong>
+              <p>{filtroSolicitudes === 'canjes' ? 'No hay canjes pendientes en este momento.' : 'No hay solicitudes pendientes por revisar.'}</p>
+            </div>
           ) : (
-            <div className="negocio-v2__lista">
-              {solicitudes.map((solicitud) => (
-                <button key={solicitud.id} type="button" onClick={() => abrirSolicitud(solicitud)}>
-                  <span className="avatar">$</span>
-                  <div><small>{origenSolicitud(solicitud)} · {formatearHora(solicitud.creado_en)}</small><strong>{formatearMonto(montoVigente(solicitud))}</strong><em>Pendiente de validación</em></div>
-                  <Icono tipo="flecha" />
-                </button>
-              ))}
+            <div className="negocio-v2__solicitudes-lista">
+              {solicitudesFiltradas.map((solicitud, indice) => {
+                const montoActual = montoVigente(solicitud)
+                const procesando = procesandoId === solicitud.id
+                return (
+                  <article key={solicitud.id} className={`negocio-v2__solicitud-card ${indice === 0 ? 'destacada' : ''}`}>
+                    <span className="negocio-v2__solicitud-avatar" aria-hidden="true"><Icono tipo="compra" /></span>
+                    <div className="negocio-v2__solicitud-contenido">
+                      <strong>{tituloSolicitud(solicitud)}</strong>
+                      <span className="negocio-v2__solicitud-origen">{origenSolicitud(solicitud)}</span>
+                      <span className="negocio-v2__solicitud-monto">{formatearMonto(montoActual)}</span>
+                      <small className="negocio-v2__solicitud-regis">Los REGIS se calculan al aprobar</small>
+                    </div>
+                    <div className="negocio-v2__solicitud-lateral">
+                      <time dateTime={solicitud.creado_en}>{tiempoRelativo(solicitud.creado_en)}</time>
+                      <em className="negocio-v2__solicitud-estado">Pendiente</em>
+                    </div>
+
+                    {indice === 0 ? (
+                      <div className="negocio-v2__solicitud-acciones">
+                        <button className="principal" type="button" disabled={procesando || !enLinea} onClick={() => void aprobarRapido(solicitud)}>
+                          {procesando ? 'Procesando…' : '✓ Aprobar'}
+                        </button>
+                        <button type="button" disabled={procesando} onClick={() => abrirSolicitud(solicitud)}>✎ Corregir</button>
+                      </div>
+                    ) : (
+                      <button className="negocio-v2__solicitud-revisar" type="button" disabled={procesando} onClick={() => abrirSolicitud(solicitud)}>Revisar</button>
+                    )}
+                  </article>
+                )
+              })}
             </div>
           )}
         </section>
