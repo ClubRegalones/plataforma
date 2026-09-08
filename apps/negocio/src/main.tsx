@@ -5,6 +5,7 @@ import { inicializarTema } from './lib/tema'
 import './index.css'
 import './marca-png.css'
 import './tema.css'
+import './tema-posicion.css'
 
 inicializarTema()
 
