@@ -3,9 +3,9 @@
    y la vectorización monocromática que se descartó. */
 
 .negocio-shell.negocio-v2 .negocio-v2__logo {
-  width: min(248px, calc(100% - 102px));
-  min-height: 66px;
-  background: url('./recursos/marca/logo-club-regalones.png') left center / contain no-repeat !important;
+  width: min(276px, calc(100% - 104px));
+  min-height: 72px;
+  background: url('./recursos/marca/logo-club-regalones.png') left center / 118% auto no-repeat !important;
 }
 
 .negocio-shell.negocio-v2 .negocio-v2__logo::before,
@@ -42,7 +42,9 @@
 
 @media (max-width: 380px) {
   .negocio-shell.negocio-v2 .negocio-v2__logo {
-    width: min(218px, calc(100% - 96px));
+    width: min(242px, calc(100% - 98px));
+    min-height: 68px;
+    background-size: 116% auto !important;
   }
 
   .negocio-shell.negocio-v2 .negocio-v2__tienda {
