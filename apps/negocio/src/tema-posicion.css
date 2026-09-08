@@ -1,0 +1,16 @@
+/* Ajuste de posicion del selector de tema en el encabezado operativo.
+   Lo mantenemos a la izquierda del estado de conexion, sin superponerse. */
+
+.negocio-tema-control {
+  top: calc(env(safe-area-inset-top, 0px) + 32px);
+  right: max(122px, calc((100vw - 430px) / 2 + 122px));
+}
+
+@media (max-width: 380px) {
+  .negocio-tema-control {
+    top: calc(env(safe-area-inset-top, 0px) + 31px);
+    right: 112px;
+    width: 36px;
+    height: 36px;
+  }
+}
