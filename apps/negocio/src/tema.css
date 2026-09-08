@@ -33,27 +33,27 @@
 .negocio-tema-control:active { transform: scale(.95); }
 
 /* --------------------------------------------------------------------------
- * Tema claro explícito
+ * Tema claro explícito — crema cálido como la demo aprobada
  * ------------------------------------------------------------------------ */
 html[data-tema='claro'],
 html[data-tema='claro'] body {
-  color: #143428 !important;
-  background: #dfe8e2 !important;
+  color: #17392d !important;
+  background: #e8dfcf !important;
 }
 
 html[data-tema='claro'] .negocio-shell {
-  color: #143428 !important;
+  color: #17392d !important;
   background:
-    radial-gradient(circle at 86% 8%, rgba(239, 125, 50, .12), transparent 28%),
-    linear-gradient(180deg, #f7faf7 0%, #eef5f0 52%, #f9fbf9 100%) !important;
-  box-shadow: 0 0 48px rgba(20, 52, 40, .16) !important;
+    radial-gradient(circle at 92% 4%, rgba(255, 170, 75, .11), transparent 26%),
+    linear-gradient(180deg, #fbf3e4 0%, #f7ecd9 55%, #f6ead6 100%) !important;
+  box-shadow: 0 0 48px rgba(45, 36, 24, .14) !important;
 }
 
 html[data-tema='claro'] .negocio-card,
 html[data-tema='claro'] .negocio-topbar {
-  border-color: rgba(15, 93, 63, .08) !important;
-  background: #fff !important;
-  box-shadow: 0 14px 38px rgba(15, 93, 63, .10) !important;
+  border-color: rgba(180, 133, 65, .14) !important;
+  background: #fffaf1 !important;
+  box-shadow: 0 14px 34px rgba(83, 61, 30, .09) !important;
 }
 
 html[data-tema='claro'] .negocio-card h1,
@@ -64,26 +64,26 @@ html[data-tema='claro'] .negocio-card p,
 html[data-tema='claro'] .negocio-topbar small,
 html[data-tema='claro'] .negocio-modos span,
 html[data-tema='claro'] .negocio-cajeros small,
-html[data-tema='claro'] .negocio-datos-turno dt { color: #53685e !important; }
+html[data-tema='claro'] .negocio-datos-turno dt { color: #6f6659 !important; }
 
 html[data-tema='claro'] .negocio-v2 {
-  --fondo: #f3f7f3;
+  --fondo: #f8eddb;
   --panel: #fffdf8;
-  --panel-2: #eef8f0;
-  --texto: #0d3b2b;
-  --texto-suave: #6d7c74;
+  --panel-2: #f6ead7;
+  --texto: #17392d;
+  --texto-suave: #756d60;
   --verde: #0f5d3f;
   --verde-2: #176a48;
   --verde-3: #0a4b35;
   --verde-claro: #8fd2a3;
   --naranjo: #ff6a12;
-  --naranjo-suave: #fff0e5;
-  --borde: rgba(15, 93, 63, .12);
-  --sombra: 0 16px 36px rgba(15, 70, 47, .10);
+  --naranjo-suave: #fff0df;
+  --borde: rgba(171, 126, 60, .16);
+  --sombra: 0 13px 30px rgba(77, 54, 24, .08);
   color: var(--texto) !important;
   background:
-    radial-gradient(circle at 8% 3%, rgba(58, 163, 100, .10), transparent 25%),
-    linear-gradient(180deg, #f9fbf8 0%, #f2f7f3 100%) !important;
+    radial-gradient(circle at 7% 4%, rgba(255, 174, 84, .09), transparent 26%),
+    linear-gradient(180deg, #fbf2e2 0%, #f8eddb 50%, #f7ebd8 100%) !important;
 }
 
 html[data-tema='claro'] .negocio-v2__comercio,
@@ -97,24 +97,25 @@ html[data-tema='claro'] .negocio-v2__sincronizado,
 html[data-tema='claro'] .negocio-v2__turno,
 html[data-tema='claro'] .negocio-v2__formulario input,
 html[data-tema='claro'] .negocio-v2__formulario textarea {
-  background: var(--panel) !important;
+  border-color: rgba(171, 126, 60, .15) !important;
+  background: #fffdf8 !important;
   box-shadow: var(--sombra) !important;
 }
 
 html[data-tema='claro'] .negocio-v2__estado.online {
   color: #0e6c42 !important;
-  border-color: #bce6c8 !important;
-  background: #def5e5 !important;
+  border-color: #b9dfbf !important;
+  background: #edf8ed !important;
 }
 
 html[data-tema='claro'] .negocio-v2__estado.offline {
   color: #9a3d2d !important;
-  border-color: #ffd5c9 !important;
-  background: #fff0eb !important;
+  border-color: #f4c8b8 !important;
+  background: #fff0e8 !important;
 }
 
 html[data-tema='claro'] .negocio-v2__hero {
-  border-color: rgba(255,255,255,.11) !important;
+  border-color: rgba(255,255,255,.24) !important;
   background:
     radial-gradient(circle at 86% 14%, rgba(185, 238, 113, .34), transparent 32%),
     radial-gradient(circle at 88% 88%, rgba(19, 113, 73, .34), transparent 34%),
@@ -122,34 +123,49 @@ html[data-tema='claro'] .negocio-v2__hero {
 }
 
 html[data-tema='claro'] .negocio-v2__todo-dia,
-html[data-tema='claro'] .negocio-v2__ayuda { background: rgba(238, 248, 240, .86) !important; }
+html[data-tema='claro'] .negocio-v2__ayuda {
+  border-color: rgba(171,126,60,.10) !important;
+  background: #f8efdf !important;
+}
 
 html[data-tema='claro'] .negocio-v2__icono-suave,
 html[data-tema='claro'] .negocio-v2__metricas article > span,
 html[data-tema='claro'] .negocio-v2__metodos button > span {
-  color: #0f5d3f !important;
-  background: #e0f2e6 !important;
+  color: #0f6b46 !important;
+  background: #e6f2e6 !important;
 }
 
 html[data-tema='claro'] .negocio-v2__acciones button > span {
-  color: #0f5d3f !important;
-  background: #e5f2e8 !important;
+  color: #0f6b46 !important;
+  background: #e6f2e6 !important;
 }
 
 html[data-tema='claro'] .negocio-v2__acciones button:nth-child(1) > span,
 html[data-tema='claro'] .negocio-v2__acciones button:nth-child(4) > span,
 html[data-tema='claro'] .negocio-v2__metodos button > span.naranja {
   color: var(--naranjo) !important;
-  background: var(--naranjo-suave) !important;
+  background: #fff0df !important;
+}
+
+html[data-tema='claro'] .negocio-v2__filtros button {
+  color: #6f6659 !important;
+  border-color: rgba(171,126,60,.18) !important;
+  background: rgba(255,253,248,.72) !important;
+}
+
+html[data-tema='claro'] .negocio-v2__filtros button.activo {
+  color: #0f5d3f !important;
+  border-color: rgba(15,93,63,.24) !important;
+  background: #eaf4e8 !important;
 }
 
 html[data-tema='claro'] .negocio-v2__nav {
-  border-top-color: rgba(15,93,63,.09) !important;
-  background: rgba(249, 251, 249, .96) !important;
-  box-shadow: 0 -12px 30px rgba(10,40,28,.08) !important;
+  border-top-color: rgba(171,126,60,.15) !important;
+  background: rgba(255, 252, 245, .97) !important;
+  box-shadow: 0 -10px 28px rgba(73,49,17,.08) !important;
 }
 
-html[data-tema='claro'] .negocio-v2__nav button { color: #85928b !important; }
+html[data-tema='claro'] .negocio-v2__nav button { color: #988f80 !important; }
 html[data-tema='claro'] .negocio-v2__nav button.activo {
   color: var(--naranjo) !important;
   background: rgba(255,106,18,.10) !important;
@@ -161,8 +177,9 @@ html[data-tema='claro'] .negocio-v2__logo {
 
 html[data-tema='claro'] .negocio-tema-control {
   color: #0f5d3f;
-  background: rgba(255,255,255,.90);
-  border-color: rgba(15,93,63,.14);
+  background: rgba(255,250,241,.96);
+  border-color: rgba(171,126,60,.20);
+  box-shadow: 0 7px 18px rgba(83,61,30,.10);
 }
 
 /* --------------------------------------------------------------------------
