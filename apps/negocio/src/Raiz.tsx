@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import App from './App'
 import AdministracionEquipo from './AdministracionEquipo'
 import InicioOperativoV2 from './InicioOperativoV2'
+import TemaControl from './TemaControl'
 import {
   leerConfiguracionDispositivo,
 } from './lib/dispositivo'
@@ -135,12 +136,15 @@ export default function Raiz() {
   return (
     <>
       {configuracion && turno ? (
-        <InicioOperativoV2
-          configuracion={configuracion}
-          turno={turno}
-          cerrandoTurno={cerrandoTurno}
-          alCerrarTurno={cerrarTurnoActual}
-        />
+        <>
+          <InicioOperativoV2
+            configuracion={configuracion}
+            turno={turno}
+            cerrandoTurno={cerrandoTurno}
+            alCerrarTurno={cerrarTurnoActual}
+          />
+          <TemaControl />
+        </>
       ) : (
         <App />
       )}
