@@ -3,8 +3,8 @@
 
 /* Logo: punto medio entre la version original pequeña y la ampliacion excesiva. */
 .negocio-shell.negocio-v2 .negocio-v2__logo {
-  width: min(238px, calc(100% - 122px));
-  min-height: 64px;
+  width: min(278px, calc(100% - 122px));
+  min-height: 82px;
   background-size: contain !important;
   background-position: left center !important;
 }
