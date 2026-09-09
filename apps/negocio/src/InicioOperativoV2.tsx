@@ -14,6 +14,10 @@ import type {
   ResumenTurnoNegocio,
   SolicitudCompraNegocio,
 } from './lib/operaciones-caja'
+import {
+  listarCanjesPendientesNegocio,
+  type CanjePendienteNegocio,
+} from './lib/canjes'
 import './operacion-v2.css'
 import './solicitudes-v3.css'
 import './solicitudes-referencia.css'
@@ -21,12 +25,6 @@ import './solicitudes-referencia.css'
 type VistaOperacion = 'inicio' | 'solicitudes' | 'escanear' | 'actividad' | 'turno'
 type FiltroSolicitudes = 'todas' | 'compras' | 'canjes'
 
-const MODO_DEMO_SOLICITUDES = true
-
-const DEMO_SALDO_ANTERIOR = 1250
-const DEMO_REGIS_ACUMULADOS = 185
-const DEMO_NUEVO_SALDO =
-  DEMO_SALDO_ANTERIOR + DEMO_REGIS_ACUMULADOS
 type IconoTipo =
   | 'inicio'
   | 'solicitudes'
@@ -86,7 +84,7 @@ function Icono({ tipo }: { tipo: IconoTipo }) {
 function mensajeError(error: unknown) {
   if (error instanceof Error) return error.message
   if (typeof error === 'object' && error !== null && 'message' in error) return String(error.message)
-  return 'No pudimos completar la operaciÃ³n. Intenta nuevamente.'
+  return 'No pudimos completar la operación. Intenta nuevamente.'
 }
 
 function montoVigente(solicitud: SolicitudCompraNegocio) {
@@ -143,6 +141,8 @@ export default function InicioOperativoV2({
   const [vista, setVista] = useState<VistaOperacion>('inicio')
   const [filtroSolicitudes, setFiltroSolicitudes] = useState<FiltroSolicitudes>('todas')
   const [solicitudes, setSolicitudes] = useState<SolicitudCompraNegocio[]>([])
+  const [canjesPendientes, setCanjesPendientes] =
+    useState<CanjePendienteNegocio[]>([])
   const [resumen, setResumen] = useState<ResumenTurnoNegocio | null>(null)
   const [cargando, setCargando] = useState(true)
   const [enLinea, setEnLinea] = useState(navigator.onLine)
@@ -152,15 +152,7 @@ export default function InicioOperativoV2({
   const [monto, setMonto] = useState('')
   const [motivo, setMotivo] = useState('')
   const [procesandoId, setProcesandoId] = useState<string | null>(null)
-  const [demoFlujoCompra, setDemoFlujoCompra] = useState<
-    'lista' | 'confirmar' | 'corregir' | 'aprobada'
-  >('lista')
-  const [demoMontoCompra, setDemoMontoCompra] = useState('18500')
-  const [demoCompraResuelta, setDemoCompraResuelta] = useState(false)
-  const [demoRechazoAbierto, setDemoRechazoAbierto] = useState(false)
-  const [demoMotivoRechazo, setDemoMotivoRechazo] = useState('')
-
-  const cargarDatos = useCallback(async (silencioso = false) => {
+const cargarDatos = useCallback(async (silencioso = false) => {
     if (!navigator.onLine) {
       setEnLinea(false)
       if (!silencioso) setCargando(false)
@@ -169,12 +161,28 @@ export default function InicioOperativoV2({
     if (!silencioso) setCargando(true)
 
     try {
-      const [solicitudesActuales, resumenActual] = await Promise.all([
-        listarSolicitudesNegocio(configuracion, turno.turno_id),
-        obtenerResumenTurnoNegocio(configuracion, turno.turno_id),
+      const [
+        solicitudesActuales,
+        resumenActual,
+        canjesActuales,
+      ] = await Promise.all([
+        listarSolicitudesNegocio(
+          configuracion,
+          turno.turno_id,
+        ),
+        obtenerResumenTurnoNegocio(
+          configuracion,
+          turno.turno_id,
+        ),
+        listarCanjesPendientesNegocio(
+          configuracion,
+          turno.turno_id,
+        ),
       ])
+
       setSolicitudes(solicitudesActuales)
       setResumen(resumenActual)
+      setCanjesPendientes(canjesActuales)
       setEnLinea(true)
       setError(null)
       setSeleccionada((actual) => {
@@ -245,7 +253,7 @@ export default function InicioOperativoV2({
           turno.turno_id,
           seleccionada.id,
           valor,
-          motivo.trim() || 'CorrecciÃ³n antes de aprobaciÃ³n',
+          motivo.trim() || 'Corrección antes de aprobación',
         )
         setMensaje('Monto corregido correctamente.')
       }
@@ -266,7 +274,7 @@ export default function InicioOperativoV2({
       return
     }
     if (actual !== escrito) {
-      setError('Guarda la correcciÃ³n del monto antes de aprobar.')
+      setError('Guarda la Corrección del monto antes de aprobar.')
       return
     }
 
@@ -297,7 +305,7 @@ export default function InicioOperativoV2({
     setError(null)
     try {
       await aprobarCompraNegocio(configuracion, turno.turno_id, solicitud.id)
-      setMensaje('Compra aprobada. Club Regalones procesÃ³ los REGIS.')
+      setMensaje('Compra aprobada. Club Regalones procesó los REGIS.')
       await cargarDatos(true)
     } catch (capturado) {
       setError(mensajeError(capturado))
@@ -309,14 +317,14 @@ export default function InicioOperativoV2({
   const pedirNuevoMonto = async () => {
     if (!seleccionada) return
     if (motivo.trim().length < 3) {
-      setError('Escribe por quÃ© necesitas que el vecino ingrese nuevamente el monto.')
+      setError('Escribe por qué necesitas que el vecino ingrese nuevamente el monto.')
       return
     }
     setProcesandoId(seleccionada.id)
     setError(null)
     try {
       await solicitarReingresoMontoNegocio(configuracion, turno.turno_id, seleccionada.id, motivo)
-      setMensaje('Se solicitÃ³ un nuevo monto al vecino.')
+      setMensaje('Se solicitó un nuevo monto al vecino.')
       setSeleccionada(null)
       setVista('inicio')
       await cargarDatos(true)
@@ -355,21 +363,17 @@ export default function InicioOperativoV2({
     [filtroSolicitudes, solicitudes],
   )
 
-  const demoCompraDisponible =
-    MODO_DEMO_SOLICITUDES &&
-    solicitudes.length === 0 &&
-    !demoCompraResuelta
-
-  const mostrarCompraDemoInicio = demoCompraDisponible
-
-  const mostrarCompraDemo =
-    demoCompraDisponible &&
-    filtroSolicitudes !== 'canjes'
+  const mostrarCanjesReales =
+    filtroSolicitudes !== 'compras'
 
   const cantidadComprasVista =
-    solicitudes.length + (demoCompraDisponible ? 1 : 0)
+    solicitudes.length
 
-  const cantidadTodasVista = cantidadComprasVista
+  const cantidadCanjesVista =
+    canjesPendientes.length
+
+  const cantidadTodasVista =
+    cantidadComprasVista + cantidadCanjesVista
 
   const procesandoSolicitud =
     seleccionada ? procesandoId === seleccionada.id : false
@@ -379,7 +383,7 @@ export default function InicioOperativoV2({
       <header className="negocio-v2__header">
         <div className="negocio-v2__logo" aria-label="Club Regalones" />
         <span className={`negocio-v2__estado ${enLinea ? 'online' : 'offline'}`}>
-          <i /> {enLinea ? 'En línea' : 'Sin conexiÃ³n'}
+          <i /> {enLinea ? 'En línea' : 'Sin conexión'}
         </span>
       </header>
 
@@ -415,22 +419,7 @@ export default function InicioOperativoV2({
               <Icono tipo="flecha" />
             </div>
             {cargando ? (
-              <p>Buscando solicitudesâ€¦</p>
-            ) : mostrarCompraDemoInicio ? (
-              <div className="negocio-v2__resumen-demo">
-                <span className="negocio-v2__resumen-demo-avatar">M</span>
-
-                <div className="negocio-v2__resumen-demo-info">
-                  <strong>María</strong>
-                  <small>Compra en local</small>
-                  <b>{formatearMonto(Number(demoMontoCompra || 0))}</b>
-                </div>
-
-                <div className="negocio-v2__resumen-demo-estado">
-                  <em>Pendiente</em>
-                  <span>Ver ›</span>
-                </div>
-              </div>
+              <p>Buscando solicitudes…</p>
             ) : solicitudesVisibles.length === 0 ? (
               <div className="negocio-v2__todo-dia">
                 <span className="negocio-v2__icono-suave"><Icono tipo="solicitudes" /></span>
@@ -447,7 +436,7 @@ export default function InicioOperativoV2({
         </>
       )}
 
-      {vista === 'solicitudes' && !seleccionada && demoFlujoCompra === 'lista' && (
+      {vista === 'solicitudes' && !seleccionada && (
         <section className="negocio-v2__pantalla negocio-v2__solicitudes-v3">
           <div className="negocio-v2__solicitudes-hero">
             <h1>Solicitudes</h1>
@@ -462,13 +451,14 @@ export default function InicioOperativoV2({
               <Icono tipo="compra" /> Compras <b>{cantidadComprasVista}</b>
             </button>
             <button className={filtroSolicitudes === 'canjes' ? 'activo' : ''} type="button" onClick={() => setFiltroSolicitudes('canjes')}>
-              <Icono tipo="canje" /> Canjes <b>0</b>
+              <Icono tipo="canje" /> Canjes <b>{cantidadCanjesVista}</b>
             </button>
           </div>
 
           {cargando ? (
-            <div className="negocio-v2__solicitudes-vacio"><span><Icono tipo="solicitudes" /></span><strong>Buscando solicitudesâ€¦</strong><p>Estamos actualizando las solicitudes pendientes.</p></div>
-          ) : solicitudesFiltradas.length === 0 && !mostrarCompraDemo ? (
+            <div className="negocio-v2__solicitudes-vacio"><span><Icono tipo="solicitudes" /></span><strong>Buscando solicitudes…</strong><p>Estamos actualizando las solicitudes pendientes.</p></div>
+          ) : solicitudesFiltradas.length === 0 &&
+              (!mostrarCanjesReales || canjesPendientes.length === 0) ? (
             <div className="negocio-v2__solicitudes-vacio">
               <span><Icono tipo="check" /></span>
               <strong>¡Todo al día!</strong>
@@ -477,72 +467,78 @@ export default function InicioOperativoV2({
           ) : (
             <div className="negocio-v2__solicitudes-lista">
 
-              {mostrarCompraDemo && (
-                <article className="negocio-v2__solicitud-card destacada solicitud-demo">
+{mostrarCanjesReales &&
+                canjesPendientes.map((canje) => {
 
-                  <span className="negocio-v2__solicitud-avatar" aria-hidden="true">
-                    M
-                  </span>
+                  const inicial =
+                    canje.nombre_vecino
+                      ?.trim()
+                      .charAt(0)
+                      .toUpperCase() || 'V'
 
-                  <div className="negocio-v2__solicitud-contenido">
-                    <strong>María</strong>
-
-                    <span className="negocio-v2__solicitud-origen">
-                      🛒 Compra en local
-                    </span>
-
-                    <span className="negocio-v2__solicitud-monto">
-                      {formatearMonto(Number(demoMontoCompra || 0))}
-                    </span>
-
-                    <small className="negocio-v2__solicitud-regis">
-                      REGIS calculados al aprobar
-                    </small>
-                  </div>
-
-                  <div className="negocio-v2__solicitud-lateral">
-                    <time>Hace 2 min</time>
-                    <em className="negocio-v2__solicitud-estado">
-                      Pendiente
-                    </em>
-                  </div>
-
-                  <div className="negocio-v2__solicitud-acciones">
-
-                    <button
-                      className="principal"
-                      type="button"
-                      onClick={() =>
-                        setDemoFlujoCompra('confirmar')
-                      }
+                  return (
+                    <article
+                      key={canje.canje_id}
+                      className="negocio-v2__solicitud-card solicitud-canje solicitud-canje-real"
                     >
-                      ✓ Aprobar
-                    </button>
 
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setDemoFlujoCompra('corregir')
-                      }
-                    >
-                      ✎ Corregir
-                    </button>
+                      <span
+                        className="negocio-v2__solicitud-avatar negocio-v2__solicitud-avatar--canje"
+                        aria-hidden="true"
+                      >
+                        {inicial}
+                      </span>
 
-                    <button
-                      className="rechazar"
-                      type="button"
-                      onClick={() => {
-                        setDemoMotivoRechazo('')
-                        setDemoRechazoAbierto(true)
-                      }}
-                    >
-                      Rechazar
-                    </button>
+                      <div className="negocio-v2__solicitud-contenido">
 
-                  </div>
-                </article>
-              )}
-              {solicitudesFiltradas.map((solicitud, indice) => {
+                        <strong>
+                          {canje.nombre_vecino}
+                        </strong>
+
+                        <span className="negocio-v2__solicitud-origen">
+                          🎁 Canje de beneficio
+                        </span>
+
+                        <span className="negocio-v2__solicitud-beneficio">
+                          {canje.nombre_beneficio}
+                        </span>
+
+                        <small className="negocio-v2__solicitud-regis negocio-v2__solicitud-regis--canje">
+                          {canje.costo_regis.toLocaleString('es-CL')} REGIS
+                        </small>
+
+                      </div>
+
+                      <div className="negocio-v2__solicitud-lateral">
+
+                        <time dateTime={canje.reservado_en}>
+                          {tiempoRelativo(canje.reservado_en)}
+                        </time>
+
+                        <em className="negocio-v2__solicitud-estado">
+                          Pendiente
+                        </em>
+
+                      </div>
+
+                      <button
+                        className="negocio-v2__solicitud-revisar negocio-v2__solicitud-revisar--canje"
+                        type="button"
+                        disabled={!enLinea}
+                        onClick={() => {
+                          setMensaje(
+                            `Canje de ${canje.nombre_vecino} listo para revisar.`
+                          )
+                        }}
+                      >
+                        Revisar
+                      </button>
+
+                    </article>
+                  )
+                })}
+
+{solicitudesFiltradas.map((solicitud, indice) => {
                 const montoActual = montoVigente(solicitud)
                 const procesando = procesandoId === solicitud.id
                 return (
@@ -562,9 +558,9 @@ export default function InicioOperativoV2({
                     {indice === 0 ? (
                       <div className="negocio-v2__solicitud-acciones">
                         <button className="principal" type="button" disabled={procesando || !enLinea} onClick={() => void aprobarRapido(solicitud)}>
-                          {procesando ? 'Procesandoâ€¦' : 'âœ“ Aprobar'}
+                          {procesando ? 'Procesando…' : '✓ Aprobar'}
                         </button>
-                        <button type="button" disabled={procesando} onClick={() => abrirSolicitud(solicitud)}>âœŽ Corregir</button>
+                        <button type="button" disabled={procesando} onClick={() => abrirSolicitud(solicitud)}>✎ Corregir</button>
                       </div>
                     ) : (
                       <button className="negocio-v2__solicitud-revisar" type="button" disabled={procesando} onClick={() => abrirSolicitud(solicitud)}>Revisar</button>
@@ -578,268 +574,9 @@ export default function InicioOperativoV2({
       )}
 
       
-      {vista === 'solicitudes' && !seleccionada && demoFlujoCompra === 'confirmar' && (
-        <section className="negocio-v2__pantalla negocio-v2__demo-compra negocio-v2__demo-confirmar-compra">
-
-          <article className="negocio-v2__demo-compra-panel">
-
-            <div className="negocio-v2__demo-compra-cabecera">
-              <div>
-                <span className="negocio-v2__demo-compra-etiqueta">
-                  Solicitud de compra
-                </span>
-
-                <h1>Confirmar compra</h1>
-
-                <div className="negocio-v2__demo-vecino">
-                  <span>M</span>
-                  <div>
-                    <strong>María</strong>
-                    <small>Compra en local</small>
-                  </div>
-                </div>
-
-                <p>
-                  Revisa el monto informado antes de aprobar la compra.
-                </p>
-              </div>
-
-              <div
-                className="negocio-v2__demo-compra-mascota"
-                aria-hidden="true"
-              />
-            </div>
-
-            <div className="negocio-v2__demo-monto">
-              <small>Monto informado</small>
-              <strong>
-                {formatearMonto(Number(demoMontoCompra || 0))}
-              </strong>
-            </div>
-
-            <div className="negocio-v2__demo-info">
-              <span>REGIS</span>
-              <div>
-                <strong>Se calculan al aprobar</strong>
-                <small>
-                  Club Regalones procesará la acumulación usando las reglas del negocio.
-                </small>
-              </div>
-            </div>
-
-            <div className="negocio-v2__demo-acciones">
-              <button
-                className="principal"
-                type="button"
-                onClick={() => {
-                  setDemoCompraResuelta(true)
-                  setDemoFlujoCompra('aprobada')
-                  setMensaje(null)
-                }}
-              >
-                ✓ Confirmar y aprobar
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setDemoFlujoCompra('lista')}
-              >
-                Volver
-              </button>
-            </div>
-
-          </article>
-        </section>
-      )}
-
-      {vista === 'solicitudes' && !seleccionada && demoFlujoCompra === 'corregir' && (
-        <section className="negocio-v2__pantalla negocio-v2__demo-compra negocio-v2__demo-corregir-compra">
-
-          <article className="negocio-v2__demo-compra-panel">
-
-            <div className="negocio-v2__demo-compra-cabecera">
-              <div>
-                <span className="negocio-v2__demo-compra-etiqueta">
-                  Corrección de solicitud
-                </span>
-
-                <h1>Corregir compra</h1>
-
-                <div className="negocio-v2__demo-vecino">
-                  <span>M</span>
-                  <div>
-                    <strong>María</strong>
-                    <small>Compra en local</small>
-                  </div>
-                </div>
-
-                <p>
-                  Ajusta el monto exacto de la boleta antes de aprobar.
-                </p>
-              </div>
-
-              <div
-                className="negocio-v2__demo-compra-mascota"
-                aria-hidden="true"
-              />
-            </div>
-
-            <label className="negocio-v2__demo-monto negocio-v2__demo-monto-editable">
-              <small>Monto corregido</small>
-
-              <span>
-                $
-                <input
-                  inputMode="numeric"
-                  value={demoMontoCompra}
-                  onChange={(evento) =>
-                    setDemoMontoCompra(
-                      evento.target.value.replace(/\D/g, '')
-                    )
-                  }
-                  aria-label="Monto corregido"
-                />
-              </span>
-            </label>
-
-            <div className="negocio-v2__demo-info">
-              <span>REGIS</span>
-              <div>
-                <strong>Se recalcularán al aprobar</strong>
-                <small>
-                  El frontend no calcula REGIS: se utilizará la lógica de Club Regalones.
-                </small>
-              </div>
-            </div>
-
-            <div className="negocio-v2__demo-acciones">
-              <button
-                className="principal"
-                type="button"
-                disabled={!demoMontoCompra || Number(demoMontoCompra) <= 0}
-                onClick={() => {
-                  setMensaje('Monto corregido en la demo.')
-                  setDemoFlujoCompra('lista')
-                }}
-              >
-                Guardar corrección
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setDemoMontoCompra('18500')
-                  setDemoFlujoCompra('lista')
-                }}
-              >
-                Cancelar
-              </button>
-            </div>
-
-          </article>
-        </section>
-      )}
-
-      {vista === 'solicitudes' && !seleccionada && demoFlujoCompra === 'aprobada' && (
-        <section className="negocio-v2__pantalla negocio-v2__resultado-compra">
-
-          <article className="negocio-v2__resultado-compra-card">
-
-            <header className="negocio-v2__resultado-compra-header">
-
-              <span
-                className="negocio-v2__resultado-compra-check"
-                aria-hidden="true"
-              >
-                ✓
-              </span>
-
-              <div>
-                <h1>¡Compra aprobada!</h1>
-                <p>La compra fue registrada correctamente.</p>
-              </div>
-
-            </header>
-
-
-            <section className="negocio-v2__resultado-compra-hero">
-
-              <div>
-                <small>Monto de la compra</small>
-
-                <strong>
-                  {formatearMonto(Number(demoMontoCompra || 0))}
-                </strong>
-              </div>
-
-              <div
-                className="negocio-v2__resultado-compra-regalon"
-                aria-hidden="true"
-              />
-
-            </section>
-
-
-            <dl className="negocio-v2__resultado-compra-resumen">
-
-              <div>
-                <dt>Saldo anterior</dt>
-                <dd>
-                  {DEMO_SALDO_ANTERIOR.toLocaleString('es-CL')} REGIS
-                </dd>
-              </div>
-
-              <div>
-                <dt>REGIS acumulados</dt>
-                <dd className="acumulados">
-                  {DEMO_REGIS_ACUMULADOS.toLocaleString('es-CL')} REGIS
-                </dd>
-              </div>
-
-              <div className="nuevo-saldo">
-                <dt>Nuevo saldo disponible</dt>
-                <dd>
-                  {DEMO_NUEVO_SALDO.toLocaleString('es-CL')} REGIS
-                </dd>
-              </div>
-
-            </dl>
-
-
-            <div className="negocio-v2__resultado-compra-acciones">
-
-              <button
-                className="principal"
-                type="button"
-                onClick={() => {
-                  setDemoFlujoCompra('lista')
-                  setVista('inicio')
-                }}
-              >
-                Volver al inicio
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setDemoFlujoCompra('lista')
-                  setVista('solicitudes')
-                }}
-              >
-                <Icono tipo="solicitudes" />
-                Ver solicitudes
-              </button>
-
-            </div>
-
-          </article>
-
-        </section>
-      )}
-
-      {vista === 'solicitudes' && seleccionada && (
+{vista === 'solicitudes' && seleccionada && (
         <section className="negocio-v2__pantalla">
-          <button className="negocio-v2__volver" type="button" onClick={() => { setSeleccionada(null); setError(null) }}>â† Volver</button>
+          <button className="negocio-v2__volver" type="button" onClick={() => { setSeleccionada(null); setError(null) }}>← Volver</button>
           <div className="negocio-v2__titulo-pantalla"><h1>Revisar compra</h1><p>{origenSolicitud(seleccionada)}</p></div>
           <article className="negocio-v2__monto-revision"><small>Monto informado</small><strong>{formatearMonto(montoVigente(seleccionada))}</strong><span>{formatearHora(seleccionada.creado_en)}</span></article>
           <div className="negocio-v2__formulario">
@@ -875,7 +612,7 @@ export default function InicioOperativoV2({
             <article><span><Icono tipo="canje" /></span><strong>{resumen?.canjes_realizados ?? 0}</strong><small>Canjes realizados</small></article>
             <article><span><Icono tipo="actividad" /></span><strong>{resumen?.regis_acumulados ?? 0}</strong><small>REGIS entregados</small></article>
           </div>
-          <div className="negocio-v2__sincronizado"><span><Icono tipo="check" /></span><div><strong>Todo al día</strong><small>{enLinea ? 'Tus datos están sincronizados con Club Regalones.' : 'Volveremos a sincronizar cuando recuperes conexiÃ³n.'}</small></div></div>
+          <div className="negocio-v2__sincronizado"><span><Icono tipo="check" /></span><div><strong>Todo al día</strong><small>{enLinea ? 'Tus datos están sincronizados con Club Regalones.' : 'Volveremos a sincronizar cuando recuperes conexión.'}</small></div></div>
         </section>
       )}
 
@@ -887,89 +624,10 @@ export default function InicioOperativoV2({
             <dl><div><dt>Negocio</dt><dd>{configuracion.nombreNegocio}</dd></div><div><dt>Sucursal</dt><dd>{configuracion.nombreSucursal}</dd></div><div><dt>Caja</dt><dd>{configuracion.nombreCaja}</dd></div><div><dt>Inicio de turno</dt><dd>{formatearHora(turno.iniciado_en)}</dd></div></dl>
           </div>
           <div className="negocio-v2__metricas turno"><article><strong>{resumen?.ventas_realizadas ?? 0}</strong><small>Compras</small></article><article><strong>{resumen?.canjes_realizados ?? 0}</strong><small>Canjes</small></article><article><strong>{resumen?.regis_acumulados ?? 0}</strong><small>REGIS</small></article></div>
-          <button className="negocio-v2__cerrar-turno" type="button" disabled={cerrandoTurno || !enLinea} onClick={() => void alCerrarTurno()}>{cerrandoTurno ? 'Cerrando turnoâ€¦' : 'Cerrar turno'}</button>
+          <button className="negocio-v2__cerrar-turno" type="button" disabled={cerrandoTurno || !enLinea} onClick={() => void alCerrarTurno()}>{cerrandoTurno ? 'Cerrando turno…' : 'Cerrar turno'}</button>
         </section>
       )}
-      {demoRechazoAbierto && (
-        <div
-          className="negocio-v2__modal-rechazo"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="titulo-rechazo-demo"
-        >
-          <div className="negocio-v2__modal-rechazo-panel">
-
-            <span
-              className="negocio-v2__modal-rechazo-icono"
-              aria-hidden="true"
-            >
-              !
-            </span>
-
-            <h2 id="titulo-rechazo-demo">
-              ¿Por qué rechazas la compra?
-            </h2>
-
-            <p>
-              Escribe brevemente el motivo para dejar registro
-              de esta solicitud.
-            </p>
-
-            <label className="negocio-v2__modal-rechazo-campo">
-
-              <span>Motivo del rechazo</span>
-
-              <textarea
-                autoFocus
-                value={demoMotivoRechazo}
-                onChange={(evento) =>
-                  setDemoMotivoRechazo(evento.target.value)
-                }
-                maxLength={500}
-                placeholder="Ej: El monto no coincide con la boleta..."
-              />
-
-              <small>
-                {demoMotivoRechazo.length}/500
-              </small>
-
-            </label>
-
-            <div className="negocio-v2__modal-rechazo-acciones">
-
-              <button
-                className="confirmar"
-                type="button"
-                disabled={!demoMotivoRechazo.trim()}
-                onClick={() => {
-                  setDemoCompraResuelta(true)
-                  setDemoRechazoAbierto(false)
-                  setDemoMotivoRechazo('')
-                  setMensaje('Compra rechazada.')
-                }}
-              >
-                Confirmar rechazo
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setDemoRechazoAbierto(false)
-                  setDemoMotivoRechazo('')
-                }}
-              >
-                Volver
-              </button>
-
-            </div>
-
-          </div>
-        </div>
-      )}
-
-
-
-      <nav className="negocio-v2__nav" aria-label="NavegaciÃ³n App Negocio">
+      <nav className="negocio-v2__nav" aria-label="Navegación App Negocio">
         {([
           ['inicio', 'Inicio', 'inicio'],
           ['solicitudes', 'Solicitudes', 'solicitudes'],

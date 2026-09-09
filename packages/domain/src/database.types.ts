@@ -4081,6 +4081,36 @@ export type Database = {
           vigencia_hasta: string
         }[]
       }
+      terminal_listar_canjes_pendientes: {
+        Args: {
+          p_limite?: number
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          avatar_vecino: string
+          beneficio_id: string
+          beneficio_version_id: string
+          canje_id: string
+          codigo_publico: string
+          compra_minima_clp: number
+          costo_regis: number
+          descripcion_beneficio: string
+          estado: Database["public"]["Enums"]["estado_canje_regis"]
+          expira_en: string
+          monto_descuento_fijo_clp: number
+          nombre_beneficio: string
+          nombre_vecino: string
+          origen: Database["public"]["Enums"]["origen_canje_regis"]
+          porcentaje_descuento_bp: number
+          porcentaje_maximo_canje_bp: number
+          reservado_en: string
+          tipo: Database["public"]["Enums"]["tipo_beneficio_regis"]
+          tope_descuento_clp: number
+          vecino_id: string
+        }[]
+      }
       terminal_listar_compras_detectadas: {
         Args: {
           p_terminal_id: string
