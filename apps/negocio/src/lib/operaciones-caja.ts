@@ -1,8 +1,9 @@
-import type { Database, Tables } from '@club-regalones/domain'
+import type { Database } from '@club-regalones/domain'
 import { supabase } from './supabase'
 import type { ConfiguracionDispositivoNegocio } from './dispositivo'
 
-export type SolicitudCompraNegocio = Tables<'solicitudes_compra'>
+export type SolicitudCompraNegocio =
+  Database['public']['Functions']['terminal_listar_solicitudes_app_negocio']['Returns'][number]
 export type ResumenTurnoNegocio =
   Database['public']['Functions']['terminal_resumen_turno']['Returns'][number]
 
@@ -21,7 +22,7 @@ export async function listarSolicitudesNegocio(
   configuracion: ConfiguracionDispositivoNegocio,
   turnoId: string,
 ) {
-  const { data, error } = await supabase.rpc('terminal_listar_solicitudes', {
+  const { data, error } = await supabase.rpc('terminal_listar_solicitudes_app_negocio', {
     ...credencial(configuracion, turnoId),
   })
 

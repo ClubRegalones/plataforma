@@ -4200,6 +4200,33 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      terminal_listar_solicitudes_app_negocio: {
+        Args: {
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          actualizado_en: string
+          avatar_vecino: string
+          caja_id: string
+          creado_en: string
+          estado: Database["public"]["Enums"]["estado_solicitud_compra"]
+          expira_en: string
+          id: string
+          idempotency_key: string
+          informado_por: Database["public"]["Enums"]["informado_por"]
+          lectura_terminal_id: string
+          llavero_id: string
+          monto_corregido: number
+          monto_informado: number
+          motivo_correccion: string
+          motivo_rechazo: string
+          nombre_vecino: string
+          turno_caja_id: string
+          vecino_id: string
+        }[]
+      }
       terminal_marcar_canje_leido: {
         Args: {
           p_canje_id: string

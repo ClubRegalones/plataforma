@@ -543,10 +543,22 @@ const cargarDatos = useCallback(async (silencioso = false) => {
                 const procesando = procesandoId === solicitud.id
                 return (
                   <article key={solicitud.id} className={`negocio-v2__solicitud-card ${indice === 0 ? 'destacada' : ''}`}>
-                    <span className="negocio-v2__solicitud-avatar" aria-hidden="true"><Icono tipo="compra" /></span>
+                    <span
+                      className="negocio-v2__solicitud-avatar"
+                      aria-hidden="true"
+                    >
+                      {solicitud.nombre_vecino
+                        ?.trim()
+                        .charAt(0)
+                        .toUpperCase() || 'V'}
+                    </span>
                     <div className="negocio-v2__solicitud-contenido">
-                      <strong>{tituloSolicitud(solicitud)}</strong>
-                      <span className="negocio-v2__solicitud-origen">{origenSolicitud(solicitud)}</span>
+                      <strong>
+                        {solicitud.nombre_vecino?.trim() || 'Vecino'}
+                      </strong>
+                      <span className="negocio-v2__solicitud-origen">
+                        🛒 {tituloSolicitud(solicitud)}
+                      </span>
                       <span className="negocio-v2__solicitud-monto">{formatearMonto(montoActual)}</span>
                       <small className="negocio-v2__solicitud-regis">Los REGIS se calculan al aprobar</small>
                     </div>
@@ -577,7 +589,14 @@ const cargarDatos = useCallback(async (silencioso = false) => {
 {vista === 'solicitudes' && seleccionada && (
         <section className="negocio-v2__pantalla">
           <button className="negocio-v2__volver" type="button" onClick={() => { setSeleccionada(null); setError(null) }}>← Volver</button>
-          <div className="negocio-v2__titulo-pantalla"><h1>Revisar compra</h1><p>{origenSolicitud(seleccionada)}</p></div>
+          <div className="negocio-v2__titulo-pantalla">
+            <h1>Revisar compra</h1>
+            <p>
+              {seleccionada.nombre_vecino?.trim() || 'Vecino'}
+              {' · '}
+              {origenSolicitud(seleccionada)}
+            </p>
+          </div>
           <article className="negocio-v2__monto-revision"><small>Monto informado</small><strong>{formatearMonto(montoVigente(seleccionada))}</strong><span>{formatearHora(seleccionada.creado_en)}</span></article>
           <div className="negocio-v2__formulario">
             <label>Monto correcto en CLP<input inputMode="numeric" value={monto} onChange={(e) => setMonto(e.target.value.replace(/\D/g, ''))} placeholder="0" /></label>
