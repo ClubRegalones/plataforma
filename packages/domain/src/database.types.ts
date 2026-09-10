@@ -3982,6 +3982,25 @@ export type Database = {
           token_vinculacion: string
         }[]
       }
+      terminal_identificar_llavero_qr: {
+        Args: {
+          p_codigo_publico: string
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          canjeados: number
+          codigo_publico: string
+          disponibles: number
+          llavero_id: string
+          nombre_vecino: string
+          pendientes: number
+          reservados: number
+          saldo_actualizado_en: string
+          vecino_id: string
+        }[]
+      }
       terminal_informar_monto: {
         Args: {
           p_monto: number
