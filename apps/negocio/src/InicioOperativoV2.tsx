@@ -21,6 +21,7 @@ import {
 import './operacion-v2.css'
 import './solicitudes-v3.css'
 import './solicitudes-referencia.css'
+import './canjes-v1.css'
 
 type VistaOperacion = 'inicio' | 'solicitudes' | 'escanear' | 'actividad' | 'turno'
 type FiltroSolicitudes = 'todas' | 'compras' | 'canjes'
@@ -44,6 +45,7 @@ type IconoTipo =
   | 'compra'
   | 'canje'
   | 'check'
+  | 'editar'
   | 'flecha'
 
 function Icono({ tipo }: { tipo: IconoTipo }) {
@@ -85,6 +87,14 @@ function Icono({ tipo }: { tipo: IconoTipo }) {
   }
   if (tipo === 'check') {
     return <svg {...comun}><path d="m5 12 4 4L19 6"/></svg>
+  }
+  if (tipo === 'editar') {
+    return (
+      <svg {...comun}>
+        <path d="M12 20h9"/>
+        <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+      </svg>
+    )
   }
   return <svg {...comun}><path d="m9 18 6-6-6-6"/></svg>
 }
@@ -176,6 +186,12 @@ export default function InicioOperativoV2({
   const [motivoRechazo, setMotivoRechazo] =
     useState('')
 
+  const [canjeSeleccionado, setCanjeSeleccionado] =
+    useState<CanjePendienteNegocio | null>(null)
+
+  const [montoCanje, setMontoCanje] =
+    useState('')
+
   const cargarDatos = useCallback(async (silencioso = false) => {
     if (!navigator.onLine) {
       setEnLinea(false)
@@ -207,6 +223,18 @@ export default function InicioOperativoV2({
       setSolicitudes(solicitudesActuales)
       setResumen(resumenActual)
       setCanjesPendientes(canjesActuales)
+
+      setCanjeSeleccionado((actual) => {
+        if (!actual) return null
+
+        return (
+          canjesActuales.find(
+            (item) =>
+              item.canje_id === actual.canje_id,
+          ) ?? null
+        )
+      })
+
       setEnLinea(true)
       setError(null)
       setSeleccionada((actual) => {
@@ -249,9 +277,57 @@ export default function InicioOperativoV2({
     setRechazoAbierto(false)
     setSolicitudRechazo(null)
     setMotivoRechazo('')
+    setCanjeSeleccionado(null)
+    setMontoCanje('')
     setFlujoCompra('lista')
     setError(null)
     setVista(nuevaVista)
+  }
+
+  const abrirCanje = (
+    canje: CanjePendienteNegocio,
+  ) => {
+    setSeleccionada(null)
+    setSolicitudConfirmacion(null)
+    setResultadoCompra(null)
+    setCanjeSeleccionado(canje)
+    setMontoCanje('')
+    setError(null)
+    setMensaje(null)
+    setFlujoCompra('lista')
+    setVista('solicitudes')
+  }
+
+  const continuarCanjeAlEscaneo = () => {
+    if (!canjeSeleccionado) return
+
+    const valor = Number(montoCanje)
+
+    if (!Number.isInteger(valor) || valor <= 0) {
+      setError(
+        'Ingresa el monto total de la compra.',
+      )
+      return
+    }
+
+    if (
+      valor <
+      canjeSeleccionado.compra_minima_clp
+    ) {
+      setError(
+        `La compra debe ser de al menos ${formatearMonto(
+          canjeSeleccionado.compra_minima_clp,
+        )} para usar este beneficio.`,
+      )
+      return
+    }
+
+    setError(null)
+
+    // Conservamos canjeSeleccionado + montoCanje.
+    // El siguiente bloque conectara QR/llavero
+    // con la confirmacion real del backend.
+    setVista('escanear')
   }
 
   const abrirSolicitud = (solicitud: SolicitudCompraNegocio) => {
@@ -703,6 +779,7 @@ export default function InicioOperativoV2({
 
       {vista === 'solicitudes' &&
         !seleccionada &&
+        !canjeSeleccionado &&
         flujoCompra === 'lista' && (
         <section className="negocio-v2__pantalla negocio-v2__solicitudes-v3">
           <div className="negocio-v2__solicitudes-hero">
@@ -792,11 +869,9 @@ export default function InicioOperativoV2({
                         className="negocio-v2__solicitud-revisar negocio-v2__solicitud-revisar--canje"
                         type="button"
                         disabled={!enLinea}
-                        onClick={() => {
-                          setMensaje(
-                            `Canje de ${canje.nombre_vecino} listo para revisar.`
-                          )
-                        }}
+                        onClick={() =>
+                          abrirCanje(canje)
+                        }
                       >
                         Revisar
                       </button>
@@ -805,15 +880,11 @@ export default function InicioOperativoV2({
                   )
                 })}
 
-{solicitudesFiltradas.map((solicitud, indice) => {
+{solicitudesFiltradas.map((solicitud) => {
                 const montoActual = montoVigente(solicitud)
                 const procesando = procesandoId === solicitud.id
                 return (
-                  <article key={solicitud.id} className={`negocio-v2__solicitud-card solicitud-demo ${
-                      indice === 0
-                        ? 'destacada'
-                        : ''
-                    }`}>
+                  <article key={solicitud.id} className="negocio-v2__solicitud-card solicitud-demo">
                     <span
                       className="negocio-v2__solicitud-avatar"
                       aria-hidden="true"
@@ -871,7 +942,215 @@ export default function InicioOperativoV2({
         </section>
       )}
 
-      
+
+
+      {vista === 'solicitudes' &&
+        canjeSeleccionado && (
+        <section className="negocio-v2__canje-revision">
+
+          <article className="negocio-v2__canje-panel">
+
+            <header className="negocio-v2__canje-cabecera">
+
+              <div className="negocio-v2__canje-cabecera-copy">
+
+                <span className="negocio-v2__canje-eyebrow">
+                  Solicitud de canje
+                </span>
+
+                <h1>Revisar canje</h1>
+
+                <div className="negocio-v2__canje-vecino">
+
+                  <span
+                    className="negocio-v2__canje-avatar"
+                    aria-hidden="true"
+                  >
+                    {canjeSeleccionado.nombre_vecino
+                      ?.trim()
+                      .charAt(0)
+                      .toUpperCase() || 'V'}
+                  </span>
+
+                  <div>
+                    <strong>
+                      {canjeSeleccionado.nombre_vecino
+                        ?.trim() || 'Vecino'}
+                    </strong>
+
+                    <small>
+                      {canjeSeleccionado.origen === 'qr'
+                        ? 'Canje solicitado desde App Vecino'
+                        : 'Canje con llavero NFC'}
+                    </small>
+                  </div>
+
+                </div>
+
+                <p>
+                  Revisa el beneficio y el monto antes de continuar.
+                </p>
+
+              </div>
+
+              <div
+                className="negocio-v2__canje-regalon"
+                aria-hidden="true"
+              />
+
+            </header>
+
+
+            <section className="negocio-v2__canje-beneficio">
+
+              <div
+                className="negocio-v2__canje-moneda"
+                aria-hidden="true"
+              />
+
+              <div className="negocio-v2__canje-beneficio-contenido">
+
+                <strong className="negocio-v2__canje-descuento">
+                  {canjeSeleccionado.nombre_beneficio}
+                </strong>
+
+                <div className="negocio-v2__canje-regis-destacados">
+                  <Icono tipo="canje" />
+
+                  <b>
+                    {canjeSeleccionado.costo_regis.toLocaleString(
+                      'es-CL',
+                    )}{' '}
+                    REGIS
+                  </b>
+
+                  <span>reservados</span>
+                </div>
+
+
+
+              </div>
+
+            </section>
+
+            <div className="negocio-v2__canje-condiciones">
+
+                  <div className="negocio-v2__canje-minimo">
+                    <Icono tipo="compra" />
+
+                    <span>
+                      Compra mínima
+                      <strong>
+                        {formatearMonto(
+                          canjeSeleccionado.compra_minima_clp,
+                        )}
+                      </strong>
+                    </span>
+                  </div>
+
+                  <div className="negocio-v2__canje-vigencia">
+                    <Icono tipo="turno" />
+
+                    <span>
+                      Válido hasta
+                      <strong>
+                        {formatearHora(
+                          canjeSeleccionado.expira_en,
+                        )}
+                      </strong>
+                    </span>
+                  </div>
+
+                </div>
+
+
+            <label className="negocio-v2__canje-monto">
+
+              <small>Monto total de la compra</small>
+
+              <span className="negocio-v2__canje-monto-fila">
+
+                <b>$</b>
+
+                <input
+                  inputMode="numeric"
+                  value={montoCanje}
+                  onChange={(evento) =>
+                    setMontoCanje(
+                      evento.target.value.replace(
+                        /\D/g,
+                        '',
+                      ),
+                    )
+                  }
+                  placeholder="0"
+                  aria-label="Monto total de la compra"
+                />
+
+                <i aria-hidden="true">
+                  <Icono tipo="editar" />
+                </i>
+
+              </span>
+
+            </label>
+
+
+            <div className="negocio-v2__canje-aviso">
+
+              <div
+                className="negocio-v2__canje-aviso-moneda"
+                aria-hidden="true"
+              />
+
+              <div>
+                <strong>
+                  El descuento se calcula al confirmar
+                </strong>
+
+                <small>
+                  Club Regalones calculará el beneficio automáticamente.
+                </small>
+              </div>
+
+            </div>
+
+
+            <div className="negocio-v2__canje-acciones">
+
+              <button
+                className="principal"
+                type="button"
+                disabled={
+                  !enLinea ||
+                  !montoCanje ||
+                  Number(montoCanje) <= 0
+                }
+                onClick={continuarCanjeAlEscaneo}
+              >
+                Continuar al escaneo
+                <Icono tipo="flecha" />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setCanjeSeleccionado(null)
+                  setMontoCanje('')
+                  setError(null)
+                  setVista('solicitudes')
+                }}
+              >
+                Volver
+              </button>
+
+            </div>
+
+          </article>
+
+        </section>
+      )}
+
 
       {vista === 'solicitudes' &&
         flujoCompra === 'corregir' &&
