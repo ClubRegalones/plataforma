@@ -1204,6 +1204,119 @@ export type Database = {
         }
         Relationships: []
       }
+      recuperaciones_pin_llavero: {
+        Row: {
+          actualizado_en: string
+          aprobada_en: string | null
+          aprobada_por: string | null
+          caja_id: string
+          cajero_negocio_id: string
+          completada_en: string | null
+          completar_antes: string | null
+          estado: Database["public"]["Enums"]["estado_recuperacion_pin_llavero"]
+          expira_en: string
+          id: string
+          idempotency_key: string
+          identidad_verificada_en: string
+          llavero_id: string
+          negocio_id: string
+          solicitada_en: string
+          sucursal_id: string
+          turno_caja_id: string
+          vecino_id: string
+        }
+        Insert: {
+          actualizado_en?: string
+          aprobada_en?: string | null
+          aprobada_por?: string | null
+          caja_id: string
+          cajero_negocio_id: string
+          completada_en?: string | null
+          completar_antes?: string | null
+          estado?: Database["public"]["Enums"]["estado_recuperacion_pin_llavero"]
+          expira_en: string
+          id?: string
+          idempotency_key: string
+          identidad_verificada_en: string
+          llavero_id: string
+          negocio_id: string
+          solicitada_en?: string
+          sucursal_id: string
+          turno_caja_id: string
+          vecino_id: string
+        }
+        Update: {
+          actualizado_en?: string
+          aprobada_en?: string | null
+          aprobada_por?: string | null
+          caja_id?: string
+          cajero_negocio_id?: string
+          completada_en?: string | null
+          completar_antes?: string | null
+          estado?: Database["public"]["Enums"]["estado_recuperacion_pin_llavero"]
+          expira_en?: string
+          id?: string
+          idempotency_key?: string
+          identidad_verificada_en?: string
+          llavero_id?: string
+          negocio_id?: string
+          solicitada_en?: string
+          sucursal_id?: string
+          turno_caja_id?: string
+          vecino_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recuperaciones_pin_llavero_caja_id_fkey"
+            columns: ["caja_id"]
+            isOneToOne: false
+            referencedRelation: "cajas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recuperaciones_pin_llavero_cajero_negocio_id_fkey"
+            columns: ["cajero_negocio_id"]
+            isOneToOne: false
+            referencedRelation: "cajeros_negocio"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recuperaciones_pin_llavero_llavero_id_fkey"
+            columns: ["llavero_id"]
+            isOneToOne: false
+            referencedRelation: "llaveros_nfc"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recuperaciones_pin_llavero_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recuperaciones_pin_llavero_sucursal_id_fkey"
+            columns: ["sucursal_id"]
+            isOneToOne: false
+            referencedRelation: "sucursales"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recuperaciones_pin_llavero_turno_caja_id_fkey"
+            columns: ["turno_caja_id"]
+            isOneToOne: false
+            referencedRelation: "turnos_caja"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recuperaciones_pin_llavero_vecino_id_fkey"
+            columns: ["vecino_id"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       registro_supervision_beneficios: {
         Row: {
           accion: Database["public"]["Enums"]["accion_supervision_beneficio_regis"]
@@ -2162,6 +2275,16 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      aprobar_recuperacion_pin_llavero: {
+        Args: { p_recuperacion_id: string }
+        Returns: {
+          aprobada: boolean
+          completar_antes: string
+          estado: Database["public"]["Enums"]["estado_recuperacion_pin_llavero"]
+          mensaje: string
+          recuperacion_id: string
+        }[]
+      }
       cambiar_estado_beneficio_regis: {
         Args: {
           p_beneficio_version_id: string
@@ -2252,6 +2375,10 @@ export type Database = {
           costo_regis: number
           estado: Database["public"]["Enums"]["estado_canje_regis"]
         }[]
+      }
+      cancelar_reservas_llavero_por_cambio_pin_interno: {
+        Args: { p_llavero_id: string }
+        Returns: number
       }
       cancelar_solicitud_llavero: {
         Args: { p_solicitud_id: string }
@@ -2931,6 +3058,10 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      expirar_recuperaciones_pin_llavero_interno: {
+        Args: never
+        Returns: number
+      }
       expirar_reservas_canje_regis: { Args: never; Returns: number }
       informar_monto_cajero: {
         Args: { p_monto: number; p_solicitud_id: string }
@@ -3172,6 +3303,18 @@ export type Database = {
           llavero_id: string
           nombre_vecino: string
           vecino_id: string
+        }[]
+      }
+      listar_recuperaciones_pin_llavero_pendientes: {
+        Args: { p_negocio_id: string }
+        Returns: {
+          codigo_publico: string
+          expira_en: string
+          nombre_cajero: string
+          nombre_sucursal: string
+          nombre_vecino: string
+          recuperacion_id: string
+          solicitada_en: string
         }[]
       }
       listar_saldos_regis_propios: {
@@ -3830,6 +3973,22 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      terminal_completar_recuperacion_pin_llavero: {
+        Args: {
+          p_nuevo_pin: string
+          p_recuperacion_id: string
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          actualizado: boolean
+          canjes_cancelados: number
+          mensaje: string
+          pin_actualizado_en: string
+          recuperacion_id: string
+        }[]
+      }
       terminal_confirmar_compra_con_canje: {
         Args: {
           p_canje_id: string
@@ -3905,6 +4064,22 @@ export type Database = {
           nombre_vecino: string
           puede_activar: boolean
           tiene_pin: boolean
+        }[]
+      }
+      terminal_consultar_recuperacion_pin_llavero: {
+        Args: {
+          p_recuperacion_id: string
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          aprobada: boolean
+          completar_antes: string
+          estado: Database["public"]["Enums"]["estado_recuperacion_pin_llavero"]
+          expira_en: string
+          puede_completar: boolean
+          recuperacion_id: string
         }[]
       }
       terminal_consultar_saldo_llavero: {
@@ -4140,6 +4315,24 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      terminal_iniciar_recuperacion_pin_llavero: {
+        Args: {
+          p_idempotency_key: string
+          p_identidad_verificada: boolean
+          p_llavero_id: string
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          codigo_publico: string
+          estado: Database["public"]["Enums"]["estado_recuperacion_pin_llavero"]
+          expira_en: string
+          nombre_vecino: string
+          recuperacion_id: string
+          solicitada_en: string
+        }[]
       }
       terminal_iniciar_turno: {
         Args: {
@@ -4841,6 +5034,11 @@ export type Database = {
       estado_negocio: "pendiente" | "activo" | "suspendido" | "rechazado"
       estado_perfil: "activo" | "bloqueado" | "eliminado"
       estado_plan: "activo" | "inactivo" | "archivado"
+      estado_recuperacion_pin_llavero:
+        | "pendiente"
+        | "aprobada"
+        | "completada"
+        | "expirada"
       estado_sesion_lector_movil:
         | "pendiente_vinculacion"
         | "vinculada"
@@ -5093,6 +5291,12 @@ export const Constants = {
       estado_negocio: ["pendiente", "activo", "suspendido", "rechazado"],
       estado_perfil: ["activo", "bloqueado", "eliminado"],
       estado_plan: ["activo", "inactivo", "archivado"],
+      estado_recuperacion_pin_llavero: [
+        "pendiente",
+        "aprobada",
+        "completada",
+        "expirada",
+      ],
       estado_sesion_lector_movil: [
         "pendiente_vinculacion",
         "vinculada",
