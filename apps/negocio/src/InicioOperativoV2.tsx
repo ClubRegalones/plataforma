@@ -24,6 +24,14 @@ import './solicitudes-referencia.css'
 
 type VistaOperacion = 'inicio' | 'solicitudes' | 'escanear' | 'actividad' | 'turno'
 type FiltroSolicitudes = 'todas' | 'compras' | 'canjes'
+type FlujoCompra = 'lista' | 'confirmar' | 'corregir' | 'aprobada'
+
+type ResultadoCompraAprobada = {
+  solicitud: SolicitudCompraNegocio
+  compra: NonNullable<
+    Awaited<ReturnType<typeof aprobarCompraNegocio>>
+  >
+}
 
 type IconoTipo =
   | 'inicio'
@@ -152,7 +160,23 @@ export default function InicioOperativoV2({
   const [monto, setMonto] = useState('')
   const [motivo, setMotivo] = useState('')
   const [procesandoId, setProcesandoId] = useState<string | null>(null)
-const cargarDatos = useCallback(async (silencioso = false) => {
+  const [flujoCompra, setFlujoCompra] =
+    useState<FlujoCompra>('lista')
+  const [solicitudConfirmacion, setSolicitudConfirmacion] =
+    useState<SolicitudCompraNegocio | null>(null)
+  const [resultadoCompra, setResultadoCompra] =
+    useState<ResultadoCompraAprobada | null>(null)
+
+  const [rechazoAbierto, setRechazoAbierto] =
+    useState(false)
+
+  const [solicitudRechazo, setSolicitudRechazo] =
+    useState<SolicitudCompraNegocio | null>(null)
+
+  const [motivoRechazo, setMotivoRechazo] =
+    useState('')
+
+  const cargarDatos = useCallback(async (silencioso = false) => {
     if (!navigator.onLine) {
       setEnLinea(false)
       if (!silencioso) setCargando(false)
@@ -220,16 +244,97 @@ const cargarDatos = useCallback(async (silencioso = false) => {
 
   const abrirVista = (nuevaVista: VistaOperacion) => {
     setSeleccionada(null)
+    setSolicitudConfirmacion(null)
+    setResultadoCompra(null)
+    setRechazoAbierto(false)
+    setSolicitudRechazo(null)
+    setMotivoRechazo('')
+    setFlujoCompra('lista')
     setError(null)
     setVista(nuevaVista)
   }
 
   const abrirSolicitud = (solicitud: SolicitudCompraNegocio) => {
+    setSolicitudConfirmacion(null)
+    setResultadoCompra(null)
+    setFlujoCompra('lista')
     setSeleccionada(solicitud)
     setMonto(montoVigente(solicitud)?.toString() ?? '')
     setMotivo('')
     setError(null)
     setVista('solicitudes')
+  }
+
+  const abrirConfirmacion = (
+    solicitud: SolicitudCompraNegocio,
+  ) => {
+    const actual = montoVigente(solicitud)
+
+    if (actual === null) {
+      setError('Esta solicitud todavía no tiene un monto informado.')
+      return
+    }
+
+    setSeleccionada(null)
+    setResultadoCompra(null)
+    setSolicitudConfirmacion(solicitud)
+    setMonto(actual.toString())
+    setMotivo('')
+    setError(null)
+    setFlujoCompra('confirmar')
+    setVista('solicitudes')
+  }
+
+  const abrirCorreccion = (
+    solicitud: SolicitudCompraNegocio,
+  ) => {
+    const actual = montoVigente(solicitud)
+
+    if (actual === null) {
+      setError(
+        'Esta solicitud todavía no tiene un monto para corregir.',
+      )
+      return
+    }
+
+    setSolicitudConfirmacion(null)
+    setResultadoCompra(null)
+    setSeleccionada(solicitud)
+    setMonto(actual.toString())
+    setMotivo('')
+    setError(null)
+    setFlujoCompra('corregir')
+    setVista('solicitudes')
+  }
+
+  const abrirRechazo = (
+    solicitud: SolicitudCompraNegocio,
+  ) => {
+    setSolicitudRechazo(solicitud)
+    setMotivoRechazo('')
+    setError(null)
+    setRechazoAbierto(true)
+  }
+
+  const abrirConfirmacionDesdeRevision = () => {
+    if (!seleccionada) return
+
+    const actual = montoVigente(seleccionada)
+    const escrito = Number(monto)
+
+    if (actual === null) {
+      setError('Primero informa el monto de la compra.')
+      return
+    }
+
+    if (actual !== escrito) {
+      setError(
+        'Guarda la corrección del monto antes de aprobar.',
+      )
+      return
+    }
+
+    abrirConfirmacion(seleccionada)
   }
 
   const guardarMonto = async () => {
@@ -265,26 +370,43 @@ const cargarDatos = useCallback(async (silencioso = false) => {
     }
   }
 
-  const aprobar = async () => {
-    if (!seleccionada) return
-    const actual = montoVigente(seleccionada)
-    const escrito = Number(monto)
+  const confirmarCompra = async () => {
+    if (!solicitudConfirmacion) return
+
+    const solicitud = solicitudConfirmacion
+    const actual = montoVigente(solicitud)
+
     if (actual === null) {
-      setError('Primero informa el monto de la compra.')
-      return
-    }
-    if (actual !== escrito) {
-      setError('Guarda la Corrección del monto antes de aprobar.')
+      setError('La solicitud no tiene un monto para aprobar.')
       return
     }
 
-    setProcesandoId(seleccionada.id)
+    setProcesandoId(solicitud.id)
     setError(null)
+
     try {
-      await aprobarCompraNegocio(configuracion, turno.turno_id, seleccionada.id)
-      setMensaje('Compra aprobada. Los REGIS fueron procesados por Club Regalones.')
+      const compra = await aprobarCompraNegocio(
+        configuracion,
+        turno.turno_id,
+        solicitud.id,
+      )
+
+      if (!compra) {
+        throw new Error(
+          'Club Regalones no devolvió la compra aprobada.',
+        )
+      }
+
+      setResultadoCompra({
+        solicitud,
+        compra,
+      })
+
+      setSolicitudConfirmacion(null)
       setSeleccionada(null)
-      setVista('inicio')
+      setFlujoCompra('aprobada')
+      setMensaje(null)
+
       await cargarDatos(true)
     } catch (capturado) {
       setError(mensajeError(capturado))
@@ -293,19 +415,50 @@ const cargarDatos = useCallback(async (silencioso = false) => {
     }
   }
 
-  const aprobarRapido = async (solicitud: SolicitudCompraNegocio) => {
-    if (!enLinea) return
-    if (montoVigente(solicitud) === null) {
-      abrirSolicitud(solicitud)
-      setError('Primero revisa e informa el monto de la compra.')
+  const guardarCorreccion = async () => {
+    if (!seleccionada || !enLinea) return
+
+    const valor = Number(monto)
+    const actual = montoVigente(seleccionada)
+
+    if (!Number.isInteger(valor) || valor <= 0) {
+      setError('Ingresa un monto válido mayor a $0.')
       return
     }
 
-    setProcesandoId(solicitud.id)
+    if (actual === null) {
+      setError(
+        'La solicitud no tiene un monto original para corregir.',
+      )
+      return
+    }
+
+    if (actual === valor) {
+      setError(
+        'Ingresa un monto distinto al informado originalmente.',
+      )
+      return
+    }
+
+    setProcesandoId(seleccionada.id)
     setError(null)
+
     try {
-      await aprobarCompraNegocio(configuracion, turno.turno_id, solicitud.id)
-      setMensaje('Compra aprobada. Club Regalones procesó los REGIS.')
+      await corregirMontoNegocio(
+        configuracion,
+        turno.turno_id,
+        seleccionada.id,
+        valor,
+        'Corrección antes de aprobación',
+      )
+
+      setMensaje(
+        `Monto corregido correctamente a ${formatearMonto(valor)}.`,
+      )
+
+      setSeleccionada(null)
+      setFlujoCompra('lista')
+
       await cargarDatos(true)
     } catch (capturado) {
       setError(mensajeError(capturado))
@@ -335,19 +488,40 @@ const cargarDatos = useCallback(async (silencioso = false) => {
     }
   }
 
-  const rechazar = async () => {
-    if (!seleccionada) return
-    if (motivo.trim().length < 3) {
-      setError('Escribe un motivo de al menos 3 caracteres.')
+  const confirmarRechazo = async () => {
+    if (!solicitudRechazo || !enLinea) return
+
+    const motivoLimpio = motivoRechazo.trim()
+
+    if (motivoLimpio.length < 3) {
+      setError(
+        'Escribe un motivo de al menos 3 caracteres.',
+      )
       return
     }
-    setProcesandoId(seleccionada.id)
+
+    setProcesandoId(solicitudRechazo.id)
     setError(null)
+
     try {
-      await rechazarCompraNegocio(configuracion, turno.turno_id, seleccionada.id, motivo)
-      setMensaje('Solicitud rechazada. No se acreditaron REGIS.')
+      await rechazarCompraNegocio(
+        configuracion,
+        turno.turno_id,
+        solicitudRechazo.id,
+        motivoLimpio,
+      )
+
+      setMensaje(
+        'Solicitud rechazada. No se acreditaron REGIS.',
+      )
+
+      setRechazoAbierto(false)
+      setSolicitudRechazo(null)
+      setMotivoRechazo('')
       setSeleccionada(null)
-      setVista('inicio')
+      setFlujoCompra('lista')
+      setVista('solicitudes')
+
       await cargarDatos(true)
     } catch (capturado) {
       setError(mensajeError(capturado))
@@ -356,7 +530,18 @@ const cargarDatos = useCallback(async (silencioso = false) => {
     }
   }
 
-  const solicitudesVisibles = useMemo(() => solicitudes.slice(0, 2), [solicitudes])
+  const solicitudesVisibles = useMemo(
+    () => solicitudes.slice(0, 2),
+    [solicitudes],
+  )
+
+  const solicitudInicio =
+    solicitudesVisibles[0] ?? null
+
+  const canjeInicio =
+    !solicitudInicio
+      ? canjesPendientes[0] ?? null
+      : null
 
   const solicitudesFiltradas = useMemo(
     () => filtroSolicitudes === 'canjes' ? [] : solicitudes,
@@ -420,23 +605,105 @@ const cargarDatos = useCallback(async (silencioso = false) => {
             </div>
             {cargando ? (
               <p>Buscando solicitudes…</p>
-            ) : solicitudesVisibles.length === 0 ? (
+            ) : !solicitudInicio && !canjeInicio ? (
               <div className="negocio-v2__todo-dia">
-                <span className="negocio-v2__icono-suave"><Icono tipo="solicitudes" /></span>
-                <div><strong>¡Todo al día!</strong><small>No hay solicitudes pendientes por el momento.</small></div>
+
+                <span className="negocio-v2__icono-suave">
+                  <Icono tipo="solicitudes" />
+                </span>
+
+                <div>
+                  <strong>¡Todo al día!</strong>
+                  <small>
+                    No hay solicitudes pendientes por el momento.
+                  </small>
+                </div>
+
+              </div>
+            ) : solicitudInicio ? (
+              <div className="negocio-v2__resumen-demo">
+
+                <span
+                  className="negocio-v2__resumen-demo-avatar"
+                  aria-hidden="true"
+                >
+                  {solicitudInicio.nombre_vecino
+                    ?.trim()
+                    .charAt(0)
+                    .toUpperCase() || 'V'}
+                </span>
+
+                <div className="negocio-v2__resumen-demo-info">
+
+                  <strong>
+                    {solicitudInicio.nombre_vecino?.trim() ||
+                      'Vecino'}
+                  </strong>
+
+                  <small>
+                    {tituloSolicitud(solicitudInicio)}
+                  </small>
+
+                  <b>
+                    {formatearMonto(
+                      montoVigente(solicitudInicio),
+                    )}
+                  </b>
+
+                </div>
+
+                <div className="negocio-v2__resumen-demo-estado">
+                  <em>Pendiente</em>
+                  <span>Ver</span>
+                </div>
+
               </div>
             ) : (
-              <div className="negocio-v2__mini-solicitudes">
-                {solicitudesVisibles.map((solicitud) => (
-                  <span key={solicitud.id}>{formatearMonto(montoVigente(solicitud))} · {origenSolicitud(solicitud)}</span>
-                ))}
+              <div className="negocio-v2__resumen-demo">
+
+                <span
+                  className="negocio-v2__resumen-demo-avatar"
+                  aria-hidden="true"
+                >
+                  {canjeInicio?.nombre_vecino
+                    ?.trim()
+                    .charAt(0)
+                    .toUpperCase() || 'V'}
+                </span>
+
+                <div className="negocio-v2__resumen-demo-info">
+
+                  <strong>
+                    {canjeInicio?.nombre_vecino?.trim() ||
+                      'Vecino'}
+                  </strong>
+
+                  <small>Canje de beneficio</small>
+
+                  <b>
+                    {canjeInicio
+                      ? `${canjeInicio.costo_regis.toLocaleString(
+                          'es-CL',
+                        )} REGIS`
+                      : ''}
+                  </b>
+
+                </div>
+
+                <div className="negocio-v2__resumen-demo-estado">
+                  <em>Pendiente</em>
+                  <span>Ver</span>
+                </div>
+
               </div>
             )}
           </button>
         </>
       )}
 
-      {vista === 'solicitudes' && !seleccionada && (
+      {vista === 'solicitudes' &&
+        !seleccionada &&
+        flujoCompra === 'lista' && (
         <section className="negocio-v2__pantalla negocio-v2__solicitudes-v3">
           <div className="negocio-v2__solicitudes-hero">
             <h1>Solicitudes</h1>
@@ -542,7 +809,11 @@ const cargarDatos = useCallback(async (silencioso = false) => {
                 const montoActual = montoVigente(solicitud)
                 const procesando = procesandoId === solicitud.id
                 return (
-                  <article key={solicitud.id} className={`negocio-v2__solicitud-card ${indice === 0 ? 'destacada' : ''}`}>
+                  <article key={solicitud.id} className={`negocio-v2__solicitud-card solicitud-demo ${
+                      indice === 0
+                        ? 'destacada'
+                        : ''
+                    }`}>
                     <span
                       className="negocio-v2__solicitud-avatar"
                       aria-hidden="true"
@@ -567,16 +838,31 @@ const cargarDatos = useCallback(async (silencioso = false) => {
                       <em className="negocio-v2__solicitud-estado">Pendiente</em>
                     </div>
 
-                    {indice === 0 ? (
-                      <div className="negocio-v2__solicitud-acciones">
-                        <button className="principal" type="button" disabled={procesando || !enLinea} onClick={() => void aprobarRapido(solicitud)}>
+                    <div className="negocio-v2__solicitud-acciones">
+                        <button className="principal" type="button" disabled={procesando || !enLinea} onClick={() => abrirConfirmacion(solicitud)}>
                           {procesando ? 'Procesando…' : '✓ Aprobar'}
                         </button>
-                        <button type="button" disabled={procesando} onClick={() => abrirSolicitud(solicitud)}>✎ Corregir</button>
+                        <button
+                          type="button"
+                          disabled={procesando}
+                          onClick={() =>
+                            abrirCorreccion(solicitud)
+                          }
+                        >
+                          Corregir
+                        </button>
+
+                        <button
+                          className="rechazar"
+                          type="button"
+                          disabled={procesando || !enLinea}
+                          onClick={() =>
+                            abrirRechazo(solicitud)
+                          }
+                        >
+                          Rechazar
+                        </button>
                       </div>
-                    ) : (
-                      <button className="negocio-v2__solicitud-revisar" type="button" disabled={procesando} onClick={() => abrirSolicitud(solicitud)}>Revisar</button>
-                    )}
                   </article>
                 )
               })}
@@ -586,28 +872,326 @@ const cargarDatos = useCallback(async (silencioso = false) => {
       )}
 
       
-{vista === 'solicitudes' && seleccionada && (
-        <section className="negocio-v2__pantalla">
-          <button className="negocio-v2__volver" type="button" onClick={() => { setSeleccionada(null); setError(null) }}>← Volver</button>
-          <div className="negocio-v2__titulo-pantalla">
-            <h1>Revisar compra</h1>
-            <p>
-              {seleccionada.nombre_vecino?.trim() || 'Vecino'}
-              {' · '}
-              {origenSolicitud(seleccionada)}
-            </p>
-          </div>
-          <article className="negocio-v2__monto-revision"><small>Monto informado</small><strong>{formatearMonto(montoVigente(seleccionada))}</strong><span>{formatearHora(seleccionada.creado_en)}</span></article>
-          <div className="negocio-v2__formulario">
-            <label>Monto correcto en CLP<input inputMode="numeric" value={monto} onChange={(e) => setMonto(e.target.value.replace(/\D/g, ''))} placeholder="0" /></label>
-            <label>Motivo<textarea value={motivo} onChange={(e) => setMotivo(e.target.value)} maxLength={500} placeholder="Ej: el monto no coincide con la caja" /></label>
-          </div>
-          <div className="negocio-v2__acciones-revision">
-            <button className="principal" type="button" disabled={procesandoSolicitud || !enLinea} onClick={() => void aprobar()}>Aprobar compra</button>
-            <button type="button" disabled={procesandoSolicitud || !enLinea} onClick={() => void guardarMonto()}>Guardar monto</button>
-            <button type="button" disabled={procesandoSolicitud || !enLinea} onClick={() => void pedirNuevoMonto()}>Pedir nuevo monto</button>
-            <button className="peligro" type="button" disabled={procesandoSolicitud || !enLinea} onClick={() => void rechazar()}>Rechazar solicitud</button>
-          </div>
+
+      {vista === 'solicitudes' &&
+        flujoCompra === 'corregir' &&
+        seleccionada && (
+        <section className="negocio-v2__pantalla negocio-v2__demo-compra negocio-v2__demo-corregir-compra">
+
+          <article className="negocio-v2__demo-compra-panel">
+
+            <div className="negocio-v2__demo-compra-cabecera">
+
+              <div>
+                <span className="negocio-v2__demo-compra-etiqueta">
+                  Corrección de solicitud
+                </span>
+
+                <h1>Corregir compra</h1>
+
+                <div className="negocio-v2__demo-vecino">
+
+                  <span>
+                    {seleccionada.nombre_vecino
+                      ?.trim()
+                      .charAt(0)
+                      .toUpperCase() || 'V'}
+                  </span>
+
+                  <div>
+                    <strong>
+                      {seleccionada.nombre_vecino?.trim() ||
+                        'Vecino'}
+                    </strong>
+
+                    <small>
+                      {tituloSolicitud(seleccionada)}
+                    </small>
+                  </div>
+
+                </div>
+
+                <p>
+                  Ajusta el monto exacto de la boleta antes
+                  de aprobar.
+                </p>
+              </div>
+
+              <div
+                className="negocio-v2__demo-compra-mascota"
+                aria-hidden="true"
+              />
+
+            </div>
+
+            <label className="negocio-v2__demo-monto negocio-v2__demo-monto-editable">
+
+              <small>Monto corregido</small>
+
+              <span>
+                $
+                <input
+                  inputMode="numeric"
+                  value={monto}
+                  onChange={(evento) =>
+                    setMonto(
+                      evento.target.value.replace(/\D/g, ''),
+                    )
+                  }
+                  aria-label="Monto corregido"
+                />
+              </span>
+
+            </label>
+
+            <div className="negocio-v2__demo-info">
+
+              <span>REGIS</span>
+
+              <div>
+                <strong>
+                  Se recalcularán al aprobar
+                </strong>
+
+                <small>
+                  Club Regalones aplicará la regla vigente
+                  sobre el monto corregido.
+                </small>
+              </div>
+
+            </div>
+
+            <div className="negocio-v2__demo-acciones">
+
+              <button
+                className="principal"
+                type="button"
+                disabled={
+                  procesandoId === seleccionada.id ||
+                  !enLinea ||
+                  !monto ||
+                  Number(monto) <= 0
+                }
+                onClick={() => void guardarCorreccion()}
+              >
+                {procesandoId === seleccionada.id
+                  ? 'Guardando...'
+                  : 'Guardar corrección'}
+              </button>
+
+              <button
+                type="button"
+                disabled={
+                  procesandoId === seleccionada.id
+                }
+                onClick={() => {
+                  setSeleccionada(null)
+                  setFlujoCompra('lista')
+                  setError(null)
+                }}
+              >
+                Cancelar
+              </button>
+
+            </div>
+
+          </article>
+        </section>
+      )}
+
+      {vista === 'solicitudes' &&
+        flujoCompra === 'confirmar' &&
+        solicitudConfirmacion && (
+        <section className="negocio-v2__pantalla negocio-v2__demo-compra negocio-v2__demo-confirmar-compra">
+
+          <article className="negocio-v2__demo-compra-panel">
+
+            <div className="negocio-v2__demo-compra-cabecera">
+              <div>
+                <span className="negocio-v2__demo-compra-etiqueta">
+                  Solicitud de compra
+                </span>
+
+                <h1>Confirmar compra</h1>
+
+                <div className="negocio-v2__demo-vecino">
+                  <span>
+                    {solicitudConfirmacion.nombre_vecino
+                      ?.trim()
+                      .charAt(0)
+                      .toUpperCase() || 'V'}
+                  </span>
+
+                  <div>
+                    <strong>
+                      {solicitudConfirmacion.nombre_vecino?.trim() ||
+                        'Vecino'}
+                    </strong>
+
+                    <small>
+                      {tituloSolicitud(solicitudConfirmacion)}
+                    </small>
+                  </div>
+                </div>
+
+                <p>
+                  Revisa el monto informado antes de aprobar la compra.
+                </p>
+              </div>
+
+              <div
+                className="negocio-v2__demo-compra-mascota"
+                aria-hidden="true"
+              />
+            </div>
+
+            <div className="negocio-v2__demo-monto">
+              <small>Monto informado</small>
+
+              <strong>
+                {formatearMonto(
+                  montoVigente(solicitudConfirmacion),
+                )}
+              </strong>
+            </div>
+
+            <div className="negocio-v2__demo-info">
+              <span>REGIS</span>
+
+              <div>
+                <strong>Se calculan al aprobar</strong>
+
+                <small>
+                  Club Regalones aplicará la regla vigente del negocio.
+                </small>
+              </div>
+            </div>
+
+            <div className="negocio-v2__demo-acciones">
+              <button
+                className="principal"
+                type="button"
+                disabled={
+                  procesandoId === solicitudConfirmacion.id ||
+                  !enLinea
+                }
+                onClick={() => void confirmarCompra()}
+              >
+                {procesandoId === solicitudConfirmacion.id
+                  ? 'Procesando...'
+                  : '\u2713 Confirmar y aprobar'}
+              </button>
+
+              <button
+                type="button"
+                disabled={
+                  procesandoId === solicitudConfirmacion.id
+                }
+                onClick={() => {
+                  setSolicitudConfirmacion(null)
+                  setFlujoCompra('lista')
+                  setError(null)
+                }}
+              >
+                Volver
+              </button>
+            </div>
+
+          </article>
+        </section>
+      )}
+
+      {vista === 'solicitudes' &&
+        flujoCompra === 'aprobada' &&
+        resultadoCompra && (
+        <section className="negocio-v2__pantalla negocio-v2__resultado-compra">
+
+          <article className="negocio-v2__resultado-compra-card">
+
+            <header className="negocio-v2__resultado-compra-header">
+              <span
+                className="negocio-v2__resultado-compra-check"
+                aria-hidden="true"
+              >
+                <Icono tipo="check" />
+              </span>
+
+              <div>
+                <h1>¡Compra aprobada!</h1>
+                <p>La compra fue registrada correctamente.</p>
+              </div>
+            </header>
+
+            <section className="negocio-v2__resultado-compra-hero">
+              <div>
+                <small>Monto de la compra</small>
+
+                <strong>
+                  {formatearMonto(
+                    resultadoCompra.compra.monto_final,
+                  )}
+                </strong>
+              </div>
+
+              <div
+                className="negocio-v2__resultado-compra-regalon"
+                aria-hidden="true"
+              />
+            </section>
+
+            <dl className="negocio-v2__resultado-compra-resumen">
+              <div>
+                <dt>Vecino</dt>
+
+                <dd>
+                  {resultadoCompra.solicitud.nombre_vecino?.trim() ||
+                    'Vecino'}
+                </dd>
+              </div>
+
+              <div>
+                <dt>REGIS acumulados</dt>
+
+                <dd className="acumulados">
+                  +{resultadoCompra.compra.regis_generados.toLocaleString(
+                    'es-CL',
+                  )} REGIS
+                </dd>
+              </div>
+
+              <div className="nuevo-saldo">
+                <dt>Registro</dt>
+                <dd>Compra confirmada</dd>
+              </div>
+            </dl>
+
+            <div className="negocio-v2__resultado-compra-acciones">
+              <button
+                className="principal"
+                type="button"
+                onClick={() => {
+                  setResultadoCompra(null)
+                  setFlujoCompra('lista')
+                  setVista('inicio')
+                }}
+              >
+                Volver al inicio
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setResultadoCompra(null)
+                  setFlujoCompra('lista')
+                  setVista('solicitudes')
+                }}
+              >
+                <Icono tipo="solicitudes" />
+                Ver solicitudes
+              </button>
+            </div>
+
+          </article>
         </section>
       )}
 
@@ -646,6 +1230,94 @@ const cargarDatos = useCallback(async (silencioso = false) => {
           <button className="negocio-v2__cerrar-turno" type="button" disabled={cerrandoTurno || !enLinea} onClick={() => void alCerrarTurno()}>{cerrandoTurno ? 'Cerrando turno…' : 'Cerrar turno'}</button>
         </section>
       )}
+      {rechazoAbierto && solicitudRechazo && (
+        <div
+          className="negocio-v2__modal-rechazo"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="titulo-rechazo-compra"
+        >
+          <div className="negocio-v2__modal-rechazo-panel">
+
+            <span
+              className="negocio-v2__modal-rechazo-icono"
+              aria-hidden="true"
+            >
+              !
+            </span>
+
+            <h2 id="titulo-rechazo-compra">
+              ¿Por qué rechazas la compra?
+            </h2>
+
+            <p>
+              {solicitudRechazo.nombre_vecino?.trim() ||
+                'Vecino'}
+              {' · '}
+              {formatearMonto(
+                montoVigente(solicitudRechazo),
+              )}
+            </p>
+
+            <label className="negocio-v2__modal-rechazo-campo">
+
+              <span>Motivo del rechazo</span>
+
+              <textarea
+                autoFocus
+                value={motivoRechazo}
+                onChange={(evento) =>
+                  setMotivoRechazo(evento.target.value)
+                }
+                maxLength={500}
+                placeholder="Ej: El monto no coincide con la boleta..."
+              />
+
+              <small>
+                {motivoRechazo.length}/500
+              </small>
+
+            </label>
+
+            <div className="negocio-v2__modal-rechazo-acciones">
+
+              <button
+                className="confirmar"
+                type="button"
+                disabled={
+                  motivoRechazo.trim().length < 3 ||
+                  procesandoId === solicitudRechazo.id ||
+                  !enLinea
+                }
+                onClick={() => void confirmarRechazo()}
+              >
+                {procesandoId === solicitudRechazo.id
+                  ? 'Rechazando...'
+                  : 'Confirmar rechazo'}
+              </button>
+
+              <button
+                type="button"
+                disabled={
+                  procesandoId === solicitudRechazo.id
+                }
+                onClick={() => {
+                  setRechazoAbierto(false)
+                  setSolicitudRechazo(null)
+                  setMotivoRechazo('')
+                  setError(null)
+                }}
+              >
+                Volver
+              </button>
+
+            </div>
+
+          </div>
+        </div>
+      )}
+
+
       <nav className="negocio-v2__nav" aria-label="Navegación App Negocio">
         {([
           ['inicio', 'Inicio', 'inicio'],
