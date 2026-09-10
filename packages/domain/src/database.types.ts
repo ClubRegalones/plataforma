@@ -3691,6 +3691,25 @@ export type Database = {
           mensaje: string
         }[]
       }
+      terminal_activar_llavero_app_negocio: {
+        Args: {
+          p_codigo_publico: string
+          p_identidad_verificada: boolean
+          p_pin_seguridad: string
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          activado: boolean
+          activado_en: string
+          codigo_publico: string
+          estado: Database["public"]["Enums"]["estado_llavero_nfc"]
+          llavero_id: string
+          mensaje: string
+          pin_configurado: boolean
+        }[]
+      }
       terminal_activar_llavero_desde_lectura: {
         Args: {
           p_identidad_verificada: boolean
@@ -3831,6 +3850,23 @@ export type Database = {
           monto_final_pagado_clp: number
           regis_utilizados: number
           valor_financiado_regis_clp: number
+        }[]
+      }
+      terminal_consultar_activacion_llavero_app_negocio: {
+        Args: {
+          p_codigo_publico: string
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          codigo_publico: string
+          entregado: boolean
+          estado: Database["public"]["Enums"]["estado_llavero_nfc"]
+          llavero_id: string
+          nombre_vecino: string
+          puede_activar: boolean
+          tiene_pin_seguridad: boolean
         }[]
       }
       terminal_consultar_canje_qr: {
