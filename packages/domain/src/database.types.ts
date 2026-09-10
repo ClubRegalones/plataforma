@@ -293,6 +293,8 @@ export type Database = {
           monto_final_pagado_clp: number | null
           negocio_id: string
           origen: Database["public"]["Enums"]["origen_canje_regis"]
+          pin_seguridad_autorizado_en: string | null
+          pin_seguridad_turno_id: string | null
           qr_token_hash: string | null
           regla_regis_id: string
           reservado_en: string
@@ -327,6 +329,8 @@ export type Database = {
           monto_final_pagado_clp?: number | null
           negocio_id: string
           origen: Database["public"]["Enums"]["origen_canje_regis"]
+          pin_seguridad_autorizado_en?: string | null
+          pin_seguridad_turno_id?: string | null
           qr_token_hash?: string | null
           regla_regis_id: string
           reservado_en?: string
@@ -361,6 +365,8 @@ export type Database = {
           monto_final_pagado_clp?: number | null
           negocio_id?: string
           origen?: Database["public"]["Enums"]["origen_canje_regis"]
+          pin_seguridad_autorizado_en?: string | null
+          pin_seguridad_turno_id?: string | null
           qr_token_hash?: string | null
           regla_regis_id?: string
           reservado_en?: string
@@ -410,6 +416,13 @@ export type Database = {
             columns: ["llavero_id"]
             isOneToOne: false
             referencedRelation: "llaveros_nfc"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canjes_regis_pin_seguridad_turno_id_fkey"
+            columns: ["pin_seguridad_turno_id"]
+            isOneToOne: false
+            referencedRelation: "turnos_caja"
             referencedColumns: ["id"]
           },
           {
@@ -2653,6 +2666,8 @@ export type Database = {
           monto_final_pagado_clp: number | null
           negocio_id: string
           origen: Database["public"]["Enums"]["origen_canje_regis"]
+          pin_seguridad_autorizado_en: string | null
+          pin_seguridad_turno_id: string | null
           qr_token_hash: string | null
           regla_regis_id: string
           reservado_en: string
@@ -4460,6 +4475,27 @@ export type Database = {
           expira_en: string
         }[]
       }
+      terminal_reservar_canje_llavero_app_negocio: {
+        Args: {
+          p_beneficio_version_id: string
+          p_idempotency_key: string
+          p_llavero_id: string
+          p_pin: string
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          autorizado: boolean
+          bloqueado_hasta: string
+          canje_id: string
+          codigo_publico: string
+          costo_regis: number
+          estado: Database["public"]["Enums"]["estado_canje_regis"]
+          expira_en: string
+          mensaje: string
+        }[]
+      }
       terminal_resumen_turno: {
         Args: {
           p_terminal_id: string
@@ -4505,6 +4541,16 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      validar_canje_llavero_app_negocio_con_pin_interno: {
+        Args: {
+          p_estado: Database["public"]["Enums"]["estado_canje_regis"]
+          p_origen: Database["public"]["Enums"]["origen_canje_regis"]
+          p_pin_autorizado_en: string
+          p_pin_turno_id: string
+          p_turno_id: string
+        }
+        Returns: undefined
       }
       validar_canje_llavero_app_negocio_interno: {
         Args: {
