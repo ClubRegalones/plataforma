@@ -756,6 +756,11 @@ export type Database = {
             | null
           pin_activacion_hash: string | null
           pin_bloqueado_hasta: string | null
+          pin_seguridad_actualizado_en: string | null
+          pin_seguridad_bloqueado_hasta: string | null
+          pin_seguridad_configurado_en: string | null
+          pin_seguridad_hash: string | null
+          pin_seguridad_intentos_fallidos: number
           preparado_en: string | null
           preparado_por: string | null
           reemplazado_por_id: string | null
@@ -783,6 +788,11 @@ export type Database = {
             | null
           pin_activacion_hash?: string | null
           pin_bloqueado_hasta?: string | null
+          pin_seguridad_actualizado_en?: string | null
+          pin_seguridad_bloqueado_hasta?: string | null
+          pin_seguridad_configurado_en?: string | null
+          pin_seguridad_hash?: string | null
+          pin_seguridad_intentos_fallidos?: number
           preparado_en?: string | null
           preparado_por?: string | null
           reemplazado_por_id?: string | null
@@ -810,6 +820,11 @@ export type Database = {
             | null
           pin_activacion_hash?: string | null
           pin_bloqueado_hasta?: string | null
+          pin_seguridad_actualizado_en?: string | null
+          pin_seguridad_bloqueado_hasta?: string | null
+          pin_seguridad_configurado_en?: string | null
+          pin_seguridad_hash?: string | null
+          pin_seguridad_intentos_fallidos?: number
           preparado_en?: string | null
           preparado_por?: string | null
           reemplazado_por_id?: string | null
@@ -2860,6 +2875,47 @@ export type Database = {
         Args: { p_terminal_id: string }
         Returns: boolean
       }
+      establecer_pin_seguridad_llavero_interno: {
+        Args: { p_llavero_id: string; p_pin: string }
+        Returns: {
+          activado_en: string | null
+          activado_por: string | null
+          actualizado_en: string
+          asignado_en: string | null
+          asignado_por: string | null
+          bloqueado_en: string | null
+          caja_activacion_id: string | null
+          codigo_publico: string
+          creado_en: string
+          estado: Database["public"]["Enums"]["estado_llavero_nfc"]
+          id: string
+          intentos_pin_fallidos: number
+          lectura_activacion_id: string | null
+          metodo_verificacion_activacion:
+            | Database["public"]["Enums"]["metodo_verificacion_llavero"]
+            | null
+          pin_activacion_hash: string | null
+          pin_bloqueado_hasta: string | null
+          pin_seguridad_actualizado_en: string | null
+          pin_seguridad_bloqueado_hasta: string | null
+          pin_seguridad_configurado_en: string | null
+          pin_seguridad_hash: string | null
+          pin_seguridad_intentos_fallidos: number
+          preparado_en: string | null
+          preparado_por: string | null
+          reemplazado_por_id: string | null
+          solicitud_id: string | null
+          token_hash: string
+          turno_caja_activacion_id: string | null
+          vecino_id: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "llaveros_nfc"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       expirar_reservas_canje_regis: { Args: never; Returns: number }
       informar_monto_cajero: {
         Args: { p_monto: number; p_solicitud_id: string }
@@ -4450,6 +4506,14 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      validar_canje_llavero_app_negocio_interno: {
+        Args: {
+          p_estado: Database["public"]["Enums"]["estado_canje_regis"]
+          p_origen: Database["public"]["Enums"]["origen_canje_regis"]
+          p_turno_id: string
+        }
+        Returns: undefined
+      }
       validar_configuracion_beneficio_regis: {
         Args: {
           p_compra_minima_clp: number
@@ -4512,6 +4576,14 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      validar_pin_seguridad_llavero_interno: {
+        Args: { p_llavero_id: string; p_pin: string }
+        Returns: {
+          autorizado: boolean
+          bloqueado_hasta: string
+          mensaje: string
+        }[]
       }
       validar_terminal_operacion_interna: {
         Args: { p_terminal_id: string; p_token_terminal: string }
