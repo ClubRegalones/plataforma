@@ -14,6 +14,8 @@ type MetodoLectura = 'qr' | 'llavero'
 
 type VecinoIdentificado = {
   metodo: 'qr' | 'nfc'
+  llaveroId: string
+  tokenNfc: string | null
   codigoPublico: string
   nombreVecino: string
   disponibles: number
@@ -60,6 +62,8 @@ function convertirLlaveroQr(
 ): VecinoIdentificado {
   return {
     metodo: 'qr',
+    llaveroId: llavero.llavero_id,
+    tokenNfc: null,
     codigoPublico: llavero.codigo_publico,
     nombreVecino:
       llavero.nombre_vecino?.trim() || 'Vecino',
@@ -76,6 +80,8 @@ function convertirLlaveroNfc(
 ): VecinoIdentificado {
   return {
     metodo: 'nfc',
+    llaveroId: llavero.llaveroId,
+    tokenNfc: llavero.tokenNfc,
     codigoPublico: llavero.codigoPublico,
     nombreVecino: llavero.nombreVecino,
     disponibles: llavero.disponibles,

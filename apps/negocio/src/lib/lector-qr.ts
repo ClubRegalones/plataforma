@@ -27,6 +27,7 @@ export type ResultadoLecturaQrNegocio =
 
 export type ResultadoLecturaNfcNegocio = {
   tipo: 'llavero'
+  llaveroId: string
   tokenNfc: string
   codigoPublico: string
   nombreVecino: string
@@ -217,8 +218,33 @@ export async function resolverNfcNegocio(
 
   const saldo = saldos?.[0]
 
+  const {
+    data: llaverosIdentificados,
+    error: errorIdentificacion,
+  } = await supabase.rpc(
+    'terminal_identificar_llavero_qr',
+    {
+      p_codigo_publico: llavero.codigo_publico,
+      ...credencial(configuracion, turnoId),
+    },
+  )
+
+  if (errorIdentificacion) {
+    throw errorIdentificacion
+  }
+
+  const llaveroIdentificado =
+    llaverosIdentificados?.[0]
+
+  if (!llaveroIdentificado) {
+    throw new Error(
+      'No pudimos completar la identificación del llavero.',
+    )
+  }
+
   return {
     tipo: 'llavero',
+    llaveroId: llaveroIdentificado.llavero_id,
     tokenNfc,
     codigoPublico: llavero.codigo_publico,
     nombreVecino:
