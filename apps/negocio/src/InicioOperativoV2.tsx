@@ -382,9 +382,7 @@ const cargarDatos = useCallback(async (silencioso = false) => {
       return
     }
 
-    setError(
-      'Los canjes con llavero se confirmaran mediante PIN.',
-    )
+    void confirmarCanjeActual()
   }
 
   const confirmarCanjeActual = async () => {

@@ -8,6 +8,12 @@ export type CanjePendienteNegocio =
 export type ResultadoCanjeNegocio =
   Database['public']['Functions']['terminal_confirmar_compra_con_canje']['Returns'][number]
 
+export type BeneficioCanjeNegocio =
+  Database['public']['Functions']['terminal_listar_beneficios_canje']['Returns'][number]
+
+export type ReservaCanjeLlaveroNegocio =
+  Database['public']['Functions']['terminal_reservar_canje_llavero_app_negocio']['Returns'][number]
+
 function credencial(
   configuracion: ConfiguracionDispositivoNegocio,
   turnoId: string,
@@ -17,6 +23,46 @@ function credencial(
     p_terminal_id: configuracion.terminalId,
     p_token_terminal: configuracion.tokenTerminal,
   }
+}
+
+export async function listarBeneficiosCanjeNegocio(
+  configuracion: ConfiguracionDispositivoNegocio,
+  turnoId: string,
+) {
+  const { data, error } = await supabase.rpc(
+    'terminal_listar_beneficios_canje',
+    {
+      ...credencial(configuracion, turnoId),
+    },
+  )
+
+  if (error) throw error
+
+  return data as BeneficioCanjeNegocio[]
+}
+
+export async function reservarCanjeLlaveroNegocio(
+  configuracion: ConfiguracionDispositivoNegocio,
+  turnoId: string,
+  llaveroId: string,
+  beneficioVersionId: string,
+  pin: string,
+  idempotencyKey: string,
+) {
+  const { data, error } = await supabase.rpc(
+    'terminal_reservar_canje_llavero_app_negocio',
+    {
+      ...credencial(configuracion, turnoId),
+      p_llavero_id: llaveroId,
+      p_beneficio_version_id: beneficioVersionId,
+      p_pin: pin.trim(),
+      p_idempotency_key: idempotencyKey,
+    },
+  )
+
+  if (error) throw error
+
+  return data[0] ?? null
 }
 
 export async function listarCanjesPendientesNegocio(
