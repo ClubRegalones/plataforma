@@ -1,4 +1,9 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import type { ConfiguracionDispositivoNegocio } from './lib/dispositivo'
 import type { TurnoAppNegocio } from './lib/cajeros'
 import {
@@ -15,6 +20,7 @@ import type {
   SolicitudCompraNegocio,
 } from './lib/operaciones-caja'
 import {
+  confirmarCanjeNegocio,
   listarCanjesPendientesNegocio,
   type CanjePendienteNegocio,
 } from './lib/canjes'
@@ -22,6 +28,8 @@ import './operacion-v2.css'
 import './solicitudes-v3.css'
 import './solicitudes-referencia.css'
 import './canjes-v1.css'
+import './canje-confirmado-v1.css'
+import EscanerQrNegocio from './EscanerQrNegocio'
 
 type VistaOperacion = 'inicio' | 'solicitudes' | 'escanear' | 'actividad' | 'turno'
 type FiltroSolicitudes = 'todas' | 'compras' | 'canjes'
@@ -192,7 +200,24 @@ export default function InicioOperativoV2({
   const [montoCanje, setMontoCanje] =
     useState('')
 
-  const cargarDatos = useCallback(async (silencioso = false) => {
+
+  const [canjeEscaneo, setCanjeEscaneo] =
+    useState<CanjePendienteNegocio | null>(null)
+
+  const [tokenQrCanje, setTokenQrCanje] =
+    useState<{
+      canjeId: string
+      token: string
+    } | null>(null)
+  const [resultadoCanjeConfirmado, setResultadoCanjeConfirmado] =
+    useState<{
+      canje: CanjePendienteNegocio
+      resultado: NonNullable<
+        Awaited<ReturnType<typeof confirmarCanjeNegocio>>
+      >
+    } | null>(null)
+
+const cargarDatos = useCallback(async (silencioso = false) => {
     if (!navigator.onLine) {
       setEnLinea(false)
       if (!silencioso) setCargando(false)
@@ -274,10 +299,14 @@ export default function InicioOperativoV2({
     setSeleccionada(null)
     setSolicitudConfirmacion(null)
     setResultadoCompra(null)
+    setResultadoCanjeConfirmado(null)
     setRechazoAbierto(false)
     setSolicitudRechazo(null)
     setMotivoRechazo('')
     setCanjeSeleccionado(null)
+    setCanjeEscaneo(null)
+    setTokenQrCanje(null)
+    setCanjeEscaneo(null)
     setMontoCanje('')
     setFlujoCompra('lista')
     setError(null)
@@ -286,11 +315,25 @@ export default function InicioOperativoV2({
 
   const abrirCanje = (
     canje: CanjePendienteNegocio,
+    tokenQr?: string,
   ) => {
     setSeleccionada(null)
     setSolicitudConfirmacion(null)
     setResultadoCompra(null)
+    setResultadoCanjeConfirmado(null)
+
     setCanjeSeleccionado(canje)
+    setCanjeEscaneo(null)
+
+    setTokenQrCanje(
+      tokenQr
+        ? {
+            canjeId: canje.canje_id,
+            token: tokenQr,
+          }
+        : null,
+    )
+
     setMontoCanje('')
     setError(null)
     setMensaje(null)
@@ -324,10 +367,112 @@ export default function InicioOperativoV2({
 
     setError(null)
 
-    // Conservamos canjeSeleccionado + montoCanje.
-    // El siguiente bloque conectara QR/llavero
-    // con la confirmacion real del backend.
-    setVista('escanear')
+    if (canjeSeleccionado.origen === 'qr') {
+      const qrYaLeido =
+        tokenQrCanje?.canjeId ===
+        canjeSeleccionado.canje_id
+
+      if (qrYaLeido) {
+        void confirmarCanjeActual()
+        return
+      }
+
+      setCanjeEscaneo(canjeSeleccionado)
+      setVista('escanear')
+      return
+    }
+
+    setError(
+      'Los canjes con llavero se confirmaran mediante PIN.',
+    )
+  }
+
+  const confirmarCanjeActual = async () => {
+    if (!canjeSeleccionado) return
+    if (procesandoId === canjeSeleccionado.canje_id) return
+
+    const valor = Number(montoCanje)
+
+    if (
+      !Number.isInteger(valor) ||
+      valor <= 0
+    ) {
+      setError(
+        'Ingresa un monto valido para la compra.',
+      )
+      return
+    }
+
+    if (
+      valor <
+      canjeSeleccionado.compra_minima_clp
+    ) {
+      setError(
+        `La compra debe ser de al menos ${formatearMonto(
+          canjeSeleccionado.compra_minima_clp,
+        )}.`,
+      )
+      return
+    }
+
+    if (
+      canjeSeleccionado.origen === 'qr' &&
+      (
+        !tokenQrCanje ||
+        tokenQrCanje.canjeId !==
+          canjeSeleccionado.canje_id
+      )
+    ) {
+      setError(
+        'Debes escanear el QR del canje antes de confirmarlo.',
+      )
+      return
+    }
+
+    const canjeActual =
+      canjeSeleccionado
+
+    setProcesandoId(canjeActual.canje_id)
+    setError(null)
+
+    try {
+      const resultado =
+        await confirmarCanjeNegocio(
+          configuracion,
+          turno.turno_id,
+          canjeActual.canje_id,
+          valor,
+          '',
+          tokenQrCanje?.token,
+        )
+
+      if (!resultado) {
+        throw new Error(
+          'Club Regalones no devolvio el resultado del canje.',
+        )
+      }
+
+      setResultadoCanjeConfirmado({
+        canje: canjeActual,
+        resultado,
+      })
+
+      setCanjeSeleccionado(null)
+      setCanjeEscaneo(null)
+      setTokenQrCanje(null)
+      setMontoCanje('')
+      setMensaje(null)
+
+      await cargarDatos(true)
+
+      setVista('solicitudes')
+    } catch (capturado) {
+      setError(
+        mensajeError(capturado),
+      )
+    } finally {
+      setProcesandoId(null)
+    }
   }
 
   const abrirSolicitud = (solicitud: SolicitudCompraNegocio) => {
@@ -780,6 +925,7 @@ export default function InicioOperativoV2({
       {vista === 'solicitudes' &&
         !seleccionada &&
         !canjeSeleccionado &&
+        !resultadoCanjeConfirmado &&
         flujoCompra === 'lista' && (
         <section className="negocio-v2__pantalla negocio-v2__solicitudes-v3">
           <div className="negocio-v2__solicitudes-hero">
@@ -1122,13 +1268,19 @@ export default function InicioOperativoV2({
                 className="principal"
                 type="button"
                 disabled={
+                  procesandoId === canjeSeleccionado.canje_id ||
                   !enLinea ||
                   !montoCanje ||
                   Number(montoCanje) <= 0
                 }
                 onClick={continuarCanjeAlEscaneo}
               >
-                Continuar al escaneo
+                {procesandoId === canjeSeleccionado.canje_id
+                  ? 'Procesando...'
+                  : tokenQrCanje?.canjeId ===
+                    canjeSeleccionado.canje_id
+                    ? 'Confirmar canje'
+                    : 'Continuar al escaneo'}
                 <Icono tipo="flecha" />
               </button>
 
@@ -1136,12 +1288,156 @@ export default function InicioOperativoV2({
                 type="button"
                 onClick={() => {
                   setCanjeSeleccionado(null)
+                  setCanjeEscaneo(null)
+                  setTokenQrCanje(null)
                   setMontoCanje('')
                   setError(null)
                   setVista('solicitudes')
                 }}
               >
                 Volver
+              </button>
+
+            </div>
+
+          </article>
+
+        </section>
+      )}
+
+
+      {vista === 'solicitudes' &&
+        resultadoCanjeConfirmado && (
+        <section className="negocio-v2__canje-exito">
+
+          <article className="negocio-v2__canje-exito-panel">
+
+            <div className="negocio-v2__canje-exito-check">
+              <Icono tipo="check" />
+            </div>
+
+            <div className="negocio-v2__canje-exito-cabecera">
+
+              <div>
+                <span>Canje completado</span>
+                <h1>?Canje confirmado!</h1>
+                <p>
+                  El beneficio fue aplicado correctamente.
+                </p>
+              </div>
+
+              <div
+                className="negocio-v2__canje-exito-regalon"
+                aria-hidden="true"
+              />
+
+            </div>
+
+            <div className="negocio-v2__canje-exito-beneficio">
+
+              <small>Beneficio utilizado</small>
+
+              <strong>
+                {
+                  resultadoCanjeConfirmado
+                    .canje
+                    .nombre_beneficio
+                }
+              </strong>
+
+              <b>
+                {
+                  resultadoCanjeConfirmado
+                    .resultado
+                    .regis_utilizados
+                    .toLocaleString('es-CL')
+                }{' '}
+                REGIS utilizados
+              </b>
+
+            </div>
+
+            <dl className="negocio-v2__canje-exito-resumen">
+
+              <div>
+                <dt>Vecino</dt>
+                <dd>
+                  {
+                    resultadoCanjeConfirmado
+                      .canje
+                      .nombre_vecino
+                      ?.trim() || 'Vecino'
+                  }
+                </dd>
+              </div>
+
+              <div>
+                <dt>Compra</dt>
+                <dd>
+                  {formatearMonto(
+                    resultadoCanjeConfirmado
+                      .resultado
+                      .monto_compra_bruto_clp,
+                  )}
+                </dd>
+              </div>
+
+              <div>
+                <dt>Descuento</dt>
+                <dd className="descuento">
+                  -{formatearMonto(
+                    resultadoCanjeConfirmado
+                      .resultado
+                      .descuento_total_clp,
+                  )}
+                </dd>
+              </div>
+
+              <div className="total">
+                <dt>Total final</dt>
+                <dd>
+                  {formatearMonto(
+                    resultadoCanjeConfirmado
+                      .resultado
+                      .monto_final_pagado_clp,
+                  )}
+                </dd>
+              </div>
+
+            </dl>
+
+            <div className="negocio-v2__canje-exito-estado">
+              <Icono tipo="check" />
+
+              <div>
+                <strong>Canje registrado</strong>
+                <small>
+                  Los REGIS fueron procesados por Club Regalones.
+                </small>
+              </div>
+            </div>
+
+            <div className="negocio-v2__canje-exito-acciones">
+
+              <button
+                className="principal"
+                type="button"
+                onClick={() => {
+                  setResultadoCanjeConfirmado(null)
+                  setVista('inicio')
+                }}
+              >
+                Volver al inicio
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setResultadoCanjeConfirmado(null)
+                  setVista('solicitudes')
+                }}
+              >
+                Ver solicitudes
               </button>
 
             </div>
@@ -1475,15 +1771,83 @@ export default function InicioOperativoV2({
       )}
 
       {vista === 'escanear' && (
-        <section className="negocio-v2__pantalla negocio-v2__escanear">
-          <div className="negocio-v2__titulo-pantalla"><h1>Escanear vecino</h1><p>Identifica al vecino para registrar una compra o aprobar un canje.</p></div>
-          <div className="negocio-v2__mascota primer-uso" aria-hidden="true" />
-          <div className="negocio-v2__metodos">
-            <button type="button" onClick={() => setMensaje('Abriremos la cÃ¡mara QR en el siguiente paso de integraciÃ³n.')}><span><Icono tipo="qr" /></span><strong>Escanear QR</strong><small>Usa la cÃ¡mara para leer el cÃ³digo del vecino.</small><Icono tipo="flecha" /></button>
-            <button type="button" onClick={() => setMensaje('La lectura del llavero NFC se conectarÃ¡ al mismo flujo de identificaciÃ³n.')}><span className="naranja"><Icono tipo="nfc" /></span><strong>Leer llavero NFC</strong><small>Acerca el llavero al telÃ©fono para leerlo.</small><Icono tipo="flecha" /></button>
-          </div>
-          <div className="negocio-v2__ayuda"><span>R</span><p>TambiÃ©n puedes usar el llavero o el QR personal del vecino para continuar.</p></div>
-        </section>
+        <EscanerQrNegocio
+          configuracion={configuracion}
+          turnoId={turno.turno_id}
+          canjeEsperado={canjeEscaneo}
+          montoCanje={montoCanje}
+          alCanjeEncontrado={async (
+            canjeId,
+            tokenQr,
+          ) => {
+            const actuales =
+              await listarCanjesPendientesNegocio(
+                configuracion,
+                turno.turno_id,
+              )
+
+            setCanjesPendientes(actuales)
+
+            const pendiente =
+              actuales.find(
+                (canje) =>
+                  canje.canje_id === canjeId,
+              )
+
+            if (!pendiente) {
+              throw new Error(
+                'El canje ya no esta disponible.',
+              )
+            }
+
+            /*
+             * EL QR SE LEE UNA SOLA VEZ.
+             * Guardamos el token junto al canje.
+             */
+            abrirCanje(
+              pendiente,
+              tokenQr,
+            )
+          }}
+          alCanjeValidado={(tokenQr) => {
+            if (!canjeEscaneo) {
+              setError(
+                'Perdimos el contexto del canje.',
+              )
+              return
+            }
+
+            const canje =
+              canjeEscaneo
+
+            setCanjeSeleccionado(canje)
+
+            setTokenQrCanje({
+              canjeId: canje.canje_id,
+              token: tokenQr,
+            })
+
+            setCanjeEscaneo(null)
+            setError(null)
+            setMensaje(
+              'QR validado correctamente.',
+            )
+            setVista('solicitudes')
+          }}
+          alVolver={() => {
+            setError(null)
+
+            if (canjeEscaneo) {
+              setCanjeSeleccionado(canjeEscaneo)
+              setCanjeEscaneo(null)
+              setVista('solicitudes')
+              return
+            }
+
+            setVista('inicio')
+          }}
+        />
+
       )}
 
       {vista === 'actividad' && (

@@ -1,0 +1,221 @@
+.negocio-v2__canje-exito {
+  display: grid;
+  place-items: start center;
+  width: 100%;
+  padding: 8px 0 18px;
+}
+
+.negocio-v2__canje-exito-panel {
+  box-sizing: border-box;
+  display: grid;
+  gap: 12px;
+  width: min(100%, 460px);
+  padding: 20px;
+  border: 1px solid var(--borde);
+  border-radius: 26px;
+  background: var(--panel);
+  box-shadow: var(--sombra);
+}
+
+.negocio-v2__canje-exito-check {
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  margin: 0 auto -3px;
+  border-radius: 50%;
+  color: #fff;
+  background: #1db56b;
+  box-shadow:
+    0 10px 24px rgba(29, 181, 107, .25);
+}
+
+.negocio-v2__canje-exito-check svg {
+  width: 31px;
+  height: 31px;
+}
+
+.negocio-v2__canje-exito-cabecera {
+  position: relative;
+  min-height: 95px;
+  padding-right: 112px;
+}
+
+.negocio-v2__canje-exito-cabecera span {
+  color: #19a568;
+  font-size: .67rem;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.negocio-v2__canje-exito-cabecera h1 {
+  margin: 2px 0 2px;
+  color: var(--texto);
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 2.25rem;
+  line-height: .95;
+}
+
+.negocio-v2__canje-exito-cabecera p {
+  margin: 5px 0 0;
+  color: var(--texto-suave);
+  font-size: .72rem;
+}
+
+.negocio-v2__canje-exito-regalon {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  width: 112px;
+  height: 112px;
+  background:
+    url('./recursos/marca/regalon-canje.png')
+    center / contain no-repeat;
+}
+
+.negocio-v2__canje-exito-beneficio {
+  display: grid;
+  gap: 3px;
+  padding: 15px;
+  border: 1px solid rgba(25, 165, 104, .22);
+  border-radius: 18px;
+  background: var(--panel-2);
+}
+
+.negocio-v2__canje-exito-beneficio small {
+  color: var(--texto-suave);
+}
+
+.negocio-v2__canje-exito-beneficio strong {
+  color: var(--texto);
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.45rem;
+  line-height: 1;
+}
+
+.negocio-v2__canje-exito-beneficio b {
+  color: #16aa69;
+  font-size: .75rem;
+}
+
+.negocio-v2__canje-exito-resumen {
+  display: grid;
+  margin: 0;
+  padding: 0 14px;
+  border: 1px solid var(--borde);
+  border-radius: 18px;
+  background: var(--panel-2);
+}
+
+.negocio-v2__canje-exito-resumen > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--borde);
+}
+
+.negocio-v2__canje-exito-resumen > div:last-child {
+  border-bottom: 0;
+}
+
+.negocio-v2__canje-exito-resumen dt {
+  color: var(--texto-suave);
+  font-size: .7rem;
+}
+
+.negocio-v2__canje-exito-resumen dd {
+  margin: 0;
+  color: var(--texto);
+  font-weight: 900;
+}
+
+.negocio-v2__canje-exito-resumen .descuento {
+  color: #ff6513;
+}
+
+.negocio-v2__canje-exito-resumen .total dt,
+.negocio-v2__canje-exito-resumen .total dd {
+  color: #18a96a;
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.negocio-v2__canje-exito-estado {
+  display: grid;
+  grid-template-columns: 25px 1fr;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 12px;
+  border-radius: 15px;
+  color: #126540;
+  background: #e7f7ee;
+}
+
+.negocio-v2__canje-exito-estado > div {
+  display: grid;
+  gap: 1px;
+}
+
+.negocio-v2__canje-exito-estado strong {
+  font-size: .75rem;
+}
+
+.negocio-v2__canje-exito-estado small {
+  font-size: .62rem;
+}
+
+.negocio-v2__canje-exito-acciones {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 9px;
+}
+
+.negocio-v2__canje-exito-acciones button {
+  min-height: 50px;
+  border: 1px solid var(--borde);
+  border-radius: 15px;
+  color: var(--verde);
+  background: var(--panel-2);
+  font-weight: 900;
+}
+
+.negocio-v2__canje-exito-acciones button.principal {
+  border-color: #19ac6b;
+  color: #fff;
+  background:
+    linear-gradient(
+      135deg,
+      #20be75,
+      #0fa85e
+    );
+}
+
+html[data-tema='oscuro']
+.negocio-v2__canje-exito-panel,
+html[data-tema='oscuro']
+.negocio-v2__canje-exito-beneficio,
+html[data-tema='oscuro']
+.negocio-v2__canje-exito-resumen,
+html[data-tema='oscuro']
+.negocio-v2__canje-exito-acciones button:not(.principal) {
+  border-color: rgba(79, 218, 146, .17);
+  background: rgba(4, 65, 46, .72);
+}
+
+html[data-tema='oscuro']
+.negocio-v2__canje-exito-estado {
+  color: #b9efd1;
+  background: rgba(23, 135, 83, .27);
+}
+
+@media (max-width: 390px) {
+  .negocio-v2__canje-exito-panel {
+    padding: 16px;
+  }
+
+  .negocio-v2__canje-exito-cabecera h1 {
+    font-size: 2rem;
+  }
+}
