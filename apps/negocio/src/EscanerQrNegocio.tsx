@@ -208,7 +208,7 @@ export default function EscanerQrNegocio({
       if (canjeEsperado) {
         if (resultado.tipo !== 'canje') {
           throw new Error(
-            'Este c?digo corresponde a un llavero. Escanea el QR temporal del canje mostrado en App Vecino.',
+            'Este código corresponde a un llavero. Escanea el QR temporal del canje mostrado en App Vecino.',
           )
         }
 
@@ -223,7 +223,7 @@ export default function EscanerQrNegocio({
 
         if (resultado.canje.estado !== 'reservado') {
           throw new Error(
-            `Este canje est? ${resultado.canje.estado}.`,
+            `Este canje está ${resultado.canje.estado}.`,
           )
         }
 
@@ -238,7 +238,7 @@ export default function EscanerQrNegocio({
       }
 
       // ------------------------------------------------------
-      // ESCANEO GENERAL ? QR TEMPORAL DE CANJE
+      // ESCANEO GENERAL · QR TEMPORAL DE CANJE
       // ------------------------------------------------------
 
       if (resultado.tipo === 'canje') {
@@ -252,7 +252,7 @@ export default function EscanerQrNegocio({
       }
 
       // ------------------------------------------------------
-      // ESCANEO GENERAL ? QR F?SICO DE LLAVERO
+      // ESCANEO GENERAL · QR FÍSICO DE LLAVERO
       // ------------------------------------------------------
 
       detenerCamara()
@@ -270,7 +270,7 @@ export default function EscanerQrNegocio({
 
       setError(mensaje)
 
-      // La c?mara sigue disponible para intentar nuevamente.
+      // La cámara sigue disponible para intentar nuevamente.
       setEstadoCamara('escaneando')
       procesandoRef.current = false
     }
@@ -723,7 +723,7 @@ export default function EscanerQrNegocio({
 
           {estadoCamara === 'validando' && (
             <span className="negocio-escaner__estado">
-              QR le?do ? Validando con Club Regalones?
+              QR leído · Validando con Club Regalones…
             </span>
           )}
 
