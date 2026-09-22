@@ -396,3 +396,165 @@ html[data-tema='oscuro']
   color: #b9ecd0;
   background: rgba(21, 124, 79, .28);
 }
+
+
+/* =========================================================
+   CANJE DESDE LLAVERO
+   ========================================================= */
+
+.negocio-escaner__acciones-vecino {
+  display: grid;
+  width: 100%;
+  gap: 9px;
+}
+
+.negocio-escaner__principal {
+  min-height: 50px;
+  border: 0;
+  border-radius: 15px;
+  color: #fff;
+  background:
+    linear-gradient(
+      135deg,
+      #20be75,
+      #0fa85e
+    );
+  font-weight: 900;
+  box-shadow:
+    0 9px 22px rgba(15, 168, 94, .20);
+}
+
+.negocio-escaner__principal:disabled {
+  cursor: not-allowed;
+  opacity: .5;
+}
+
+.negocio-escaner__beneficios {
+  display: grid;
+  width: 100%;
+  gap: 9px;
+}
+
+.negocio-escaner__beneficio {
+  position: relative;
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 82px;
+  padding: 13px;
+  border: 1px solid var(--borde);
+  border-radius: 17px;
+  color: var(--texto);
+  background: var(--panel);
+  text-align: left;
+}
+
+.negocio-escaner__beneficio > div {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+.negocio-escaner__beneficio strong {
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1rem;
+  line-height: 1.05;
+}
+
+.negocio-escaner__beneficio small {
+  color: var(--texto-suave);
+  font-size: .64rem;
+  line-height: 1.35;
+}
+
+.negocio-escaner__beneficio b {
+  color: var(--naranjo);
+  font-size: .72rem;
+  white-space: nowrap;
+}
+
+.negocio-escaner__beneficio em {
+  position: absolute;
+  right: 12px;
+  bottom: 7px;
+  color: var(--texto-suave);
+  font-size: .56rem;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.negocio-escaner__beneficio:disabled {
+  cursor: not-allowed;
+  opacity: .48;
+}
+
+.negocio-escaner__pin-card {
+  display: grid;
+  justify-items: center;
+  width: 100%;
+  gap: 3px;
+  padding: 15px;
+  border: 1px solid var(--borde);
+  border-radius: 18px;
+  background: var(--panel-2);
+}
+
+.negocio-escaner__pin-card small,
+.negocio-escaner__pin-card span {
+  color: var(--texto-suave);
+  font-size: .68rem;
+}
+
+.negocio-escaner__pin-card strong {
+  color: var(--texto);
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.25rem;
+}
+
+.negocio-escaner__pin-card span {
+  color: var(--naranjo);
+  font-weight: 900;
+}
+
+.negocio-escaner__pin {
+  display: grid;
+  width: 100%;
+  gap: 7px;
+  text-align: left;
+}
+
+.negocio-escaner__pin > span {
+  color: var(--texto);
+  font-size: .72rem;
+  font-weight: 900;
+}
+
+.negocio-escaner__pin input {
+  width: 100%;
+  min-height: 58px;
+  border: 1px solid var(--borde);
+  border-radius: 16px;
+  outline: none;
+  color: var(--texto);
+  background: var(--panel);
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.9rem;
+  font-weight: 900;
+  letter-spacing: .6em;
+  text-align: center;
+}
+
+.negocio-escaner__pin input:focus {
+  border-color: var(--naranjo);
+  box-shadow:
+    0 0 0 3px rgba(255, 106, 18, .12);
+}
+
+.negocio-escaner__pin small {
+  color: var(--texto-suave);
+  font-size: .62rem;
+  text-align: center;
+}

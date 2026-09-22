@@ -1,7 +1,12 @@
 import { BrowserQRCodeReader } from '@zxing/browser'
 import { useEffect, useRef, useState } from 'react'
 import type { ConfiguracionDispositivoNegocio } from './lib/dispositivo'
-import type { CanjePendienteNegocio } from './lib/canjes'
+import {
+  listarBeneficiosCanjeNegocio,
+  reservarCanjeLlaveroNegocio,
+  type BeneficioCanjeNegocio,
+  type CanjePendienteNegocio,
+} from './lib/canjes'
 import {
   resolverNfcNegocio,
   resolverQrNegocio,
@@ -92,6 +97,17 @@ function convertirLlaveroNfc(
   }
 }
 
+function crearClaveIdempotenteCanje() {
+  const identificador =
+    typeof crypto.randomUUID === 'function'
+      ? crypto.randomUUID()
+      : `${Date.now()}-${Math.random()
+          .toString(36)
+          .slice(2)}`
+
+  return `canje-llavero-${identificador}`
+}
+
 function leerContenidoRegistroNfc(
   registros: RegistroNfc[],
 ) {
@@ -122,6 +138,7 @@ export default function EscanerQrNegocio({
   montoCanje,
   alCanjeEncontrado,
   alCanjeValidado,
+  alCanjeLlaveroReservado,
   alVolver,
 }: {
   configuracion: ConfiguracionDispositivoNegocio
@@ -137,6 +154,10 @@ export default function EscanerQrNegocio({
   alCanjeValidado: (
     tokenQr: string,
   ) => void
+
+  alCanjeLlaveroReservado: (
+    canjeId: string,
+  ) => Promise<void> | void
 
   alVolver: () => void
 }) {
@@ -160,6 +181,33 @@ export default function EscanerQrNegocio({
 
   const [canjeValidado, setCanjeValidado] =
     useState(false)
+
+  const [pasoLlavero, setPasoLlavero] =
+    useState<'resultado' | 'beneficios' | 'pin'>(
+      'resultado',
+    )
+
+  const [beneficios, setBeneficios] =
+    useState<BeneficioCanjeNegocio[]>([])
+
+  const [
+    beneficioSeleccionado,
+    setBeneficioSeleccionado,
+  ] = useState<BeneficioCanjeNegocio | null>(null)
+
+  const [cargandoBeneficios, setCargandoBeneficios] =
+    useState(false)
+
+  const [pinCanje, setPinCanje] =
+    useState('')
+
+  const [
+    procesandoCanjeLlavero,
+    setProcesandoCanjeLlavero,
+  ] = useState(false)
+
+  const idempotencyCanjeRef =
+    useRef<string | null>(null)
 
   const videoRef =
     useRef<HTMLVideoElement | null>(null)
@@ -188,6 +236,12 @@ export default function EscanerQrNegocio({
   const limpiarResultado = () => {
     setVecino(null)
     setCanjeValidado(false)
+    setPasoLlavero('resultado')
+    setBeneficios([])
+    setBeneficioSeleccionado(null)
+    setPinCanje('')
+    setProcesandoCanjeLlavero(false)
+    idempotencyCanjeRef.current = null
     setError(null)
     procesandoRef.current = false
   }
@@ -433,6 +487,114 @@ export default function EscanerQrNegocio({
     }
   }
 
+
+  async function abrirBeneficiosCanje() {
+    if (!vecino || cargandoBeneficios) return
+
+    setPasoLlavero('beneficios')
+    setCargandoBeneficios(true)
+    setBeneficios([])
+    setBeneficioSeleccionado(null)
+    setPinCanje('')
+    idempotencyCanjeRef.current = null
+    setError(null)
+
+    try {
+      const actuales =
+        await listarBeneficiosCanjeNegocio(
+          configuracion,
+          turnoId,
+        )
+
+      setBeneficios(actuales)
+    } catch (capturado) {
+      setError(
+        capturado instanceof Error
+          ? capturado.message
+          : 'No pudimos cargar las recompensas.',
+      )
+    } finally {
+      setCargandoBeneficios(false)
+    }
+  }
+
+  function elegirBeneficio(
+    beneficio: BeneficioCanjeNegocio,
+  ) {
+    setBeneficioSeleccionado(beneficio)
+    setPinCanje('')
+    setError(null)
+
+    idempotencyCanjeRef.current =
+      crearClaveIdempotenteCanje()
+
+    setPasoLlavero('pin')
+  }
+
+  async function reservarCanjeConPin() {
+    if (
+      !vecino ||
+      !beneficioSeleccionado ||
+      procesandoCanjeLlavero
+    ) {
+      return
+    }
+
+    if (!/^[0-9]{4}$/.test(pinCanje)) {
+      setError(
+        'El PIN de seguridad debe tener exactamente 4 d\u00edgitos.',
+      )
+      return
+    }
+
+    if (!idempotencyCanjeRef.current) {
+      idempotencyCanjeRef.current =
+        crearClaveIdempotenteCanje()
+    }
+
+    setProcesandoCanjeLlavero(true)
+    setError(null)
+
+    try {
+      const reserva =
+        await reservarCanjeLlaveroNegocio(
+          configuracion,
+          turnoId,
+          vecino.llaveroId,
+          beneficioSeleccionado.id,
+          pinCanje,
+          idempotencyCanjeRef.current,
+        )
+
+      if (!reserva) {
+        throw new Error(
+          'Club Regalones no devolvi\u00f3 la reserva del canje.',
+        )
+      }
+
+      if (!reserva.autorizado) {
+        setError(
+          reserva.mensaje ||
+            'No pudimos autorizar el PIN.',
+        )
+        return
+      }
+
+      await alCanjeLlaveroReservado(
+        reserva.canje_id,
+      )
+    } catch (capturado) {
+      setError(
+        capturado instanceof Error
+          ? capturado.message
+          : 'No pudimos reservar el canje.',
+      )
+    } finally {
+      setProcesandoCanjeLlavero(false)
+    }
+  }
+
+
   const reiniciarQr = () => {
     detenerCamara()
     detenerNfc()
@@ -468,22 +630,257 @@ export default function EscanerQrNegocio({
     }
   }, [])
 
+  if (
+    vecino &&
+    pasoLlavero === 'beneficios'
+  ) {
+    return (
+      <section className="negocio-escaner negocio-escaner--resultado">
+
+        <span className="negocio-escaner__eyebrow">
+          Canje con llavero
+        </span>
+
+        <h1>Elige una recompensa</h1>
+
+        <article className="negocio-escaner__vecino-card">
+          <span className="negocio-escaner__avatar">
+            {vecino.nombreVecino
+              .charAt(0)
+              .toUpperCase()}
+          </span>
+
+          <div>
+            <strong>{vecino.nombreVecino}</strong>
+            <small>
+              {vecino.disponibles.toLocaleString(
+                'es-CL',
+              )}{' '}
+              REGIS disponibles
+            </small>
+          </div>
+        </article>
+
+        {cargandoBeneficios ? (
+          <p className="negocio-escaner__proximo">
+            Cargando recompensas...
+          </p>
+        ) : beneficios.length > 0 ? (
+          <div className="negocio-escaner__beneficios">
+            {beneficios.map((beneficio) => {
+              const sinSaldo =
+                beneficio.costo_regis >
+                vecino.disponibles
+
+              return (
+                <button
+                  key={beneficio.id}
+                  className="negocio-escaner__beneficio"
+                  type="button"
+                  disabled={
+                    sinSaldo ||
+                    procesandoCanjeLlavero
+                  }
+                  onClick={() =>
+                    elegirBeneficio(beneficio)
+                  }
+                >
+                  <div>
+                    <strong>
+                      {beneficio.nombre}
+                    </strong>
+
+                    <small>
+                      {beneficio.descripcion}
+                    </small>
+
+                    <small>
+                      Compra m\u00ednima: $
+                      {beneficio.compra_minima_clp
+                        .toLocaleString('es-CL')}
+                    </small>
+                  </div>
+
+                  <b>
+                    {beneficio.costo_regis
+                      .toLocaleString('es-CL')}
+                    {' REGIS'}
+                  </b>
+
+                  {sinSaldo && (
+                    <em>Saldo insuficiente</em>
+                  )}
+                </button>
+              )
+            })}
+          </div>
+        ) : (
+          <p className="negocio-escaner__proximo">
+            Este negocio no tiene recompensas
+            disponibles en este momento.
+          </p>
+        )}
+
+        {error && (
+          <div
+            className="negocio-escaner__error"
+            role="alert"
+          >
+            {error}
+          </div>
+        )}
+
+        <button
+          className="negocio-escaner__secundario"
+          type="button"
+          onClick={() => {
+            setPasoLlavero('resultado')
+            setError(null)
+          }}
+        >
+          Volver
+        </button>
+
+      </section>
+    )
+  }
+
+  if (
+    vecino &&
+    pasoLlavero === 'pin' &&
+    beneficioSeleccionado
+  ) {
+    return (
+      <section className="negocio-escaner negocio-escaner--resultado">
+
+        <span className="negocio-escaner__eyebrow">
+          Autorizar canje
+        </span>
+
+        <h1>PIN de seguridad</h1>
+
+        <article className="negocio-escaner__vecino-card">
+          <span className="negocio-escaner__avatar">
+            {vecino.nombreVecino
+              .charAt(0)
+              .toUpperCase()}
+          </span>
+
+          <div>
+            <strong>{vecino.nombreVecino}</strong>
+            <small>
+              {beneficioSeleccionado.nombre}
+            </small>
+          </div>
+        </article>
+
+        <article className="negocio-escaner__pin-card">
+          <small>Recompensa seleccionada</small>
+
+          <strong>
+            {beneficioSeleccionado.nombre}
+          </strong>
+
+          <span>
+            {beneficioSeleccionado.costo_regis
+              .toLocaleString('es-CL')}
+            {' REGIS'}
+          </span>
+        </article>
+
+        <label className="negocio-escaner__pin">
+          <span>
+            PIN de seguridad del llavero
+          </span>
+
+          <input
+            autoFocus
+            type="password"
+            inputMode="numeric"
+            autoComplete="off"
+            maxLength={4}
+            value={pinCanje}
+            onChange={(evento) =>
+              setPinCanje(
+                evento.target.value
+                  .replace(/\\D/g, '')
+                  .slice(0, 4),
+              )
+            }
+            aria-label="PIN de seguridad"
+          />
+
+          <small>
+            El vecino debe ingresar sus 4 d\u00edgitos.
+          </small>
+        </label>
+
+        {error && (
+          <div
+            className="negocio-escaner__error"
+            role="alert"
+          >
+            {error}
+          </div>
+        )}
+
+        <div className="negocio-escaner__acciones-vecino">
+          <button
+            className="negocio-escaner__principal"
+            type="button"
+            disabled={
+              pinCanje.length !== 4 ||
+              procesandoCanjeLlavero
+            }
+            onClick={() =>
+              void reservarCanjeConPin()
+            }
+          >
+            {procesandoCanjeLlavero
+              ? 'Autorizando...'
+              : 'Confirmar PIN'}
+          </button>
+
+          <button
+            className="negocio-escaner__secundario"
+            type="button"
+            disabled={procesandoCanjeLlavero}
+            onClick={() => {
+              setPasoLlavero('beneficios')
+              setBeneficioSeleccionado(null)
+              setPinCanje('')
+              idempotencyCanjeRef.current = null
+              setError(null)
+            }}
+          >
+            Volver
+          </button>
+        </div>
+
+        <p className="negocio-escaner__seguridad">
+          El QR o NFC solo identifica al vecino.
+          El gasto de REGIS requiere su PIN.
+        </p>
+
+      </section>
+    )
+  }
+
   if (vecino) {
     return (
       <section className="negocio-escaner negocio-escaner--resultado">
 
         <div className="negocio-escaner__encontrado-check">
-          ✓
+          ?
         </div>
 
         <span className="negocio-escaner__eyebrow">
-          Identificación correcta
+          Identificaci\u00f3n correcta
         </span>
 
         <h1>Vecino encontrado</h1>
 
         <article className="negocio-escaner__vecino-card">
-
           <span className="negocio-escaner__avatar">
             {vecino.nombreVecino
               .charAt(0)
@@ -497,19 +894,18 @@ export default function EscanerQrNegocio({
               Llavero {vecino.codigoPublico}
             </small>
           </div>
-
         </article>
 
         <article className="negocio-escaner__saldo">
-
           <small>REGIS disponibles</small>
 
           <strong>
-            {vecino.disponibles.toLocaleString('es-CL')}
+            {vecino.disponibles.toLocaleString(
+              'es-CL',
+            )}
           </strong>
 
           <span>REGIS</span>
-
         </article>
 
         <p className="negocio-escaner__metodo-ok">
@@ -519,17 +915,29 @@ export default function EscanerQrNegocio({
             : 'QR del llavero'}
         </p>
 
-        <button
-          className="negocio-escaner__secundario"
-          type="button"
-          onClick={reiniciarQr}
-        >
-          Escanear otro
-        </button>
+        <div className="negocio-escaner__acciones-vecino">
+          <button
+            className="negocio-escaner__principal"
+            type="button"
+            onClick={() =>
+              void abrirBeneficiosCanje()
+            }
+          >
+            Canjear beneficio
+          </button>
 
-        <p className="negocio-escaner__proximo">
-          Ahora podemos continuar con Registrar compra
-          o Canjear beneficio.
+          <button
+            className="negocio-escaner__secundario"
+            type="button"
+            onClick={reiniciarQr}
+          >
+            Escanear otro
+          </button>
+        </div>
+
+        <p className="negocio-escaner__seguridad">
+          Para gastar REGIS siempre pediremos
+          el PIN de seguridad del vecino.
         </p>
 
       </section>

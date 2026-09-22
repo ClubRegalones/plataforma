@@ -1832,6 +1832,31 @@ const cargarDatos = useCallback(async (silencioso = false) => {
             )
             setVista('solicitudes')
           }}
+          alCanjeLlaveroReservado={async (
+            canjeId,
+          ) => {
+            const actuales =
+              await listarCanjesPendientesNegocio(
+                configuracion,
+                turno.turno_id,
+              )
+
+            setCanjesPendientes(actuales)
+
+            const pendiente =
+              actuales.find(
+                (canje) =>
+                  canje.canje_id === canjeId,
+              )
+
+            if (!pendiente) {
+              throw new Error(
+                'El canje con llavero ya no est\u00e1 disponible.',
+              )
+            }
+
+            abrirCanje(pendiente)
+          }}
           alVolver={() => {
             setError(null)
 
