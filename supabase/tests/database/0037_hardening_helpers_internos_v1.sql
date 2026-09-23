@@ -127,16 +127,17 @@ select ok(
 -- ============================================================================
 -- COMPRA POR TELEFONO LEGACY
 --
--- Se conserva POR AHORA porque Terminal V1 estable todavia la utiliza.
+-- La función legacy se conserva internamente, pero ya no está expuesta
+-- al cliente Terminal.
 -- ============================================================================
 
 select ok(
-  has_function_privilege(
+  not has_function_privilege(
     'anon',
     'public.terminal_crear_solicitud_compra_por_telefono(text,integer,text,uuid,uuid,text)',
     'EXECUTE'
   ),
-  'compra por telefono legacy permanece disponible durante transicion'
+  'compra por teléfono legacy queda cerrada al cliente'
 );
 
 

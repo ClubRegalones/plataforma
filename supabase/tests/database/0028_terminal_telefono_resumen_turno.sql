@@ -44,12 +44,12 @@ select has_function(
 );
 
 select ok(
-  has_function_privilege(
+  not has_function_privilege(
     'anon',
     'public.terminal_buscar_vecino_por_telefono(text,uuid,uuid,text)',
     'EXECUTE'
   ),
-  'El cliente Terminal puede usar la búsqueda estrecha sin leer perfiles directamente'
+  'La búsqueda legacy por teléfono ya no está expuesta al cliente Terminal'
 );
 
 select ok(
