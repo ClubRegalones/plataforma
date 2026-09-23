@@ -11,13 +11,21 @@
   "scripts": {
     "dev": "pnpm --filter @club-regalones/portal dev",
     "dev:portal": "pnpm --filter @club-regalones/portal dev",
+    "dev:vecino": "pnpm --filter @club-regalones/vecino dev",
+    "dev:negocio": "pnpm --filter @club-regalones/negocio dev",
+    "dev:negocio:local": "node ./scripts/dev-supabase-local.mjs @club-regalones/negocio",
     "dev:terminal": "pnpm --filter @club-regalones/terminal dev",
     "dev:comercio": "pnpm --filter @club-regalones/comercio dev",
+    "dev:comercio:local": "node ./scripts/dev-supabase-local.mjs @club-regalones/comercio",
     "dev:admin": "pnpm --filter @club-regalones/admin dev",
+    "dev:escenario-negocio": "node ./scripts/escenario-app-negocio.mjs",
     "typecheck": "pnpm --recursive --if-present run typecheck",
     "lint": "eslint \"apps/**/*.{ts,tsx}\" \"packages/**/*.{ts,tsx}\" --no-error-on-unmatched-pattern",
     "build": "pnpm --recursive --if-present run build",
     "preview": "pnpm --filter @club-regalones/portal preview",
+    "preview:portal": "pnpm --filter @club-regalones/portal preview",
+    "preview:vecino": "pnpm --filter @club-regalones/vecino preview",
+    "preview:negocio": "pnpm --filter @club-regalones/negocio preview",
     "preview:terminal": "pnpm --filter @club-regalones/terminal preview",
     "preview:comercio": "pnpm --filter @club-regalones/comercio preview",
     "preview:admin": "pnpm --filter @club-regalones/admin preview",
@@ -25,7 +33,8 @@
     "db:stop": "node ./node_modules/supabase/dist/supabase.js stop",
     "db:reset": "node ./node_modules/supabase/dist/supabase.js db reset",
     "db:test": "node ./node_modules/supabase/dist/supabase.js test db",
-    "db:lint": "node ./node_modules/supabase/dist/supabase.js db lint"
+    "db:lint": "node ./node_modules/supabase/dist/supabase.js db lint",
+    "db:types": "node ./scripts/generar-tipos-supabase.mjs"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

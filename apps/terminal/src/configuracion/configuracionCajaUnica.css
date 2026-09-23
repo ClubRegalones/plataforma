@@ -1,0 +1,207 @@
+.configuracion-caja--unica .configuracion-caja__cuerpo {
+  gap: 0;
+}
+
+.configuracion-caja__resumen-unico {
+  min-height: 6.4rem;
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.15rem;
+  border: 1px solid #315e3d;
+  border-radius: 1rem;
+  background:
+    linear-gradient(
+      90deg,
+      rgb(21 78 43 / 35%),
+      rgb(5 28 18 / 72%)
+    );
+}
+
+.configuracion-caja__resumen-info {
+  min-width: 0;
+  display: grid;
+  gap: 0.2rem;
+}
+
+.configuracion-caja__resumen-info small {
+  color: #7f9588;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.configuracion-caja__resumen-info strong {
+  color: #fff9eb;
+  font-size: 1.05rem;
+}
+
+.configuracion-caja__resumen-info span {
+  color: #9eb0a5;
+  font-size: 0.78rem;
+}
+
+.configuracion-caja__traslado {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  gap: 1rem;
+  margin-top: 1.2rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid rgb(255 100 39 / 40%);
+  border-radius: 1rem;
+  background: rgb(255 100 39 / 8%);
+}
+
+.configuracion-caja__traslado-icono {
+  display: grid;
+  width: 2.65rem;
+  height: 2.65rem;
+  place-items: center;
+  border-radius: 0.75rem;
+  color: #ff7a3e;
+  background: rgb(255 100 39 / 12%);
+  font-size: 1.35rem;
+  font-weight: 800;
+}
+
+.configuracion-caja__traslado strong {
+  color: #fff9eb;
+}
+
+.configuracion-caja__traslado p {
+  margin: 0.35rem 0 0.25rem;
+  color: #b6c3bb;
+  line-height: 1.5;
+}
+
+.configuracion-caja__traslado p b {
+  color: #fff9eb;
+}
+
+.configuracion-caja__traslado small {
+  color: #ffad85;
+  font-weight: 650;
+}
+
+.configuracion-caja-unica__modal-fondo {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+  background: rgb(0 10 6 / 76%);
+  backdrop-filter: blur(8px);
+}
+
+.configuracion-caja-unica__modal {
+  width: min(100%, 34rem);
+  display: grid;
+  gap: 1rem;
+  padding: 1.5rem;
+  border: 1px solid #315e3d;
+  border-radius: 1.2rem;
+  background: #071b12;
+  box-shadow: 0 1.5rem 4rem rgb(0 0 0 / 34%);
+}
+
+.configuracion-caja-unica__modal-icono {
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  place-items: center;
+  border-radius: 0.85rem;
+  color: #ff7a3e;
+  background: rgb(255 100 39 / 12%);
+  font-size: 1.35rem;
+  font-weight: 800;
+}
+
+.configuracion-caja-unica__modal-etiqueta {
+  color: #69da6d;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.configuracion-caja-unica__modal h2 {
+  margin: 0.35rem 0 0;
+  color: #fff9eb;
+  font-family: var(--fuente-marca);
+  font-size: 1.8rem;
+  line-height: 1.08;
+}
+
+.configuracion-caja-unica__modal p {
+  margin: 0.7rem 0 0;
+  color: #aebcb3;
+  line-height: 1.55;
+}
+
+.configuracion-caja-unica__modal p strong {
+  color: #fff9eb;
+}
+
+.configuracion-caja-unica__modal-acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.35rem;
+}
+
+.configuracion-caja-unica__modal-acciones button {
+  min-height: 2.9rem;
+  padding: 0 1rem;
+  border-radius: 0.75rem;
+  color: #dbe6df;
+  background: #153426;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.configuracion-caja-unica__modal-acciones .configuracion-caja-unica__confirmar {
+  color: #fff;
+  background: #e85f1c;
+}
+
+.configuracion-negocio__estado-sucursal {
+  justify-self: end;
+  padding: 0.42rem 0.7rem;
+  border: 1px solid rgb(100 217 105 / 20%);
+  border-radius: 999px;
+  color: #75df79;
+  background: rgb(69 168 79 / 10%);
+  font-size: 0.7rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .configuracion-caja__resumen-unico {
+    grid-template-columns: 2.8rem minmax(0, 1fr);
+  }
+
+  .configuracion-caja__resumen-unico > .configuracion-caja__estado {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+
+  .configuracion-caja__traslado {
+    grid-template-columns: 1fr;
+  }
+
+  .configuracion-negocio__estado-sucursal {
+    display: none;
+  }
+
+  .configuracion-caja-unica__modal-acciones {
+    flex-direction: column-reverse;
+  }
+
+  .configuracion-caja-unica__modal-acciones button {
+    width: 100%;
+  }
+}

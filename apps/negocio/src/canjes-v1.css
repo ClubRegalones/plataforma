@@ -1,0 +1,1738 @@
+/* ============================================================
+   CLUB REGALONES — REVISAR CANJE V1
+   ============================================================ */
+
+.negocio-v2__canje-revision {
+  box-sizing: border-box;
+  min-height: 0;
+  padding: 4px 0 6px;
+  overflow: visible;
+}
+
+.negocio-v2__canje-panel {
+  box-sizing: border-box;
+
+  width: 100%;
+  min-height: 0;
+
+  display: grid;
+  grid-template-rows: auto auto auto auto 54px;
+  gap: 8px;
+
+  padding: 14px;
+
+  border: 1px solid rgba(30, 232, 132, .5);
+  border-radius: 30px;
+
+  background:
+    radial-gradient(
+      circle at 90% 4%,
+      rgba(80, 228, 115, .2),
+      transparent 28%
+    ),
+    linear-gradient(
+      155deg,
+      rgba(9, 101, 66, .98),
+      rgba(0, 64, 45, .99)
+    );
+
+  box-shadow:
+    0 18px 42px rgba(0, 0, 0, .18),
+    inset 0 1px rgba(255, 255, 255, .04);
+
+  overflow: hidden;
+}
+
+
+/* ============================================================
+   CABECERA
+   ============================================================ */
+
+.negocio-v2__canje-cabecera {
+  position: relative;
+
+  min-height: 0;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 116px;
+  gap: 6px;
+}
+
+.negocio-v2__canje-cabecera-copy {
+  min-width: 0;
+}
+
+.negocio-v2__canje-eyebrow {
+  display: block;
+
+  margin-bottom: 2px;
+
+  color: #62f2aa;
+
+  font-family: 'Poppins', sans-serif;
+  font-size: .73rem;
+  font-weight: 800;
+  letter-spacing: .055em;
+  text-transform: uppercase;
+}
+
+.negocio-v2__canje-cabecera h1 {
+  margin: 0 0 7px;
+
+  color: #fffaf1;
+
+  font-family: 'Baloo 2', sans-serif;
+  font-size: clamp(2.15rem, 8vw, 3rem);
+  font-weight: 800;
+  line-height: .94;
+  letter-spacing: -.03em;
+}
+
+.negocio-v2__canje-vecino {
+  width: min(100%, 288px);
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 8px 10px;
+
+  border: 1px solid rgba(47, 227, 135, .33);
+  border-radius: 18px;
+
+  background: rgba(4, 82, 57, .72);
+}
+
+.negocio-v2__canje-avatar {
+  flex: 0 0 auto;
+
+  width: 44px;
+  height: 44px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 50%;
+
+  color: #ff6715;
+  background: #ffe1d1;
+
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.negocio-v2__canje-vecino div {
+  min-width: 0;
+}
+
+.negocio-v2__canje-vecino strong,
+.negocio-v2__canje-vecino small {
+  display: block;
+}
+
+.negocio-v2__canje-vecino strong {
+  overflow: hidden;
+
+  color: #fffaf1;
+
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1rem;
+  line-height: 1.05;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.negocio-v2__canje-vecino small {
+  margin-top: 2px;
+
+  color: #c4ddd3;
+
+  font-size: .72rem;
+  line-height: 1.25;
+}
+
+.negocio-v2__canje-cabecera-copy > p {
+  max-width: 305px;
+
+  margin: 7px 0 0;
+
+  color: #d7e9e1;
+
+  font-size: .77rem;
+  line-height: 1.35;
+}
+
+.negocio-v2__canje-regalon {
+  position: absolute;
+
+  right: -6px;
+  bottom: -2px;
+
+  width: 132px;
+  height: 132px;
+
+  background:
+    url('./recursos/marca/regalon-canje.png')
+    center / contain no-repeat;
+
+  filter:
+    drop-shadow(0 12px 12px rgba(0, 0, 0, .16));
+
+  pointer-events: none;
+}
+
+
+/* ============================================================
+   BENEFICIO — INFORMACION PRINCIPAL
+   ============================================================ */
+
+.negocio-v2__canje-beneficio {
+  min-height: 0;
+
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  align-items: center;
+  gap: 9px;
+
+  padding: 10px 11px;
+
+  border: 1px solid rgba(50, 234, 139, .55);
+  border-radius: 22px;
+
+  background:
+    radial-gradient(
+      circle at 10% 50%,
+      rgba(255, 164, 25, .1),
+      transparent 28%
+    ),
+    rgba(0, 55, 40, .64);
+
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, .1);
+}
+
+.negocio-v2__canje-moneda,
+.negocio-v2__canje-aviso-moneda {
+  background:
+    url('./recursos/marca/moneda-regis.png')
+    center / contain no-repeat;
+
+  filter:
+    drop-shadow(0 7px 8px rgba(0, 0, 0, .18));
+}
+
+.negocio-v2__canje-moneda {
+  width: 68px;
+  height: 68px;
+}
+
+.negocio-v2__canje-beneficio-contenido {
+  min-width: 0;
+}
+
+.negocio-v2__canje-descuento {
+  display: block;
+
+  margin-bottom: 4px;
+
+  color: #fffaf1;
+
+  font-family: 'Baloo 2', sans-serif;
+  font-size: clamp(1.58rem, 6.5vw, 2.2rem);
+  font-weight: 800;
+  line-height: .94;
+  letter-spacing: -.025em;
+}
+
+.negocio-v2__canje-regis-destacados {
+  min-height: 38px;
+
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 6px 10px;
+
+  border: 1px solid rgba(54, 242, 157, .5);
+  border-radius: 14px;
+
+  color: #53f2aa;
+  background: rgba(0, 96, 67, .5);
+}
+
+.negocio-v2__canje-regis-destacados svg {
+  width: 23px;
+  height: 23px;
+
+  flex: 0 0 auto;
+}
+
+.negocio-v2__canje-regis-destacados b {
+  font-family: 'Baloo 2', sans-serif;
+  font-size: clamp(1.32rem, 5vw, 1.72rem);
+  line-height: 1;
+}
+
+.negocio-v2__canje-regis-destacados span {
+  color: #eefaf5;
+
+  font-size: .73rem;
+  font-weight: 700;
+}
+
+.negocio-v2__canje-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+
+  margin-top: 5px;
+}
+
+.negocio-v2__canje-minimo,
+.negocio-v2__canje-vigencia {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 6px 8px;
+
+  border-radius: 13px;
+
+  background: rgba(6, 86, 61, .64);
+}
+
+.negocio-v2__canje-vigencia {
+  border: 1px solid rgba(255, 182, 34, .7);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(95, 77, 14, .5),
+      rgba(70, 56, 12, .42)
+    );
+}
+
+.negocio-v2__canje-minimo svg,
+.negocio-v2__canje-vigencia svg {
+  width: 21px;
+  height: 21px;
+
+  flex: 0 0 auto;
+}
+
+.negocio-v2__canje-minimo svg {
+  color: #7bf0b9;
+}
+
+.negocio-v2__canje-vigencia svg {
+  color: #ffd34e;
+}
+
+.negocio-v2__canje-minimo span,
+.negocio-v2__canje-vigencia span {
+  min-width: 0;
+
+  color: #d6e7df;
+
+  font-size: .64rem;
+  line-height: 1.15;
+}
+
+.negocio-v2__canje-minimo strong,
+.negocio-v2__canje-vigencia strong {
+  display: block;
+
+  margin-top: 2px;
+
+  color: #fffaf1;
+
+  font-family: 'Baloo 2', sans-serif;
+  font-size: .98rem;
+  line-height: 1;
+}
+
+.negocio-v2__canje-vigencia strong {
+  color: #ffd34e;
+}
+
+
+/* ============================================================
+   MONTO
+   ============================================================ */
+
+.negocio-v2__canje-monto {
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  padding: 8px 12px;
+
+  border: 1.5px solid #52efaa;
+  border-radius: 21px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(1, 116, 75, .8),
+      rgba(3, 78, 58, .8)
+    );
+}
+
+.negocio-v2__canje-monto > small {
+  color: #cce9de;
+
+  font-size: .72rem;
+}
+
+.negocio-v2__canje-monto-fila {
+  display: grid;
+  grid-template-columns: auto 1fr 40px;
+  align-items: center;
+  gap: 3px;
+
+  margin-top: 2px;
+}
+
+.negocio-v2__canje-monto-fila > b {
+  color: #fffaf1;
+
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 2.7rem;
+  line-height: .9;
+}
+
+.negocio-v2__canje-monto input {
+  min-width: 0;
+  width: 100%;
+
+  padding: 0;
+
+  border: 0;
+  outline: 0;
+
+  color: #fffaf1;
+  background: transparent;
+
+  font-family: 'Baloo 2', sans-serif;
+  font-size: clamp(2.45rem, 10vw, 3.2rem);
+  font-weight: 800;
+  line-height: .9;
+}
+
+.negocio-v2__canje-monto input::placeholder {
+  color: rgba(255, 250, 241, .42);
+  opacity: 1;
+}
+
+.negocio-v2__canje-monto-fila i {
+  width: 36px;
+  height: 36px;
+
+  display: grid;
+  place-items: center;
+
+  border: 1px solid rgba(78, 235, 163, .35);
+  border-radius: 50%;
+
+  color: #c9f7e1;
+  background: rgba(0, 89, 63, .52);
+}
+
+.negocio-v2__canje-monto-fila i svg {
+  width: 19px;
+  height: 19px;
+}
+
+
+/* ============================================================
+   AVISO
+   ============================================================ */
+
+.negocio-v2__canje-aviso {
+  min-height: 0;
+
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  align-items: center;
+  gap: 9px;
+
+  padding: 6px 10px;
+
+  border: 1px solid rgba(49, 205, 132, .3);
+  border-radius: 17px;
+
+  background: rgba(0, 56, 42, .58);
+}
+
+.negocio-v2__canje-aviso-moneda {
+  width: 44px;
+  height: 44px;
+}
+
+.negocio-v2__canje-aviso strong,
+.negocio-v2__canje-aviso small {
+  display: block;
+}
+
+.negocio-v2__canje-aviso strong {
+  color: #fffaf1;
+
+  font-family: 'Baloo 2', sans-serif;
+  font-size: .88rem;
+  line-height: 1.05;
+}
+
+.negocio-v2__canje-aviso small {
+  margin-top: 2px;
+
+  color: #c2dbd1;
+
+  font-size: .65rem;
+  line-height: 1.28;
+}
+
+
+/* ============================================================
+   ACCIONES
+   ============================================================ */
+
+.negocio-v2__canje-acciones {
+  display: grid;
+  grid-template-columns: 1.7fr .72fr;
+  gap: 9px;
+}
+
+.negocio-v2__canje-acciones button {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+
+  border: 1px solid rgba(43, 221, 137, .38);
+  border-radius: 16px;
+
+  color: #fffaf1;
+  background: rgba(0, 69, 50, .9);
+
+  font-family: 'Baloo 2', sans-serif;
+  font-size: .9rem;
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+.negocio-v2__canje-acciones button.principal {
+  border-color: #ff721a;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ff7419,
+      #ff5c0a
+    );
+
+  box-shadow:
+    0 8px 18px rgba(255, 91, 12, .18);
+}
+
+.negocio-v2__canje-acciones button.principal svg {
+  width: 20px;
+  height: 20px;
+}
+
+.negocio-v2__canje-acciones button:disabled {
+  cursor: not-allowed;
+
+  opacity: .48;
+}
+
+
+/* ============================================================
+   PANTALLAS DE MENOR ALTURA
+   ============================================================ */
+
+@media (max-height: 830px) {
+  .negocio-v2__canje-revision {
+    padding-top: 2px;
+    padding-bottom: 4px;
+  }
+
+  .negocio-v2__canje-panel {
+    gap: 7px;
+    padding: 13px;
+
+    border-radius: 25px;
+
+    grid-template-rows:
+      minmax(0, 1.25fr)
+      minmax(0, 1.45fr)
+      minmax(82px, .76fr)
+      minmax(58px, .52fr)
+      50px;
+  }
+
+  .negocio-v2__canje-cabecera {
+    grid-template-columns: minmax(0, 1fr) 106px;
+  }
+
+  .negocio-v2__canje-cabecera h1 {
+    margin-bottom: 5px;
+
+    font-size: 2.15rem;
+  }
+
+  .negocio-v2__canje-regalon {
+    width: 122px;
+    height: 122px;
+  }
+
+  .negocio-v2__canje-vecino {
+    padding: 6px 8px;
+  }
+
+  .negocio-v2__canje-avatar {
+    width: 38px;
+    height: 38px;
+  }
+
+  .negocio-v2__canje-cabecera-copy > p {
+    margin-top: 4px;
+
+    font-size: .7rem;
+  }
+
+  .negocio-v2__canje-beneficio {
+    grid-template-columns: 68px minmax(0, 1fr);
+
+    padding: 9px 10px;
+  }
+
+  .negocio-v2__canje-moneda {
+    width: 64px;
+    height: 64px;
+  }
+
+  .negocio-v2__canje-descuento {
+    font-size: 1.55rem;
+  }
+
+  .negocio-v2__canje-regis-destacados {
+    min-height: 34px;
+
+    padding: 4px 8px;
+  }
+
+  .negocio-v2__canje-meta {
+    margin-top: 5px;
+  }
+
+  .negocio-v2__canje-minimo,
+  .negocio-v2__canje-vigencia {
+    padding: 4px 6px;
+  }
+
+  .negocio-v2__canje-monto {
+    padding: 7px 11px;
+  }
+
+  .negocio-v2__canje-monto-fila > b {
+    font-size: 2.2rem;
+  }
+
+  .negocio-v2__canje-monto input {
+    font-size: 2.5rem;
+  }
+
+  .negocio-v2__canje-aviso {
+    padding: 6px 9px;
+  }
+
+  .negocio-v2__canje-aviso-moneda {
+    width: 38px;
+    height: 38px;
+  }
+}
+
+
+@media (max-width: 390px) {
+  .negocio-v2__canje-revision {
+    padding-inline: 10px;
+  }
+
+  .negocio-v2__canje-panel {
+    padding-inline: 12px;
+  }
+
+  .negocio-v2__canje-cabecera {
+    grid-template-columns: minmax(0, 1fr) 92px;
+  }
+
+  .negocio-v2__canje-regalon {
+    width: 108px;
+    height: 108px;
+  }
+
+  .negocio-v2__canje-beneficio {
+    grid-template-columns: 58px minmax(0, 1fr);
+  }
+
+  .negocio-v2__canje-moneda {
+    width: 56px;
+    height: 56px;
+  }
+
+  .negocio-v2__canje-regis-destacados span {
+    display: none;
+  }
+
+  .negocio-v2__canje-meta {
+    gap: 5px;
+  }
+
+  .negocio-v2__canje-acciones {
+    grid-template-columns: 1.55fr .65fr;
+  }
+}
+
+/* CANJE EQUILIBRADO V3 ? INICIO */
+
+/*
+   La secci?n ocupa el espacio real disponible entre
+   header y navegaci?n. No fuerza 100vh y tampoco se
+   comprime hacia arriba.
+*/
+
+.negocio-v2__canje-revision {
+  box-sizing: border-box;
+  width: 100%;
+  height: min(700px, calc(100dvh - 230px));
+  min-height: 0;
+  padding: 4px 0 8px;
+  overflow: hidden;
+}
+
+.negocio-v2__canje-panel {
+  box-sizing: border-box;
+
+  width: 100%;
+  height: 100%;
+
+  display: grid;
+  grid-template-rows:
+    1.24fr
+    1.48fr
+    .78fr
+    .52fr
+    54px;
+  gap: 8px;
+
+  padding: 14px;
+
+  border-radius: 28px;
+}
+
+
+/* ============================================================
+   CABECERA
+   ============================================================ */
+
+.negocio-v2__canje-cabecera {
+  grid-template-columns: minmax(0, 1fr) 124px;
+  gap: 7px;
+}
+
+.negocio-v2__canje-eyebrow {
+  margin-bottom: 2px;
+  font-size: .7rem;
+}
+
+.negocio-v2__canje-cabecera h1 {
+  margin: 0 0 7px;
+
+  font-size: clamp(2.15rem, 8.4vw, 2.75rem);
+  line-height: .92;
+}
+
+.negocio-v2__canje-vecino {
+  width: min(100%, 280px);
+
+  gap: 9px;
+
+  padding: 8px 9px;
+
+  border-radius: 16px;
+}
+
+.negocio-v2__canje-avatar {
+  width: 43px;
+  height: 43px;
+
+  font-size: 1.05rem;
+}
+
+.negocio-v2__canje-vecino strong {
+  font-size: .98rem;
+}
+
+.negocio-v2__canje-vecino small {
+  margin-top: 1px;
+
+  font-size: .68rem;
+  line-height: 1.22;
+}
+
+.negocio-v2__canje-cabecera-copy > p {
+  max-width: 300px;
+
+  margin: 7px 0 0;
+
+  font-size: .72rem;
+  line-height: 1.3;
+}
+
+.negocio-v2__canje-regalon {
+  right: -5px;
+  bottom: -5px;
+
+  width: 137px;
+  height: 137px;
+}
+
+
+/* ============================================================
+   BENEFICIO ? PARTE PROTAGONISTA
+   ============================================================ */
+
+.negocio-v2__canje-beneficio {
+  grid-template-columns: 76px minmax(0, 1fr);
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 12px;
+
+  border-radius: 22px;
+}
+
+.negocio-v2__canje-moneda {
+  width: 72px;
+  height: 72px;
+}
+
+.negocio-v2__canje-descuento {
+  margin-bottom: 7px;
+
+  font-size: clamp(1.72rem, 7vw, 2.15rem);
+  line-height: .94;
+}
+
+.negocio-v2__canje-regis-destacados {
+  min-height: 43px;
+
+  gap: 7px;
+
+  padding: 6px 10px;
+
+  border-radius: 14px;
+}
+
+.negocio-v2__canje-regis-destacados svg {
+  width: 22px;
+  height: 22px;
+}
+
+.negocio-v2__canje-regis-destacados b {
+  font-size: clamp(1.45rem, 5.6vw, 1.8rem);
+}
+
+.negocio-v2__canje-regis-destacados span {
+  font-size: .68rem;
+}
+
+.negocio-v2__canje-meta {
+  gap: 8px;
+
+  margin-top: 8px;
+}
+
+.negocio-v2__canje-minimo,
+.negocio-v2__canje-vigencia {
+  min-height: 48px;
+
+  gap: 7px;
+
+  padding: 7px 8px;
+
+  border-radius: 13px;
+}
+
+.negocio-v2__canje-minimo svg,
+.negocio-v2__canje-vigencia svg {
+  width: 21px;
+  height: 21px;
+}
+
+.negocio-v2__canje-minimo span,
+.negocio-v2__canje-vigencia span {
+  font-size: .62rem;
+}
+
+.negocio-v2__canje-minimo strong,
+.negocio-v2__canje-vigencia strong {
+  margin-top: 2px;
+
+  font-size: 1rem;
+}
+
+
+/* ============================================================
+   MONTO
+   ============================================================ */
+
+.negocio-v2__canje-monto {
+  min-height: 0;
+
+  justify-content: center;
+
+  padding: 10px 13px;
+
+  border-radius: 20px;
+}
+
+.negocio-v2__canje-monto > small {
+  font-size: .7rem;
+}
+
+.negocio-v2__canje-monto-fila {
+  grid-template-columns: auto 1fr 40px;
+
+  margin-top: 2px;
+}
+
+.negocio-v2__canje-monto-fila > b {
+  font-size: 2.65rem;
+}
+
+.negocio-v2__canje-monto input {
+  font-size: clamp(2.55rem, 10vw, 3.1rem);
+}
+
+.negocio-v2__canje-monto-fila i {
+  width: 38px;
+  height: 38px;
+}
+
+.negocio-v2__canje-monto-fila i svg {
+  width: 19px;
+  height: 19px;
+}
+
+
+/* ============================================================
+   AVISO
+   ============================================================ */
+
+.negocio-v2__canje-aviso {
+  grid-template-columns: 43px minmax(0, 1fr);
+
+  gap: 9px;
+
+  padding: 8px 10px;
+
+  border-radius: 16px;
+}
+
+.negocio-v2__canje-aviso-moneda {
+  width: 41px;
+  height: 41px;
+}
+
+.negocio-v2__canje-aviso strong {
+  font-size: .84rem;
+}
+
+.negocio-v2__canje-aviso small {
+  margin-top: 2px;
+
+  font-size: .62rem;
+  line-height: 1.25;
+}
+
+
+/* ============================================================
+   BOTONES
+   ============================================================ */
+
+.negocio-v2__canje-acciones {
+  height: 54px;
+
+  grid-template-columns: 1.65fr .72fr;
+
+  gap: 9px;
+}
+
+.negocio-v2__canje-acciones button {
+  min-height: 54px;
+
+  border-radius: 15px;
+
+  font-size: .88rem;
+}
+
+
+/* ============================================================
+   VIEWPORTS M?S BAJOS
+   ============================================================ */
+
+@media (max-height: 840px) {
+  .negocio-v2__canje-revision {
+    height: calc(100dvh - 215px);
+  }
+
+  .negocio-v2__canje-panel {
+    grid-template-rows:
+      1.18fr
+      1.42fr
+      .75fr
+      .5fr
+      48px;
+
+    gap: 6px;
+
+    padding: 11px;
+  }
+
+  .negocio-v2__canje-cabecera {
+    grid-template-columns: minmax(0, 1fr) 108px;
+  }
+
+  .negocio-v2__canje-cabecera h1 {
+    font-size: 2rem;
+  }
+
+  .negocio-v2__canje-regalon {
+    width: 118px;
+    height: 118px;
+  }
+
+  .negocio-v2__canje-beneficio {
+    grid-template-columns: 64px minmax(0, 1fr);
+
+    padding: 9px;
+  }
+
+  .negocio-v2__canje-moneda {
+    width: 61px;
+    height: 61px;
+  }
+
+  .negocio-v2__canje-descuento {
+    font-size: 1.55rem;
+  }
+
+  .negocio-v2__canje-regis-destacados {
+    min-height: 36px;
+  }
+
+  .negocio-v2__canje-minimo,
+  .negocio-v2__canje-vigencia {
+    min-height: 40px;
+
+    padding-block: 5px;
+  }
+
+  .negocio-v2__canje-monto {
+    padding-block: 7px;
+  }
+
+  .negocio-v2__canje-aviso {
+    padding-block: 5px;
+  }
+
+  .negocio-v2__canje-acciones,
+  .negocio-v2__canje-acciones button {
+    height: 48px;
+    min-height: 48px;
+  }
+}
+
+/* CANJE EQUILIBRADO V3 ? FIN */
+
+/* CANJE SEPARADO V4 ? INICIO */
+
+/*
+  Ahora el panel tiene seis bloques:
+  cabecera
+  beneficio
+  condiciones
+  monto
+  aviso
+  acciones
+*/
+
+.negocio-v2__canje-panel {
+  grid-template-rows:
+    minmax(0, 1.12fr)
+    minmax(96px, .72fr)
+    minmax(58px, .43fr)
+    minmax(90px, .68fr)
+    minmax(60px, .42fr)
+    54px;
+
+  gap: 8px;
+}
+
+
+/* BENEFICIO:
+   solo descuento + REGIS */
+
+.negocio-v2__canje-beneficio {
+  min-height: 0;
+
+  grid-template-columns:
+    68px
+    minmax(0, 1fr);
+
+  gap: 9px;
+
+  padding: 10px 11px;
+
+  border-radius: 19px;
+}
+
+.negocio-v2__canje-moneda {
+  width: 64px;
+  height: 64px;
+}
+
+.negocio-v2__canje-descuento {
+  margin-bottom: 6px;
+
+  font-size: clamp(
+    1.72rem,
+    7vw,
+    2.08rem
+  );
+}
+
+.negocio-v2__canje-regis-destacados {
+  min-height: 40px;
+
+  padding: 5px 9px;
+}
+
+
+/* CONDICIONES:
+   caja independiente */
+
+.negocio-v2__canje-condiciones {
+  box-sizing: border-box;
+
+  min-height: 0;
+
+  display: grid;
+
+  grid-template-columns:
+    1fr
+    1fr;
+
+  align-items: stretch;
+
+  gap: 8px;
+
+  padding: 7px;
+
+  border:
+    1px solid
+    rgba(56, 229, 145, .36);
+
+  border-radius: 17px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(3, 75, 53, .8),
+      rgba(1, 58, 43, .82)
+    );
+}
+
+.negocio-v2__canje-condiciones
+.negocio-v2__canje-minimo,
+
+.negocio-v2__canje-condiciones
+.negocio-v2__canje-vigencia {
+  box-sizing: border-box;
+
+  min-width: 0;
+  min-height: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+
+  margin: 0;
+
+  padding: 7px 9px;
+
+  border-radius: 12px;
+}
+
+.negocio-v2__canje-condiciones
+.negocio-v2__canje-minimo {
+  border:
+    1px solid
+    rgba(77, 231, 163, .18);
+
+  background:
+    rgba(7, 101, 70, .55);
+}
+
+.negocio-v2__canje-condiciones
+.negocio-v2__canje-vigencia {
+  border:
+    1px solid
+    rgba(255, 187, 42, .75);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(89, 72, 13, .55),
+      rgba(63, 51, 10, .5)
+    );
+}
+
+.negocio-v2__canje-condiciones
+.negocio-v2__canje-minimo svg,
+
+.negocio-v2__canje-condiciones
+.negocio-v2__canje-vigencia svg {
+  width: 21px;
+  height: 21px;
+
+  flex: 0 0 auto;
+}
+
+.negocio-v2__canje-condiciones
+.negocio-v2__canje-minimo span,
+
+.negocio-v2__canje-condiciones
+.negocio-v2__canje-vigencia span {
+  color: #d8e9e2;
+
+  font-size: .63rem;
+  line-height: 1.12;
+}
+
+.negocio-v2__canje-condiciones
+.negocio-v2__canje-minimo strong,
+
+.negocio-v2__canje-condiciones
+.negocio-v2__canje-vigencia strong {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #fffaf1;
+
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.negocio-v2__canje-condiciones
+.negocio-v2__canje-vigencia strong {
+  color: #ffd34e;
+}
+
+
+/* En esta nueva estructura canje-meta
+   ya no participa visualmente. */
+
+.negocio-v2__canje-meta {
+  display: contents;
+}
+
+
+@media (max-height: 840px) {
+
+  .negocio-v2__canje-panel {
+    grid-template-rows:
+      minmax(0, 1.05fr)
+      minmax(86px, .68fr)
+      minmax(52px, .4fr)
+      minmax(82px, .64fr)
+      minmax(54px, .4fr)
+      48px;
+
+    gap: 6px;
+  }
+
+  .negocio-v2__canje-beneficio {
+    grid-template-columns:
+      58px
+      minmax(0, 1fr);
+
+    padding: 8px 9px;
+  }
+
+  .negocio-v2__canje-moneda {
+    width: 55px;
+    height: 55px;
+  }
+
+  .negocio-v2__canje-condiciones {
+    padding: 5px;
+    gap: 6px;
+  }
+
+  .negocio-v2__canje-condiciones
+  .negocio-v2__canje-minimo,
+
+  .negocio-v2__canje-condiciones
+  .negocio-v2__canje-vigencia {
+    padding: 5px 7px;
+  }
+}
+
+/* CANJE SEPARADO V4 ? FIN */
+
+/* AJUSTE REGIS DENTRO DEL BENEFICIO ? INICIO */
+
+.negocio-v2__canje-beneficio {
+  grid-template-columns: 58px minmax(0, 1fr);
+  align-items: center;
+  min-height: 102px;
+  padding: 10px 11px;
+}
+
+.negocio-v2__canje-moneda {
+  width: 56px;
+  height: 56px;
+}
+
+.negocio-v2__canje-beneficio-contenido {
+  min-width: 0;
+  display: grid;
+  align-content: center;
+  gap: 6px;
+}
+
+.negocio-v2__canje-descuento {
+  margin: 0;
+
+  font-size: clamp(
+    1.42rem,
+    5.8vw,
+    1.72rem
+  );
+
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.negocio-v2__canje-regis-destacados {
+  box-sizing: border-box;
+
+  width: 100%;
+  min-height: 38px;
+
+  margin: 0;
+
+  padding: 5px 9px;
+
+  overflow: hidden;
+}
+
+.negocio-v2__canje-regis-destacados b {
+  white-space: nowrap;
+}
+
+@media (max-width: 390px) {
+  .negocio-v2__canje-beneficio {
+    grid-template-columns: 52px minmax(0, 1fr);
+  }
+
+  .negocio-v2__canje-moneda {
+    width: 50px;
+    height: 50px;
+  }
+
+  .negocio-v2__canje-descuento {
+    font-size: 1.38rem;
+  }
+}
+
+/* AJUSTE REGIS DENTRO DEL BENEFICIO ? FIN */
+
+/* Ajuste fino ? etiqueta monto */
+.negocio-v2__canje-monto > small {
+  transform: translateY(4px);
+}
+
+/* Ajuste fino ? etiqueta monto */
+.negocio-v2__canje-monto > small {
+  transform: translateY(4px);
+}
+
+/* MODO CLARO CANJE V2 ? INICIO */
+
+/* ------------------------------------------------------------
+   PANEL GENERAL
+   ------------------------------------------------------------ */
+
+html[data-tema='claro'] .negocio-v2__canje-panel {
+  border-color: rgba(20, 83, 61, .10);
+
+  background:
+    linear-gradient(
+      180deg,
+      #fffdfa 0%,
+      #fffaf4 100%
+    );
+
+  box-shadow:
+    0 14px 34px rgba(72, 66, 50, .09);
+}
+
+
+/* ------------------------------------------------------------
+   TITULOS Y TEXTO
+   ------------------------------------------------------------ */
+
+html[data-tema='claro'] .negocio-v2__canje-eyebrow {
+  color: #239466;
+}
+
+html[data-tema='claro'] .negocio-v2__canje-cabecera h1 {
+  color: #073f32;
+}
+
+html[data-tema='claro']
+.negocio-v2__canje-cabecera-copy > p {
+  color: #53635d;
+}
+
+
+/* ------------------------------------------------------------
+   VECINO
+   ------------------------------------------------------------ */
+
+html[data-tema='claro'] .negocio-v2__canje-vecino {
+  border-color: rgba(24, 143, 95, .13);
+
+  background:
+    linear-gradient(
+      145deg,
+      #f7fcf9,
+      #eef8f2
+    );
+}
+
+html[data-tema='claro']
+.negocio-v2__canje-vecino strong {
+  color: #073f32;
+}
+
+html[data-tema='claro']
+.negocio-v2__canje-vecino small {
+  color: #56675f;
+}
+
+
+/* ------------------------------------------------------------
+   BOX BENEFICIO
+   ------------------------------------------------------------ */
+
+html[data-tema='claro']
+.negocio-v2__canje-beneficio {
+  border-color: rgba(25, 153, 101, .16);
+
+  background:
+    linear-gradient(
+      145deg,
+      #f8fdfa,
+      #eef9f3
+    );
+
+  box-shadow:
+    0 7px 18px rgba(19, 85, 58, .045);
+}
+
+html[data-tema='claro']
+.negocio-v2__canje-descuento {
+  color: #063f32;
+}
+
+html[data-tema='claro']
+.negocio-v2__canje-regis-destacados {
+  border-color: rgba(23, 169, 109, .25);
+
+  color: #118d60;
+
+  background:
+    linear-gradient(
+      145deg,
+      #eaf9f1,
+      #e0f5e9
+    );
+}
+
+html[data-tema='claro']
+.negocio-v2__canje-regis-destacados b {
+  color: #139967;
+}
+
+html[data-tema='claro']
+.negocio-v2__canje-regis-destacados span {
+  color: #3e5149;
+}
+
+
+/* ------------------------------------------------------------
+   BOX CONDICIONES
+   ------------------------------------------------------------ */
+
+html[data-tema='claro']
+.negocio-v2__canje-condiciones {
+  border-color: rgba(20, 126, 84, .11);
+
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #f8fbf9
+    );
+
+  box-shadow:
+    0 5px 14px rgba(32, 73, 55, .04);
+}
+
+
+/* Compra m?nima */
+
+html[data-tema='claro']
+.negocio-v2__canje-condiciones
+.negocio-v2__canje-minimo {
+  border-color: rgba(22, 145, 94, .14);
+
+  background:
+    linear-gradient(
+      145deg,
+      #f1faf5,
+      #e9f7ef
+    );
+}
+
+html[data-tema='claro']
+.negocio-v2__canje-condiciones
+.negocio-v2__canje-minimo svg {
+  color: #138a5d;
+}
+
+html[data-tema='claro']
+.negocio-v2__canje-condiciones
+.negocio-v2__canje-minimo span {
+  color: #52655d;
+}
+
+html[data-tema='claro']
+.negocio-v2__canje-condiciones
+.negocio-v2__canje-minimo strong {
+  color: #073f32;
+}
+
+
+/* Vigencia */
+
+html[data-tema='claro']
+.negocio-v2__canje-condiciones
+.negocio-v2__canje-vigencia {
+  border-color: #edb52d;
+
+  background:
+    linear-gradient(
+      145deg,
+      #fffaf0,
+      #fff3d4
+    );
+}
+
+html[data-tema='claro']
+.negocio-v2__canje-condiciones
+.negocio-v2__canje-vigencia svg {
+  color: #d38a10;
+}
+
+html[data-tema='claro']
+.negocio-v2__canje-condiciones
+.negocio-v2__canje-vigencia span {
+  color: #665c4d;
+}
+
+html[data-tema='claro']
+.negocio-v2__canje-condiciones
+.negocio-v2__canje-vigencia strong {
+  color: #ba6909;
+}
+
+
+/* ------------------------------------------------------------
+   MONTO
+   ------------------------------------------------------------ */
+
+html[data-tema='claro']
+.negocio-v2__canje-monto {
+  border-color: rgba(25, 139, 94, .16);
+
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #f8fbf9
+    );
+
+  box-shadow:
+    0 6px 16px rgba(28, 72, 53, .04);
+}
+
+html[data-tema='claro']
+.negocio-v2__canje-monto > small {
+  color: #53635d;
+}
+
+html[data-tema='claro']
+.negocio-v2__canje-monto-fila > b {
+  color: #073f32;
+}
+
+html[data-tema='claro']
+.negocio-v2__canje-monto input {
+  color: #073f32;
+}
+
+html[data-tema='claro']
+.negocio-v2__canje-monto input::placeholder {
+  color: #78ad93;
+}
+
+html[data-tema='claro']
+.negocio-v2__canje-monto-fila i {
+  border-color: rgba(22, 151, 98, .15);
+
+  color: #0b8057;
+
+  background:
+    linear-gradient(
+      145deg,
+      #effaf4,
+      #e5f6ed
+    );
+}
+
+
+/* ------------------------------------------------------------
+   AVISO
+   ------------------------------------------------------------ */
+
+html[data-tema='claro']
+.negocio-v2__canje-aviso {
+  border-color: rgba(20, 93, 63, .09);
+
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #fafcfb
+    );
+
+  box-shadow:
+    0 5px 14px rgba(28, 72, 53, .035);
+}
+
+html[data-tema='claro']
+.negocio-v2__canje-aviso strong {
+  color: #073f32;
+}
+
+html[data-tema='claro']
+.negocio-v2__canje-aviso small {
+  color: #596861;
+}
+
+
+/* ------------------------------------------------------------
+   BOTONES
+   ------------------------------------------------------------ */
+
+html[data-tema='claro']
+.negocio-v2__canje-acciones button.principal {
+  border-color: #ff6a12;
+
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ff7b20,
+      #ff5f0d
+    );
+
+  box-shadow:
+    0 8px 18px rgba(255, 98, 15, .17);
+}
+
+html[data-tema='claro']
+.negocio-v2__canje-acciones button:not(.principal) {
+  border-color: rgba(20, 130, 87, .15);
+
+  color: #08533d;
+
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #f1faf5
+    );
+}
+
+html[data-tema='claro']
+.negocio-v2__canje-acciones button.principal:disabled {
+  border-color: #e5aa70;
+
+  color: rgba(255,255,255,.85);
+
+  background:
+    linear-gradient(
+      135deg,
+      #dca064,
+      #cf8e4e
+    );
+
+  opacity: .72;
+}
+
+
+/* ------------------------------------------------------------
+   MONEDAS OFICIALES
+   ------------------------------------------------------------ */
+
+html[data-tema='claro']
+.negocio-v2__canje-moneda,
+html[data-tema='claro']
+.negocio-v2__canje-aviso-moneda {
+  filter:
+    drop-shadow(
+      0 5px 6px rgba(123, 82, 5, .14)
+    );
+}
+
+/* MODO CLARO CANJE V2 ? FIN */

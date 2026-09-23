@@ -1,0 +1,26 @@
+/*
+ * Activos oficiales de marca para App Negocio.
+ * Este archivo se carga globalmente y fuerza el uso de los SVG de alta calidad
+ * sobre los PNG heredados de Terminal, sin modificar la lógica operacional.
+ */
+
+.negocio-v2__logo {
+  background-image: url('./recursos/marca/logo-club-regalones.svg') !important;
+  background-position: left center !important;
+  background-repeat: no-repeat !important;
+  background-size: contain !important;
+}
+
+.negocio-v2__tienda {
+  background-image: url('./recursos/marca/tienda-regalones.svg') !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: 88% 88% !important;
+}
+
+.negocio-v2__mascota.saludando {
+  background-image: url('./recursos/marca/regalon-saludando.svg') !important;
+  background-position: center bottom !important;
+  background-repeat: no-repeat !important;
+  background-size: contain !important;
+}

@@ -795,7 +795,7 @@ begin
   where idempotency_key = '1db-replay-reserva-0045';
 
   perform set_config(
-    'prueba.1db_canje_a1',
+    'prueba.canje_1db_a1',
     v_canje_id::text,
     true
   );
@@ -812,7 +812,7 @@ set local role anon;
 select throws_ok(
   format(
     'select * from public.terminal_confirmar_compra_con_canje(%L::uuid,15000,%L::uuid,%L::uuid,%L,%L,null)',
-    current_setting('prueba.1db_canje_a1'),
+    current_setting('prueba.canje_1db_a1'),
     'e2600000-0000-4000-8000-000000000045',
     'e2400000-0000-4000-8000-000000000045',
     'terminal-seguridad-b-0045-credencial-valida',
@@ -829,7 +829,7 @@ select ok(
   (
     select estado = 'reservado'
     from public.canjes_regis
-    where id = current_setting('prueba.1db_canje_a1')::uuid
+    where id = current_setting('prueba.canje_1db_a1')::uuid
   ),
   'El intento cruzado no altera el estado del canje'
 );
@@ -856,7 +856,7 @@ set local role anon;
 select lives_ok(
   format(
     'select * from public.terminal_confirmar_compra_con_canje(%L::uuid,15000,%L::uuid,%L::uuid,%L,%L,null)',
-    current_setting('prueba.1db_canje_a1'),
+    current_setting('prueba.canje_1db_a1'),
     'e1600000-0000-4000-8000-000000000045',
     'e1400000-0000-4000-8000-000000000045',
     'terminal-seguridad-a-0045-credencial-valida',
@@ -874,10 +874,10 @@ begin
   select compra_id
   into v_compra_id
   from public.canjes_regis
-  where id = current_setting('prueba.1db_canje_a1')::uuid;
+  where id = current_setting('prueba.canje_1db_a1')::uuid;
 
   perform set_config(
-    'prueba.1db_compra_a1',
+    'prueba.compra_1db_a1',
     v_compra_id::text,
     true
   );
@@ -888,7 +888,7 @@ select is(
   (
     select estado::text
     from public.canjes_regis
-    where id = current_setting('prueba.1db_canje_a1')::uuid
+    where id = current_setting('prueba.canje_1db_a1')::uuid
   ),
   'confirmado',
   'El canje queda confirmado'
@@ -910,7 +910,7 @@ select is(
   (
     select count(*)::integer
     from public.movimientos_regis
-    where canje_id = current_setting('prueba.1db_canje_a1')::uuid
+    where canje_id = current_setting('prueba.canje_1db_a1')::uuid
       and tipo = 'canje'
       and estado = 'canjeado'
   ),
@@ -928,7 +928,7 @@ set local role anon;
 select lives_ok(
   format(
     'select * from public.terminal_confirmar_compra_con_canje(%L::uuid,999999,%L::uuid,%L::uuid,%L,%L,null)',
-    current_setting('prueba.1db_canje_a1'),
+    current_setting('prueba.canje_1db_a1'),
     'e1600000-0000-4000-8000-000000000045',
     'e1400000-0000-4000-8000-000000000045',
     'terminal-seguridad-a-0045-credencial-valida',
@@ -943,9 +943,9 @@ select is(
   (
     select compra_id::text
     from public.canjes_regis
-    where id = current_setting('prueba.1db_canje_a1')::uuid
+    where id = current_setting('prueba.canje_1db_a1')::uuid
   ),
-  current_setting('prueba.1db_compra_a1'),
+  current_setting('prueba.compra_1db_a1'),
   'El replay conserva la compra original'
 );
 
@@ -953,7 +953,7 @@ select is(
   (
     select monto_compra_bruto_clp
     from public.canjes_regis
-    where id = current_setting('prueba.1db_canje_a1')::uuid
+    where id = current_setting('prueba.canje_1db_a1')::uuid
   ),
   15000,
   'Un replay con monto manipulado no reescribe la operación confirmada'
@@ -963,7 +963,7 @@ select is(
   (
     select count(*)::integer
     from public.movimientos_regis
-    where canje_id = current_setting('prueba.1db_canje_a1')::uuid
+    where canje_id = current_setting('prueba.canje_1db_a1')::uuid
       and tipo = 'canje'
   ),
   1,
@@ -992,7 +992,7 @@ set local role anon;
 select throws_ok(
   format(
     'select * from public.terminal_cancelar_canje(%L::uuid,%L::uuid,%L::uuid,%L)',
-    current_setting('prueba.1db_canje_a1'),
+    current_setting('prueba.canje_1db_a1'),
     'e1600000-0000-4000-8000-000000000045',
     'e1400000-0000-4000-8000-000000000045',
     'terminal-seguridad-a-0045-credencial-valida'
@@ -1007,9 +1007,9 @@ reset role;
 select ok(
   (
     select estado = 'confirmado'
-      and compra_id::text = current_setting('prueba.1db_compra_a1')
+      and compra_id::text = current_setting('prueba.compra_1db_a1')
     from public.canjes_regis
-    where id = current_setting('prueba.1db_canje_a1')::uuid
+    where id = current_setting('prueba.canje_1db_a1')::uuid
   ),
   'El intento de cancelar no modifica la operación finalizada'
 );

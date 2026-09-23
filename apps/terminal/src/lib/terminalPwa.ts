@@ -50,6 +50,20 @@ export function eliminarCredencialTerminal(cajaId: string) {
   window.localStorage.removeItem(claveTerminal(cajaId))
 }
 
+const convertirCredencial = (registro: {
+  terminal_id: string
+  caja_id: string
+  identificador_publico: string
+  token_terminal: string
+  nombre_dispositivo: string
+}): CredencialTerminalLocal => ({
+  terminalId: registro.terminal_id,
+  cajaId: registro.caja_id,
+  identificadorPublico: registro.identificador_publico,
+  tokenTerminal: registro.token_terminal,
+  nombreDispositivo: registro.nombre_dispositivo,
+})
+
 export async function registrarTerminalPwa(
   cajaId: string,
   nombreDispositivo: string,
@@ -64,14 +78,43 @@ export async function registrarTerminalPwa(
   const registro = data[0]
   if (!registro) return null
 
-  const credencial: CredencialTerminalLocal = {
-    terminalId: registro.terminal_id,
-    cajaId: registro.caja_id,
-    identificadorPublico: registro.identificador_publico,
-    tokenTerminal: registro.token_terminal,
-    nombreDispositivo: registro.nombre_dispositivo,
-  }
+  const credencial = convertirCredencial(registro)
+  guardarCredencialTerminal(credencial)
+  return credencial
+}
 
+export async function moverTerminalPwa(
+  cajaId: string,
+  nombreDispositivo: string,
+) {
+  const rpc = supabase.rpc.bind(supabase) as unknown as (
+    funcion: string,
+    parametros: Record<string, unknown>,
+  ) => Promise<{
+    data: Array<{
+      terminal_id: string
+      caja_id: string
+      identificador_publico: string
+      token_terminal: string
+      nombre_dispositivo: string
+      estado: string
+    }> | null
+    error: unknown
+  }>
+
+  const { data, error } = await rpc('mover_terminal_pwa', {
+    p_caja_id: cajaId,
+    p_nombre_dispositivo: nombreDispositivo,
+    p_version_app: __APP_VERSION__,
+  })
+
+  if (error) throw error
+  const registro = data?.[0]
+  if (!registro) return null
+
+  eliminarCredencialTerminal(cajaId)
+
+  const credencial = convertirCredencial(registro)
   guardarCredencialTerminal(credencial)
   return credencial
 }

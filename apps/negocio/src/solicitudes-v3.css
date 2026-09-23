@@ -1,0 +1,315 @@
+/* Vista de Solicitudes V3.
+   Reproduce la dirección visual aprobada sin duplicar reglas de negocio:
+   las compras siguen usando los RPC existentes de Terminal Regalones. */
+
+.negocio-v2__solicitudes-v3 {
+  position: relative;
+  display: grid;
+  gap: 18px;
+  padding-top: 4px;
+}
+
+.negocio-v2__solicitudes-hero {
+  position: relative;
+  min-height: 196px;
+  padding: 18px 152px 10px 2px;
+  overflow: hidden;
+}
+
+.negocio-v2__solicitudes-hero::after {
+  content: '';
+  position: absolute;
+  right: -10px;
+  bottom: -2px;
+  width: 170px;
+  height: 176px;
+  pointer-events: none;
+  background: url('./recursos/marca/regalon-compras.png') center bottom / contain no-repeat;
+  filter: drop-shadow(0 12px 18px rgba(0,0,0,.18));
+}
+
+.negocio-v2__solicitudes-hero h1 {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: clamp(3.1rem, 13vw, 4.25rem);
+  line-height: .92;
+  letter-spacing: -.035em;
+}
+
+.negocio-v2__solicitudes-hero p {
+  position: relative;
+  z-index: 1;
+  max-width: 300px;
+  margin: 12px 0 0;
+  color: var(--texto-suave);
+  font-size: .82rem;
+  line-height: 1.55;
+}
+
+.negocio-v2__solicitudes-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 9px;
+}
+
+.negocio-v2__solicitudes-tabs button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-width: 0;
+  min-height: 48px;
+  padding: 0 10px;
+  border: 1px solid var(--borde);
+  border-radius: 999px;
+  color: var(--texto-suave);
+  background: color-mix(in srgb, var(--panel) 82%, transparent);
+  font-size: .72rem;
+  font-weight: 800;
+  box-shadow: 0 9px 22px rgba(0,0,0,.06);
+}
+
+.negocio-v2__solicitudes-tabs button.activo {
+  color: #fff;
+  border-color: #ff7b25;
+  background: linear-gradient(135deg, #ff771c, #ff5c0a);
+  box-shadow: 0 10px 24px rgba(255, 106, 18, .23);
+}
+
+.negocio-v2__solicitudes-tabs b {
+  display: grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--naranjo);
+  font-size: .62rem;
+}
+
+.negocio-v2__solicitudes-tabs button.activo b {
+  color: var(--naranjo);
+  background: #fff8ee;
+}
+
+.negocio-v2__solicitudes-lista {
+  display: grid;
+  gap: 12px;
+}
+
+.negocio-v2__solicitud-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 58px minmax(0,1fr) auto;
+  gap: 12px;
+  min-width: 0;
+  padding: 17px;
+  border: 1px solid rgba(148, 121, 78, .14);
+  border-radius: 24px;
+  color: #12392b;
+  background: #fffaf1;
+  box-shadow: 0 14px 28px rgba(30, 23, 12, .10);
+}
+
+.negocio-v2__solicitud-card.destacada {
+  border: 2px solid #ff6a12;
+  box-shadow: 0 15px 30px rgba(255,106,18,.16), 0 12px 28px rgba(30,23,12,.10);
+}
+
+.negocio-v2__solicitud-avatar {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  color: #ff6810;
+  background: #ffe4cf;
+}
+
+.negocio-v2__solicitud-avatar svg { width: 27px; height: 27px; }
+
+.negocio-v2__solicitud-contenido {
+  display: grid;
+  align-content: start;
+  gap: 3px;
+  min-width: 0;
+}
+
+.negocio-v2__solicitud-contenido > strong {
+  overflow: hidden;
+  color: #10382a;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.03rem;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.negocio-v2__solicitud-origen {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #6f746f;
+  font-size: .68rem;
+}
+
+.negocio-v2__solicitud-monto {
+  margin-top: 3px;
+  color: #063d2b;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.72rem;
+  line-height: 1;
+}
+
+.negocio-v2__solicitud-regis {
+  color: #a77912;
+  font-size: .65rem;
+  font-weight: 700;
+}
+
+.negocio-v2__solicitud-lateral {
+  display: grid;
+  justify-items: end;
+  align-content: start;
+  gap: 7px;
+  min-width: 72px;
+}
+
+.negocio-v2__solicitud-lateral time {
+  color: #6e746f;
+  font-size: .64rem;
+  white-space: nowrap;
+}
+
+.negocio-v2__solicitud-estado {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  color: #8b5c00;
+  background: #fff0b9;
+  font-size: .61rem;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.negocio-v2__solicitud-acciones {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 9px;
+  margin-top: 2px;
+}
+
+.negocio-v2__solicitud-acciones button {
+  min-height: 48px;
+  border: 1px solid rgba(15,93,63,.18);
+  border-radius: 16px;
+  color: #0e4d37;
+  background: #f4ede2;
+  font-size: .76rem;
+  font-weight: 800;
+}
+
+.negocio-v2__solicitud-acciones button.principal {
+  color: #fff;
+  border-color: #ff6a12;
+  background: linear-gradient(135deg, #ff771c, #ff5d0a);
+  box-shadow: 0 9px 20px rgba(255,106,18,.20);
+}
+
+.negocio-v2__solicitud-acciones button:disabled {
+  opacity: .5;
+}
+
+.negocio-v2__solicitud-revisar {
+  grid-column: 3;
+  align-self: end;
+  min-width: 88px;
+  min-height: 42px;
+  padding: 0 14px;
+  border-radius: 14px;
+  color: #fff;
+  background: linear-gradient(135deg, #ff771c, #ff5d0a);
+  font-size: .72rem;
+  font-weight: 800;
+}
+
+.negocio-v2__solicitudes-vacio {
+  display: grid;
+  justify-items: center;
+  gap: 7px;
+  padding: 36px 22px;
+  border: 1px solid var(--borde);
+  border-radius: 24px;
+  color: var(--texto-suave);
+  background: color-mix(in srgb, var(--panel) 88%, transparent);
+  text-align: center;
+}
+
+.negocio-v2__solicitudes-vacio > span {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  color: #0f6b46;
+  background: #e5f2e8;
+}
+
+.negocio-v2__solicitudes-vacio strong {
+  color: var(--texto);
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.2rem;
+}
+
+.negocio-v2__solicitudes-vacio p {
+  margin: 0;
+  max-width: 260px;
+  font-size: .7rem;
+  line-height: 1.45;
+}
+
+/* En las vistas internas ya no repetimos negocio/sucursal: queda reservado para Inicio. */
+.negocio-v2:has(.negocio-v2__solicitudes-v3) > .negocio-v2__comercio { display: none; }
+
+html[data-tema='oscuro'] .negocio-v2__solicitudes-hero h1 { color: #fffdf5; }
+html[data-tema='oscuro'] .negocio-v2__solicitudes-hero p { color: #aebfb6; }
+html[data-tema='oscuro'] .negocio-v2__solicitudes-tabs button:not(.activo) {
+  color: #b8c8bf;
+  border-color: rgba(83,214,130,.24);
+  background: rgba(5, 57, 39, .74);
+}
+
+html[data-tema='claro'] .negocio-v2__solicitudes-hero h1 { color: #063d2b; }
+html[data-tema='claro'] .negocio-v2__solicitudes-hero p { color: #756d60; }
+html[data-tema='claro'] .negocio-v2__solicitudes-tabs button:not(.activo) {
+  color: #6f6659;
+  border-color: rgba(171,126,60,.16);
+  background: rgba(255,250,241,.90);
+}
+
+@media (max-width: 380px) {
+  .negocio-v2__solicitudes-hero {
+    min-height: 180px;
+    padding-right: 132px;
+  }
+  .negocio-v2__solicitudes-hero::after {
+    right: -18px;
+    width: 155px;
+    height: 160px;
+  }
+  .negocio-v2__solicitudes-hero h1 { font-size: 3.05rem; }
+  .negocio-v2__solicitud-card {
+    grid-template-columns: 52px minmax(0,1fr) auto;
+    padding: 14px;
+  }
+  .negocio-v2__solicitud-avatar { width: 52px; height: 52px; }
+  .negocio-v2__solicitud-lateral { min-width: 64px; }
+  .negocio-v2__solicitud-revisar { min-width: 78px; padding: 0 10px; }
+}

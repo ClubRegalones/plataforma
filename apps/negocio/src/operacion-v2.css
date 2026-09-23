@@ -1,0 +1,699 @@
+.negocio-v2 {
+  --fondo: #f3f7f3;
+  --panel: #fffdf8;
+  --panel-2: #eef8f0;
+  --texto: #0d3b2b;
+  --texto-suave: #6d7c74;
+  --verde: #0f5d3f;
+  --verde-2: #176a48;
+  --verde-3: #0a4b35;
+  --verde-claro: #8fd2a3;
+  --naranjo: #ff6a12;
+  --naranjo-suave: #fff0e5;
+  --borde: rgba(15, 93, 63, .12);
+  --sombra: 0 16px 36px rgba(15, 70, 47, .10);
+  color: var(--texto);
+  background:
+    radial-gradient(circle at 8% 3%, rgba(58, 163, 100, .10), transparent 25%),
+    linear-gradient(180deg, #f9fbf8 0%, #f2f7f3 100%);
+}
+
+.negocio-v2 button {
+  -webkit-tap-highlight-color: transparent;
+  transition: transform .15s ease, border-color .15s ease, background .15s ease;
+}
+
+.negocio-v2 button:active:not(:disabled) { transform: scale(.985); }
+.negocio-v2 svg { display: block; }
+
+/* --------------------------------------------------------------------------
+ * Header / marca
+ * ------------------------------------------------------------------------ */
+.negocio-v2__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 78px;
+  padding: 2px 2px 0;
+}
+
+/* El PNG oficial tiene bastante aire interno. Para que la marca tenga la misma
+   presencia del mockup, renderizamos el wordmark con las tipografías oficiales
+   y mantenemos el logo/mascota oficiales en el resto de la experiencia. */
+.negocio-v2__logo {
+  display: grid;
+  align-content: center;
+  width: min(245px, calc(100% - 102px));
+  min-height: 58px;
+  background: none;
+}
+
+.negocio-v2__logo::before {
+  content: 'Club Regalones  ♥';
+  color: var(--texto);
+  font-family: 'Baloo 2', sans-serif;
+  font-size: clamp(1.72rem, 8.4vw, 2.08rem);
+  font-weight: 800;
+  line-height: .88;
+  letter-spacing: -.025em;
+  white-space: nowrap;
+}
+
+.negocio-v2__logo::after {
+  content: 'Más barrio, más beneficios';
+  margin-top: 6px;
+  color: var(--naranjo);
+  font-size: .66rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.negocio-v2__estado {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 38px;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: .72rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.negocio-v2__estado i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 12px currentColor;
+}
+
+.negocio-v2__estado.online { color: #0e6c42; border-color: #bce6c8; background: #def5e5; }
+.negocio-v2__estado.offline { color: #9a3d2d; border-color: #ffd5c9; background: #fff0eb; }
+
+/* --------------------------------------------------------------------------
+ * Comercio
+ * ------------------------------------------------------------------------ */
+.negocio-v2__comercio {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr) 24px;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 94px;
+  margin-top: 8px;
+  padding: 13px 15px;
+  border: 1px solid var(--borde);
+  border-radius: 24px;
+  color: var(--texto);
+  background: var(--panel);
+  box-shadow: var(--sombra);
+  text-align: left;
+}
+
+.negocio-v2__tienda {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  overflow: hidden;
+  border: 2px solid rgba(111, 220, 143, .75);
+  border-radius: 50%;
+  background:
+    url('../../terminal/src/recursos/mascota/regalon-saludando.png') center 47% / 185% auto no-repeat,
+    linear-gradient(145deg, #137149, #0a5038);
+  box-shadow: inset 0 0 0 4px rgba(255,255,255,.06), 0 8px 18px rgba(15,93,63,.12);
+  font-size: 0;
+}
+
+.negocio-v2__comercio > div { display: grid; min-width: 0; gap: 3px; }
+.negocio-v2__comercio strong {
+  overflow: hidden;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.04rem;
+  line-height: 1.05;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.negocio-v2__comercio small {
+  overflow: hidden;
+  color: var(--texto-suave);
+  font-size: .72rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.negocio-v2__comercio > svg { width: 22px; height: 22px; color: var(--verde); }
+
+.negocio-v2__toast {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 15px;
+  font-size: .78rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+.negocio-v2__toast.exito { color: #0d6740; background: #e8f6ed; }
+.negocio-v2__toast.error { color: #8d271e; background: #fff0ed; }
+
+/* --------------------------------------------------------------------------
+ * Home
+ * ------------------------------------------------------------------------ */
+.negocio-v2__hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 158px;
+  align-items: end;
+  min-height: 215px;
+  margin-top: 16px;
+  padding: 25px 20px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.11);
+  border-radius: 28px;
+  color: #fff;
+  background:
+    radial-gradient(circle at 86% 14%, rgba(185, 238, 113, .34), transparent 32%),
+    radial-gradient(circle at 88% 88%, rgba(19, 113, 73, .34), transparent 34%),
+    linear-gradient(135deg, #108153 0%, #0f6544 44%, #174b37 100%);
+  box-shadow: 0 19px 38px rgba(15, 93, 63, .20);
+}
+
+.negocio-v2__hero::after {
+  content: '';
+  position: absolute;
+  right: -26px;
+  top: -42px;
+  width: 210px;
+  height: 210px;
+  border-radius: 50%;
+  background: repeating-conic-gradient(from -12deg, rgba(255,255,255,.08) 0 12deg, transparent 12deg 28deg);
+  opacity: .65;
+}
+
+.negocio-v2__hero > div:first-child { position: relative; z-index: 2; align-self: center; }
+.negocio-v2__hero span {
+  color: #9fe0af;
+  font-size: .76rem;
+  font-weight: 800;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+.negocio-v2__hero h1 {
+  max-width: 215px;
+  margin: 7px 0 8px;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: clamp(2.65rem, 13vw, 3.35rem);
+  line-height: .88;
+  letter-spacing: -.025em;
+}
+.negocio-v2__hero p {
+  max-width: 205px;
+  margin: 0;
+  color: rgba(255,255,255,.84);
+  font-size: .84rem;
+  line-height: 1.42;
+}
+
+.negocio-v2__mascota { pointer-events: none; background-position: center bottom; background-repeat: no-repeat; background-size: contain; }
+.negocio-v2__mascota.saludando {
+  position: relative;
+  z-index: 2;
+  justify-self: end;
+  align-self: end;
+  width: 168px;
+  height: 188px;
+  margin: 0 -18px -26px -16px;
+  background-image: url('../../terminal/src/recursos/mascota/regalon-saludando.png');
+  background-size: 168% auto;
+  background-position: center 52%;
+  filter: drop-shadow(0 15px 16px rgba(0,0,0,.20));
+}
+.negocio-v2__mascota.primer-uso {
+  position: absolute;
+  top: 68px;
+  right: 5px;
+  width: 138px;
+  height: 150px;
+  background-image: url('../../terminal/src/recursos/mascota/regalon-primer-uso.png');
+  background-size: 158% auto;
+  background-position: center 48%;
+  filter: drop-shadow(0 10px 14px rgba(15,93,63,.17));
+}
+
+.negocio-v2__pendientes {
+  display: grid;
+  gap: 13px;
+  width: 100%;
+  margin-top: 17px;
+  padding: 17px;
+  border: 1px solid var(--borde);
+  border-radius: 24px;
+  color: var(--texto);
+  background: var(--panel);
+  box-shadow: var(--sombra);
+  text-align: left;
+}
+
+.negocio-v2__pendientes-titulo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 9px;
+}
+.negocio-v2__pendientes-titulo strong {
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.37rem;
+  line-height: 1;
+}
+.negocio-v2__pendientes-titulo > span {
+  display: grid;
+  place-items: center;
+  min-width: 31px;
+  height: 31px;
+  padding: 0 8px;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--naranjo);
+  box-shadow: 0 7px 18px rgba(255,106,18,.22);
+  font-size: .78rem;
+  font-weight: 800;
+}
+.negocio-v2__pendientes-titulo svg { color: var(--verde); }
+.negocio-v2__pendientes > p { margin: 0; color: var(--texto-suave); font-size: .78rem; }
+
+.negocio-v2__todo-dia {
+  display: grid;
+  grid-template-columns: 58px minmax(0,1fr);
+  align-items: center;
+  gap: 13px;
+  min-height: 75px;
+  padding: 7px 10px 7px 2px;
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--panel-2) 78%, transparent);
+}
+.negocio-v2__todo-dia > div { display: grid; gap: 3px; }
+.negocio-v2__todo-dia strong { font-size: .96rem; }
+.negocio-v2__todo-dia small { color: var(--texto-suave); font-size: .72rem; line-height: 1.4; }
+.negocio-v2__icono-suave {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  color: var(--verde);
+  background: #dff0e4;
+}
+.negocio-v2__mini-solicitudes { display: grid; gap: 5px; color: var(--texto-suave); font-size: .72rem; }
+
+.negocio-v2__acciones { margin-top: 21px; }
+.negocio-v2__acciones h2 {
+  margin: 0 0 11px;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.47rem;
+  line-height: 1;
+}
+.negocio-v2__acciones > div {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 10px;
+}
+.negocio-v2__acciones button {
+  position: relative;
+  display: grid;
+  grid-template-columns: 48px minmax(0,1fr) 18px;
+  grid-template-rows: auto auto;
+  align-items: center;
+  column-gap: 11px;
+  min-height: 110px;
+  padding: 14px;
+  border: 1px solid var(--borde);
+  border-radius: 20px;
+  color: var(--texto);
+  background: var(--panel);
+  box-shadow: 0 8px 22px rgba(20,52,40,.06);
+  text-align: left;
+}
+.negocio-v2__acciones button > span {
+  grid-row: 1 / 3;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 15px;
+  color: #59d989;
+  background: #e5f2e8;
+}
+.negocio-v2__acciones button:nth-child(1) > span,
+.negocio-v2__acciones button:nth-child(4) > span { color: var(--naranjo); background: var(--naranjo-suave); }
+.negocio-v2__acciones button strong { align-self: end; font-size: .79rem; line-height: 1.15; }
+.negocio-v2__acciones button small { align-self: start; color: var(--texto-suave); font-size: .64rem; line-height: 1.35; }
+.negocio-v2__acciones button > svg { grid-column: 3; grid-row: 1 / 3; width: 18px; color: #75837c; }
+
+/* --------------------------------------------------------------------------
+ * Pantallas internas
+ * ------------------------------------------------------------------------ */
+.negocio-v2__pantalla { position: relative; padding: 18px 0 6px; animation: v2entrada .18s ease; }
+@keyframes v2entrada { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+.negocio-v2__titulo-pantalla { padding: 2px 4px 15px; }
+.negocio-v2__titulo-pantalla h1 {
+  margin: 0;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: clamp(2.2rem, 11vw, 3rem);
+  line-height: .96;
+  color: var(--texto);
+}
+.negocio-v2__titulo-pantalla p { max-width: 320px; margin: 7px 0 0; color: var(--texto-suave); font-size: .82rem; line-height: 1.45; }
+.negocio-v2__volver { margin-bottom: 10px; padding: 0 4px; color: var(--verde); background: transparent; font-weight: 800; }
+
+.negocio-v2__filtros { display: flex; gap: 8px; margin-bottom: 12px; overflow-x: auto; scrollbar-width: none; }
+.negocio-v2__filtros::-webkit-scrollbar { display: none; }
+.negocio-v2__filtros button {
+  flex: 0 0 auto;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid var(--borde);
+  border-radius: 999px;
+  color: var(--texto-suave);
+  background: transparent;
+  font-size: .72rem;
+  font-weight: 800;
+}
+.negocio-v2__filtros button.activo { color: #fff; border-color: var(--naranjo); background: var(--naranjo); box-shadow: 0 7px 18px rgba(255,106,18,.2); }
+
+.negocio-v2__vacio {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  min-height: 235px;
+  align-content: center;
+  padding: 26px;
+  border: 1px solid var(--borde);
+  border-radius: 25px;
+  background: var(--panel);
+  box-shadow: var(--sombra);
+  text-align: center;
+}
+.negocio-v2__vacio > span { display: grid; place-items: center; width: 68px; height: 68px; border-radius: 50%; color: #fff; background: #20a55d; }
+.negocio-v2__vacio strong { font-size: 1rem; }
+.negocio-v2__vacio p { max-width: 240px; margin: 0; color: var(--texto-suave); font-size: .74rem; line-height: 1.45; }
+
+.negocio-v2__lista { display: grid; gap: 10px; }
+.negocio-v2__lista > button {
+  display: grid;
+  grid-template-columns: 50px minmax(0,1fr) 22px;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 15px;
+  border: 1px solid var(--borde);
+  border-radius: 20px;
+  color: var(--texto);
+  background: var(--panel);
+  box-shadow: var(--sombra);
+  text-align: left;
+}
+.negocio-v2__lista .avatar { display: grid; place-items: center; width: 50px; height: 50px; border-radius: 50%; color: var(--naranjo); background: var(--naranjo-suave); font-family: 'Baloo 2', sans-serif; font-size: 1.3rem; }
+.negocio-v2__lista > button > div { display: grid; gap: 2px; }
+.negocio-v2__lista small, .negocio-v2__lista em { color: var(--texto-suave); font-size: .65rem; font-style: normal; }
+.negocio-v2__lista strong { font-family: 'Baloo 2', sans-serif; font-size: 1.3rem; line-height: 1; }
+.negocio-v2__lista svg { color: var(--verde); }
+
+.negocio-v2__monto-revision {
+  display: grid;
+  gap: 4px;
+  padding: 19px;
+  border-radius: 23px;
+  color: #fff;
+  background: linear-gradient(135deg, #0e6644, #174a36);
+  box-shadow: 0 15px 30px rgba(15,93,63,.17);
+}
+.negocio-v2__monto-revision small, .negocio-v2__monto-revision span { color: rgba(255,255,255,.72); font-size: .7rem; }
+.negocio-v2__monto-revision strong { font-family: 'Baloo 2', sans-serif; font-size: 2.1rem; line-height: 1; }
+
+.negocio-v2__formulario { display: grid; gap: 12px; margin-top: 14px; }
+.negocio-v2__formulario label { display: grid; gap: 6px; color: var(--texto); font-size: .76rem; font-weight: 800; }
+.negocio-v2__formulario input,
+.negocio-v2__formulario textarea {
+  width: 100%;
+  border: 1px solid var(--borde);
+  border-radius: 15px;
+  color: var(--texto);
+  background: var(--panel);
+  outline: none;
+  font: inherit;
+}
+.negocio-v2__formulario input { min-height: 54px; padding: 0 14px; }
+.negocio-v2__formulario textarea { min-height: 92px; padding: 12px 14px; resize: vertical; }
+.negocio-v2__formulario input:focus,
+.negocio-v2__formulario textarea:focus { border-color: var(--verde); box-shadow: 0 0 0 3px rgba(15,93,63,.1); }
+
+.negocio-v2__acciones-revision { display: grid; gap: 9px; margin-top: 15px; }
+.negocio-v2__acciones-revision button { min-height: 50px; border-radius: 15px; color: var(--verde); background: #e8f1e8; font-weight: 800; }
+.negocio-v2__acciones-revision .principal { color: #fff; background: var(--naranjo); box-shadow: 0 10px 22px rgba(255,106,18,.20); }
+.negocio-v2__acciones-revision .peligro { color: #8d271e; background: #fff0ed; }
+
+/* --------------------------------------------------------------------------
+ * Escanear
+ * ------------------------------------------------------------------------ */
+.negocio-v2__escanear { min-height: 575px; }
+.negocio-v2__escanear .negocio-v2__titulo-pantalla { padding-right: 120px; }
+
+.negocio-v2__metodos { display: grid; gap: 11px; margin-top: 17px; }
+.negocio-v2__metodos button {
+  display: grid;
+  grid-template-columns: 54px minmax(0,1fr) 20px;
+  grid-template-rows: auto auto;
+  align-items: center;
+  column-gap: 12px;
+  min-height: 96px;
+  padding: 15px;
+  border: 1px solid var(--borde);
+  border-radius: 21px;
+  color: var(--texto);
+  background: var(--panel);
+  box-shadow: var(--sombra);
+  text-align: left;
+}
+.negocio-v2__metodos button > span {
+  grid-row: 1 / 3;
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 17px;
+  color: #48d17c;
+  background: #e0f2e6;
+}
+.negocio-v2__metodos button > span.naranja { color: var(--naranjo); background: var(--naranjo-suave); }
+.negocio-v2__metodos strong { align-self: end; font-size: .9rem; }
+.negocio-v2__metodos small { align-self: start; color: var(--texto-suave); font-size: .7rem; line-height: 1.35; }
+.negocio-v2__metodos button > svg { grid-column: 3; grid-row: 1 / 3; color: var(--verde); }
+
+.negocio-v2__ayuda {
+  display: grid;
+  grid-template-columns: 42px minmax(0,1fr);
+  align-items: center;
+  gap: 11px;
+  margin-top: 13px;
+  padding: 13px;
+  border: 1px solid var(--borde);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--panel-2) 78%, transparent);
+}
+.negocio-v2__ayuda > span { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; color: #fff; background: var(--verde); font-family: 'Baloo 2', sans-serif; }
+.negocio-v2__ayuda p { margin: 0; color: var(--texto-suave); font-size: .7rem; line-height: 1.4; }
+
+/* --------------------------------------------------------------------------
+ * Actividad / turno
+ * ------------------------------------------------------------------------ */
+.negocio-v2__metricas { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 9px; }
+.negocio-v2__metricas article {
+  display: grid;
+  justify-items: center;
+  gap: 5px;
+  min-width: 0;
+  padding: 14px 8px;
+  border: 1px solid var(--borde);
+  border-radius: 18px;
+  background: var(--panel);
+  box-shadow: var(--sombra);
+  text-align: center;
+}
+.negocio-v2__metricas article > span { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 13px; color: var(--verde); background: #e2f0e6; }
+.negocio-v2__metricas strong { color: var(--verde); font-family: 'Baloo 2', sans-serif; font-size: 1.5rem; line-height: 1; }
+.negocio-v2__metricas small { color: var(--texto-suave); font-size: .62rem; line-height: 1.3; }
+.negocio-v2__metricas.turno article { padding: 13px 7px; }
+
+.negocio-v2__sincronizado {
+  display: grid;
+  grid-template-columns: 48px minmax(0,1fr);
+  align-items: center;
+  gap: 12px;
+  margin-top: 13px;
+  padding: 15px;
+  border: 1px solid var(--borde);
+  border-radius: 20px;
+  background: var(--panel);
+  box-shadow: var(--sombra);
+}
+.negocio-v2__sincronizado > span { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; color: #fff; background: #1e9d5d; }
+.negocio-v2__sincronizado > div { display: grid; gap: 2px; }
+.negocio-v2__sincronizado small { color: var(--texto-suave); font-size: .68rem; line-height: 1.4; }
+
+.negocio-v2__turno {
+  padding: 16px;
+  border: 1px solid var(--borde);
+  border-radius: 22px;
+  background: var(--panel);
+  box-shadow: var(--sombra);
+}
+.negocio-v2__turno-cajero { display: grid; grid-template-columns: 50px minmax(0,1fr) auto; align-items: center; gap: 11px; padding-bottom: 14px; border-bottom: 1px solid var(--borde); }
+.negocio-v2__turno-cajero > span { display: grid; place-items: center; width: 50px; height: 50px; border-radius: 50%; color: #fff; background: var(--verde); font-family: 'Baloo 2', sans-serif; font-size: 1.35rem; }
+.negocio-v2__turno-cajero > div { display: grid; gap: 1px; }
+.negocio-v2__turno-cajero small { color: var(--texto-suave); font-size: .65rem; }
+.negocio-v2__turno-cajero strong { font-size: .92rem; }
+.negocio-v2__turno-cajero em { padding: 6px 9px; border-radius: 999px; color: #0e6c42; background: #def5e5; font-size: .65rem; font-style: normal; font-weight: 800; }
+.negocio-v2__turno dl { display: grid; gap: 10px; margin: 14px 0 0; }
+.negocio-v2__turno dl > div { display: flex; justify-content: space-between; gap: 12px; }
+.negocio-v2__turno dt { color: var(--texto-suave); font-size: .68rem; }
+.negocio-v2__turno dd { margin: 0; max-width: 62%; color: var(--texto); font-size: .7rem; font-weight: 800; text-align: right; }
+.negocio-v2__cerrar-turno { width: 100%; min-height: 52px; margin-top: 14px; border-radius: 15px; color: #fff; background: var(--naranjo); font-weight: 800; box-shadow: 0 10px 24px rgba(255,106,18,.20); }
+
+/* --------------------------------------------------------------------------
+ * Navegación inferior
+ * ------------------------------------------------------------------------ */
+.negocio-v2__nav {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0,1fr));
+  width: min(100%, 430px);
+  min-height: calc(78px + env(safe-area-inset-bottom, 0px));
+  padding: 7px 8px env(safe-area-inset-bottom, 0px);
+  border-top: 1px solid rgba(15,93,63,.09);
+  background: rgba(249, 251, 249, .96);
+  box-shadow: 0 -12px 30px rgba(10,40,28,.08);
+  backdrop-filter: blur(14px);
+  transform: translateX(-50%);
+}
+
+.negocio-v2__nav button {
+  position: relative;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 3px;
+  min-width: 0;
+  min-height: 62px;
+  padding: 6px 1px;
+  border-radius: 16px;
+  color: #85928b;
+  background: transparent;
+}
+.negocio-v2__nav button span { position: relative; display: grid; place-items: center; min-height: 26px; }
+.negocio-v2__nav button svg { width: 22px; height: 22px; }
+.negocio-v2__nav button small { max-width: 100%; overflow: hidden; font-size: .58rem; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+.negocio-v2__nav button.activo { color: var(--naranjo); background: rgba(255,106,18,.10); }
+.negocio-v2__nav button.activo small { font-weight: 800; }
+.negocio-v2__nav .con-badge b { position: absolute; top: -7px; right: -9px; display: grid; place-items: center; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 999px; color: #fff; background: var(--naranjo); font-size: .5rem; }
+
+/* --------------------------------------------------------------------------
+ * Dark mode — referencia visual aprobada
+ * ------------------------------------------------------------------------ */
+@media (prefers-color-scheme: dark) {
+  .negocio-v2 {
+    --fondo: #061d14;
+    --panel: #0a3425;
+    --panel-2: #0d3e2c;
+    --texto: #fffdf5;
+    --texto-suave: #b8c8bf;
+    --verde: #64e18e;
+    --verde-2: #1da866;
+    --verde-3: #063224;
+    --verde-claro: #91e5aa;
+    --borde: rgba(83, 214, 130, .23);
+    --sombra: 0 18px 38px rgba(0,0,0,.26);
+    background:
+      radial-gradient(circle at 8% 3%, rgba(43, 176, 100, .18), transparent 26%),
+      radial-gradient(circle at 92% 0%, rgba(0, 97, 58, .18), transparent 30%),
+      linear-gradient(180deg, #042319 0%, #061d14 52%, #041a12 100%);
+  }
+
+  .negocio-v2__logo::before { color: #fffdf5; }
+  .negocio-v2__estado.online { color: #77ed9d; border-color: rgba(85,229,135,.38); background: rgba(17, 114, 68, .30); }
+  .negocio-v2__estado.offline { color: #ffb29c; border-color: rgba(255,138,106,.25); background: rgba(157,64,43,.18); }
+
+  .negocio-v2__comercio,
+  .negocio-v2__pendientes,
+  .negocio-v2__acciones button,
+  .negocio-v2__lista > button,
+  .negocio-v2__vacio,
+  .negocio-v2__metodos button,
+  .negocio-v2__metricas article,
+  .negocio-v2__sincronizado,
+  .negocio-v2__turno,
+  .negocio-v2__formulario input,
+  .negocio-v2__formulario textarea {
+    background: linear-gradient(145deg, rgba(9, 58, 40, .96), rgba(7, 47, 33, .96));
+    box-shadow: var(--sombra);
+  }
+
+  .negocio-v2__comercio { border-color: rgba(83,214,130,.28); }
+  .negocio-v2__comercio > svg,
+  .negocio-v2__pendientes-titulo svg,
+  .negocio-v2__lista svg,
+  .negocio-v2__metodos button > svg { color: #72e89a; }
+
+  .negocio-v2__hero {
+    border-color: rgba(136, 239, 164, .22);
+    background:
+      radial-gradient(circle at 86% 14%, rgba(185, 238, 113, .26), transparent 31%),
+      radial-gradient(circle at 92% 82%, rgba(37, 138, 81, .22), transparent 34%),
+      linear-gradient(135deg, #0d8b59 0%, #0d6f49 42%, #174936 100%);
+  }
+
+  .negocio-v2__todo-dia,
+  .negocio-v2__ayuda { background: rgba(15, 72, 51, .64); }
+  .negocio-v2__icono-suave,
+  .negocio-v2__metricas article > span,
+  .negocio-v2__metodos button > span { color: #6fe495; background: rgba(43, 157, 89, .22); }
+
+  .negocio-v2__acciones button > span { color: #62e390; background: rgba(37, 141, 81, .24); }
+  .negocio-v2__acciones button:nth-child(1) > span,
+  .negocio-v2__acciones button:nth-child(4) > span,
+  .negocio-v2__metodos button > span.naranja { color: #ff7d2a; background: rgba(255,106,18,.15); }
+
+  .negocio-v2__filtros button { color: #bdcbc3; border-color: rgba(83,214,130,.20); }
+  .negocio-v2__vacio > span,
+  .negocio-v2__sincronizado > span { background: #198b55; }
+  .negocio-v2__acciones-revision button { color: #a7e7b8; background: rgba(35,126,73,.28); }
+  .negocio-v2__acciones-revision .principal,
+  .negocio-v2__cerrar-turno { color: #fff; background: var(--naranjo); }
+  .negocio-v2__acciones-revision .peligro { color: #ffb4a1; background: rgba(150,55,36,.22); }
+  .negocio-v2__turno-cajero em { color: #80eba1; background: rgba(27,132,78,.24); }
+  .negocio-v2__turno-cajero > span { color: #032417; background: #72df96; }
+
+  .negocio-v2__nav {
+    border-top-color: rgba(83,214,130,.16);
+    background: rgba(4, 39, 27, .97);
+    box-shadow: 0 -12px 30px rgba(0,0,0,.22);
+  }
+  .negocio-v2__nav button { color: #9dada4; }
+  .negocio-v2__nav button.activo { color: #ff7219; background: rgba(255,106,18,.12); }
+}
+
+@media (max-width: 360px) {
+  .negocio-v2__logo::before { font-size: 1.55rem; }
+  .negocio-v2__logo::after { font-size: .6rem; }
+  .negocio-v2__estado { padding: 0 9px; font-size: .67rem; }
+  .negocio-v2__hero { grid-template-columns: minmax(0,1fr) 128px; min-height: 200px; }
+  .negocio-v2__hero h1 { font-size: 2.45rem; }
+  .negocio-v2__mascota.saludando { width: 145px; height: 168px; }
+  .negocio-v2__acciones button { grid-template-columns: 42px minmax(0,1fr) 15px; min-height: 105px; padding: 12px; }
+  .negocio-v2__acciones button > span { width: 42px; height: 42px; }
+}

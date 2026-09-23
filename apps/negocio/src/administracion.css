@@ -1,0 +1,288 @@
+.negocio-acceso-administracion {
+  position: fixed;
+  left: 50%;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
+  z-index: 30;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 46px;
+  padding: 0 15px;
+  border-radius: 999px;
+  background: #143428;
+  color: #fff;
+  box-shadow: 0 12px 30px rgba(20, 52, 40, .22);
+  font-weight: 800;
+  transform: translateX(calc(215px - 100%));
+}
+
+.negocio-acceso-administracion span {
+  font-size: 1.05rem;
+}
+
+/* Configuración pertenece a la pantalla previa al turno, no al menú del cajero. */
+.negocio-acceso-administracion--inicio {
+  left: 50%;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 18px;
+  align-items: center;
+  gap: 12px;
+  width: min(calc(100% - 32px), 398px);
+  min-height: 70px;
+  padding: 11px 15px;
+  border: 1px solid rgba(15, 93, 63, .16);
+  border-radius: 20px;
+  color: #143428;
+  background: rgba(255, 255, 255, .96);
+  box-shadow: 0 12px 30px rgba(20, 52, 40, .13);
+  backdrop-filter: blur(14px);
+  transform: translateX(-50%);
+  text-align: left;
+}
+
+.negocio-acceso-administracion--inicio > span:first-child {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  color: #0f5d3f;
+  background: #e8f1e8;
+  font-size: 1.2rem;
+}
+
+.negocio-acceso-administracion--inicio > span:nth-child(2) {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+}
+
+.negocio-acceso-administracion--inicio strong {
+  color: inherit;
+  font-size: .82rem;
+}
+
+.negocio-acceso-administracion--inicio small {
+  color: #718078;
+  font-size: .63rem;
+  font-weight: 500;
+}
+
+.negocio-acceso-administracion--inicio b {
+  color: #0f5d3f;
+  font-size: 1.55rem;
+  font-weight: 500;
+}
+
+.negocio-admin-layout {
+  width: 100%;
+  margin: 0;
+}
+
+.negocio-admin-encabezado {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.negocio-admin-encabezado h1 {
+  margin-bottom: 0;
+}
+
+.negocio-admin-encabezado > button,
+.negocio-admin-form-acciones button,
+.negocio-equipo-acciones button {
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 12px;
+  font-weight: 800;
+}
+
+.negocio-admin-encabezado > button {
+  color: #fff;
+  background: #0f5d3f;
+}
+
+.negocio-form--admin {
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px solid #dce6df;
+  border-radius: 18px;
+  background: #f8fbf9;
+}
+
+.negocio-admin-form-acciones {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 9px;
+}
+
+.negocio-admin-form-acciones .secundario,
+.negocio-equipo-acciones .secundario,
+.negocio-modal-acciones .secundario {
+  color: #0f5d3f;
+  background: #e8f1e8;
+}
+
+.negocio-equipo-seccion {
+  margin-top: 24px;
+}
+
+.negocio-equipo-seccion h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  font-family: 'Baloo 2', sans-serif;
+  color: #143428;
+}
+
+.negocio-equipo-seccion h2 span {
+  display: inline-grid;
+  place-items: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: #edf6ef;
+  color: #0f5d3f;
+  font-family: 'Poppins', sans-serif;
+  font-size: .82rem;
+}
+
+.negocio-equipo-seccion--inactivos {
+  padding-top: 20px;
+  border-top: 1px solid #e3ebe5;
+}
+
+.negocio-equipo-lista {
+  display: grid;
+  gap: 10px;
+}
+
+.negocio-equipo-item {
+  display: grid;
+  gap: 12px;
+  padding: 15px;
+  border: 1px solid #dce6df;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.negocio-equipo-item > div:first-child {
+  display: grid;
+  gap: 3px;
+}
+
+.negocio-equipo-item strong {
+  color: #143428;
+}
+
+.negocio-equipo-item span,
+.negocio-equipo-item small,
+.negocio-texto-suave {
+  color: #708078;
+}
+
+.negocio-equipo-acciones {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.negocio-equipo-acciones button {
+  width: 100%;
+}
+
+.negocio-equipo-acciones .peligro,
+.negocio-modal-acciones .peligro {
+  color: #8d271e;
+  background: #fff0ed;
+}
+
+.negocio-modal-fondo {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(20, 52, 40, .35);
+  backdrop-filter: blur(2px);
+}
+
+.negocio-modal {
+  width: min(100%, 390px);
+  padding: 22px;
+  border: 1px solid #e1e8e3;
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 24px 70px rgba(20, 52, 40, .24);
+}
+
+.negocio-modal h2 {
+  margin: 8px 0 12px;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: clamp(1.8rem, 8vw, 2.2rem);
+  line-height: 1.05;
+  color: #143428;
+}
+
+.negocio-modal p {
+  margin: 0;
+  color: #53685e;
+  line-height: 1.6;
+}
+
+.negocio-modal .negocio-modal-nota {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #f5f7f1;
+  color: #6b7c73;
+  font-size: .9rem;
+}
+
+.negocio-modal-acciones {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 9px;
+  margin-top: 20px;
+}
+
+.negocio-modal-acciones button {
+  min-height: 48px;
+  padding: 0 14px;
+  border-radius: 12px;
+  font-weight: 800;
+}
+
+@media (prefers-color-scheme: dark) {
+  .negocio-acceso-administracion--inicio {
+    color: #f5f2e9;
+    border-color: rgba(255, 255, 255, .08);
+    background: rgba(21, 50, 38, .96);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, .24);
+  }
+
+  .negocio-acceso-administracion--inicio > span:first-child {
+    color: #9ed7ad;
+    background: #204432;
+  }
+
+  .negocio-acceso-administracion--inicio small {
+    color: #afbeb6;
+  }
+
+  .negocio-acceso-administracion--inicio b {
+    color: #9ed7ad;
+  }
+}
+
+@media (max-width: 430px) {
+  .negocio-acceso-administracion--inicio {
+    width: calc(100% - 28px);
+  }
+}
