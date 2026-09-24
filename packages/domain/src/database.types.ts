@@ -1120,6 +1120,7 @@ export type Database = {
           modalidad_atencion: Database["public"]["Enums"]["modalidad_atencion"]
           nombre: string
           rol_plataforma: Database["public"]["Enums"]["rol_plataforma"]
+          rut: string | null
           telefono: string | null
         }
         Insert: {
@@ -1133,6 +1134,7 @@ export type Database = {
           modalidad_atencion?: Database["public"]["Enums"]["modalidad_atencion"]
           nombre: string
           rol_plataforma?: Database["public"]["Enums"]["rol_plataforma"]
+          rut?: string | null
           telefono?: string | null
         }
         Update: {
@@ -1146,6 +1148,7 @@ export type Database = {
           modalidad_atencion?: Database["public"]["Enums"]["modalidad_atencion"]
           nombre?: string
           rol_plataforma?: Database["public"]["Enums"]["rol_plataforma"]
+          rut?: string | null
           telefono?: string | null
         }
         Relationships: []
@@ -2285,6 +2288,7 @@ export type Database = {
           recuperacion_id: string
         }[]
       }
+      calcular_dv_rut: { Args: { p_cuerpo: string }; Returns: string }
       cambiar_estado_beneficio_regis: {
         Args: {
           p_beneficio_version_id: string
@@ -2990,6 +2994,7 @@ export type Database = {
         }
       }
       eliminar_caja_sin_uso: { Args: { p_caja_id: string }; Returns: boolean }
+      enmascarar_rut: { Args: { p_rut: string }; Returns: string }
       entregar_llavero: {
         Args: {
           p_codigo_publico: string
@@ -3017,6 +3022,7 @@ export type Database = {
         Args: { p_terminal_id: string }
         Returns: boolean
       }
+      es_rut_valido: { Args: { p_rut: string }; Returns: boolean }
       establecer_pin_seguridad_llavero_interno: {
         Args: { p_llavero_id: string; p_pin: string }
         Returns: {
@@ -3063,6 +3069,7 @@ export type Database = {
         Returns: number
       }
       expirar_reservas_canje_regis: { Args: never; Returns: number }
+      formatear_rut: { Args: { p_rut: string }; Returns: string }
       informar_monto_cajero: {
         Args: { p_monto: number; p_solicitud_id: string }
         Returns: {
@@ -3435,6 +3442,7 @@ export type Database = {
           rol: Database["public"]["Enums"]["rol_cajero_negocio"]
         }[]
       }
+      normalizar_rut: { Args: { p_rut: string }; Returns: string }
       obtener_lectura_operacion_interna: {
         Args: {
           p_lectura_id: string
