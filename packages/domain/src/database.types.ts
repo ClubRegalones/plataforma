@@ -101,6 +101,95 @@ export type Database = {
           },
         ]
       }
+      auditoria_busquedas_recuperacion: {
+        Row: {
+          caja_id: string
+          cajero_id: string
+          creado_en: string
+          encontrado: boolean
+          id: string
+          negocio_id: string
+          sucursal_id: string
+          terminal_id: string
+          turno_id: string
+          vecino_id: string | null
+        }
+        Insert: {
+          caja_id: string
+          cajero_id: string
+          creado_en?: string
+          encontrado: boolean
+          id?: string
+          negocio_id: string
+          sucursal_id: string
+          terminal_id: string
+          turno_id: string
+          vecino_id?: string | null
+        }
+        Update: {
+          caja_id?: string
+          cajero_id?: string
+          creado_en?: string
+          encontrado?: boolean
+          id?: string
+          negocio_id?: string
+          sucursal_id?: string
+          terminal_id?: string
+          turno_id?: string
+          vecino_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "auditoria_busquedas_recuperacion_caja_id_fkey"
+            columns: ["caja_id"]
+            isOneToOne: false
+            referencedRelation: "cajas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "auditoria_busquedas_recuperacion_cajero_id_fkey"
+            columns: ["cajero_id"]
+            isOneToOne: false
+            referencedRelation: "cajeros_negocio"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "auditoria_busquedas_recuperacion_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "auditoria_busquedas_recuperacion_sucursal_id_fkey"
+            columns: ["sucursal_id"]
+            isOneToOne: false
+            referencedRelation: "sucursales"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "auditoria_busquedas_recuperacion_terminal_id_fkey"
+            columns: ["terminal_id"]
+            isOneToOne: false
+            referencedRelation: "terminales"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "auditoria_busquedas_recuperacion_turno_id_fkey"
+            columns: ["turno_id"]
+            isOneToOne: false
+            referencedRelation: "turnos_caja"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "auditoria_busquedas_recuperacion_vecino_id_fkey"
+            columns: ["vecino_id"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       beneficios_regis: {
         Row: {
           codigo: string
@@ -132,6 +221,30 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      bloqueos_intentos: {
+        Row: {
+          actualizado_en: string
+          bloqueado_hasta: string | null
+          clave: string
+          fallos: number
+          ventana_inicia_en: string
+        }
+        Insert: {
+          actualizado_en?: string
+          bloqueado_hasta?: string | null
+          clave: string
+          fallos?: number
+          ventana_inicia_en?: string
+        }
+        Update: {
+          actualizado_en?: string
+          bloqueado_hasta?: string | null
+          clave?: string
+          fallos?: number
+          ventana_inicia_en?: string
+        }
+        Relationships: []
       }
       cajas: {
         Row: {
@@ -614,6 +727,86 @@ export type Database = {
             columns: ["negocio_id"]
             isOneToOne: false
             referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      consentimientos_vecino: {
+        Row: {
+          canal: Database["public"]["Enums"]["canal_consentimiento"]
+          id: string
+          otorgado: boolean
+          registrado_en: string
+          vecino_id: string
+          version_id: string
+        }
+        Insert: {
+          canal: Database["public"]["Enums"]["canal_consentimiento"]
+          id?: string
+          otorgado: boolean
+          registrado_en?: string
+          vecino_id: string
+          version_id: string
+        }
+        Update: {
+          canal?: Database["public"]["Enums"]["canal_consentimiento"]
+          id?: string
+          otorgado?: boolean
+          registrado_en?: string
+          vecino_id?: string
+          version_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "consentimientos_vecino_vecino_id_fkey"
+            columns: ["vecino_id"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "consentimientos_vecino_version_id_fkey"
+            columns: ["version_id"]
+            isOneToOne: false
+            referencedRelation: "versiones_consentimiento"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contactos_vecino: {
+        Row: {
+          actualizado_en: string
+          creado_en: string
+          id: string
+          tipo: Database["public"]["Enums"]["tipo_contacto_vecino"]
+          valor: string
+          vecino_id: string
+          verificado_en: string | null
+        }
+        Insert: {
+          actualizado_en?: string
+          creado_en?: string
+          id?: string
+          tipo: Database["public"]["Enums"]["tipo_contacto_vecino"]
+          valor: string
+          vecino_id: string
+          verificado_en?: string | null
+        }
+        Update: {
+          actualizado_en?: string
+          creado_en?: string
+          id?: string
+          tipo?: Database["public"]["Enums"]["tipo_contacto_vecino"]
+          valor?: string
+          vecino_id?: string
+          verificado_en?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contactos_vecino_vecino_id_fkey"
+            columns: ["vecino_id"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
             referencedColumns: ["id"]
           },
         ]
@@ -1120,6 +1313,7 @@ export type Database = {
           modalidad_atencion: Database["public"]["Enums"]["modalidad_atencion"]
           nombre: string
           rol_plataforma: Database["public"]["Enums"]["rol_plataforma"]
+          rut: string | null
           telefono: string | null
         }
         Insert: {
@@ -1133,6 +1327,7 @@ export type Database = {
           modalidad_atencion?: Database["public"]["Enums"]["modalidad_atencion"]
           nombre: string
           rol_plataforma?: Database["public"]["Enums"]["rol_plataforma"]
+          rut?: string | null
           telefono?: string | null
         }
         Update: {
@@ -1146,6 +1341,7 @@ export type Database = {
           modalidad_atencion?: Database["public"]["Enums"]["modalidad_atencion"]
           nombre?: string
           rol_plataforma?: Database["public"]["Enums"]["rol_plataforma"]
+          rut?: string | null
           telefono?: string | null
         }
         Relationships: []
@@ -1203,6 +1399,140 @@ export type Database = {
           precio_mensual_clp?: number
         }
         Relationships: []
+      }
+      recuperaciones_cuenta: {
+        Row: {
+          actualizado_en: string
+          bloqueado_en: string | null
+          caja_id: string
+          cajero_id: string
+          codigo_hash: string
+          completado_en: string | null
+          creado_en: string
+          estado: Database["public"]["Enums"]["estado_recuperacion_cuenta"]
+          expira_en: string
+          expirado_en: string | null
+          id: string
+          identidad_verificada: boolean
+          identidad_verificada_en: string | null
+          intentos_fallidos: number
+          invalidado_en: string | null
+          motivo: Database["public"]["Enums"]["motivo_recuperacion_cuenta"]
+          negocio_id: string
+          sucursal_id: string
+          terminal_id: string
+          token_recuperacion_consumido_en: string | null
+          token_recuperacion_expira_en: string | null
+          token_recuperacion_hash: string | null
+          turno_id: string
+          validado_en: string | null
+          vecino_id: string
+        }
+        Insert: {
+          actualizado_en?: string
+          bloqueado_en?: string | null
+          caja_id: string
+          cajero_id: string
+          codigo_hash: string
+          completado_en?: string | null
+          creado_en?: string
+          estado?: Database["public"]["Enums"]["estado_recuperacion_cuenta"]
+          expira_en: string
+          expirado_en?: string | null
+          id?: string
+          identidad_verificada?: boolean
+          identidad_verificada_en?: string | null
+          intentos_fallidos?: number
+          invalidado_en?: string | null
+          motivo: Database["public"]["Enums"]["motivo_recuperacion_cuenta"]
+          negocio_id: string
+          sucursal_id: string
+          terminal_id: string
+          token_recuperacion_consumido_en?: string | null
+          token_recuperacion_expira_en?: string | null
+          token_recuperacion_hash?: string | null
+          turno_id: string
+          validado_en?: string | null
+          vecino_id: string
+        }
+        Update: {
+          actualizado_en?: string
+          bloqueado_en?: string | null
+          caja_id?: string
+          cajero_id?: string
+          codigo_hash?: string
+          completado_en?: string | null
+          creado_en?: string
+          estado?: Database["public"]["Enums"]["estado_recuperacion_cuenta"]
+          expira_en?: string
+          expirado_en?: string | null
+          id?: string
+          identidad_verificada?: boolean
+          identidad_verificada_en?: string | null
+          intentos_fallidos?: number
+          invalidado_en?: string | null
+          motivo?: Database["public"]["Enums"]["motivo_recuperacion_cuenta"]
+          negocio_id?: string
+          sucursal_id?: string
+          terminal_id?: string
+          token_recuperacion_consumido_en?: string | null
+          token_recuperacion_expira_en?: string | null
+          token_recuperacion_hash?: string | null
+          turno_id?: string
+          validado_en?: string | null
+          vecino_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recuperaciones_cuenta_caja_id_fkey"
+            columns: ["caja_id"]
+            isOneToOne: false
+            referencedRelation: "cajas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recuperaciones_cuenta_cajero_id_fkey"
+            columns: ["cajero_id"]
+            isOneToOne: false
+            referencedRelation: "cajeros_negocio"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recuperaciones_cuenta_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recuperaciones_cuenta_sucursal_id_fkey"
+            columns: ["sucursal_id"]
+            isOneToOne: false
+            referencedRelation: "sucursales"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recuperaciones_cuenta_terminal_id_fkey"
+            columns: ["terminal_id"]
+            isOneToOne: false
+            referencedRelation: "terminales"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recuperaciones_cuenta_turno_id_fkey"
+            columns: ["turno_id"]
+            isOneToOne: false
+            referencedRelation: "turnos_caja"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recuperaciones_cuenta_vecino_id_fkey"
+            columns: ["vecino_id"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       recuperaciones_pin_llavero: {
         Row: {
@@ -2091,9 +2421,44 @@ export type Database = {
           },
         ]
       }
+      versiones_consentimiento: {
+        Row: {
+          creado_en: string
+          id: string
+          obligatorio: boolean
+          publicado_en: string
+          tipo: Database["public"]["Enums"]["tipo_consentimiento"]
+          version: string
+        }
+        Insert: {
+          creado_en?: string
+          id?: string
+          obligatorio: boolean
+          publicado_en?: string
+          tipo: Database["public"]["Enums"]["tipo_consentimiento"]
+          version: string
+        }
+        Update: {
+          creado_en?: string
+          id?: string
+          obligatorio?: boolean
+          publicado_en?: string
+          tipo?: Database["public"]["Enums"]["tipo_consentimiento"]
+          version?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
-      [_ in never]: never
+      versiones_consentimiento_vigentes: {
+        Row: {
+          obligatorio: boolean | null
+          publicado_en: string | null
+          tipo: Database["public"]["Enums"]["tipo_consentimiento"] | null
+          version: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       acreditar_regis_compra: {
@@ -2285,6 +2650,7 @@ export type Database = {
           recuperacion_id: string
         }[]
       }
+      calcular_dv_rut: { Args: { p_cuerpo: string }; Returns: string }
       cambiar_estado_beneficio_regis: {
         Args: {
           p_beneficio_version_id: string
@@ -2430,6 +2796,23 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      completar_recuperacion_cuenta: {
+        Args: { p_recuperacion_id: string; p_token_recuperacion_hash: string }
+        Returns: Database["public"]["Enums"]["motivo_recuperacion_cuenta"]
+      }
+      completar_registro_vecino: {
+        Args: {
+          p_apellido: string
+          p_canal?: Database["public"]["Enums"]["canal_consentimiento"]
+          p_consentimientos?: Json
+          p_correo?: string
+          p_nombre: string
+          p_rut: string
+          p_telefono?: string
+          p_usuario_id: string
+        }
+        Returns: undefined
       }
       configurar_modo_identificacion_cajeros: {
         Args: {
@@ -2757,6 +3140,24 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      crear_recuperacion_codigo_comercio: {
+        Args: {
+          p_codigo_hash: string
+          p_identidad_verificada: boolean
+          p_motivo: Database["public"]["Enums"]["motivo_recuperacion_cuenta"]
+          p_rut: string
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          expira_en: string
+          nombre_vecino: string
+          recuperacion_id: string
+          rut_enmascarado: string
+          vecino_id: string
+        }[]
+      }
       crear_reserva_canje_regis_interna: {
         Args: {
           p_beneficio_version_id: string
@@ -2990,6 +3391,7 @@ export type Database = {
         }
       }
       eliminar_caja_sin_uso: { Args: { p_caja_id: string }; Returns: boolean }
+      enmascarar_rut: { Args: { p_rut: string }; Returns: string }
       entregar_llavero: {
         Args: {
           p_codigo_publico: string
@@ -3006,6 +3408,7 @@ export type Database = {
         }[]
       }
       es_admin_regalones: { Args: never; Returns: boolean }
+      es_correo_tecnico: { Args: { p_correo: string }; Returns: boolean }
       es_miembro_negocio: {
         Args: {
           p_negocio_id: string
@@ -3017,6 +3420,7 @@ export type Database = {
         Args: { p_terminal_id: string }
         Returns: boolean
       }
+      es_rut_valido: { Args: { p_rut: string }; Returns: boolean }
       establecer_pin_seguridad_llavero_interno: {
         Args: { p_llavero_id: string; p_pin: string }
         Returns: {
@@ -3063,6 +3467,7 @@ export type Database = {
         Returns: number
       }
       expirar_reservas_canje_regis: { Args: never; Returns: number }
+      formatear_rut: { Args: { p_rut: string }; Returns: string }
       informar_monto_cajero: {
         Args: { p_monto: number; p_solicitud_id: string }
         Returns: {
@@ -3133,6 +3538,12 @@ export type Database = {
           turno_id: string
         }[]
       }
+      intento_bloqueado: { Args: { p_clave: string }; Returns: string }
+      liberar_cambio_contrasena_recuperacion: {
+        Args: { p_recuperacion_id: string; p_token_recuperacion_hash: string }
+        Returns: undefined
+      }
+      limpiar_intentos: { Args: { p_clave: string }; Returns: undefined }
       listar_beneficios_regis_disponibles: {
         Args: { p_negocio_id?: string }
         Returns: {
@@ -3435,6 +3846,15 @@ export type Database = {
           rol: Database["public"]["Enums"]["rol_cajero_negocio"]
         }[]
       }
+      normalizar_correo_contacto: {
+        Args: { p_correo: string }
+        Returns: string
+      }
+      normalizar_rut: { Args: { p_rut: string }; Returns: string }
+      normalizar_telefono_contacto: {
+        Args: { p_telefono: string }
+        Returns: string
+      }
       obtener_lectura_operacion_interna: {
         Args: {
           p_lectura_id: string
@@ -3495,6 +3915,23 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      obtener_usuario_id_acceso_por_rut: {
+        Args: { p_rut: string }
+        Returns: string
+      }
+      obtener_vecino_recuperacion_por_rut: {
+        Args: {
+          p_rut: string
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          nombre_vecino: string
+          rut_enmascarado: string
+          vecino_id: string
+        }[]
+      }
       preparar_caja_regalones: {
         Args: { p_sucursal_id: string }
         Returns: {
@@ -3505,6 +3942,13 @@ export type Database = {
           terminal_id: string
           terminal_identificador: string
           terminal_nombre_dispositivo: string
+        }[]
+      }
+      preparar_cambio_contrasena_recuperacion: {
+        Args: { p_recuperacion_id: string; p_token_recuperacion_hash: string }
+        Returns: {
+          motivo: Database["public"]["Enums"]["motivo_recuperacion_cuenta"]
+          vecino_id: string
         }[]
       }
       preparar_llavero: {
@@ -3688,6 +4132,15 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      registrar_intento_fallido: {
+        Args: {
+          p_bloqueo: string
+          p_clave: string
+          p_maximo: number
+          p_ventana: string
+        }
+        Returns: string
+      }
       registrar_lectura_llavero_terminal: {
         Args: { p_token_lector: string; p_token_llavero: string }
         Returns: {
@@ -3789,6 +4242,7 @@ export type Database = {
         Args: { p_terminal_id: string }
         Returns: undefined
       }
+      rut_registrado: { Args: { p_rut: string }; Returns: boolean }
       solicitar_reingreso_monto: {
         Args: { p_motivo: string; p_solicitud_id: string }
         Returns: {
@@ -4789,6 +5243,21 @@ export type Database = {
         }
         Returns: undefined
       }
+      validar_codigo_comercio_recuperacion: {
+        Args: {
+          p_codigo_hash: string
+          p_rut: string
+          p_token_recuperacion_hash: string
+        }
+        Returns: {
+          intentos_restantes: number
+          motivo: Database["public"]["Enums"]["motivo_recuperacion_cuenta"]
+          recuperacion_id: string
+          resultado: string
+          valido: boolean
+          vecino_id: string
+        }[]
+      }
       validar_configuracion_beneficio_regis: {
         Args: {
           p_compra_minima_clp: number
@@ -4990,6 +5459,7 @@ export type Database = {
         | "pausado"
         | "reactivado"
         | "finalizado"
+      canal_consentimiento: "web" | "app_vecino" | "totem" | "asistido"
       categoria_ticket_soporte:
         | "beneficios"
         | "compras"
@@ -5034,6 +5504,13 @@ export type Database = {
       estado_negocio: "pendiente" | "activo" | "suspendido" | "rechazado"
       estado_perfil: "activo" | "bloqueado" | "eliminado"
       estado_plan: "activo" | "inactivo" | "archivado"
+      estado_recuperacion_cuenta:
+        | "pendiente"
+        | "validada"
+        | "completada"
+        | "invalidada"
+        | "bloqueada"
+        | "expirada"
       estado_recuperacion_pin_llavero:
         | "pendiente"
         | "aprobada"
@@ -5081,6 +5558,10 @@ export type Database = {
       metodo_verificacion_llavero: "cedula" | "pin" | "sms"
       modalidad_atencion: "digital" | "asistida"
       modo_identificacion_cajero: "solo_nombre" | "nombre_pin"
+      motivo_recuperacion_cuenta:
+        | "olvido_sin_contacto"
+        | "activacion_digital"
+        | "traspaso_identidad"
       origen_canje_regis: "qr" | "llavero"
       origen_compra: "autoservicio" | "asistido" | "integracion_pos"
       origen_creacion_cajero:
@@ -5093,6 +5574,11 @@ export type Database = {
       rol_plataforma: "usuario" | "admin_regalones"
       severidad_riesgo: "baja" | "media" | "alta" | "critica"
       tipo_beneficio_regis: "porcentaje_descuento" | "monto_fijo"
+      tipo_consentimiento:
+        | "terminos_privacidad"
+        | "avisos_comerciales"
+        | "analisis_personalizado"
+      tipo_contacto_vecino: "correo" | "telefono"
       tipo_etiqueta_nfc: "inscripcion" | "compra"
       tipo_movimiento_regis:
         | "acreditacion_compra"
@@ -5237,6 +5723,7 @@ export const Constants = {
         "reactivado",
         "finalizado",
       ],
+      canal_consentimiento: ["web", "app_vecino", "totem", "asistido"],
       categoria_ticket_soporte: [
         "beneficios",
         "compras",
@@ -5291,6 +5778,14 @@ export const Constants = {
       estado_negocio: ["pendiente", "activo", "suspendido", "rechazado"],
       estado_perfil: ["activo", "bloqueado", "eliminado"],
       estado_plan: ["activo", "inactivo", "archivado"],
+      estado_recuperacion_cuenta: [
+        "pendiente",
+        "validada",
+        "completada",
+        "invalidada",
+        "bloqueada",
+        "expirada",
+      ],
       estado_recuperacion_pin_llavero: [
         "pendiente",
         "aprobada",
@@ -5345,6 +5840,11 @@ export const Constants = {
       metodo_verificacion_llavero: ["cedula", "pin", "sms"],
       modalidad_atencion: ["digital", "asistida"],
       modo_identificacion_cajero: ["solo_nombre", "nombre_pin"],
+      motivo_recuperacion_cuenta: [
+        "olvido_sin_contacto",
+        "activacion_digital",
+        "traspaso_identidad",
+      ],
       origen_canje_regis: ["qr", "llavero"],
       origen_compra: ["autoservicio", "asistido", "integracion_pos"],
       origen_creacion_cajero: [
@@ -5358,6 +5858,12 @@ export const Constants = {
       rol_plataforma: ["usuario", "admin_regalones"],
       severidad_riesgo: ["baja", "media", "alta", "critica"],
       tipo_beneficio_regis: ["porcentaje_descuento", "monto_fijo"],
+      tipo_consentimiento: [
+        "terminos_privacidad",
+        "avisos_comerciales",
+        "analisis_personalizado",
+      ],
+      tipo_contacto_vecino: ["correo", "telefono"],
       tipo_etiqueta_nfc: ["inscripcion", "compra"],
       tipo_movimiento_regis: [
         "acreditacion_compra",

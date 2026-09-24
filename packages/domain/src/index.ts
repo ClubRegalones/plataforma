@@ -15,3 +15,13 @@ export {
   calcularDescuentoBeneficio,
 } from './reglas-beneficios'
 export type { ReglaDescuentoBeneficio } from './reglas-beneficios'
+export { registrarVecino, ingresarConRut } from './identidad-vecino'
+export type {
+  ClienteIdentidad,
+  DatosRegistroVecino,
+  TipoConsentimiento,
+  DecisionConsentimiento,
+  ResultadoIdentidad,
+  CodigoIdentidad,
+  SesionVecino,
+} from './identidad-vecino'
