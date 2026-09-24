@@ -417,6 +417,101 @@ select throws_ok(
 );
 
 
+-- Auditoría de búsquedas desde App Negocio.
+
+select has_table(
+  'public',
+  'auditoria_busquedas_recuperacion',
+  'existe la tabla de auditoría de búsquedas de recuperación'
+);
+
+select hasnt_column(
+  'public',
+  'auditoria_busquedas_recuperacion',
+  'rut',
+  'la auditoría no almacena el RUT consultado en claro'
+);
+
+select ok(
+  (
+    select
+      relrowsecurity
+      and not has_table_privilege(
+        'anon',
+        'public.auditoria_busquedas_recuperacion',
+        'SELECT'
+      )
+    from pg_class
+    where oid =
+      'public.auditoria_busquedas_recuperacion'::regclass
+  ),
+  'la auditoría tiene RLS y no puede leerse como anon'
+);
+
+select ok(
+  (
+    select
+      count(*) = 2
+      and bool_and(encontrado)
+      and bool_and(
+        negocio_id =
+          'c1100000-0000-4000-8000-000000000048'
+      )
+      and bool_and(
+        sucursal_id =
+          'c1200000-0000-4000-8000-000000000048'
+      )
+      and bool_and(
+        caja_id =
+          'c1300000-0000-4000-8000-000000000048'
+      )
+      and bool_and(
+        terminal_id =
+          'c1400000-0000-4000-8000-000000000048'
+      )
+      and bool_and(
+        cajero_id =
+          'c1500000-0000-4000-8000-000000000048'
+      )
+      and bool_and(
+        turno_id =
+          'c1610000-0000-4000-8000-000000000048'
+      )
+      and bool_and(
+        vecino_id =
+          '00000000-0000-0000-0000-00000000f481'
+      )
+    from public.auditoria_busquedas_recuperacion
+  ),
+  'las búsquedas de recuperación quedan auditadas con su contexto real'
+);
+
+select lives_ok(
+  $$
+    select *
+    from public.obtener_vecino_recuperacion_por_rut(
+      '11.111.111-1',
+      'c1610000-0000-4000-8000-000000000048',
+      'c1400000-0000-4000-8000-000000000048',
+      'terminal-codigo-comercio-0048-credencial-segura'
+    )
+  $$,
+  'una búsqueda válida sin coincidencia se procesa sin inventar un vecino'
+);
+
+select ok(
+  (
+    select
+      count(*) = 3
+      and count(*) filter (
+        where encontrado = false
+          and vecino_id is null
+      ) = 1
+    from public.auditoria_busquedas_recuperacion
+  ),
+  'una búsqueda válida sin coincidencia también queda auditada sin guardar identidad'
+);
+
 -- ============================================================================
 -- 7. CÉDULA PRESENCIAL OBLIGATORIA
 -- ============================================================================

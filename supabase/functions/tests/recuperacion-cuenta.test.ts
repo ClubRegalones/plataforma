@@ -918,3 +918,107 @@ Deno.test(
     )
   },
 )
+Deno.test(
+  'cambio de contraseña revoca los refresh tokens anteriores',
+  async () => {
+    const contexto = await crearContextoNegocio()
+    const rut = rutAleatorio()
+
+    const claveOriginal = 'ClaveSesionAnterior-2026!'
+    const claveNueva = 'ClaveSesionNueva-2026!'
+
+    await registrarVecino(
+      rut,
+      claveOriginal,
+    )
+
+    // Abrimos deliberadamente una sesión antes de la recuperación.
+    // Este refresh token representa, por ejemplo, otro navegador/dispositivo
+    // que todavía tenía acceso a la cuenta.
+    const sesionAnterior = await llamar(
+      'acceso-vecino',
+      {
+        rut,
+        contrasena: claveOriginal,
+      },
+    )
+
+    assertEquals(sesionAnterior.estado, 200)
+    assertEquals(
+      sesionAnterior.cuerpo.codigo,
+      'ACCESO_CONCEDIDO',
+    )
+
+    const refreshTokenAnterior =
+      sesionAnterior.cuerpo.sesion?.refresh_token
+
+    assert(
+      typeof refreshTokenAnterior === 'string' &&
+        refreshTokenAnterior.length > 0,
+      'la sesión anterior entrega un refresh token',
+    )
+
+    const codigoComercio = await emitirCodigo(
+      contexto,
+      rut,
+      'traspaso_identidad',
+    )
+
+    const recuperacion = await validarCodigo(
+      rut,
+      codigoComercio,
+    )
+
+    await cambiarContrasena(
+      recuperacion.recuperacionId,
+      recuperacion.token,
+      claveNueva,
+    )
+
+    // El cambio administrativo de contraseña debe terminar las sesiones
+    // anteriores. Un refresh token emitido antes de la recuperación
+    // ya no puede obtener un access token nuevo.
+    const refreshAnterior = await fetch(
+      `${URL}/auth/v1/token?grant_type=refresh_token`,
+      {
+        method: 'POST',
+        headers: {
+          apikey: ANON,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          refresh_token: refreshTokenAnterior,
+        }),
+      },
+    )
+
+    assert(
+      !refreshAnterior.ok,
+      'el refresh token anterior debe quedar revocado después de la recuperación',
+    )
+
+    const cuerpoRefresh = await refreshAnterior
+      .json()
+      .catch(() => ({})) as Record<string, unknown>
+
+    assert(
+      !('access_token' in cuerpoRefresh),
+      'un refresh token revocado no puede entregar un nuevo access token',
+    )
+
+    // La persona legítima sí puede entrar usando la contraseña nueva.
+    const sesionNueva = await llamar(
+      'acceso-vecino',
+      {
+        rut,
+        contrasena: claveNueva,
+      },
+    )
+
+    assertEquals(sesionNueva.estado, 200)
+    assertEquals(
+      sesionNueva.cuerpo.codigo,
+      'ACCESO_CONCEDIDO',
+    )
+  },
+)

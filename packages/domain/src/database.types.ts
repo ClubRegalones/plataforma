@@ -101,6 +101,95 @@ export type Database = {
           },
         ]
       }
+      auditoria_busquedas_recuperacion: {
+        Row: {
+          caja_id: string
+          cajero_id: string
+          creado_en: string
+          encontrado: boolean
+          id: string
+          negocio_id: string
+          sucursal_id: string
+          terminal_id: string
+          turno_id: string
+          vecino_id: string | null
+        }
+        Insert: {
+          caja_id: string
+          cajero_id: string
+          creado_en?: string
+          encontrado: boolean
+          id?: string
+          negocio_id: string
+          sucursal_id: string
+          terminal_id: string
+          turno_id: string
+          vecino_id?: string | null
+        }
+        Update: {
+          caja_id?: string
+          cajero_id?: string
+          creado_en?: string
+          encontrado?: boolean
+          id?: string
+          negocio_id?: string
+          sucursal_id?: string
+          terminal_id?: string
+          turno_id?: string
+          vecino_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "auditoria_busquedas_recuperacion_caja_id_fkey"
+            columns: ["caja_id"]
+            isOneToOne: false
+            referencedRelation: "cajas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "auditoria_busquedas_recuperacion_cajero_id_fkey"
+            columns: ["cajero_id"]
+            isOneToOne: false
+            referencedRelation: "cajeros_negocio"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "auditoria_busquedas_recuperacion_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "auditoria_busquedas_recuperacion_sucursal_id_fkey"
+            columns: ["sucursal_id"]
+            isOneToOne: false
+            referencedRelation: "sucursales"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "auditoria_busquedas_recuperacion_terminal_id_fkey"
+            columns: ["terminal_id"]
+            isOneToOne: false
+            referencedRelation: "terminales"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "auditoria_busquedas_recuperacion_turno_id_fkey"
+            columns: ["turno_id"]
+            isOneToOne: false
+            referencedRelation: "turnos_caja"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "auditoria_busquedas_recuperacion_vecino_id_fkey"
+            columns: ["vecino_id"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       beneficios_regis: {
         Row: {
           codigo: string

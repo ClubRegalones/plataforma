@@ -1,5 +1,3 @@
-begin;
-
 -- ============================================================================
 -- CLUB REGALONES
 -- RECUPERACIÓN DE CUENTA + CÓDIGO DE COMERCIO · V1
@@ -61,6 +59,14 @@ create table public.recuperaciones_cuenta (
   intentos_fallidos smallint not null default 0,
 
   expira_en timestamptz not null,
+
+  -- Token temporal posterior a la validación del Código de Comercio.
+  -- Solo se almacena su HMAC.
+  token_recuperacion_hash varchar(64),
+  token_recuperacion_expira_en timestamptz,
+
+  -- Reserva temporal de 60 segundos para evitar dos cambios simultáneos.
+  token_recuperacion_consumido_en timestamptz,
 
   -- Contexto completo de la verificación presencial.
   negocio_id uuid not null
@@ -140,7 +146,6 @@ create table public.recuperaciones_cuenta (
     or
     (
       estado = 'invalidada'
-      and validado_en is null
       and completado_en is null
       and invalidado_en is not null
       and bloqueado_en is null
@@ -165,14 +170,38 @@ create table public.recuperaciones_cuenta (
       and bloqueado_en is null
       and expirado_en is not null
     )
+  ),
+
+  constraint recuperaciones_token_hash_valido check (
+    token_recuperacion_hash is null
+    or token_recuperacion_hash ~ '^[0-9a-f]{64}$'
+  ),
+
+  constraint recuperaciones_token_completo check (
+    (
+      token_recuperacion_hash is null
+      and token_recuperacion_expira_en is null
+    )
+    or
+    (
+      token_recuperacion_hash is not null
+      and token_recuperacion_expira_en is not null
+      and validado_en is not null
+      and token_recuperacion_expira_en > validado_en
+    )
+  ),
+
+  constraint recuperaciones_token_consumido_valido check (
+    token_recuperacion_consumido_en is null
+    or validado_en is not null
   )
 );
 
 
--- Solo puede existir un Código de Comercio pendiente por vecino.
-create unique index recuperaciones_cuenta_pendiente_unica
+-- Solo puede existir una recuperación activa por vecino.
+create unique index recuperaciones_cuenta_activa_unica
   on public.recuperaciones_cuenta (vecino_id)
-  where estado = 'pendiente';
+  where estado in ('pendiente', 'validada');
 
 
 create index recuperaciones_cuenta_vecino_estado_idx
@@ -225,83 +254,59 @@ revoke all on table public.recuperaciones_cuenta
 
 
 -- ----------------------------------------------------------------------------
--- 4. Una sola recuperación activa por vecino
+-- 4. Auditoría de búsquedas de recuperación
 --
--- "Activa" incluye:
---   - pendiente: código todavía no validado
---   - validada: código aceptado, recuperación todavía no completada
+-- Registra quién consultó una identidad desde App Negocio sin almacenar
+-- el RUT buscado en claro.
 -- ----------------------------------------------------------------------------
 
-drop index public.recuperaciones_cuenta_pendiente_unica;
+create table public.auditoria_busquedas_recuperacion (
+  id uuid primary key default gen_random_uuid(),
 
-create unique index recuperaciones_cuenta_activa_unica
-  on public.recuperaciones_cuenta (vecino_id)
-  where estado in ('pendiente', 'validada');
+  negocio_id uuid not null
+    references public.negocios (id) on delete restrict,
 
+  sucursal_id uuid not null
+    references public.sucursales (id) on delete restrict,
 
--- Una recuperación validada también puede ser invalidada si se emite un
--- Código de Comercio nuevo antes de completar el cambio de contraseña.
+  caja_id uuid not null
+    references public.cajas (id) on delete restrict,
 
-alter table public.recuperaciones_cuenta
-  drop constraint recuperaciones_estado_fechas_valido;
+  terminal_id uuid not null
+    references public.terminales (id) on delete restrict,
 
-alter table public.recuperaciones_cuenta
-  add constraint recuperaciones_estado_fechas_valido check (
-    (
-      estado = 'pendiente'
-      and validado_en is null
-      and completado_en is null
-      and invalidado_en is null
-      and bloqueado_en is null
-      and expirado_en is null
-    )
-    or
-    (
-      estado = 'validada'
-      and validado_en is not null
-      and completado_en is null
-      and invalidado_en is null
-      and bloqueado_en is null
-      and expirado_en is null
-    )
-    or
-    (
-      estado = 'completada'
-      and validado_en is not null
-      and completado_en is not null
-      and invalidado_en is null
-      and bloqueado_en is null
-      and expirado_en is null
-    )
-    or
-    (
-      estado = 'invalidada'
-      and completado_en is null
-      and invalidado_en is not null
-      and bloqueado_en is null
-      and expirado_en is null
-    )
-    or
-    (
-      estado = 'bloqueada'
-      and validado_en is null
-      and completado_en is null
-      and invalidado_en is null
-      and bloqueado_en is not null
-      and expirado_en is null
-      and intentos_fallidos = 5
-    )
-    or
-    (
-      estado = 'expirada'
-      and validado_en is null
-      and completado_en is null
-      and invalidado_en is null
-      and bloqueado_en is null
-      and expirado_en is not null
-    )
+  cajero_id uuid not null
+    references public.cajeros_negocio (id) on delete restrict,
+
+  turno_id uuid not null
+    references public.turnos_caja (id) on delete restrict,
+
+  vecino_id uuid
+    references public.perfiles (id) on delete set null,
+
+  encontrado boolean not null,
+
+  creado_en timestamptz not null default clock_timestamp()
+);
+
+create index auditoria_busquedas_recuperacion_turno_idx
+  on public.auditoria_busquedas_recuperacion (
+    turno_id,
+    cajero_id,
+    creado_en desc
   );
 
+alter table public.auditoria_busquedas_recuperacion
+  enable row level security;
+
+revoke all on table public.auditoria_busquedas_recuperacion
+  from anon, authenticated;
+
+grant select on table public.auditoria_busquedas_recuperacion
+  to service_role;
+
+comment on table public.auditoria_busquedas_recuperacion is
+  'Audita búsquedas de identidad realizadas por cajeros durante recuperación. No almacena el RUT consultado ni datos de la cédula.';
 
 -- ----------------------------------------------------------------------------
 -- 5. Buscar vecino para recuperación desde App Negocio
@@ -332,6 +337,10 @@ set search_path = ''
 as $$
 declare
   v_turno public.turnos_caja;
+  v_sucursal_id uuid;
+  v_vecino_id uuid;
+  v_nombre_vecino text;
+  v_rut_enmascarado text;
 begin
   if not public.es_rut_valido(p_rut) then
     raise exception 'RUT_INVALIDO'
@@ -351,7 +360,16 @@ begin
       using errcode = '42501';
   end if;
 
-  return query
+  select caja.sucursal_id
+  into v_sucursal_id
+  from public.cajas as caja
+  where caja.id = v_turno.caja_id;
+
+  if v_sucursal_id is null then
+    raise exception 'No se pudo resolver la sucursal del turno'
+      using errcode = '42501';
+  end if;
+
   select
     perfil.id,
     btrim(
@@ -362,13 +380,47 @@ begin
       )
     )::text,
     public.enmascarar_rut(perfil.rut)::text
+  into
+    v_vecino_id,
+    v_nombre_vecino,
+    v_rut_enmascarado
   from public.perfiles as perfil
   where perfil.rut = public.normalizar_rut(p_rut)
     and perfil.estado = 'activo'
   limit 1;
+
+  insert into public.auditoria_busquedas_recuperacion (
+    negocio_id,
+    sucursal_id,
+    caja_id,
+    terminal_id,
+    cajero_id,
+    turno_id,
+    vecino_id,
+    encontrado
+  )
+  values (
+    v_turno.negocio_id,
+    v_sucursal_id,
+    v_turno.caja_id,
+    p_terminal_id,
+    v_turno.cajero_negocio_id,
+    v_turno.id,
+    v_vecino_id,
+    v_vecino_id is not null
+  );
+
+  if v_vecino_id is null then
+    return;
+  end if;
+
+  return query
+  select
+    v_vecino_id,
+    v_nombre_vecino,
+    v_rut_enmascarado;
 end;
 $$;
-
 
 -- ----------------------------------------------------------------------------
 -- 6. Crear recuperación / Código de Comercio
@@ -429,7 +481,6 @@ begin
       using errcode = '42501';
   end if;
 
-  -- Valida credencial física, turno, caja, negocio y cajero activo.
   v_turno := public.validar_turno_terminal_interno(
     p_turno_id,
     p_terminal_id,
@@ -451,8 +502,6 @@ begin
       using errcode = '42501';
   end if;
 
-  -- Bloqueamos el perfil durante la emisión para evitar dos códigos
-  -- simultáneos para el mismo vecino.
   select perfil.*
   into v_vecino
   from public.perfiles as perfil
@@ -465,14 +514,52 @@ begin
       using errcode = 'P0002';
   end if;
 
-  -- Cualquier proceso activo anterior deja de ser válido.
+
+  -- Una recuperación validada cuyo token ya venció puede cerrarse para
+  -- permitir que el vecino solicite un nuevo Código de Comercio.
+  --
+  -- Si el token ya fue consumido por una operación en curso, no lo tocamos.
+
+  update public.recuperaciones_cuenta
+  set
+    estado = 'invalidada',
+    invalidado_en = v_ahora,
+    token_recuperacion_hash = null,
+    token_recuperacion_expira_en = null,
+    token_recuperacion_consumido_en = null,
+    actualizado_en = v_ahora
+  where recuperaciones_cuenta.vecino_id = v_vecino.id
+    and estado = 'validada'
+    and token_recuperacion_expira_en <= v_ahora
+    and (
+      token_recuperacion_consumido_en is null
+      or token_recuperacion_consumido_en
+        <= v_ahora - interval '60 seconds'
+    );
+
+
+  -- No permitimos reemplazar una recuperación ya validada y vigente.
+
+  if exists (
+    select 1
+    from public.recuperaciones_cuenta
+    where recuperaciones_cuenta.vecino_id = v_vecino.id
+      and estado = 'validada'
+  ) then
+    raise exception 'RECUPERACION_EN_PROCESO'
+      using errcode = '23514';
+  end if;
+
+
+  -- Un código todavía pendiente sí puede reemplazarse.
   update public.recuperaciones_cuenta
   set
     estado = 'invalidada',
     invalidado_en = v_ahora,
     actualizado_en = v_ahora
   where recuperaciones_cuenta.vecino_id = v_vecino.id
-    and estado in ('pendiente', 'validada');
+    and estado = 'pendiente';
+
 
   insert into public.recuperaciones_cuenta (
     vecino_id,
@@ -509,6 +596,7 @@ begin
   returning *
   into v_recuperacion;
 
+
   return query
   select
     v_recuperacion.id,
@@ -522,9 +610,9 @@ begin
     )::text,
     public.enmascarar_rut(v_vecino.rut)::text,
     v_recuperacion.expira_en;
+
 end;
 $$;
-
 
 -- ----------------------------------------------------------------------------
 -- 7. Permisos
@@ -602,270 +690,6 @@ comment on function public.crear_recuperacion_codigo_comercio(
 --   - bloquea definitivamente al quinto fallo
 --   - consume el código correcto pasando la recuperación a "validada"
 -- ----------------------------------------------------------------------------
-
-create function public.validar_codigo_comercio_recuperacion(
-  p_rut text,
-  p_codigo_hash text
-)
-returns table (
-  valido boolean,
-  resultado text,
-  recuperacion_id uuid,
-  vecino_id uuid,
-  motivo public.motivo_recuperacion_cuenta,
-  intentos_restantes smallint
-)
-language plpgsql
-security definer
-set search_path = ''
-as $$
-declare
-  v_vecino_id uuid;
-  v_recuperacion public.recuperaciones_cuenta;
-  v_intentos smallint;
-  v_ahora timestamptz := clock_timestamp();
-begin
-
-  -- Respuesta inválida uniforme para entradas mal formadas.
-  if not public.es_rut_valido(p_rut)
-    or p_codigo_hash is null
-    or p_codigo_hash !~ '^[0-9a-f]{64}$'
-  then
-    return query
-    select
-      false,
-      'CODIGO_INVALIDO'::text,
-      null::uuid,
-      null::uuid,
-      null::public.motivo_recuperacion_cuenta,
-      null::smallint;
-
-    return;
-  end if;
-
-
-  select perfil.id
-  into v_vecino_id
-  from public.perfiles as perfil
-  where perfil.rut = public.normalizar_rut(p_rut)
-    and perfil.estado = 'activo'
-  limit 1;
-
-
-  -- No revelamos mediante esta primitiva si el RUT existe.
-  if v_vecino_id is null then
-    return query
-    select
-      false,
-      'CODIGO_INVALIDO'::text,
-      null::uuid,
-      null::uuid,
-      null::public.motivo_recuperacion_cuenta,
-      null::smallint;
-
-    return;
-  end if;
-
-
-  select recuperacion.*
-  into v_recuperacion
-  from public.recuperaciones_cuenta as recuperacion
-  where recuperacion.vecino_id = v_vecino_id
-    and recuperacion.estado = 'pendiente'
-  order by recuperacion.creado_en desc
-  limit 1
-  for update;
-
-
-  if not found then
-    return query
-    select
-      false,
-      'CODIGO_INVALIDO'::text,
-      null::uuid,
-      null::uuid,
-      null::public.motivo_recuperacion_cuenta,
-      null::smallint;
-
-    return;
-  end if;
-
-
-  -- --------------------------------------------------------------------------
-  -- Código vencido
-  -- --------------------------------------------------------------------------
-
-  if v_recuperacion.expira_en <= v_ahora then
-
-    update public.recuperaciones_cuenta
-    set
-      estado = 'expirada',
-      expirado_en = v_ahora,
-      actualizado_en = v_ahora
-    where id = v_recuperacion.id;
-
-    return query
-    select
-      false,
-      'CODIGO_EXPIRADO'::text,
-      v_recuperacion.id,
-      v_vecino_id,
-      v_recuperacion.motivo,
-      null::smallint;
-
-    return;
-
-  end if;
-
-
-  -- --------------------------------------------------------------------------
-  -- Código incorrecto
-  -- --------------------------------------------------------------------------
-
-  if v_recuperacion.codigo_hash <> lower(p_codigo_hash) then
-
-    v_intentos := v_recuperacion.intentos_fallidos + 1;
-
-    if v_intentos >= 5 then
-
-      update public.recuperaciones_cuenta
-      set
-        intentos_fallidos = 5,
-        estado = 'bloqueada',
-        bloqueado_en = v_ahora,
-        actualizado_en = v_ahora
-      where id = v_recuperacion.id;
-
-      return query
-      select
-        false,
-        'CODIGO_BLOQUEADO'::text,
-        v_recuperacion.id,
-        v_vecino_id,
-        v_recuperacion.motivo,
-        0::smallint;
-
-      return;
-
-    end if;
-
-
-    update public.recuperaciones_cuenta
-    set
-      intentos_fallidos = v_intentos,
-      actualizado_en = v_ahora
-    where id = v_recuperacion.id;
-
-
-    return query
-    select
-      false,
-      'CODIGO_INVALIDO'::text,
-      v_recuperacion.id,
-      v_vecino_id,
-      v_recuperacion.motivo,
-      (5 - v_intentos)::smallint;
-
-    return;
-
-  end if;
-
-
-  -- --------------------------------------------------------------------------
-  -- Código correcto
-  --
-  -- Cambiar a "validada" consume el código.
-  -- Un segundo intento ya no encontrará una recuperación pendiente.
-  -- --------------------------------------------------------------------------
-
-  update public.recuperaciones_cuenta
-  set
-    estado = 'validada',
-    validado_en = v_ahora,
-    actualizado_en = v_ahora
-  where id = v_recuperacion.id;
-
-
-  return query
-  select
-    true,
-    'CODIGO_VALIDO'::text,
-    v_recuperacion.id,
-    v_vecino_id,
-    v_recuperacion.motivo,
-    (5 - v_recuperacion.intentos_fallidos)::smallint;
-
-end;
-$$;
-
-
--- ----------------------------------------------------------------------------
--- 9. Permisos
--- ----------------------------------------------------------------------------
-
-revoke all on function public.validar_codigo_comercio_recuperacion(
-  text,
-  text
-) from public, anon, authenticated;
-
-grant execute on function public.validar_codigo_comercio_recuperacion(
-  text,
-  text
-) to service_role;
-
-
-comment on function public.validar_codigo_comercio_recuperacion(
-  text,
-  text
-) is
-  'Valida por service_role el HMAC del Código de Comercio. Controla expiración, máximo cinco fallos y uso único sin exponer el código en claro.';
-
--- ----------------------------------------------------------------------------
--- 10. Token temporal posterior a la validación del Código de Comercio
---
--- El UUID de la recuperación NO es una credencial.
---
--- Cuando el Código de Comercio es correcto, la Edge Function genera un
--- secreto aleatorio de alta entropía. Solo su HMAC se almacena aquí.
---
--- Ese token autoriza exclusivamente el paso posterior: crear una nueva
--- contraseña desde el dispositivo del vecino.
--- ----------------------------------------------------------------------------
-
-alter table public.recuperaciones_cuenta
-  add column token_recuperacion_hash varchar(64),
-  add column token_recuperacion_expira_en timestamptz;
-
-alter table public.recuperaciones_cuenta
-  add constraint recuperaciones_token_hash_valido check (
-    token_recuperacion_hash is null
-    or token_recuperacion_hash ~ '^[0-9a-f]{64}$'
-  );
-
-alter table public.recuperaciones_cuenta
-  add constraint recuperaciones_token_completo check (
-    (
-      token_recuperacion_hash is null
-      and token_recuperacion_expira_en is null
-    )
-    or
-    (
-      token_recuperacion_hash is not null
-      and token_recuperacion_expira_en is not null
-      and validado_en is not null
-      and token_recuperacion_expira_en > validado_en
-    )
-  );
-
-
--- Reemplazamos la primera versión por una que además registra
--- el token temporal generado por la Edge Function.
-
-drop function public.validar_codigo_comercio_recuperacion(
-  text,
-  text
-);
-
 
 create function public.validar_codigo_comercio_recuperacion(
   p_rut text,
@@ -1085,7 +909,7 @@ comment on function public.validar_codigo_comercio_recuperacion(
   'Valida el Código de Comercio y, al consumirlo correctamente, registra el HMAC de un token temporal de alta entropía para autorizar el cambio de contraseña.';
 
 -- ----------------------------------------------------------------------------
--- 11. Consumo seguro del token de recuperación
+-- 9. Consumo seguro del token de recuperación
 --
 -- Una vez validado el Código de Comercio, el token temporal puede utilizarse
 -- una sola vez para iniciar el cambio de contraseña.
@@ -1094,210 +918,9 @@ comment on function public.validar_codigo_comercio_recuperacion(
 -- token (doble clic, reintento paralelo, etc.).
 -- ----------------------------------------------------------------------------
 
-alter table public.recuperaciones_cuenta
-  add column token_recuperacion_consumido_en timestamptz;
-
-alter table public.recuperaciones_cuenta
-  add constraint recuperaciones_token_consumido_valido check (
-    token_recuperacion_consumido_en is null
-    or validado_en is not null
-  );
-
 
 -- ----------------------------------------------------------------------------
--- 12. Emisión endurecida de un nuevo Código de Comercio
---
--- Una recuperación solamente pendiente puede ser reemplazada.
---
--- Si el Código de Comercio ya fue validado y existe un token de recuperación
--- todavía vigente, no permitimos que otro código pise ese proceso.
--- ----------------------------------------------------------------------------
-
-create or replace function public.crear_recuperacion_codigo_comercio(
-  p_rut text,
-  p_motivo public.motivo_recuperacion_cuenta,
-  p_codigo_hash text,
-  p_turno_id uuid,
-  p_terminal_id uuid,
-  p_token_terminal text,
-  p_identidad_verificada boolean
-)
-returns table (
-  recuperacion_id uuid,
-  vecino_id uuid,
-  nombre_vecino text,
-  rut_enmascarado text,
-  expira_en timestamptz
-)
-language plpgsql
-security definer
-set search_path = ''
-as $$
-declare
-  v_turno public.turnos_caja;
-  v_vecino public.perfiles;
-  v_sucursal_id uuid;
-  v_recuperacion public.recuperaciones_cuenta;
-  v_ahora timestamptz := clock_timestamp();
-begin
-  if not public.es_rut_valido(p_rut) then
-    raise exception 'RUT_INVALIDO'
-      using errcode = '22023';
-  end if;
-
-  if p_motivo is null then
-    raise exception 'MOTIVO_RECUPERACION_REQUERIDO'
-      using errcode = '22023';
-  end if;
-
-  if p_codigo_hash is null
-    or p_codigo_hash !~ '^[0-9a-f]{64}$'
-  then
-    raise exception 'CODIGO_HASH_INVALIDO'
-      using errcode = '22023';
-  end if;
-
-  if p_identidad_verificada is not true then
-    raise exception 'IDENTIDAD_NO_VERIFICADA'
-      using errcode = '42501';
-  end if;
-
-  v_turno := public.validar_turno_terminal_interno(
-    p_turno_id,
-    p_terminal_id,
-    p_token_terminal
-  );
-
-  if v_turno.cajero_negocio_id is null then
-    raise exception 'Esta operación requiere un turno de App Negocio'
-      using errcode = '42501';
-  end if;
-
-  select caja.sucursal_id
-  into v_sucursal_id
-  from public.cajas as caja
-  where caja.id = v_turno.caja_id;
-
-  if v_sucursal_id is null then
-    raise exception 'No se pudo resolver la sucursal del turno'
-      using errcode = '42501';
-  end if;
-
-  select perfil.*
-  into v_vecino
-  from public.perfiles as perfil
-  where perfil.rut = public.normalizar_rut(p_rut)
-    and perfil.estado = 'activo'
-  for update;
-
-  if not found then
-    raise exception 'VECINO_NO_ENCONTRADO'
-      using errcode = 'P0002';
-  end if;
-
-
-  -- Una recuperación validada cuyo token ya venció puede cerrarse para
-  -- permitir que el vecino solicite un nuevo Código de Comercio.
-  --
-  -- Si el token ya fue consumido por una operación en curso, no lo tocamos.
-
-  update public.recuperaciones_cuenta
-  set
-    estado = 'invalidada',
-    invalidado_en = v_ahora,
-    token_recuperacion_hash = null,
-    token_recuperacion_expira_en = null,
-    token_recuperacion_consumido_en = null,
-    actualizado_en = v_ahora
-  where recuperaciones_cuenta.vecino_id = v_vecino.id
-    and estado = 'validada'
-    and token_recuperacion_expira_en <= v_ahora
-    and (
-      token_recuperacion_consumido_en is null
-      or token_recuperacion_consumido_en
-        <= v_ahora - interval '60 seconds'
-    );
-
-
-  -- No permitimos reemplazar una recuperación ya validada y vigente.
-
-  if exists (
-    select 1
-    from public.recuperaciones_cuenta
-    where recuperaciones_cuenta.vecino_id = v_vecino.id
-      and estado = 'validada'
-  ) then
-    raise exception 'RECUPERACION_EN_PROCESO'
-      using errcode = '23514';
-  end if;
-
-
-  -- Un código todavía pendiente sí puede reemplazarse.
-  update public.recuperaciones_cuenta
-  set
-    estado = 'invalidada',
-    invalidado_en = v_ahora,
-    actualizado_en = v_ahora
-  where recuperaciones_cuenta.vecino_id = v_vecino.id
-    and estado = 'pendiente';
-
-
-  insert into public.recuperaciones_cuenta (
-    vecino_id,
-    motivo,
-    codigo_hash,
-    estado,
-    intentos_fallidos,
-    expira_en,
-    negocio_id,
-    sucursal_id,
-    caja_id,
-    terminal_id,
-    cajero_id,
-    turno_id,
-    identidad_verificada,
-    identidad_verificada_en
-  )
-  values (
-    v_vecino.id,
-    p_motivo,
-    p_codigo_hash,
-    'pendiente',
-    0,
-    v_ahora + interval '30 minutes',
-    v_turno.negocio_id,
-    v_sucursal_id,
-    v_turno.caja_id,
-    p_terminal_id,
-    v_turno.cajero_negocio_id,
-    v_turno.id,
-    true,
-    v_ahora
-  )
-  returning *
-  into v_recuperacion;
-
-
-  return query
-  select
-    v_recuperacion.id,
-    v_vecino.id,
-    btrim(
-      concat_ws(
-        ' ',
-        v_vecino.nombre,
-        v_vecino.apellido
-      )
-    )::text,
-    public.enmascarar_rut(v_vecino.rut)::text,
-    v_recuperacion.expira_en;
-
-end;
-$$;
-
-
--- ----------------------------------------------------------------------------
--- 13. Preparar cambio de contraseña
+-- 10. Preparar cambio de contraseña
 --
 -- Solo service_role.
 --
@@ -1379,7 +1002,7 @@ $$;
 
 
 -- ----------------------------------------------------------------------------
--- 14. Liberar token si Supabase Auth falla
+-- 11. Liberar token si Supabase Auth falla
 --
 -- Si el cambio de contraseña administrativo falla, la Edge Function puede
 -- devolver el token a estado utilizable siempre que todavía no haya vencido.
@@ -1410,7 +1033,7 @@ $$;
 
 
 -- ----------------------------------------------------------------------------
--- 15. Completar recuperación
+-- 12. Completar recuperación
 --
 -- Se ejecuta solamente DESPUÉS de que Supabase Auth haya cambiado la
 -- contraseña correctamente.
@@ -1505,7 +1128,7 @@ $$;
 
 
 -- ----------------------------------------------------------------------------
--- 16. Permisos
+-- 13. Permisos
 -- ----------------------------------------------------------------------------
 
 revoke all on function public.preparar_cambio_contrasena_recuperacion(
@@ -1557,6 +1180,3 @@ comment on function public.completar_recuperacion_cuenta(
   text
 ) is
   'Finaliza una recuperación después del cambio exitoso de contraseña. En traspaso de identidad elimina contactos anteriores sin tocar REGIS, compras, canjes ni historial.';
-
-
-commit;
