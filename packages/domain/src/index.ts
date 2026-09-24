@@ -19,6 +19,8 @@ export { registrarVecino, ingresarConRut } from './identidad-vecino'
 export type {
   ClienteIdentidad,
   DatosRegistroVecino,
+  TipoConsentimiento,
+  DecisionConsentimiento,
   ResultadoIdentidad,
   CodigoIdentidad,
   SesionVecino,
