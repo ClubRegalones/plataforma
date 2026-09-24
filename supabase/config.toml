@@ -417,3 +417,8 @@ enabled = true
 verify_jwt = false
 [functions.acceso-vecino]
 verify_jwt = false
+[functions.recuperacion-cuenta-negocio]
+verify_jwt = false
+
+[functions.recuperacion-cuenta-vecino]
+verify_jwt = false

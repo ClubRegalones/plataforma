@@ -1311,6 +1311,140 @@ export type Database = {
         }
         Relationships: []
       }
+      recuperaciones_cuenta: {
+        Row: {
+          actualizado_en: string
+          bloqueado_en: string | null
+          caja_id: string
+          cajero_id: string
+          codigo_hash: string
+          completado_en: string | null
+          creado_en: string
+          estado: Database["public"]["Enums"]["estado_recuperacion_cuenta"]
+          expira_en: string
+          expirado_en: string | null
+          id: string
+          identidad_verificada: boolean
+          identidad_verificada_en: string | null
+          intentos_fallidos: number
+          invalidado_en: string | null
+          motivo: Database["public"]["Enums"]["motivo_recuperacion_cuenta"]
+          negocio_id: string
+          sucursal_id: string
+          terminal_id: string
+          token_recuperacion_consumido_en: string | null
+          token_recuperacion_expira_en: string | null
+          token_recuperacion_hash: string | null
+          turno_id: string
+          validado_en: string | null
+          vecino_id: string
+        }
+        Insert: {
+          actualizado_en?: string
+          bloqueado_en?: string | null
+          caja_id: string
+          cajero_id: string
+          codigo_hash: string
+          completado_en?: string | null
+          creado_en?: string
+          estado?: Database["public"]["Enums"]["estado_recuperacion_cuenta"]
+          expira_en: string
+          expirado_en?: string | null
+          id?: string
+          identidad_verificada?: boolean
+          identidad_verificada_en?: string | null
+          intentos_fallidos?: number
+          invalidado_en?: string | null
+          motivo: Database["public"]["Enums"]["motivo_recuperacion_cuenta"]
+          negocio_id: string
+          sucursal_id: string
+          terminal_id: string
+          token_recuperacion_consumido_en?: string | null
+          token_recuperacion_expira_en?: string | null
+          token_recuperacion_hash?: string | null
+          turno_id: string
+          validado_en?: string | null
+          vecino_id: string
+        }
+        Update: {
+          actualizado_en?: string
+          bloqueado_en?: string | null
+          caja_id?: string
+          cajero_id?: string
+          codigo_hash?: string
+          completado_en?: string | null
+          creado_en?: string
+          estado?: Database["public"]["Enums"]["estado_recuperacion_cuenta"]
+          expira_en?: string
+          expirado_en?: string | null
+          id?: string
+          identidad_verificada?: boolean
+          identidad_verificada_en?: string | null
+          intentos_fallidos?: number
+          invalidado_en?: string | null
+          motivo?: Database["public"]["Enums"]["motivo_recuperacion_cuenta"]
+          negocio_id?: string
+          sucursal_id?: string
+          terminal_id?: string
+          token_recuperacion_consumido_en?: string | null
+          token_recuperacion_expira_en?: string | null
+          token_recuperacion_hash?: string | null
+          turno_id?: string
+          validado_en?: string | null
+          vecino_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recuperaciones_cuenta_caja_id_fkey"
+            columns: ["caja_id"]
+            isOneToOne: false
+            referencedRelation: "cajas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recuperaciones_cuenta_cajero_id_fkey"
+            columns: ["cajero_id"]
+            isOneToOne: false
+            referencedRelation: "cajeros_negocio"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recuperaciones_cuenta_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recuperaciones_cuenta_sucursal_id_fkey"
+            columns: ["sucursal_id"]
+            isOneToOne: false
+            referencedRelation: "sucursales"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recuperaciones_cuenta_terminal_id_fkey"
+            columns: ["terminal_id"]
+            isOneToOne: false
+            referencedRelation: "terminales"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recuperaciones_cuenta_turno_id_fkey"
+            columns: ["turno_id"]
+            isOneToOne: false
+            referencedRelation: "turnos_caja"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recuperaciones_cuenta_vecino_id_fkey"
+            columns: ["vecino_id"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       recuperaciones_pin_llavero: {
         Row: {
           actualizado_en: string
@@ -2574,6 +2708,10 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      completar_recuperacion_cuenta: {
+        Args: { p_recuperacion_id: string; p_token_recuperacion_hash: string }
+        Returns: Database["public"]["Enums"]["motivo_recuperacion_cuenta"]
+      }
       completar_registro_vecino: {
         Args: {
           p_apellido: string
@@ -2912,6 +3050,24 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      crear_recuperacion_codigo_comercio: {
+        Args: {
+          p_codigo_hash: string
+          p_identidad_verificada: boolean
+          p_motivo: Database["public"]["Enums"]["motivo_recuperacion_cuenta"]
+          p_rut: string
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          expira_en: string
+          nombre_vecino: string
+          recuperacion_id: string
+          rut_enmascarado: string
+          vecino_id: string
+        }[]
       }
       crear_reserva_canje_regis_interna: {
         Args: {
@@ -3294,6 +3450,10 @@ export type Database = {
         }[]
       }
       intento_bloqueado: { Args: { p_clave: string }; Returns: string }
+      liberar_cambio_contrasena_recuperacion: {
+        Args: { p_recuperacion_id: string; p_token_recuperacion_hash: string }
+        Returns: undefined
+      }
       limpiar_intentos: { Args: { p_clave: string }; Returns: undefined }
       listar_beneficios_regis_disponibles: {
         Args: { p_negocio_id?: string }
@@ -3670,6 +3830,19 @@ export type Database = {
         Args: { p_rut: string }
         Returns: string
       }
+      obtener_vecino_recuperacion_por_rut: {
+        Args: {
+          p_rut: string
+          p_terminal_id: string
+          p_token_terminal: string
+          p_turno_id: string
+        }
+        Returns: {
+          nombre_vecino: string
+          rut_enmascarado: string
+          vecino_id: string
+        }[]
+      }
       preparar_caja_regalones: {
         Args: { p_sucursal_id: string }
         Returns: {
@@ -3680,6 +3853,13 @@ export type Database = {
           terminal_id: string
           terminal_identificador: string
           terminal_nombre_dispositivo: string
+        }[]
+      }
+      preparar_cambio_contrasena_recuperacion: {
+        Args: { p_recuperacion_id: string; p_token_recuperacion_hash: string }
+        Returns: {
+          motivo: Database["public"]["Enums"]["motivo_recuperacion_cuenta"]
+          vecino_id: string
         }[]
       }
       preparar_llavero: {
@@ -4974,6 +5154,21 @@ export type Database = {
         }
         Returns: undefined
       }
+      validar_codigo_comercio_recuperacion: {
+        Args: {
+          p_codigo_hash: string
+          p_rut: string
+          p_token_recuperacion_hash: string
+        }
+        Returns: {
+          intentos_restantes: number
+          motivo: Database["public"]["Enums"]["motivo_recuperacion_cuenta"]
+          recuperacion_id: string
+          resultado: string
+          valido: boolean
+          vecino_id: string
+        }[]
+      }
       validar_configuracion_beneficio_regis: {
         Args: {
           p_compra_minima_clp: number
@@ -5220,6 +5415,13 @@ export type Database = {
       estado_negocio: "pendiente" | "activo" | "suspendido" | "rechazado"
       estado_perfil: "activo" | "bloqueado" | "eliminado"
       estado_plan: "activo" | "inactivo" | "archivado"
+      estado_recuperacion_cuenta:
+        | "pendiente"
+        | "validada"
+        | "completada"
+        | "invalidada"
+        | "bloqueada"
+        | "expirada"
       estado_recuperacion_pin_llavero:
         | "pendiente"
         | "aprobada"
@@ -5267,6 +5469,10 @@ export type Database = {
       metodo_verificacion_llavero: "cedula" | "pin" | "sms"
       modalidad_atencion: "digital" | "asistida"
       modo_identificacion_cajero: "solo_nombre" | "nombre_pin"
+      motivo_recuperacion_cuenta:
+        | "olvido_sin_contacto"
+        | "activacion_digital"
+        | "traspaso_identidad"
       origen_canje_regis: "qr" | "llavero"
       origen_compra: "autoservicio" | "asistido" | "integracion_pos"
       origen_creacion_cajero:
@@ -5483,6 +5689,14 @@ export const Constants = {
       estado_negocio: ["pendiente", "activo", "suspendido", "rechazado"],
       estado_perfil: ["activo", "bloqueado", "eliminado"],
       estado_plan: ["activo", "inactivo", "archivado"],
+      estado_recuperacion_cuenta: [
+        "pendiente",
+        "validada",
+        "completada",
+        "invalidada",
+        "bloqueada",
+        "expirada",
+      ],
       estado_recuperacion_pin_llavero: [
         "pendiente",
         "aprobada",
@@ -5537,6 +5751,11 @@ export const Constants = {
       metodo_verificacion_llavero: ["cedula", "pin", "sms"],
       modalidad_atencion: ["digital", "asistida"],
       modo_identificacion_cajero: ["solo_nombre", "nombre_pin"],
+      motivo_recuperacion_cuenta: [
+        "olvido_sin_contacto",
+        "activacion_digital",
+        "traspaso_identidad",
+      ],
       origen_canje_regis: ["qr", "llavero"],
       origen_compra: ["autoservicio", "asistido", "integracion_pos"],
       origen_creacion_cajero: [
