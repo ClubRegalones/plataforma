@@ -23,3 +23,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+
+supabase/functions/.env
+.env
+.env.*
+!.env.example
+!supabase/functions/.env.example

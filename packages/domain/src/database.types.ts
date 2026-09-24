@@ -133,6 +133,30 @@ export type Database = {
           },
         ]
       }
+      bloqueos_intentos: {
+        Row: {
+          actualizado_en: string
+          bloqueado_hasta: string | null
+          clave: string
+          fallos: number
+          ventana_inicia_en: string
+        }
+        Insert: {
+          actualizado_en?: string
+          bloqueado_hasta?: string | null
+          clave: string
+          fallos?: number
+          ventana_inicia_en?: string
+        }
+        Update: {
+          actualizado_en?: string
+          bloqueado_hasta?: string | null
+          clave?: string
+          fallos?: number
+          ventana_inicia_en?: string
+        }
+        Relationships: []
+      }
       cajas: {
         Row: {
           actualizado_en: string
@@ -614,6 +638,86 @@ export type Database = {
             columns: ["negocio_id"]
             isOneToOne: false
             referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      consentimientos_vecino: {
+        Row: {
+          canal: Database["public"]["Enums"]["canal_consentimiento"]
+          id: string
+          otorgado: boolean
+          registrado_en: string
+          vecino_id: string
+          version_id: string
+        }
+        Insert: {
+          canal: Database["public"]["Enums"]["canal_consentimiento"]
+          id?: string
+          otorgado: boolean
+          registrado_en?: string
+          vecino_id: string
+          version_id: string
+        }
+        Update: {
+          canal?: Database["public"]["Enums"]["canal_consentimiento"]
+          id?: string
+          otorgado?: boolean
+          registrado_en?: string
+          vecino_id?: string
+          version_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "consentimientos_vecino_vecino_id_fkey"
+            columns: ["vecino_id"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "consentimientos_vecino_version_id_fkey"
+            columns: ["version_id"]
+            isOneToOne: false
+            referencedRelation: "versiones_consentimiento"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contactos_vecino: {
+        Row: {
+          actualizado_en: string
+          creado_en: string
+          id: string
+          tipo: Database["public"]["Enums"]["tipo_contacto_vecino"]
+          valor: string
+          vecino_id: string
+          verificado_en: string | null
+        }
+        Insert: {
+          actualizado_en?: string
+          creado_en?: string
+          id?: string
+          tipo: Database["public"]["Enums"]["tipo_contacto_vecino"]
+          valor: string
+          vecino_id: string
+          verificado_en?: string | null
+        }
+        Update: {
+          actualizado_en?: string
+          creado_en?: string
+          id?: string
+          tipo?: Database["public"]["Enums"]["tipo_contacto_vecino"]
+          valor?: string
+          vecino_id?: string
+          verificado_en?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contactos_vecino_vecino_id_fkey"
+            columns: ["vecino_id"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
             referencedColumns: ["id"]
           },
         ]
@@ -2094,9 +2198,44 @@ export type Database = {
           },
         ]
       }
+      versiones_consentimiento: {
+        Row: {
+          creado_en: string
+          id: string
+          obligatorio: boolean
+          publicado_en: string
+          tipo: Database["public"]["Enums"]["tipo_consentimiento"]
+          version: string
+        }
+        Insert: {
+          creado_en?: string
+          id?: string
+          obligatorio: boolean
+          publicado_en?: string
+          tipo: Database["public"]["Enums"]["tipo_consentimiento"]
+          version: string
+        }
+        Update: {
+          creado_en?: string
+          id?: string
+          obligatorio?: boolean
+          publicado_en?: string
+          tipo?: Database["public"]["Enums"]["tipo_consentimiento"]
+          version?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
-      [_ in never]: never
+      versiones_consentimiento_vigentes: {
+        Row: {
+          obligatorio: boolean | null
+          publicado_en: string | null
+          tipo: Database["public"]["Enums"]["tipo_consentimiento"] | null
+          version: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       acreditar_regis_compra: {
@@ -2434,6 +2573,19 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      completar_registro_vecino: {
+        Args: {
+          p_apellido: string
+          p_canal?: Database["public"]["Enums"]["canal_consentimiento"]
+          p_consentimientos?: Json
+          p_correo?: string
+          p_nombre: string
+          p_rut: string
+          p_telefono?: string
+          p_usuario_id: string
+        }
+        Returns: undefined
       }
       configurar_modo_identificacion_cajeros: {
         Args: {
@@ -3011,6 +3163,7 @@ export type Database = {
         }[]
       }
       es_admin_regalones: { Args: never; Returns: boolean }
+      es_correo_tecnico: { Args: { p_correo: string }; Returns: boolean }
       es_miembro_negocio: {
         Args: {
           p_negocio_id: string
@@ -3140,6 +3293,8 @@ export type Database = {
           turno_id: string
         }[]
       }
+      intento_bloqueado: { Args: { p_clave: string }; Returns: string }
+      limpiar_intentos: { Args: { p_clave: string }; Returns: undefined }
       listar_beneficios_regis_disponibles: {
         Args: { p_negocio_id?: string }
         Returns: {
@@ -3442,7 +3597,15 @@ export type Database = {
           rol: Database["public"]["Enums"]["rol_cajero_negocio"]
         }[]
       }
+      normalizar_correo_contacto: {
+        Args: { p_correo: string }
+        Returns: string
+      }
       normalizar_rut: { Args: { p_rut: string }; Returns: string }
+      normalizar_telefono_contacto: {
+        Args: { p_telefono: string }
+        Returns: string
+      }
       obtener_lectura_operacion_interna: {
         Args: {
           p_lectura_id: string
@@ -3502,6 +3665,10 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      obtener_usuario_id_acceso_por_rut: {
+        Args: { p_rut: string }
+        Returns: string
       }
       preparar_caja_regalones: {
         Args: { p_sucursal_id: string }
@@ -3696,6 +3863,15 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      registrar_intento_fallido: {
+        Args: {
+          p_bloqueo: string
+          p_clave: string
+          p_maximo: number
+          p_ventana: string
+        }
+        Returns: string
+      }
       registrar_lectura_llavero_terminal: {
         Args: { p_token_lector: string; p_token_llavero: string }
         Returns: {
@@ -3797,6 +3973,7 @@ export type Database = {
         Args: { p_terminal_id: string }
         Returns: undefined
       }
+      rut_registrado: { Args: { p_rut: string }; Returns: boolean }
       solicitar_reingreso_monto: {
         Args: { p_motivo: string; p_solicitud_id: string }
         Returns: {
@@ -4998,6 +5175,7 @@ export type Database = {
         | "pausado"
         | "reactivado"
         | "finalizado"
+      canal_consentimiento: "web" | "app_vecino" | "totem" | "asistido"
       categoria_ticket_soporte:
         | "beneficios"
         | "compras"
@@ -5101,6 +5279,11 @@ export type Database = {
       rol_plataforma: "usuario" | "admin_regalones"
       severidad_riesgo: "baja" | "media" | "alta" | "critica"
       tipo_beneficio_regis: "porcentaje_descuento" | "monto_fijo"
+      tipo_consentimiento:
+        | "terminos_privacidad"
+        | "avisos_comerciales"
+        | "analisis_personalizado"
+      tipo_contacto_vecino: "correo" | "telefono"
       tipo_etiqueta_nfc: "inscripcion" | "compra"
       tipo_movimiento_regis:
         | "acreditacion_compra"
@@ -5245,6 +5428,7 @@ export const Constants = {
         "reactivado",
         "finalizado",
       ],
+      canal_consentimiento: ["web", "app_vecino", "totem", "asistido"],
       categoria_ticket_soporte: [
         "beneficios",
         "compras",
@@ -5366,6 +5550,12 @@ export const Constants = {
       rol_plataforma: ["usuario", "admin_regalones"],
       severidad_riesgo: ["baja", "media", "alta", "critica"],
       tipo_beneficio_regis: ["porcentaje_descuento", "monto_fijo"],
+      tipo_consentimiento: [
+        "terminos_privacidad",
+        "avisos_comerciales",
+        "analisis_personalizado",
+      ],
+      tipo_contacto_vecino: ["correo", "telefono"],
       tipo_etiqueta_nfc: ["inscripcion", "compra"],
       tipo_movimiento_regis: [
         "acreditacion_compra",
