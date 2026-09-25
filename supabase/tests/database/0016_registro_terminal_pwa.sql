@@ -49,11 +49,12 @@ values
     '{"nombre":"Cajero Terminal"}'::jsonb
   );
 
-insert into public.negocios (id, nombre, slug, rubro, estado)
+insert into public.negocios (id, nombre, slug, rut, rubro, estado)
 values (
   '51000000-0000-0000-0000-00000000e201',
   'Negocio Terminal PWA',
   'negocio-terminal-pwa',
+  '99999993K',
   'Almacén',
   'activo'
 );

@@ -157,12 +157,13 @@ select is(
   'Auth creó los perfiles del flujo REGIS'
 );
 
-insert into public.negocios (id, nombre, slug, rubro, estado)
+insert into public.negocios (id, nombre, slug, rut, rubro, estado)
 values
   (
     '71000000-0000-4000-8000-000000000001',
     'Negocio A Regis',
     'negocio-a-regis',
+    '99999993K',
     'Almacén',
     'activo'
   ),
@@ -170,6 +171,7 @@ values
     '71000000-0000-4000-8000-000000000002',
     'Negocio B Regis',
     'negocio-b-regis',
+    '999999921',
     'Panadería',
     'activo'
   );

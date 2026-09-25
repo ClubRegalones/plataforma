@@ -100,12 +100,13 @@ values
     '{"nombre":"Vecino lector","apellido":"Prueba"}'::jsonb
   );
 
-insert into public.negocios (id, nombre, slug, rubro, estado)
+insert into public.negocios (id, nombre, slug, rut, rubro, estado)
 values
   (
     '41000000-0000-0000-0000-00000000e101',
     'Negocio lector A',
     'negocio-lector-a',
+    '99999993K',
     'Almacén',
     'activo'
   ),
@@ -113,6 +114,7 @@ values
     '41000000-0000-0000-0000-00000000e102',
     'Negocio lector B',
     'negocio-lector-b',
+    '999999921',
     'Panadería',
     'activo'
   );

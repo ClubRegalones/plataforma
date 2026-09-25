@@ -131,6 +131,7 @@ insert into public.negocios (
   id,
   nombre,
   slug,
+  rut,
   rubro,
   estado
 )
@@ -138,6 +139,7 @@ values (
   'e1100000-0000-4000-8000-000000000045',
   'Negocio Seguridad A 0045',
   'negocio-seguridad-a-0045',
+  '99999993K',
   'Almacén',
   'activo'
 );
@@ -257,6 +259,7 @@ insert into public.negocios (
   id,
   nombre,
   slug,
+  rut,
   rubro,
   estado
 )
@@ -264,6 +267,7 @@ values (
   'e2100000-0000-4000-8000-000000000045',
   'Negocio Seguridad B 0045',
   'negocio-seguridad-b-0045',
+  '999999921',
   'Almacén',
   'activo'
 );

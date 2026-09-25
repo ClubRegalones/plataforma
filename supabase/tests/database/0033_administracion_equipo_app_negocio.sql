@@ -37,11 +37,12 @@ values (
   '{"nombre":"Propietario Equipo"}'::jsonb
 );
 
-insert into public.negocios (id, nombre, slug, rubro, estado)
+insert into public.negocios (id, nombre, slug, rut, rubro, estado)
 values (
   '61000000-0000-0000-0000-00000000f033',
   'Negocio Equipo',
   'negocio-equipo',
+  '99999993K',
   'Almacén',
   'activo'
 );

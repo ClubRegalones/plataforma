@@ -103,12 +103,13 @@ select is(
   'Auth creó los perfiles del flujo asistido'
 );
 
-insert into public.negocios (id, nombre, slug, rubro, estado)
+insert into public.negocios (id, nombre, slug, rut, rubro, estado)
 values
   (
     '31000000-0000-0000-0000-00000000f001',
     'Negocio A Asistido',
     'negocio-a-asistido',
+    '99999993K',
     'Almacén',
     'activo'
   ),
@@ -116,6 +117,7 @@ values
     '31000000-0000-0000-0000-00000000f002',
     'Negocio B Asistido',
     'negocio-b-asistido',
+    '999999921',
     'Panadería',
     'activo'
   );

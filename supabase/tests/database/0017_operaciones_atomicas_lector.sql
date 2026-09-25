@@ -64,11 +64,12 @@ values
     '{"nombre":"Vecino Activar","apellido":"Atómico"}'::jsonb
   );
 
-insert into public.negocios (id, nombre, slug, rubro, estado)
+insert into public.negocios (id, nombre, slug, rut, rubro, estado)
 values (
   '61000000-0000-0000-0000-00000000e301',
   'Negocio operaciones atómicas',
   'negocio-operaciones-atomicas',
+  '99999993K',
   'Almacén',
   'activo'
 );

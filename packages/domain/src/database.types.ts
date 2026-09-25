@@ -1272,7 +1272,7 @@ export type Database = {
           logo_url: string | null
           nombre: string
           rubro: string
-          rut: string | null
+          rut: string
           slug: string
         }
         Insert: {
@@ -1284,7 +1284,7 @@ export type Database = {
           logo_url?: string | null
           nombre: string
           rubro: string
-          rut?: string | null
+          rut: string
           slug: string
         }
         Update: {
@@ -1296,7 +1296,7 @@ export type Database = {
           logo_url?: string | null
           nombre?: string
           rubro?: string
-          rut?: string | null
+          rut?: string
           slug?: string
         }
         Relationships: []
@@ -3118,7 +3118,7 @@ export type Database = {
           p_logo_url?: string
           p_nombre: string
           p_rubro: string
-          p_rut?: string
+          p_rut: string
           p_slug: string
         }
         Returns: {
@@ -3130,7 +3130,7 @@ export type Database = {
           logo_url: string | null
           nombre: string
           rubro: string
-          rut: string | null
+          rut: string
           slug: string
         }
         SetofOptions: {
