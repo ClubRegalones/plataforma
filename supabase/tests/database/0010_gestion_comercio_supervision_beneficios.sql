@@ -57,12 +57,13 @@ update public.perfiles
 set rol_plataforma = 'admin_regalones'
 where id = '00000000-0000-0000-0000-00000000fa05';
 
-insert into public.negocios (id, nombre, slug, rubro, estado)
+insert into public.negocios (id, nombre, slug, rut, rubro, estado)
 values
   (
     '96000000-0000-4000-8000-000000000001',
     'Comercio Gestión Beneficios',
     'comercio-gestion-beneficios',
+    '99999993K',
     'Almacén',
     'activo'
   ),
@@ -70,6 +71,7 @@ values
     '96000000-0000-4000-8000-000000000002',
     'Otro Comercio Gestión Beneficios',
     'otro-comercio-gestion-beneficios',
+    '999999921',
     'Panadería',
     'activo'
   );

@@ -38,6 +38,7 @@ begin
   insert into public.negocios (
     nombre,
     slug,
+    rut,
     rubro,
     descripcion,
     estado
@@ -45,6 +46,7 @@ begin
   values (
     'Comercio de prueba',
     'comercio-prueba-flujo',
+    '999999956',
     'Almacén de barrio',
     'Datos controlados para validar el primer flujo del MVP.',
     'activo'
@@ -52,6 +54,7 @@ begin
   on conflict (slug) do update
   set
     nombre = excluded.nombre,
+    rut = excluded.rut,
     rubro = excluded.rubro,
     descripcion = excluded.descripcion,
     estado = 'activo'

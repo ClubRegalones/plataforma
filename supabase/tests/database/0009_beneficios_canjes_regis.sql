@@ -163,12 +163,13 @@ values
     '{"nombre":"Vecino Tres Canjes"}'::jsonb
   );
 
-insert into public.negocios (id, nombre, slug, rubro, estado)
+insert into public.negocios (id, nombre, slug, rut, rubro, estado)
 values
   (
     '91000000-0000-4000-8000-000000000001',
     'Panadería Beneficios A',
     'panaderia-beneficios-a',
+    '99999993K',
     'Panadería',
     'activo'
   ),
@@ -176,6 +177,7 @@ values
     '91000000-0000-4000-8000-000000000002',
     'Almacén Beneficios B',
     'almacen-beneficios-b',
+    '999999921',
     'Almacén',
     'activo'
   );

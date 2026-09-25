@@ -16,12 +16,14 @@ insert into public.negocios (
   id,
   nombre,
   slug,
+  rut,
   rubro,
   estado
 ) values (
   '71000000-0000-0000-0000-000000000001',
   'Almacén Piloto Regalones',
   'almacen-piloto-regalones',
+  '999999891',
   'Almacén',
   'activo'
 )
@@ -29,6 +31,7 @@ on conflict (id) do update
 set
   nombre = excluded.nombre,
   slug = excluded.slug,
+  rut = excluded.rut,
   rubro = excluded.rubro,
   estado = excluded.estado;
 

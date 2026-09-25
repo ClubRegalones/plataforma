@@ -202,6 +202,7 @@ insert into public.negocios (
   id,
   nombre,
   slug,
+  rut,
   rubro,
   estado
 )
@@ -209,6 +210,7 @@ values (
   'c1100000-0000-4000-8000-000000000048',
   'Negocio Código Comercio 0048',
   'codigo-comercio-0048',
+  '99999993K',
   'Almacén',
   'activo'
 );

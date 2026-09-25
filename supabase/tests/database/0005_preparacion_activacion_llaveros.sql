@@ -106,11 +106,12 @@ where id in (
   '00000000-0000-0000-0000-00000000e004'
 );
 
-insert into public.negocios (id, nombre, slug, rubro, estado)
+insert into public.negocios (id, nombre, slug, rut, rubro, estado)
 values (
   '21000000-0000-0000-0000-00000000e001',
   'Negocio Activación',
   'negocio-activacion',
+  '99999993K',
   'Almacén',
   'activo'
 );

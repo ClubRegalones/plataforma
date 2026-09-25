@@ -34,12 +34,13 @@ select is(
   'El trigger de Auth crea los cuatro perfiles de prueba'
 );
 
-insert into public.negocios (id, nombre, slug, rubro, estado)
+insert into public.negocios (id, nombre, slug, rut, rubro, estado)
 values
   (
     '10000000-0000-0000-0000-00000000a001',
     'Negocio A',
     'negocio-a',
+    '99999993K',
     'Almacén',
     'activo'
   ),
@@ -47,6 +48,7 @@ values
     '10000000-0000-0000-0000-00000000b001',
     'Negocio B',
     'negocio-b',
+    '999999921',
     'Panadería',
     'activo'
   );

@@ -76,11 +76,12 @@ update public.perfiles
 set modalidad_atencion = 'asistida'
 where id = '00000000-0000-0000-0000-00000000f002';
 
-insert into public.negocios (id, nombre, slug, rubro, estado)
+insert into public.negocios (id, nombre, slug, rut, rubro, estado)
 values (
   '20000000-0000-0000-0000-00000000f001',
   'Negocio Flujo Llaveros',
   'negocio-flujo-llaveros',
+  '99999993K',
   'Almacén',
   'activo'
 );

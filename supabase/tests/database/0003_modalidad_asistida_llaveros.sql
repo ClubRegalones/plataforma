@@ -60,10 +60,10 @@ update public.perfiles
 set rol_plataforma = 'admin_regalones'
 where id = '00000000-0000-0000-0000-00000000e001';
 
-insert into public.negocios (id, nombre, slug, rubro, estado)
+insert into public.negocios (id, nombre, slug, rut, rubro, estado)
 values
-  ('10000000-0000-0000-0000-00000000a001', 'Negocio A Llaveros', 'negocio-a-llaveros', 'Almacén', 'activo'),
-  ('10000000-0000-0000-0000-00000000b001', 'Negocio B Llaveros', 'negocio-b-llaveros', 'Panadería', 'activo');
+  ('10000000-0000-0000-0000-00000000a001', 'Negocio A Llaveros', 'negocio-a-llaveros', '99999993K', 'Almacén', 'activo'),
+  ('10000000-0000-0000-0000-00000000b001', 'Negocio B Llaveros', 'negocio-b-llaveros', '999999921', 'Panadería', 'activo');
 
 insert into public.miembros_negocio (negocio_id, usuario_id, rol)
 values

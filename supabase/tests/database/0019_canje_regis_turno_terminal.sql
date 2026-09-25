@@ -51,11 +51,12 @@ values
     '{"nombre":"Vecino","apellido":"Canje Turno"}'::jsonb
   );
 
-insert into public.negocios (id, nombre, slug, rubro, estado)
+insert into public.negocios (id, nombre, slug, rut, rubro, estado)
 values (
   '81100000-0000-4000-8000-000000000191',
   'Negocio Canje Turno',
   'negocio-canje-turno',
+  '99999993K',
   'Almacén',
   'activo'
 );

@@ -32,11 +32,12 @@ values (
   '{"nombre":"Propietario Onboarding"}'::jsonb
 );
 
-insert into public.negocios (id, nombre, slug, rubro, estado)
+insert into public.negocios (id, nombre, slug, rut, rubro, estado)
 values (
   '61000000-0000-0000-0000-00000000f032',
   'Negocio Onboarding',
   'negocio-onboarding',
+  '99999993K',
   'Almacén',
   'activo'
 );

@@ -30,6 +30,7 @@ insert into public.negocios (
   id,
   nombre,
   slug,
+  rut,
   rubro,
   estado
 )
@@ -37,6 +38,7 @@ values (
   '51000000-0000-0000-0000-00000000e229',
   'Negocio Caja Regalones',
   'negocio-caja-regalones',
+  '99999993K',
   'Almacén',
   'activo'
 );

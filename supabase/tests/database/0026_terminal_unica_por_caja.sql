@@ -36,6 +36,7 @@ insert into public.negocios (
   id,
   nombre,
   slug,
+  rut,
   rubro,
   estado
 )
@@ -43,6 +44,7 @@ values (
   '51000000-0000-0000-0000-00000000e226',
   'Negocio Terminal Única',
   'negocio-terminal-unica',
+  '99999993K',
   'Almacén',
   'activo'
 );

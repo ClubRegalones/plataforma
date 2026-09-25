@@ -121,6 +121,7 @@ insert into public.negocios (
   id,
   nombre,
   slug,
+  rut,
   rubro,
   estado
 )
@@ -128,6 +129,7 @@ values (
   'b1100000-0000-4000-8000-000000000043',
   'Negocio Recuperación 0043',
   'negocio-recuperacion-0043',
+  '99999993K',
   'Almacén',
   'activo'
 );

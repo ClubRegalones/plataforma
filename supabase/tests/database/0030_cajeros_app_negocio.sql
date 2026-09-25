@@ -25,11 +25,12 @@ values (
   '{"nombre":"Propietario App Negocio"}'::jsonb
 );
 
-insert into public.negocios (id, nombre, slug, rubro, estado)
+insert into public.negocios (id, nombre, slug, rut, rubro, estado)
 values (
   '61000000-0000-0000-0000-00000000f030',
   'Negocio App Móvil',
   'negocio-app-movil',
+  '99999993K',
   'Almacén',
   'activo'
 );
